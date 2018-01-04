@@ -1,6 +1,10 @@
 # Directory for java compiled files
 target
 
+# IDEA files
+idea
+*.iml
+
 # Compiled class file
 *.class
 
