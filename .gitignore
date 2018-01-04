@@ -1,3 +1,6 @@
+# Directory for java compiled files
+target
+
 # Compiled class file
 *.class
 
