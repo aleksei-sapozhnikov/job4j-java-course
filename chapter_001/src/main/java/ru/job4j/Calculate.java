@@ -1,7 +1,7 @@
 package ru.job4j;
 
 /**
-* Simple class to print messages
+* Simple class to print messages.
 * 
 * @author Aleksei Sapozhnikov (vermucht@gmail.com)
 * @vesrion $Id$
@@ -10,8 +10,8 @@ package ru.job4j;
 public class Calculate {
 	
 	/**
-	* Main method - program starts from here
-	* @param args - arguments
+	* Main method - program starts from here.
+	* @param args - arguments.
 	*/
 	public static void main(String[] args) {
 		System.out.println("Hello world.");

@@ -1,5 +1,5 @@
 /**
-* Package for studying
+* Package for studying.
 *
 * @author Aleksei Sapozhnikov (vermucht@gmail.com)
 * @version $Id$

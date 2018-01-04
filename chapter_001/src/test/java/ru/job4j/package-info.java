@@ -1,5 +1,5 @@
 /**
-* Package for testing programs created during study
+* Package for testing programs created during study.
 *
 * @author Aleksei Sapozhnikov (vermucht@gmail.com)
 * @version $Id$
