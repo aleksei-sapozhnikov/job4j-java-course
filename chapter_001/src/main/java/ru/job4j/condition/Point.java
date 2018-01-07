@@ -1,0 +1,63 @@
+package ru.job4j.condition;
+
+/**
+ * Class operates with 2-dimensional points.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 07.01.2018
+ */
+public class Point {
+
+    /**
+     * Point coordinates.
+     */
+    private int x;
+    private int y;
+
+    /**
+     * Constructor.
+     *
+     * @param x x-coordinate.
+     * @param y y-coordinate.
+     */
+    public Point(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Calculates distance between our Point and another Point.
+     *
+     * @param that Other point.
+     * @return Distance between points.
+     */
+    public double distanceTo(Point that) {
+        int x1 = this.x;
+        int y1 = this.y;
+        int x2 = that.x;
+        int y2 = that.y;
+
+        return Math.sqrt(
+                Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)
+        );
+    }
+
+    /**
+     * Main.
+     *
+     * @param args Command-line arguments.
+     */
+    public static void main(String[] args) {
+        Point a = new Point(1, 2);
+        Point b = new Point(3, 4);
+
+        System.out.println("x1 = " + a.x);
+        System.out.println("y1 = " + a.y);
+        System.out.println("x2 = " + b.x);
+        System.out.println("y2 = " + b.y);
+
+        System.out.println("Расстояние между точками А и В : " + a.distanceTo(b));
+    }
+
+}
