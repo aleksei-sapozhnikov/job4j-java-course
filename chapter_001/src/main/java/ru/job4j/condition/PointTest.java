@@ -24,6 +24,6 @@ public class PointTest {
         double result = a.distanceTo(b);
         double expected = 2.8284271247461903D;
         assertThat(result, is(expected));
-
     }
+
 }
