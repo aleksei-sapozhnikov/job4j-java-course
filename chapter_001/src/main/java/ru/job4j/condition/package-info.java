@@ -1,5 +1,5 @@
 /**
- * Program showing distance between two points
+ * Simple programs to study conditions in Java.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
