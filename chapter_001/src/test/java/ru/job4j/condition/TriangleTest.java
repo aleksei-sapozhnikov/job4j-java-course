@@ -52,4 +52,20 @@ public class TriangleTest {
         // Comparing expected and real results.
         assertThat(result, closeTo(expected, 0.1));
     }
+
+    @Test
+    public void whenTriangleCannotExistThenAreaMinusOne() {
+        // Giving vertices.
+        Point a = new Point(0, 0);
+        Point b = new Point(0, 2);
+        Point c = new Point(0, 2);
+        // Making triangle.
+        Triangle triangle = new Triangle(a, b, c);
+        // Вычисляем площадь.
+        double result = triangle.area();
+        // Result we expect.
+        double expected = -1D;
+        // Comparing expected and real results.
+        assertThat(result, closeTo(expected, 0.1));
+    }
 }
