@@ -14,10 +14,24 @@ public class Max {
      *
      * @param first  First value.
      * @param second Second value.
-     * @return max of two values.
+     * @return Max of two values.
      */
     public int max(int first, int second) {
         return (first > second) ? first : second;
+    }
+
+    /**
+     * Returns max of three given values.
+     *
+     * @param first  First value.
+     * @param second Second value.
+     * @param third  Third value.
+     * @return Max of three values.
+     */
+    public int max(int first, int second, int third) {
+        int result = this.max(first, second);
+        result = this.max(result, third);
+        return result;
     }
 
 }
