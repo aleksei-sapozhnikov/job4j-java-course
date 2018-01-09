@@ -7,6 +7,10 @@ import static org.junit.Assert.assertThat;
 
 /**
  * Tests for Factorial class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 09.01.2018
  */
 public class FactorialTest {
 
