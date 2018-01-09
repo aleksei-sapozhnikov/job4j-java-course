@@ -42,7 +42,7 @@ public class CounterTest {
     }
 
     @Test
-    public void whenSumEvenNumbersFromFivetoFiveThenZero() {
+    public void whenSumEvenNumbersFromFiveToFiveThenZero() {
         Counter count = new Counter();
         int result = count.add(5, 5);
         int expected = 0;

@@ -18,7 +18,7 @@ public class DummyBotTest {
      * Test answer method.
      */
     @Test
-    public void whenSayGreetBotAnwerGreet() {
+    public void whenSayGreetBotAnswerGreet() {
         DummyBot bot = new DummyBot();
         assertThat(
                 bot.answer("Привет, Бот."),
