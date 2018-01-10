@@ -17,14 +17,11 @@ public class Counter {
      * @return Sum of the even values in the range.
      */
     public int add(int start, int finish) {
-        // If start is not even value, we take the next one.
-        if (start % 2 != 0) {
-            start++;
-        }
-        // Then, with step == 2 we take even numbers only.
         int result = 0;
-        for (int i = start; i <= finish; i = i + 2) {
-            result += i;
+        for (int i = start; i <= finish; i++) {
+            if (i % 2 == 0) {
+                result += i;
+            }
         }
         return result;
     }
