@@ -16,14 +16,7 @@ public class Turn {
      * @return The same array object with elements standing in backwards order.
      */
     public int[] back(int[] array) {
-        int lastIndexOfCycle;
-        // 2 cases: even and odd number of elements
-        if (array.length % 2 == 0) {
-            lastIndexOfCycle = (array.length / 2) - 1;
-        } else {
-            // we don't have to swap central element
-            lastIndexOfCycle = ((array.length - 1) / 2) - 1;
-        }
+        int lastIndexOfCycle = array.length / 2 - 1;
         // swap
         for (int i = 0; i <= lastIndexOfCycle; i++) {
             int temp = array[i];
