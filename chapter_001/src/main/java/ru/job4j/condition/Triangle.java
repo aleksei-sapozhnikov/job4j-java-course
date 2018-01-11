@@ -73,16 +73,14 @@ public class Triangle {
      * @return true if such triangle can exist, false otherwise.
      */
     private boolean exist(double ab, double ac, double bc) {
-        boolean rsl = true;
-        if (ab + ac <= bc) {
-            rsl = false;
-        }
-        if (ab + bc <= ac) {
-            rsl = false;
-        }
-        if (ac + bc <= ab) {
-            rsl = false;
+        boolean rsl = false;
+        if (ab + ac > bc
+                && ab + bc > ac
+                && ac + bc > ab
+                ) {
+            rsl = true;
         }
         return rsl;
     }
+
 }
