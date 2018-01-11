@@ -33,13 +33,8 @@ public class Point {
      * @return Distance between points.
      */
     public double distanceTo(Point that) {
-        int x1 = this.x;
-        int y1 = this.y;
-        int x2 = that.x;
-        int y2 = that.y;
-
         return Math.sqrt(
-                Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)
+                Math.pow(that.x - this.x, 2) + Math.pow(that.y - this.y, 2)
         );
     }
 
