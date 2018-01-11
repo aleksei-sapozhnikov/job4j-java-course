@@ -56,12 +56,5 @@ public class FactorialTest {
         int expected = 120;
         assertThat(result, is(expected));
     }
-
-    @Test
-    public void whenMinusFiveThenZero() {
-        Factorial fact = new Factorial();
-        int result = fact.calc(-5);
-        int expected = 0;
-        assertThat(result, is(expected));
-    }
+    
 }

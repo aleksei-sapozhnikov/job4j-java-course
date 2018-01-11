@@ -10,21 +10,14 @@ package ru.job4j.loop;
 public class Factorial {
 
     /**
-     * Finds factorial (n!) for given positive value or zero for negative value.
+     * Finds factorial (n!) for given positive value.
      * 0! == 1
      *
      * @param n Given value.
      * @return Factorial.
      */
     public int calc(int n) {
-        int result;
-        // checking given value
-        if (n < 0) {
-            result = 0;
-        } else {
-            result = 1;
-        }
-        // calculating factorial
+        int result = 1;
         for (int i = 2; i <= n; i++) {
             result *= i;
         }
