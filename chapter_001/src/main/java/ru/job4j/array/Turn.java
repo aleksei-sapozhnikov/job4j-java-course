@@ -16,9 +16,7 @@ public class Turn {
      * @return The same array object with elements standing in backwards order.
      */
     public int[] back(int[] array) {
-        int lastIndexOfCycle = array.length / 2 - 1;
-        // swap
-        for (int i = 0; i <= lastIndexOfCycle; i++) {
+        for (int i = 0; i <= array.length / 2 - 1; i++) {
             int temp = array[i];
             array[i] = array[(array.length - 1) - i];
             array[array.length - 1 - i] = temp;
