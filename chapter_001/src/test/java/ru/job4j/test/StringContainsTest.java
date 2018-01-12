@@ -1,4 +1,4 @@
-package ru.job4j.testTask;
+package ru.job4j.test;
 
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
- * @since 11.01.2018
+ * @since 12.01.2018
  */
 public class StringContainsTest {
 
@@ -55,6 +55,16 @@ public class StringContainsTest {
         String sub = "Привет";
         boolean result = cont.contains(origin, sub);
         boolean expected = true;
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenSubStringLongerThenOriginalThenFalse() {
+        StringContains cont = new StringContains();
+        String origin = "Привет";
+        String sub = "Приветкагдила";
+        boolean result = cont.contains(origin, sub);
+        boolean expected = false;
         assertThat(result, is(expected));
     }
 
