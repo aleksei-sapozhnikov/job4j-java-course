@@ -19,18 +19,20 @@ public class StringContains {
     public boolean contains(String origin, String sub) {
         boolean result = false;
         if (sub.length() <= origin.length()) {
-            char[] originArr = origin.toCharArray();
-            char[] subArr = sub.toCharArray();
-            for (int i = 0; i < originArr.length; i++) {
-                int j = 0;
-                while (originArr[i] == subArr[j]) {
-                    if (j < subArr.length - 1) {
-                        i++;
-                        j++;
-                    } else {
-                        result = true;
-                        break;
-                    }
+            char[] originArray = origin.toCharArray();
+            char[] subArray = sub.toCharArray();
+            int subIndex = 0;
+            for (char originChar : originArray) {
+                if (result) {
+                    break;
+                }
+                if (originChar == subArray[subIndex]) {
+                    subIndex++;
+                } else {
+                    subIndex = 0;
+                }
+                if (subIndex == subArray.length) {
+                    result = true;
                 }
             }
         }
