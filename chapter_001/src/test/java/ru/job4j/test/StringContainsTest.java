@@ -20,7 +20,7 @@ public class StringContainsTest {
     @Test
     public void whenContainsSubStringInCenterThenTrue() {
         StringContains cont = new StringContains();
-        String origin = "Привет";
+        String origin = "Прививеет";
         String sub = "иве";
         boolean result = cont.contains(origin, sub);
         boolean expected = true;
