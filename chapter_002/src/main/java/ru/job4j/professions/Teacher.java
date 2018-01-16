@@ -39,7 +39,7 @@ public class Teacher extends Profession {
      *
      * @param students Array of Students.
      */
-    public void teach(Student[] students) {
+    public String teach(Student[] students) {
         // list all students
         StringBuilder sb = new StringBuilder();
         for (Student stud : students) {
@@ -49,10 +49,13 @@ public class Teacher extends Profession {
         }
         String studentsNames = sb.toString();
         // do method
+        String result = "Учитель " + this.getName()
+                + " учит наукам студентов, в числе которых: " + studentsNames;
         System.out.println(
-                "Учитель " + this.getName() +
-                        " учит наукам студентов, в числе которых: " + studentsNames
+                "Учитель " + this.getName()
+                        + " учит наукам студентов, в числе которых: " + studentsNames
         );
+        return result;
     }
 
     /**
@@ -64,10 +67,10 @@ public class Teacher extends Profession {
     public Mark test(Student student) {
         Mark mark = new Mark("Оценен оценкой");
         System.out.println(
-                "Учитель " + this.getName() +
-                        "проверил знания студента " + student.getName() +
-                        "и поставил ему оценку: \"" + mark.getName() + "\"" +
-                        "."
+                "Учитель " + this.getName()
+                        + " проверил знания студента " + student.getName()
+                        + " и поставил ему оценку: \"" + mark.getName() + "\""
+                        + "."
         );
         return mark;
     }

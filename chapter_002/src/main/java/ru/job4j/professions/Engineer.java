@@ -44,9 +44,9 @@ public class Engineer extends Profession {
     public Project design() {
         Project project = new Project("Очередной проект");
         System.out.println(
-                "Инженер " + this.getName() +
-                        "разработал новый проект: \"" + project.getName() + "\"" +
-                        "."
+                "Инженер " + this.getName()
+                        + " разработал новый проект: \"" + project.getName() + "\""
+                        + "."
         );
         return project;
     }
@@ -60,10 +60,10 @@ public class Engineer extends Profession {
     public Construction build(Project project) {
         Construction construction = new Construction("Очередной дом");
         System.out.println(
-                "Инженер " + this.getName() +
-                        "построил сооружение \"" + construction.getName() + "\"" +
-                        "по проекту \"" + project.getName() + "\"" +
-                        "."
+                "Инженер " + this.getName()
+                        + " построил сооружение \"" + construction.getName() + "\""
+                        + " по проекту \"" + project.getName() + "\""
+                        + "."
         );
         return construction;
     }
@@ -77,10 +77,10 @@ public class Engineer extends Profession {
     public Project study(Construction construction) {
         Project project = new Project("Чертеж изученной конструкции");
         System.out.println(
-                "Инженер " + this.getName() +
-                        "изучил конструкцию \"" + construction.getName() + "\"" +
-                        "и создал проект \"" + project.getName() + "\"" +
-                        "."
+                "Инженер " + this.getName()
+                        + " изучил конструкцию \"" + construction.getName() + "\""
+                        + " и создал проект \"" + project.getName() + "\""
+                        + "."
         );
         return project;
     }

@@ -42,13 +42,12 @@ public class Doctor extends Profession {
      */
     public Diagnosis diagnose(Patient patient) {
         Diagnosis diagnosis = new Diagnosis("Болеет болезнью");
-        System.out.println
-                (
-                        "Доктор " + this.getName() +
-                                "диагностирует пациента " + patient.getName() +
-                                "и ставит диагноз: \"" + diagnosis.getName() + "\"" +
-                                "."
-                );
+        System.out.println(
+                "Доктор " + this.getName()
+                        + " диагностирует пациента " + patient.getName()
+                        + " и ставит диагноз: \"" + diagnosis.getName() + "\""
+                        + "."
+        );
         return diagnosis;
     }
 
@@ -58,13 +57,18 @@ public class Doctor extends Profession {
      * @param patient   Patient to heal.
      * @param diagnosis Diagnosis to heal.
      */
-    public void heal(Patient patient, Diagnosis diagnosis) {
+    public String heal(Patient patient, Diagnosis diagnosis) {
+        String result = "Доктор " + this.getName()
+                + " вылечил пациента " + patient.getName()
+                + ", у которого был диагноз: \"" + diagnosis.getName() + "\""
+                + ".";
         System.out.println(
-                "Доктор " + this.getName() +
-                        "вылечил пациента " + patient.getName() +
-                        ", у которого был диагноз: \"" + diagnosis.getName() + "\"" +
-                        "."
+                "Доктор " + this.getName()
+                        + " вылечил пациента " + patient.getName()
+                        + ", у которого был диагноз: \"" + diagnosis.getName() + "\""
+                        + "."
         );
+        return result;
     }
 
 }
