@@ -21,20 +21,18 @@ public class StringContains {
         if (sub.length() <= origin.length()) {
             char[] originArray = origin.toCharArray();
             char[] subArray = sub.toCharArray();
-            for (int originIndex = 0; originIndex + subArray.length - 1 < originArray.length; originIndex++) {
-                for (int subIndex = 0; originArray[originIndex + subIndex] == subArray[subIndex]; subIndex++) {
-                    if (subIndex == subArray.length - 1) {
-                        result = true;
-                    }
-                    if (result) {
-                        break;
-                    }
-                }
+            ready:
+            for (int originIndex = 0; originIndex < originArray.length; originIndex++) {
                 if (result) {
                     break;
                 }
+                for (int subIndex = 0; originIndex + subIndex < originArray.length; subIndex++) {
+                    if (subIndex == subArray.length - 1) {
+                        result = true;
+                        continue ready;
+                    }
+                }
             }
-
         }
         return result;
     }
