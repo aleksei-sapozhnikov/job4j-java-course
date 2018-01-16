@@ -23,7 +23,7 @@ public class EngineerTest {
         Engineer engineer = new Engineer("Захар Пряткин", diploma, 56, bureau);
         Project result = engineer.design();
         Project expected = new Project("Очередной проект");
-        assertEquals(result.name, expected.name);
+        assertEquals(result.getName(), expected.getName());
     }
 
     /**
@@ -37,7 +37,7 @@ public class EngineerTest {
         Project project = new Project("Очередной проект");
         Construction result = engineer.build(project);
         Construction expected = new Construction("Очередной дом");
-        assertEquals(result.name, expected.name);
+        assertEquals(result.getName(), expected.getName());
     }
 
     /**
@@ -51,6 +51,6 @@ public class EngineerTest {
         Construction construction = new Construction("Очередной дом");
         Project result = engineer.study(construction);
         Project expected = new Project("Чертеж изученной конструкции");
-        assertEquals(result.name, expected.name);
+        assertEquals(result.getName(), expected.getName());
     }
 }

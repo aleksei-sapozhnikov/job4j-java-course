@@ -40,7 +40,7 @@ public class TeacherTest {
         Student student = new Student("Васечкин");
         Mark result = teacher.test(student);
         Mark expected = new Mark("Оценен оценкой");
-        assertEquals(result.name, expected.name);
+        assertEquals(result.getName(), expected.getName());
 
     }
 }

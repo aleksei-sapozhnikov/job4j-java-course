@@ -29,7 +29,7 @@ public class DoctorTest {
         Patient patient = new Patient("Иван Сидоров");
         Diagnosis result = doctor.diagnose(patient);
         Diagnosis expected = new Diagnosis("Болеет болезнью");
-        assertEquals(result.name, expected.name);
+        assertEquals(result.getName(), expected.getName());
     }
 
     /**
