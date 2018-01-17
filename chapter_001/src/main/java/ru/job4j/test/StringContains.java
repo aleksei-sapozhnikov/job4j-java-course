@@ -26,10 +26,16 @@ public class StringContains {
                 if (result) {
                     break;
                 }
-                for (int subIndex = 0; originIndex + subIndex < originArray.length; subIndex++) {
+                if (originIndex + subArray.length - 1 > originArray.length) {
+                    break;
+                }
+                int subIndex = 0;
+                while (originArray[originIndex + subIndex] == subArray[subIndex]) {
                     if (subIndex == subArray.length - 1) {
                         result = true;
                         continue ready;
+                    } else {
+                        subIndex++;
                     }
                 }
             }

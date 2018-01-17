@@ -18,6 +18,16 @@ public class StringContainsTest {
      * Test contains method.
      */
     @Test
+    public void whenNotContainsSubStringThenFalse() {
+        StringContains cont = new StringContains();
+        String origin = "Привет";
+        String sub = "ива";
+        boolean result = cont.contains(origin, sub);
+        boolean expected = false;
+        assertThat(result, is(expected));
+    }
+
+    @Test
     public void whenContainsSubStringInCenterThenTrue() {
         StringContains cont = new StringContains();
         String origin = "Прививеет";
