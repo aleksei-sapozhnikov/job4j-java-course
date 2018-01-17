@@ -1,5 +1,7 @@
 package ru.job4j.test;
 
+import java.util.Arrays;
+
 /**
  * Join arrays.
  *
@@ -22,24 +24,16 @@ public class ArrayJoin {
         int secondIndex = 0;
         int resultIndex = 0;
         while (firstIndex < firstArray.length && secondIndex < secondArray.length) {
-            if (firstArray[firstIndex] < secondArray[secondIndex]) {
-                resultArray[resultIndex] = firstArray[firstIndex];
-                firstIndex++;
-                resultIndex++;
-            } else {
-                resultArray[resultIndex] = secondArray[secondIndex];
-                secondIndex++;
-                resultIndex++;
-            }
+            resultArray[resultIndex++] = firstArray[firstIndex] < secondArray[secondIndex] ? firstArray[firstIndex++] : secondArray[secondIndex++];
         }
-        for (; firstIndex < firstArray.length; firstIndex++) {
-            resultArray[resultIndex] = firstArray[firstIndex];
-            resultIndex++;
-        }
-        for (; secondIndex < secondArray.length; secondIndex++) {
-            resultArray[resultIndex] = secondArray[secondIndex];
-            resultIndex++;
-        }
+        boolean copyFirst = firstIndex < firstArray.length;
+        System.arraycopy(
+                copyFirst ? firstArray : secondArray,
+                copyFirst ? firstIndex : secondIndex,
+                resultArray,
+                resultIndex,
+                copyFirst ? firstArray.length - firstIndex : secondArray.length - secondIndex
+        );
         return resultArray;
     }
 }
