@@ -17,7 +17,7 @@ public class Doctor extends Profession {
     /**
      * Fields.
      */
-    public Hospital work;
+    private Hospital work;
 
     /**
      * Constructor.
@@ -28,9 +28,7 @@ public class Doctor extends Profession {
      * @param work    Place of work.
      */
     public Doctor(String name, Diploma diploma, int age, Hospital work) {
-        this.name = name;
-        this.diploma = diploma;
-        this.age = age;
+        super(name, diploma, age);
         this.work = work;
     }
 

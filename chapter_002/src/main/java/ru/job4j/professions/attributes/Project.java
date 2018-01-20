@@ -5,7 +5,7 @@ public class Project {
     /**
      * Fields.
      */
-    public String name;
+    private String name;
 
     /**
      * Constructor.

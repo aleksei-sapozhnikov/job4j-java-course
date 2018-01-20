@@ -12,7 +12,7 @@ public class Diagnosis {
     /**
      * Fields.
      */
-    public String name;
+    private String name;
 
     /**
      * Constructor.

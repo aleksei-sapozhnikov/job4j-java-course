@@ -13,9 +13,9 @@ public class Profession {
     /**
      * Fields.
      */
-    public String name;
-    public Diploma diploma;
-    public int age;
+    private String name;
+    private Diploma diploma;
+    private int age;
 
     /**
      * Default constructor.

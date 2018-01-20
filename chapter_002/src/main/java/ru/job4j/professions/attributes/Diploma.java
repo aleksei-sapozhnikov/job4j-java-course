@@ -12,7 +12,7 @@ public class Diploma {
     /**
      * Fields.
      */
-    public String name;
+    private String name;
 
     /**
      * Constructor.

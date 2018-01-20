@@ -17,7 +17,7 @@ public class Teacher extends Profession {
     /**
      * Fields.
      */
-    public School work;
+    private School work;
 
     /**
      * Constructor.
@@ -28,9 +28,7 @@ public class Teacher extends Profession {
      * @param work    Place of work.
      */
     public Teacher(String name, Diploma diploma, int age, School work) {
-        this.name = name;
-        this.diploma = diploma;
-        this.age = age;
+        super(name, diploma, age);
         this.work = work;
     }
 

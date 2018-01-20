@@ -12,7 +12,7 @@ public class Construction {
     /**
      * Fields.
      */
-    public String name;
+    private String name;
 
     /**
      * Constructor.

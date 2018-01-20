@@ -12,7 +12,7 @@ public class Bureau {
     /**
      * Fields.
      */
-    public String name;
+    private String name;
 
     /**
      * Constructor.

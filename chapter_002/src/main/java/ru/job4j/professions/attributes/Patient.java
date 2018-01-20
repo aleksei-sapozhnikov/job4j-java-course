@@ -12,7 +12,7 @@ public class Patient {
     /**
      * Fields.
      */
-    public String name;
+    private String name;
 
     /**
      * Constructor.

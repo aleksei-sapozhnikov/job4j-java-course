@@ -5,8 +5,6 @@ import ru.job4j.professions.attributes.Construction;
 import ru.job4j.professions.attributes.Diploma;
 import ru.job4j.professions.attributes.Project;
 
-import java.lang.reflect.Constructor;
-
 /**
  * Engineer class.
  *
@@ -19,7 +17,7 @@ public class Engineer extends Profession {
     /**
      * Fields.
      */
-    public Bureau work;
+    private Bureau work;
 
     /**
      * Constructor.
@@ -30,9 +28,7 @@ public class Engineer extends Profession {
      * @param work    Place of work.
      */
     public Engineer(String name, Diploma diploma, int age, Bureau work) {
-        this.name = name;
-        this.diploma = diploma;
-        this.age = age;
+        super(name, diploma, age);
         this.work = work;
     }
 

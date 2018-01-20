@@ -12,7 +12,7 @@ public class Mark {
     /**
      * Fields.
      */
-    public String name;
+    private String name;
 
     /**
      * Constructor.
