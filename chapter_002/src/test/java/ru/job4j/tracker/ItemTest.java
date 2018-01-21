@@ -11,7 +11,7 @@ public class ItemTest {
      * Test getters : name, description, createTime.
      */
     @Test
-    public void WhenGettersThenFieldValues() {
+    public void whenGettersThenFieldValues() {
         Item item = new Item("Item1", "Desc1", 123L);
         //results
         String resultName = item.getName();

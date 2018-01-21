@@ -2,6 +2,10 @@ package ru.job4j.tracker;
 
 /**
  * Object to store in tracker.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 19.01.2018
  */
 public class Item {
 
@@ -78,7 +82,7 @@ public class Item {
      *
      * @return Comments field value.
      */
-    public String[] getComments() {
+    private String[] getComments() {
         return comments;
     }
 
@@ -106,7 +110,7 @@ public class Item {
      *
      * @param description Value to set.
      */
-    public void setDescription(String description) {
+    private void setDescription(String description) {
         this.description = description;
     }
 
@@ -115,7 +119,7 @@ public class Item {
      *
      * @param createTime Value to set.
      */
-    public void setCreateTime(long createTime) {
+    private void setCreateTime(long createTime) {
         this.createTime = createTime;
     }
 
@@ -124,7 +128,7 @@ public class Item {
      *
      * @param comments Value to set.
      */
-    public void setComments(String[] comments) {
+    private void setComments(String[] comments) {
         this.comments = comments;
     }
 

@@ -5,6 +5,10 @@ import java.util.Random;
 
 /**
  * Storage of items : tasks, messages, etc.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 19.01.2018
  */
 public class Tracker {
 

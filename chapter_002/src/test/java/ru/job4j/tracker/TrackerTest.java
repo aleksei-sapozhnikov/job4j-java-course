@@ -34,8 +34,7 @@ public class TrackerTest {
     @Test
     public void whenNoSuchIdThenNull() {
         Tracker tracker = new Tracker();
-        Item item = new Item("name2", "desc2", 4323L);
-        tracker.add(item);
+        Item item = tracker.add(new Item("name2", "desc2", 4323L));
         String notId = item.getId() + "123";
         Item result = tracker.findById(notId);
         Item expected = null;
@@ -48,18 +47,13 @@ public class TrackerTest {
     @Test
     public void whenGivenNameThenItemsWithThatName() {
         Tracker tracker = new Tracker();
-        //create
-        Item item1 = new Item("name1", "desc1", 324L);
-        Item item2 = new Item("name2", "desc2", 756L);
-        Item item3 = new Item("name1", "desc3", 743L);
-        Item item4 = new Item("name3", "desc4", 12L);
-        Item item5 = new Item("name1", "desc2", 323L);
-        //add
-        tracker.add(item1);
-        tracker.add(item2);
-        tracker.add(item3);
-        tracker.add(item4);
-        tracker.add(item5);
+        //create and add
+        Item item1 = tracker.add(new Item("name1", "desc1", 324L));
+        Item item2 = tracker.add(new Item("name2", "desc2", 756L));
+        Item item3 = tracker.add(new Item("name1", "desc3", 743L));
+        Item item4 = tracker.add(new Item("name4", "desc4", 12L));
+        Item item5 = tracker.add(new Item("name1", "desc5", 323L));
+        Item item6 = tracker.add(new Item("name6", "desc6", 577L));
         //matching
         Item[] result = tracker.findByName("name1");
         Item[] expected = {item1, item3, item5};
@@ -72,18 +66,12 @@ public class TrackerTest {
     @Test
     public void whenHasItemsReturnAllNotNullItems() {
         Tracker tracker = new Tracker();
-        //create
-        Item item1 = new Item("name1", "desc1", 324L);
-        Item item2 = new Item("name2", "desc2", 756L);
-        Item item3 = new Item("name1", "desc3", 743L);
-        Item item4 = new Item("name3", "desc4", 12L);
-        Item item5 = new Item("name1", "desc2", 323L);
-        //add
-        tracker.add(item1);
-        tracker.add(item2);
-        tracker.add(item3);
-        tracker.add(item4);
-        tracker.add(item5);
+        //create and add
+        Item item1 = tracker.add(new Item("name1", "desc1", 324L));
+        Item item2 = tracker.add(new Item("name2", "desc2", 756L));
+        Item item3 = tracker.add(new Item("name1", "desc3", 743L));
+        Item item4 = tracker.add(new Item("name3", "desc4", 12L));
+        Item item5 = tracker.add(new Item("name1", "desc2", 323L));
         //matching
         Item[] result = tracker.findAll();
         Item[] expected = {item1, item2, item3, item4, item5};
@@ -96,10 +84,9 @@ public class TrackerTest {
     @Test
     public void whenReplaceNameThenReturnNewName() {
         Tracker tracker = new Tracker();
-        //old Item
-        Item oldItem = new Item("name1", "desc1", 123L);
-        tracker.add(oldItem);
-        //new Item
+        //item to replace
+        Item oldItem = tracker.add(new Item("name1", "desc1", 123L));
+        //new item
         Item newItem = new Item("name3", "desc3", 323L);
         newItem.setId(oldItem.getId());
         //replace and match
@@ -114,17 +101,11 @@ public class TrackerTest {
     public void whenDeleteItemThenArrayWithoutThisItem() {
         Tracker tracker = new Tracker();
         //create
-        Item item1 = new Item("name1", "desc1", 324L);
-        Item item2 = new Item("name2", "desc2", 756L);
-        Item item3 = new Item("name1", "desc3", 743L);
-        Item item4 = new Item("name3", "desc4", 12L);
-        Item item5 = new Item("name1", "desc2", 323L);
-        //add
-        tracker.add(item1);
-        tracker.add(item2);
-        tracker.add(item3);
-        tracker.add(item4);
-        tracker.add(item5);
+        Item item1 = tracker.add(new Item("name1", "desc1", 324L));
+        Item item2 = tracker.add(new Item("name2", "desc2", 756L));
+        Item item3 = tracker.add(new Item("name1", "desc3", 743L));
+        Item item4 = tracker.add(new Item("name3", "desc4", 12L));
+        Item item5 = tracker.add(new Item("name1", "desc2", 323L));
         //delete and match
         tracker.delete(item4.getId());
         Item[] result = tracker.findAll();
