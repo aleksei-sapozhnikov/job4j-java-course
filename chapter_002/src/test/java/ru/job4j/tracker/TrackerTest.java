@@ -14,8 +14,7 @@ public class TrackerTest {
     @Test
     public void whenAddNewItemThenTrackerHasSameItem() {
         Tracker tracker = new Tracker();
-        Item item = new Item("test1", "testDescription", 123L);
-        tracker.add(item);
+        Item item = tracker.add(new Item("test1", "testDescription", 123L));
         assertThat(tracker.findAll()[0], is(item));
     }
 
@@ -25,8 +24,7 @@ public class TrackerTest {
     @Test
     public void whenGivenIdOfItemThenTheItem() {
         Tracker tracker = new Tracker();
-        Item item = new Item("name2", "desc2", 4323L);
-        tracker.add(item);
+        Item item = tracker.add(new Item("name2", "desc2", 4323L));
         Item itemOther = tracker.findById(item.getId());
         assertThat(itemOther, is(item));
     }

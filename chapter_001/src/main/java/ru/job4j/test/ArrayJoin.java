@@ -1,7 +1,5 @@
 package ru.job4j.test;
 
-import java.util.Arrays;
-
 /**
  * Join arrays.
  *

@@ -61,9 +61,8 @@ public class Tracker {
                 delIndex + 1,
                 this.items,
                 delIndex,
-                this.position - delIndex - 1
+                this.position-- - delIndex - 1
         );
-        this.position--;
     }
 
     /**
