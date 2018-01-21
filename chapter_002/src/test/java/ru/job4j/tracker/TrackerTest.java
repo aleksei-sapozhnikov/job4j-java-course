@@ -53,10 +53,10 @@ public class TrackerTest {
         Item item3 = tracker.add(new Item("name1", "desc3", 743L));
         Item item4 = tracker.add(new Item("name4", "desc4", 12L));
         Item item5 = tracker.add(new Item("name1", "desc5", 323L));
-        Item item6 = tracker.add(new Item("name6", "desc6", 577L));
+        Item item6 = tracker.add(new Item("name1", "desc6", 577L));
         //matching
         Item[] result = tracker.findByName("name1");
-        Item[] expected = {item1, item3, item5};
+        Item[] expected = {item1, item3, item5, item6};
         assertThat(result, arrayContainingInAnyOrder(expected));
     }
 

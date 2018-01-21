@@ -77,15 +77,6 @@ public class Item {
         return createTime;
     }
 
-    /**
-     * Get comments of this Item.
-     *
-     * @return Comments field value.
-     */
-    private String[] getComments() {
-        return comments;
-    }
-
 
     /**
      * Set id.
@@ -103,33 +94,6 @@ public class Item {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * Set description.
-     *
-     * @param description Value to set.
-     */
-    private void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Set time of creation.
-     *
-     * @param createTime Value to set.
-     */
-    private void setCreateTime(long createTime) {
-        this.createTime = createTime;
-    }
-
-    /**
-     * Set comments.
-     *
-     * @param comments Value to set.
-     */
-    private void setComments(String[] comments) {
-        this.comments = comments;
     }
 
 }
