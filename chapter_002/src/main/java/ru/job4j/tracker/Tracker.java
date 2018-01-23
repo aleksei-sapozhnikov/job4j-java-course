@@ -30,7 +30,7 @@ public class Tracker {
      */
     public Item add(Item item) {
         item.setId(this.generateId());
-        this.items[position++] = item;
+        this.items[this.position++] = item;
         return item;
     }
 
@@ -73,7 +73,7 @@ public class Tracker {
      */
     public Item findById(String id) {
         Item result = null;
-        for (int i = 0; i < position; i++) {
+        for (int i = 0; i < this.position; i++) {
             if (id.equals(this.items[i].getId())) {
                 result = this.items[i];
                 break;
@@ -89,7 +89,7 @@ public class Tracker {
      * @return Array of Items satisfying the condition.
      */
     public Item[] findByName(String key) {
-        Item[] temp = new Item[this.items.length];
+        Item[] temp = new Item[this.position];
         int index = 0;
         for (int i = 0; i < this.position; i++) {
             if (key.equals(this.items[i].getName())) {
@@ -105,7 +105,7 @@ public class Tracker {
      * @return Array of Items stored in tracker (without null elements).
      */
     public Item[] findAll() {
-        return Arrays.copyOf(this.items, position);
+        return Arrays.copyOf(this.items, this.position);
     }
 
     /**
