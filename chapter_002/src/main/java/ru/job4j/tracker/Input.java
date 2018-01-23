@@ -9,7 +9,7 @@ public interface Input {
      * Ask question and get answer from user.
      *
      * @param question Question we ask.
-     * @return Answer given by user.
+     * @return User's answer.
      */
     String ask(String question);
 

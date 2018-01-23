@@ -1,5 +1,8 @@
 package ru.job4j.tracker;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Object to store in tracker.
  *
@@ -62,40 +65,14 @@ public class StartUI {
      * @param input   Where to take input data from.
      * @param tracker Storage of items.
      */
-    public StartUI(Input input, Tracker tracker) {
+    private StartUI(Input input, Tracker tracker) {
         this.input = input;
         this.tracker = tracker;
     }
 
-    /**
-     * Display menu with action variants.
-     */
-    private void showMenu() {
-        System.out.println(
-                "============ Action menu ============"
-                        + ADD + " : Add new Item"
-                        + SHOW_ALL + " : Show all items"
-                        + EDIT + " : Edit item"
-                        + DELETE + " : Delete item"
-                        + FIND_BY_ID + " : Find item by Id"
-                        + FIND_BY_NAME + " : Find items by name"
-                        + EXIT + " : Exit Program"
-        );
-    }
 
     /**
-     * Add new item to storage.
-     */
-    private void createItem() {
-        System.out.println("------------ Add new item ------------");
-        String name = this.input.ask("Enter item name :");
-        String desc = this.input.ask("Enter item description :");
-        Item item = this.tracker.add(new Item(name, desc, System.currentTimeMillis()));
-        System.out.println("------------ New item added. Item id : " + item.getId());
-    }
-
-    /**
-     * Main method of program.
+     * Main method, starts the program.
      *
      * @param args Command-line arguments.
      */
@@ -104,30 +81,155 @@ public class StartUI {
     }
 
     /**
-     * Initialize program.
+     * Initialization part.
      */
-    public void init() {
+    private void init() {
         boolean exit = false;
         while (!exit) {
             this.showMenu();
             String answer = this.input.ask("Enter number for action : ");
             if (ADD.equals(answer)) {
-                this.createItem();
+                this.addItem();
             } else if (SHOW_ALL.equals(answer)) {
-                // show all
+                this.showAllItems();
             } else if (EDIT.equals(answer)) {
-                // edit
+                this.editItem();
             } else if (DELETE.equals(answer)) {
-                // delete
+                this.deleteItem();
             } else if (FIND_BY_ID.equals(answer)) {
-                // find by id
+                this.findByIdItem();
             } else if (FIND_BY_NAME.equals(answer)) {
-                // find by name
+                this.findByNameItem();
             } else if (EXIT.equals(answer)) {
                 exit = true;
             } else {
-                System.out.println("Unknown operation.");
+                System.out.println("=== Unknown operation.");
             }
         }
     }
+
+    /**
+     * Display menu with action variants.
+     */
+    private void showMenu() {
+        System.out.println();
+        System.out.println("============ Action menu ============");
+        System.out.println(ADD + " : Add new Item");
+        System.out.println(SHOW_ALL + " : Show all items");
+        System.out.println(EDIT + " : Edit item");
+        System.out.println(DELETE + " : Delete item");
+        System.out.println(FIND_BY_ID + " : Find item by Id");
+        System.out.println(FIND_BY_NAME + " : Find items by name");
+        System.out.println(EXIT + " : Exit Program");
+        System.out.println();
+    }
+
+    /**
+     * Add new item to storage.
+     */
+    private void addItem() {
+        System.out.println();
+        System.out.println("------------ Add new item ------------");
+        String name = this.input.ask("Enter item name : ");
+        String desc = this.input.ask("Enter item description : ");
+        Item item = this.tracker.add(new Item(name, desc, System.currentTimeMillis()));
+        System.out.println("=== New item added. Item id : " + item.getId());
+    }
+
+    /**
+     * Show all items contained.
+     */
+    private void showAllItems() {
+        System.out.println();
+        System.out.println("------------ Show all items contained ------------");
+        Item[] items = this.tracker.findAll();
+        for (Item item : items) {
+            System.out.println();
+            System.out.println("== Item id : " + item.getId());
+            System.out.println("name : " + item.getName());
+            System.out.println("description : " + item.getDescription());
+            System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
+        }
+    }
+
+    /**
+     * Edit item.
+     */
+    private void editItem() {
+        System.out.println();
+        System.out.println("------------ Edit item ------------");
+        String editId = this.input.ask("Enter item id : ");
+        Item oldItem = this.tracker.findById(editId);
+        //show item data
+        System.out.println("id : " + oldItem.getId());
+        System.out.println("name : " + oldItem.getName());
+        System.out.println("description : " + oldItem.getDescription());
+        System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(oldItem.getCreateTime())));
+        //get new data
+        System.out.println();
+        String name = this.input.ask("Enter item new name : ");
+        String desc = this.input.ask("Enter item new description : ");
+        Item newItem = new Item(name, desc, oldItem.getCreateTime());
+        newItem.setId(oldItem.getId());
+        //confirm
+        if ("y".equals(input.ask("Confirm change (y to continue)? : "))) {
+            this.tracker.replace(editId, newItem);
+            System.out.println("=== Item information updated.");
+        } else {
+            System.out.println("=== Operation aborted.");
+        }
+    }
+
+    /**
+     * Delete item.
+     */
+    private void deleteItem() {
+        System.out.println();
+        System.out.println("------------ Delete item ------------");
+        String delId = this.input.ask("Enter item id : ");
+        //confirm
+        if ("y".equals(input.ask("Confirm delete (y to continue)? : "))) {
+            this.tracker.delete(delId);
+            System.out.println("=== Item deleted.");
+        } else {
+            System.out.println("=== Operation aborted.");
+        }
+    }
+
+    /**
+     * Find item by id.
+     */
+    private void findByIdItem() {
+        System.out.println();
+        System.out.println("------------ Find item by id ------------");
+        String findId = this.input.ask("Enter item id : ");
+        Item item = this.tracker.findById(findId);
+        if (item != null) {
+            System.out.println("=== Item information : ");
+            System.out.println("id : " + item.getId());
+            System.out.println("name : " + item.getName());
+            System.out.println("description : " + item.getDescription());
+            System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
+        } else {
+            System.out.println("== Unknown id");
+        }
+    }
+
+    /**
+     * Find items with given name.
+     */
+    private void findByNameItem() {
+        System.out.println();
+        System.out.println("------------ Find items with given name ------------");
+        String findName = this.input.ask("Enter name : ");
+        Item[] items = tracker.findByName(findName);
+        for (Item item : items) {
+            System.out.println();
+            System.out.println("== Item id : " + item.getId());
+            System.out.println("name : " + item.getName());
+            System.out.println("description : " + item.getDescription());
+            System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
+        }
+    }
+
 }
