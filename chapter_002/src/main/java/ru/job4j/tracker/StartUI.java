@@ -65,7 +65,7 @@ public class StartUI {
      * @param input   Where to take input data from.
      * @param tracker Storage of items.
      */
-    private StartUI(Input input, Tracker tracker) {
+    public StartUI(Input input, Tracker tracker) {
         this.input = input;
         this.tracker = tracker;
     }
@@ -83,7 +83,7 @@ public class StartUI {
     /**
      * Initialization part.
      */
-    private void init() {
+    public void init() {
         boolean exit = false;
         while (!exit) {
             this.showMenu();
@@ -102,6 +102,7 @@ public class StartUI {
                 this.findByNameItem();
             } else if (EXIT.equals(answer)) {
                 exit = true;
+                System.out.println("=== Exit program.");
             } else {
                 System.out.println("=== Unknown operation.");
             }
@@ -204,15 +205,11 @@ public class StartUI {
         System.out.println("------------ Find item by id ------------");
         String findId = this.input.ask("Enter item id : ");
         Item item = this.tracker.findById(findId);
-        if (item != null) {
-            System.out.println("=== Item information : ");
-            System.out.println("id : " + item.getId());
-            System.out.println("name : " + item.getName());
-            System.out.println("description : " + item.getDescription());
-            System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
-        } else {
-            System.out.println("== Unknown id");
-        }
+        System.out.println("=== Item information : ");
+        System.out.println("id : " + item.getId());
+        System.out.println("name : " + item.getName());
+        System.out.println("description : " + item.getDescription());
+        System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
     }
 
     /**
