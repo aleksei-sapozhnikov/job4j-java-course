@@ -1,5 +1,7 @@
 package ru.job4j.paint;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -18,19 +20,43 @@ import static org.junit.Assert.assertThat;
 public class PaintTest {
 
     /**
+     * Stores default "standard" output to console.
+     */
+    private final PrintStream stdout = System.out;
+
+    /**
+     * Buffer for results.
+     */
+    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
+
+
+    /**
+     * Change "standard" output to array.
+     */
+    @Before
+    public void loadOutput() {
+        System.out.println("executing @Before method");
+        System.setOut(new PrintStream(this.out));
+    }
+
+    /**
+     * Change output back to "standard".
+     */
+    @After
+    public void backOutput() {
+        System.setOut(this.stdout);
+        System.out.println("executed @After method");
+    }
+
+
+    /**
      * Test draw method.
      */
     @Test
     public void whenDrawSquareThenSquare() {
-        //set new out
-        PrintStream stdout = System.out;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
-        //draw
         new Paint().draw(new Square());
-        //match
         assertThat(
-                new String(out.toByteArray()),
+                new String(this.out.toByteArray()),
                 is(
                         new StringBuilder()
                                 .append("*-*-*-*-*").append(System.lineSeparator())
@@ -41,24 +67,13 @@ public class PaintTest {
                                 .toString()
                 )
         );
-        // return standard out
-        System.setOut(stdout);
     }
 
-    /**
-     * Test draw method.
-     */
     @Test
     public void whenDrawTriangleThenTriangle() {
-        //set new out
-        PrintStream stdout = System.out;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        System.setOut(new PrintStream(out));
-        //draw
         new Paint().draw(new Triangle());
-        //match
         assertThat(
-                new String(out.toByteArray()),
+                new String(this.out.toByteArray()),
                 is(
                         new StringBuilder()
                                 .append("    *    ").append(System.lineSeparator())
@@ -69,8 +84,6 @@ public class PaintTest {
                                 .toString()
                 )
         );
-        // return standard out
-        System.setOut(stdout);
     }
 
 }
