@@ -24,10 +24,10 @@ public class TriangleTest {
                 triangle.draw(),
                 is(
                         new StringBuilder()
-                                .append("    *    \n")
-                                .append("   ***   \n")
-                                .append("  *****  \n")
-                                .append(" ******* \n")
+                                .append("    *    ").append(System.lineSeparator())
+                                .append("   ***   ").append(System.lineSeparator())
+                                .append("  *****  ").append(System.lineSeparator())
+                                .append(" ******* ").append(System.lineSeparator())
                                 .append("*********")
                                 .toString()
                 )

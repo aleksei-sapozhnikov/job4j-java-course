@@ -17,7 +17,7 @@ public class Square implements Shape {
      * @return String containing drawing in pseudo-graphics.
      */
     public String draw() {
-        return new StringJoiner("\n")
+        return new StringJoiner(System.lineSeparator())
                 .add("*-*-*-*-*")
                 .add("*-*-*-*-*")
                 .add("*-*-*-*-*")
