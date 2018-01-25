@@ -7,7 +7,6 @@ import ru.job4j.professions.attributes.Hospital;
 import ru.job4j.professions.attributes.Patient;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 
 /**
  * Tests for Doctor class.

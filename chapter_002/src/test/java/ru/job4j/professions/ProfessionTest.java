@@ -7,7 +7,8 @@ import ru.job4j.professions.attributes.Hospital;
 import ru.job4j.professions.attributes.School;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
 
 public class ProfessionTest {
 

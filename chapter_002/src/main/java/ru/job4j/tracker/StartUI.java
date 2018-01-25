@@ -115,14 +115,13 @@ public class StartUI {
     private void showMenu() {
         System.out.println();
         System.out.println("============ Action menu ============");
-        System.out.println(ADD + " : Add new Item");
-        System.out.println(SHOW_ALL + " : Show all items");
-        System.out.println(EDIT + " : Edit item");
-        System.out.println(DELETE + " : Delete item");
-        System.out.println(FIND_BY_ID + " : Find item by Id");
-        System.out.println(FIND_BY_NAME + " : Find items by name");
-        System.out.println(EXIT + " : Exit Program");
-        System.out.println();
+        System.out.println(String.format("%s : Add new Item", ADD));
+        System.out.println(String.format("%s : Show all items", SHOW_ALL));
+        System.out.println(String.format("%s : Edit item", EDIT));
+        System.out.println(String.format("%s : Delete item", DELETE));
+        System.out.println(String.format("%s : Find item by Id", FIND_BY_ID));
+        System.out.println(String.format("%s : Find items by name", FIND_BY_NAME));
+        System.out.println(String.format("%s : Exit Program", EXIT));
     }
 
     /**
@@ -134,7 +133,7 @@ public class StartUI {
         String name = this.input.ask("Enter item name : ");
         String desc = this.input.ask("Enter item description : ");
         Item item = this.tracker.add(new Item(name, desc, System.currentTimeMillis()));
-        System.out.println("=== New item added. Item id : " + item.getId());
+        System.out.println(String.format("=== New item added. Item id : %s", item.getId()));
     }
 
     /**
@@ -146,10 +145,10 @@ public class StartUI {
         Item[] items = this.tracker.findAll();
         for (Item item : items) {
             System.out.println();
-            System.out.println("== Item id : " + item.getId());
-            System.out.println("name : " + item.getName());
-            System.out.println("description : " + item.getDescription());
-            System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
+            System.out.println(String.format("=== Item id : %s", item.getId()));
+            System.out.println(String.format("name : %s", item.getName()));
+            System.out.println(String.format("description : %s", item.getDescription()));
+            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
         }
     }
 
@@ -162,10 +161,10 @@ public class StartUI {
         String editId = this.input.ask("Enter item id : ");
         Item oldItem = this.tracker.findById(editId);
         //show item data
-        System.out.println("id : " + oldItem.getId());
-        System.out.println("name : " + oldItem.getName());
-        System.out.println("description : " + oldItem.getDescription());
-        System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(oldItem.getCreateTime())));
+        System.out.println(String.format("id : %s", oldItem.getId()));
+        System.out.println(String.format("name : %s", oldItem.getName()));
+        System.out.println(String.format("description : %s", oldItem.getDescription()));
+        System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(oldItem.getCreateTime()))));
         //get new data
         System.out.println();
         String name = this.input.ask("Enter item new name : ");
@@ -206,10 +205,10 @@ public class StartUI {
         String findId = this.input.ask("Enter item id : ");
         Item item = this.tracker.findById(findId);
         System.out.println("=== Item information : ");
-        System.out.println("id : " + item.getId());
-        System.out.println("name : " + item.getName());
-        System.out.println("description : " + item.getDescription());
-        System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
+        System.out.println(String.format("id : %s", item.getId()));
+        System.out.println(String.format("name : %s", item.getName()));
+        System.out.println(String.format("description : %s", item.getDescription()));
+        System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
     }
 
     /**
@@ -222,10 +221,10 @@ public class StartUI {
         Item[] items = tracker.findByName(findName);
         for (Item item : items) {
             System.out.println();
-            System.out.println("== Item id : " + item.getId());
-            System.out.println("name : " + item.getName());
-            System.out.println("description : " + item.getDescription());
-            System.out.println("created : " + new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime())));
+            System.out.println(String.format("== Item id : %s", item.getId()));
+            System.out.println(String.format("name : %s", item.getName()));
+            System.out.println(String.format("description : %s", item.getDescription()));
+            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
         }
     }
 

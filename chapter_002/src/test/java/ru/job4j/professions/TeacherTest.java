@@ -6,7 +6,7 @@ import ru.job4j.professions.attributes.Mark;
 import ru.job4j.professions.attributes.School;
 import ru.job4j.professions.attributes.Student;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class TeacherTest {
 

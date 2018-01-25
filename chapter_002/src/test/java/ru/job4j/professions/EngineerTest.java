@@ -6,7 +6,7 @@ import ru.job4j.professions.attributes.Construction;
 import ru.job4j.professions.attributes.Diploma;
 import ru.job4j.professions.attributes.Project;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test for Engineer class.
