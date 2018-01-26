@@ -31,7 +31,6 @@ public class StubInput implements Input {
      * @return Answer from "user".
      */
     public String ask(String question) {
-        System.out.println(String.format("%s%s", question, this.answers[position]));
         return (this.answers[position++]);
     }
 
