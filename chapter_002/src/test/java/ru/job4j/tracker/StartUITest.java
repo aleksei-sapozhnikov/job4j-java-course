@@ -231,7 +231,7 @@ public class StartUITest {
         Item item3 = tracker.add(new Item("name1", "desc3", 0L));
         item3.setId("333");
         //run program
-        Input input = new StubInput(new String[]{"4", "111", "6"});
+        Input input = new StubInput(new String[]{"5", "name1", "6"});
         new StartUI(input, tracker).init();
         String result = new String(this.out.toByteArray());
         String expected = new StringJoiner(System.lineSeparator())
@@ -245,11 +245,16 @@ public class StartUITest {
                 .add("5 : Find items by name")
                 .add("6 : Exit Program")
                 .add("")
-                .add("------------ Find item by id ------------")
-                .add("=== Item information : ")
-                .add("id : 111")
+                .add("------------ Find items with given name ------------")
+                .add("")
+                .add("== Item id : 111")
                 .add("name : name1")
                 .add("description : desc1")
+                .add("created : 01.01.1970 03:00:00")
+                .add("")
+                .add("== Item id : 333")
+                .add("name : name1")
+                .add("description : desc3")
                 .add("created : 01.01.1970 03:00:00")
                 .add("")
                 .add("============ Action menu ============")
