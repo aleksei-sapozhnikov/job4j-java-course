@@ -51,7 +51,11 @@ public class StubInput implements Input {
                 break;
             }
         }
-        return inRange ? key : -1;
+        if (inRange) {
+            return key;
+        } else {
+            throw new MenuActionOutOfRangeException("Entered menu action is out of allowed range");
+        }
     }
 
 }
