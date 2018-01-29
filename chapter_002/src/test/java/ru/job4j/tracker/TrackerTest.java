@@ -29,14 +29,12 @@ public class TrackerTest {
         assertThat(itemOther, is(item));
     }
 
-    @Test
-    public void whenNoSuchIdThenNull() {
+    @Test(expected = NoSuchIdException.class)
+    public void whenNoSuchIdThenNoSuchIdException() {
         Tracker tracker = new Tracker();
         Item item = tracker.add(new Item("name2", "desc2", 4323L));
         String notId = item.getId() + "123";
-        Item result = tracker.findById(notId);
-        Item expected = null;
-        assertThat(result, is(expected));
+        tracker.findById(notId);
     }
 
     /**

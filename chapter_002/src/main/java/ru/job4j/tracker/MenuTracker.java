@@ -19,9 +19,14 @@ public class MenuTracker {
     private Tracker tracker;
 
     /**
-     * All possible user actions.
+     * Array containing all possible user actions.
      */
     private UserAction[] userActions = new UserAction[7];
+
+    /**
+     * Range of actions which can be entered by user.
+     */
+    private int[] actionRange = {0, 1, 2, 3, 4, 5, 6};
 
 
     /**
@@ -33,6 +38,15 @@ public class MenuTracker {
     public MenuTracker(Input input, Tracker tracker) {
         this.input = input;
         this.tracker = tracker;
+    }
+
+    /**
+     * Get range of action numbers which user can enter.
+     *
+     * @return Array of action numbers (keys).
+     */
+    public int[] getActionRange() {
+        return this.actionRange;
     }
 
     /**
@@ -63,12 +77,11 @@ public class MenuTracker {
      *
      * @param key Action key.
      */
-    public void launchAction(String key) {
-        this.userActions[Integer.valueOf(key)].execute(this.input, this.tracker);
+    public void launchAction(int key) {
+        this.userActions[key].execute(this.input, this.tracker);
     }
 
     /**
-     * <<<<<<< HEAD
      * Program initialization.
      */
     public void init() {
@@ -77,8 +90,6 @@ public class MenuTracker {
 
 
     /**
-     * =======
-     * >>>>>>> Реализовать события на внутренних классах. [#787]
      * Action : add item.
      */
     private class AddItem implements UserAction {
@@ -89,11 +100,7 @@ public class MenuTracker {
         private static final int KEY = 0;
 
         /**
-         * <<<<<<< HEAD
-         * Description of the action
-         * =======
          * Description of the action.
-         * >>>>>>> Реализовать события на внутренних классах. [#787]
          */
         private static final String DESCRIPTION = "Add new Item";
 
@@ -128,8 +135,6 @@ public class MenuTracker {
     }
 
     /**
-     * <<<<<<< HEAD
-     * =======
      * Action : delete item.
      */
     private class DeleteItem implements UserAction {
@@ -160,15 +165,19 @@ public class MenuTracker {
          * @param tracker Where to store items.
          */
         public void execute(Input input, Tracker tracker) {
-            System.out.println();
-            System.out.println("------------ Delete item ------------");
-            String delId = input.ask("Enter item id : ");
-            //confirm
-            if ("y".equals(input.ask("Confirm delete (y to continue)? : "))) {
-                tracker.delete(delId);
-                System.out.println("=== Item deleted.");
-            } else {
-                System.out.println("=== Operation aborted.");
+            try {
+                System.out.println();
+                System.out.println("------------ Delete item ------------");
+                String delId = input.ask("Enter item id : ");
+                //confirm
+                if ("y".equals(input.ask("Confirm delete (y to continue)? : "))) {
+                    tracker.delete(delId);
+                    System.out.println("=== Item deleted.");
+                } else {
+                    System.out.println("=== Operation aborted.");
+                }
+            } catch (NoSuchIdException nside) {
+                System.out.println("=== Exception : Item with such id not found. Try again.");
             }
         }
 
@@ -178,7 +187,6 @@ public class MenuTracker {
     }
 
     /**
-     * >>>>>>> Реализовать события на внутренних классах. [#787]
      * Action : show all items contained.
      */
     private static class ShowAllItems implements UserAction {
@@ -189,11 +197,7 @@ public class MenuTracker {
         private static final int KEY = 1;
 
         /**
-         * <<<<<<< HEAD
-         * Description of the action
-         * =======
          * Description of the action.
-         * >>>>>>> Реализовать события на внутренних классах. [#787]
          */
         private static final String DESCRIPTION = "Show all items";
 
@@ -261,15 +265,19 @@ public class MenuTracker {
          * @param tracker Where to store items.
          */
         public void execute(Input input, Tracker tracker) {
-            System.out.println();
-            System.out.println("------------ Find item by id ------------");
-            String findId = input.ask("Enter item id : ");
-            Item item = tracker.findById(findId);
-            System.out.println("=== Item information : ");
-            System.out.println(String.format("id : %s", item.getId()));
-            System.out.println(String.format("name : %s", item.getName()));
-            System.out.println(String.format("description : %s", item.getDescription()));
-            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
+            try {
+                System.out.println();
+                System.out.println("------------ Find item by id ------------");
+                String findId = input.ask("Enter item id : ");
+                Item item = tracker.findById(findId);
+                System.out.println("=== Item information : ");
+                System.out.println(String.format("id : %s", item.getId()));
+                System.out.println(String.format("name : %s", item.getName()));
+                System.out.println(String.format("description : %s", item.getDescription()));
+                System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
+            } catch (NoSuchIdException nside) {
+                System.out.println("=== Exception : Item with such id not found. Try again.");
+            }
         }
 
         public String menuLine() {
@@ -309,28 +317,32 @@ class EditItem implements UserAction {
      * @param tracker Where to store items.
      */
     public void execute(Input input, Tracker tracker) {
-        System.out.println();
-        System.out.println("------------ Edit item ------------");
-        String editId = input.ask("Enter item id : ");
-        Item oldItem = tracker.findById(editId);
-        //show item data
-        System.out.println(String.format("id : %s", oldItem.getId()));
-        System.out.println(String.format("name : %s", oldItem.getName()));
-        System.out.println(String.format("description : %s", oldItem.getDescription()));
-        System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(oldItem.getCreateTime()))));
-        //get new data
-        System.out.println();
-        String name = input.ask("Enter item new name : ");
-        String desc = input.ask("Enter item new description : ");
-        //store old information
-        Item newItem = new Item(name, desc, oldItem.getCreateTime());
-        newItem.setId(oldItem.getId());
-        //confirm
-        if ("y".equals(input.ask("Confirm change (y to continue)? : "))) {
-            tracker.replace(editId, newItem);
-            System.out.println("=== Item information updated.");
-        } else {
-            System.out.println("=== Operation aborted.");
+        try {
+            System.out.println();
+            System.out.println("------------ Edit item ------------");
+            String editId = input.ask("Enter item id : ");
+            Item oldItem = tracker.findById(editId);
+            //show item data
+            System.out.println(String.format("id : %s", oldItem.getId()));
+            System.out.println(String.format("name : %s", oldItem.getName()));
+            System.out.println(String.format("description : %s", oldItem.getDescription()));
+            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(oldItem.getCreateTime()))));
+            //get new data
+            System.out.println();
+            String name = input.ask("Enter item new name : ");
+            String desc = input.ask("Enter item new description : ");
+            //store old information
+            Item newItem = new Item(name, desc, oldItem.getCreateTime());
+            newItem.setId(oldItem.getId());
+            //confirm
+            if ("y".equals(input.ask("Confirm change (y to continue)? : "))) {
+                tracker.replace(editId, newItem);
+                System.out.println("=== Item information updated.");
+            } else {
+                System.out.println("=== Operation aborted.");
+            }
+        } catch (NoSuchIdException nside) {
+            System.out.println("=== Exception : Item with such id not found. Try again.");
         }
     }
 

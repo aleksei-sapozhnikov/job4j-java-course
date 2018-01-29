@@ -72,14 +72,20 @@ public class Tracker {
      * @return Item with this id.
      */
     public Item findById(String id) {
+        boolean found = false;
         Item result = null;
         for (int i = 0; i < this.position; i++) {
             if (id.equals(this.items[i].getId())) {
                 result = this.items[i];
+                found = true;
                 break;
             }
         }
-        return result;
+        if (found) {
+            return result;
+        } else {
+            throw new NoSuchIdException("Item with such id not found");
+        }
     }
 
     /**

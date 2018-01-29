@@ -106,16 +106,14 @@ public class StartUITest {
         assertThat(result, is(expected));
     }
 
-    @Test
-    public void whenUserDeleteItemTheFindByIdThisItemIsNull() {
+    @Test(expected = NoSuchIdException.class)
+    public void whenUserDeleteItemThenFindByIdThisItemNoSuchIdException() {
         Tracker tracker = new Tracker();
         Item item1 = tracker.add(new Item("name1", "desc1", System.currentTimeMillis()));
         Item itemDel = tracker.add(new Item("name2", "desc3", System.currentTimeMillis()));
         Input input = new StubInput(new String[]{"3", itemDel.getId(), "y", "6"});
         new StartUI(input, tracker).init();
-        Item result = tracker.findById(itemDel.getId());
-        Item expected = null;
-        assertThat(result, is(expected));
+        tracker.findById(itemDel.getId());
     }
 
     /**

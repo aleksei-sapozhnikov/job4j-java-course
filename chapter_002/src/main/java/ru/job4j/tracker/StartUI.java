@@ -12,7 +12,7 @@ public class StartUI {
     /**
      * Menu constant to exit from program.
      */
-    private static final String EXIT = "6";
+    private static final int EXIT = 6;
 
     /**
      * Where from input is taken.
@@ -23,6 +23,7 @@ public class StartUI {
      * Storage of items.
      */
     private final Tracker tracker;
+
 
     /**
      * Constructor
@@ -41,7 +42,7 @@ public class StartUI {
      * @param args Command-line arguments.
      */
     public static void main(String[] args) {
-        new StartUI(new ConsoleInput(), new Tracker()).init();
+        new StartUI(new ValidateInput(), new Tracker()).init();
     }
 
     /**
@@ -53,9 +54,9 @@ public class StartUI {
         menu.fillUserActions();
         while (!exit) {
             menu.show();
-            String answer = this.input.ask("Enter number for action : ");
+            int answer = this.input.ask("Enter number for action : ", menu.getActionRange());
             menu.launchAction(answer);
-            if (EXIT.equals(answer)) {
+            if (EXIT == answer) {
                 exit = true;
             }
         }

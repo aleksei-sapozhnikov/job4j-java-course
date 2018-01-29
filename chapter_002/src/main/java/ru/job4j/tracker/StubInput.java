@@ -34,4 +34,24 @@ public class StubInput implements Input {
         return (this.answers[position++]);
     }
 
+    /**
+     * Ask question and get answer from user what to do.
+     * Answer must be an integer in a definite range.
+     *
+     * @param question Question we ask.
+     * @param range    Answer number must be in that range.
+     * @return Number of the action chosen by user.
+     */
+    public int ask(String question, int[] range) {
+        int key = Integer.valueOf(this.ask(question));
+        boolean inRange = false;
+        for (int item : range) {
+            if (key == item) {
+                inRange = true;
+                break;
+            }
+        }
+        return inRange ? key : -1;
+    }
+
 }
