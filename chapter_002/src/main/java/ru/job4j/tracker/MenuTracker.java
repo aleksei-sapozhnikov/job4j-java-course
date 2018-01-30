@@ -26,7 +26,7 @@ public class MenuTracker {
     /**
      * Numbers (keys) of actions which can be entered by user.
      */
-    private int[] actionKeys = {0, 1, 2, 3, 4, 5, 6};
+    private int[] actionKeys = {0, 1, 2, 3, 4, 5};
 
     /**
      * List of action names.
@@ -91,7 +91,9 @@ public class MenuTracker {
                     this.actionKeys[position], this.actionDescriptions[position]
             );
         } else {
-            System.out.println("=== Error: length of action keys array is not equal to length of action descriptions array.");
+            throw new RuntimeException(
+                    "Length of array with action keys is not equal to length of array with actions descriptions."
+            );
         }
     }
 
