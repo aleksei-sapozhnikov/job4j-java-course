@@ -26,7 +26,7 @@ public class MenuTracker {
     /**
      * Numbers (keys) of actions which can be entered by user.
      */
-    private int[] actionKeys = {0, 1, 2, 3, 4, 5};
+    private int[] actionKeys = {0, 1, 2, 3, 4, 5, 6};
 
     /**
      * List of action names.
