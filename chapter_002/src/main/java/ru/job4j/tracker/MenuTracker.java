@@ -24,10 +24,24 @@ public class MenuTracker {
     private UserAction[] userActions = new UserAction[7];
 
     /**
-     * Range of actions which can be entered by user.
+     * Numbers (keys) of actions which can be entered by user.
      */
-    private int[] actionRange = {0, 1, 2, 3, 4, 5, 6};
+    private int[] actionKeys = {0, 1, 2, 3, 4, 5, 6};
 
+    /**
+     * List of action names.
+     * Position in this array corresponds with the key in the actionKeys array.
+     * Action with key actionKeys[0] will have key actionKeys[0]
+     */
+    private String[] actionDescriptions = {
+            "Add new Item",
+            "Show all items",
+            "Edit item",
+            "Delete item",
+            "Find item by Id",
+            "Find items by name",
+            "Exit Program"
+    };
 
     /**
      * Constructor.
@@ -45,21 +59,40 @@ public class MenuTracker {
      *
      * @return Array of action numbers (keys).
      */
-    public int[] getActionRange() {
-        return this.actionRange;
+    public int[] getActionKeys() {
+        return this.actionKeys;
     }
 
     /**
      * Fill array with possible actions.
      */
     public void fillUserActions() {
-        this.userActions[0] = this.new AddItem();
-        this.userActions[1] = new MenuTracker.ShowAllItems();
-        this.userActions[2] = new EditItem();
-        this.userActions[3] = this.new DeleteItem();
-        this.userActions[4] = new MenuTracker.FindItemById();
-        this.userActions[5] = new FindItemsByName();
-        this.userActions[6] = new Exit();
+        if (actionKeys.length == actionDescriptions.length) {
+            int position = 0;
+            this.userActions[position] = this.new AddItem(
+                    this.actionKeys[position], this.actionDescriptions[position++]
+            );
+            this.userActions[position] = new MenuTracker.ShowAllItems(
+                    this.actionKeys[position], this.actionDescriptions[position++]
+            );
+            this.userActions[position] = new EditItem(
+                    this.actionKeys[position], this.actionDescriptions[position++]
+            );
+            this.userActions[position] = this.new DeleteItem(
+                    this.actionKeys[position], this.actionDescriptions[position++]
+            );
+            this.userActions[position] = new MenuTracker.FindItemById(
+                    this.actionKeys[position], this.actionDescriptions[position++]
+            );
+            this.userActions[position] = new FindItemsByName(
+                    this.actionKeys[position], this.actionDescriptions[position++]
+            );
+            this.userActions[position] = new Exit(
+                    this.actionKeys[position], this.actionDescriptions[position]
+            );
+        } else {
+            System.out.println("=== Error: length of action keys array is not equal to length of action descriptions array.");
+        }
     }
 
     public void show() {
@@ -82,35 +115,18 @@ public class MenuTracker {
     }
 
     /**
-     * Program initialization.
-     */
-    public void init() {
-        //
-    }
-
-
-    /**
      * Action : add item.
      */
-    private class AddItem implements UserAction {
+    private class AddItem extends BaseAction {
 
         /**
-         * Key of this action.
-         */
-        private static final int KEY = 0;
-
-        /**
-         * Description of the action.
-         */
-        private static final String DESCRIPTION = "Add new Item";
-
-        /**
-         * Get key of the action.
+         * Constructor inherited from superclass.
          *
-         * @return Value of the KEY constant.
+         * @param key         Number (key) of the action.
+         * @param description Description - what action is.
          */
-        public int getActionKey() {
-            return KEY;
+        private AddItem(int key, String description) {
+            super(key, description);
         }
 
         /**
@@ -126,36 +142,21 @@ public class MenuTracker {
             String desc = input.ask("Enter item description : ");
             Item item = tracker.add(new Item(name, desc, System.currentTimeMillis()));
             System.out.println(String.format("=== New item added. Item id : %s", item.getId()));
-
-        }
-
-        public String menuLine() {
-            return String.format("%s : %s", KEY, DESCRIPTION);
         }
     }
 
     /**
      * Action : delete item.
      */
-    private class DeleteItem implements UserAction {
-
+    private class DeleteItem extends BaseAction {
         /**
-         * Key of this action.
-         */
-        private static final int KEY = 3;
-
-        /**
-         * Description of the action.
-         */
-        private static final String DESCRIPTION = "Delete item";
-
-        /**
-         * Get key of the action.
+         * Constructor inherited from superclass.
          *
-         * @return Value of the KEY constant.
+         * @param key         Number (key) of the action.
+         * @param description Description - what action is.
          */
-        public int getActionKey() {
-            return KEY;
+        private DeleteItem(int key, String description) {
+            super(key, description);
         }
 
         /**
@@ -180,34 +181,21 @@ public class MenuTracker {
                 System.out.println("=== Exception : Item with such id not found. Try again.");
             }
         }
-
-        public String menuLine() {
-            return String.format("%s : %s", KEY, DESCRIPTION);
-        }
     }
 
     /**
      * Action : show all items contained.
      */
-    private static class ShowAllItems implements UserAction {
+    private static class ShowAllItems extends BaseAction {
 
         /**
-         * Key of this action.
-         */
-        private static final int KEY = 1;
-
-        /**
-         * Description of the action.
-         */
-        private static final String DESCRIPTION = "Show all items";
-
-        /**
-         * Get key of the action.
+         * Constructor inherited from superclass.
          *
-         * @return Value of the KEY constant.
+         * @param key         Number (key) of the action.
+         * @param description Description - what action is.
          */
-        public int getActionKey() {
-            return KEY;
+        private ShowAllItems(int key, String description) {
+            super(key, description);
         }
 
         /**
@@ -228,34 +216,21 @@ public class MenuTracker {
                 System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
             }
         }
-
-        public String menuLine() {
-            return String.format("%s : %s", KEY, DESCRIPTION);
-        }
     }
 
     /**
      * Action : find item by id.
      */
-    private static class FindItemById implements UserAction {
+    private static class FindItemById extends BaseAction {
 
         /**
-         * Key of this action.
-         */
-        private static final int KEY = 4;
-
-        /**
-         * Description of the action.
-         */
-        private static final String DESCRIPTION = "Find item by Id";
-
-        /**
-         * Get key of the action.
+         * Constructor inherited from superclass.
          *
-         * @return Value of the KEY constant.
+         * @param key         Number (key) of the action.
+         * @param description Description - what action is.
          */
-        public int getActionKey() {
-            return KEY;
+        private FindItemById(int key, String description) {
+            super(key, description);
         }
 
         /**
@@ -279,35 +254,22 @@ public class MenuTracker {
                 System.out.println("=== Exception : Item with such id not found. Try again.");
             }
         }
-
-        public String menuLine() {
-            return String.format("%s : %s", KEY, DESCRIPTION);
-        }
     }
 }
 
 /**
  * Action : edit item information.
  */
-class EditItem implements UserAction {
+class EditItem extends BaseAction {
 
     /**
-     * Key of this action.
-     */
-    private static final int KEY = 2;
-
-    /**
-     * Description of the action
-     */
-    private static final String DESCRIPTION = "Edit item";
-
-    /**
-     * Get key of the action.
+     * Constructor inherited from superclass.
      *
-     * @return Value of the KEY constant.
+     * @param key         Number (key) of the action.
+     * @param description Description - what action is.
      */
-    public int getActionKey() {
-        return KEY;
+    EditItem(int key, String description) {
+        super(key, description);
     }
 
     /**
@@ -345,35 +307,21 @@ class EditItem implements UserAction {
             System.out.println("=== Exception : Item with such id not found. Try again.");
         }
     }
-
-    public String menuLine() {
-        return String.format("%s : %s", KEY, DESCRIPTION);
-    }
-
 }
 
 /**
  * Action : find items by given name.
  */
-class FindItemsByName implements UserAction {
+class FindItemsByName extends BaseAction {
 
     /**
-     * Key of this action.
-     */
-    private static final int KEY = 5;
-
-    /**
-     * Description of the action
-     */
-    private static final String DESCRIPTION = "Find items by name";
-
-    /**
-     * Get key of the action.
+     * Constructor inherited from superclass.
      *
-     * @return Value of the KEY constant.
+     * @param key         Number (key) of the action.
+     * @param description Description - what action is.
      */
-    public int getActionKey() {
-        return KEY;
+    FindItemsByName(int key, String description) {
+        super(key, description);
     }
 
     /**
@@ -395,35 +343,21 @@ class FindItemsByName implements UserAction {
             System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
         }
     }
-
-    public String menuLine() {
-        return String.format("%s : %s", KEY, DESCRIPTION);
-    }
-
 }
 
 /**
  * Action : exit from program.
  */
-class Exit implements UserAction {
+class Exit extends BaseAction {
 
     /**
-     * Key of this action.
-     */
-    private static final int KEY = 6;
-
-    /**
-     * Description of the action
-     */
-    private static final String DESCRIPTION = "Exit Program";
-
-    /**
-     * Get key of the action.
+     * Constructor inherited from superclass.
      *
-     * @return Value of the KEY constant.
+     * @param key         Number (key) of the action.
+     * @param description Description - what action is.
      */
-    public int getActionKey() {
-        return KEY;
+    Exit(int key, String description) {
+        super(key, description);
     }
 
     /**
@@ -435,9 +369,4 @@ class Exit implements UserAction {
     public void execute(Input input, Tracker tracker) {
         System.out.println("=== Exit program.");
     }
-
-    public String menuLine() {
-        return String.format("%s : %s", KEY, DESCRIPTION);
-    }
-
 }
