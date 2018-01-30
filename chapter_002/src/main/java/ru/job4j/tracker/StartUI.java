@@ -54,7 +54,7 @@ public class StartUI {
         menu.fillUserActions();
         while (!exit) {
             menu.show();
-            int answer = this.input.ask("Enter number for action : ", menu.getActionRange());
+            int answer = this.input.ask("Enter number for action : ", menu.getActionKeys());
             menu.launchAction(answer);
             if (EXIT == answer) {
                 exit = true;
