@@ -39,6 +39,13 @@ public class BoardTest {
         board.move(new Cell(1, 1), new Cell(2, 3));
     }
 
+    @Test(expected = ImpossibleMoveException.class)
+    public void whenMoveOutOfTheBoardThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Bishop(new Cell(1, 1)));
+        board.move(new Cell(1, 1), new Cell(4, 8));
+    }
+
     @Test(expected = OccupiedWayException.class)
     public void whenMoveToOccupiedCellThenOccupiedWayException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
