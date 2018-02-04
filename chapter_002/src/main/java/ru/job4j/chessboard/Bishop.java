@@ -46,19 +46,23 @@ class Bishop extends Figure {
             throw new ImpossibleMoveException("Bishop figure cannot move like this.");
         }
         //move
-        boolean goUp = dest.getX() > source.getX();
-        int posWay = 0;
+        boolean goRight = dest.getX() > source.getX();
+        boolean goingUp = dest.getY() > source.getY();
+        int dx = goRight ? 1 : -1;
+        int dy = goingUp ? 1 : -1;
+        int wayX = goRight ? source.getX() + 1 : source.getX() - 1;
+        int wayY = goingUp ? source.getY() + 1 : source.getY() - 1;
+        int positionWay = 0;
         Cell[] tempWay = new Cell[100];
-        int wayX = goUp ? source.getX() + 1 : source.getX() - 1;
-        int wayY = goUp ? source.getY() + 1 : source.getY() - 1;
-        while (goUp
+        while (goRight
                 ? wayX <= dest.getX()
-                : wayX >= dest.getX()) {
-            tempWay[posWay++] = goUp
-                    ? new Cell(wayX++, wayY++)
-                    : new Cell(wayX--, wayY--);
+                : wayX >= dest.getX()
+                ) {
+            tempWay[positionWay++] = new Cell(wayX, wayY);
+            wayX += dx;
+            wayY += dy;
         }
-        return Arrays.copyOf(tempWay, posWay);
+        return Arrays.copyOf(tempWay, positionWay);
     }
 
 
