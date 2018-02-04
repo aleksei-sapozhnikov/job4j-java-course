@@ -24,27 +24,27 @@ public class Board {
     /**
      * Position of a new figure in figures array.
      */
-    private int figArrPos = 0;
+    private int figArrayPos = 0;
 
     /**
      * Add new figure to array.
      *
      * @param figure Figure to add.
      */
-    public void add(Figure figure) {
-        this.figures[this.figArrPos++] = figure;
+    void add(Figure figure) {
+        this.figures[this.figArrayPos++] = figure;
     }
 
     /**
      * Replace existing figure with new figure (on a new cell).
      *
-     * @param oldFigure Figure to replace.
-     * @param newFigure New figure to this place.
+     * @param oldFig Figure to replace.
+     * @param newFig New figure to this place.
      */
-    private void replace(Figure oldFigure, Figure newFigure) {
+    private void replace(Figure oldFig, Figure newFig) {
         this.figures[
-                Arrays.asList(this.figures).indexOf(oldFigure)
-                ] = newFigure;
+                Arrays.asList(this.figures).indexOf(oldFig)
+                ] = newFig;
     }
 
     /**
@@ -55,7 +55,7 @@ public class Board {
      */
     private Figure findFigureByPosition(Cell position) {
         Figure result = null;
-        for (int i = 0; i < this.figArrPos; i++) {
+        for (int i = 0; i < this.figArrayPos; i++) {
             if (this.figures[i].isInPosition(position)) {
                 result = this.figures[i];
                 break;
@@ -70,7 +70,7 @@ public class Board {
      * @param positions Array of positions to check.
      * @return true if there is a figure in any of the given positions, false if not.
      */
-    boolean arefiguresInPosititons(Cell[] positions) {
+    boolean isAnyFigureInPositions(Cell[] positions) {
         boolean result = false;
         for (Cell tempCell : positions) {
             if (this.findFigureByPosition(tempCell) != null) {
@@ -99,12 +99,18 @@ public class Board {
             throw new FigureNotFoundException("No figure found in this cell.");
         }
         // Если фигура есть. Проверить может ли она так двигаться. Если нет то упадет исключение
+        // same cell
+        if (source.equals(dest)) {
+            throw new ImpossibleMoveException("Destination position is equal to the source position.");
+        }
+        //out of board
         if (!dest.isInRange(MIN_X, MAX_X, MIN_Y, MAX_Y)) {
             throw new ImpossibleMoveException("Figure goes out of the chessboard.");
         }
-        Cell[] way = figure.way(source, dest); // throws extension
+        //find way
+        Cell[] way = figure.way(source, dest);
         // Проверить что полученный путь. не занят фигурами. Если занят выкинуть исключение
-        if (this.arefiguresInPosititons(way)) {
+        if (this.isAnyFigureInPositions(way)) {
             throw new OccupiedWayException("The way is blocked by another figure.");
         }
         // Если все отлично. Записать в ячейку новое новое положение Figure figure.copy(Cell dest)

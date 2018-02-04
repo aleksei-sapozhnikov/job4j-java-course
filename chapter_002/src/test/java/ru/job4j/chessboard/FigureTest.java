@@ -15,27 +15,6 @@ import static org.junit.Assert.assertThat;
 public class FigureTest {
 
     /**
-     * Test getPosition() method.
-     */
-    @Test
-    public void whenGetPositionArrayOfFiguresThenPositionArrayOfFigures() {
-        Figure[] figures = new Figure[]{
-                new Bishop(new Cell(1, 2))
-        };
-        //result
-        Cell[] result = new Cell[figures.length];
-        for (int i = 0; i < figures.length; i++) {
-            result[i] = figures[i].getPosition();
-        }
-        //expected
-        Cell[] expected = new Cell[]{
-                new Cell(1, 2)
-        };
-        //check
-        assertThat(result, is(expected));
-    }
-
-    /**
      * Test isInPosition() method.
      */
     @Test

@@ -26,6 +26,13 @@ public class BoardTest {
     }
 
     @Test(expected = ImpossibleMoveException.class)
+    public void whenMoveIntoTheSameCellThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Bishop(new Cell(2, 1)));
+        board.move(new Cell(2, 1), new Cell(2, 1));
+    }
+
+    @Test(expected = ImpossibleMoveException.class)
     public void whenImpossibleMoveThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 1)));
@@ -47,5 +54,36 @@ public class BoardTest {
         board.move(new Cell(2, 1), new Cell(4, 3));
     }
 
+    /**
+     * Test isAnyFigureInPositions() method.
+     */
+    @Test
+    public void whenIsAnyFigureInPositionsThenTrue() {
+        Board board = new Board();
+        board.add(new Bishop(new Cell(1, 2)));
+        board.add(new Bishop(new Cell(5, 6)));
+        board.add(new Bishop(new Cell(0, 2)));
+        Cell[] positions = new Cell[]{
+                new Cell(3, 6),
+                new Cell(5, 6),
+                new Cell(0, 3),
+        };
+        boolean result = board.isAnyFigureInPositions(positions);
+        assertThat(result, is(true));
+    }
 
+    @Test
+    public void whenNoAnyFigureInPositionsThenFalse() {
+        Board board = new Board();
+        board.add(new Bishop(new Cell(1, 2)));
+        board.add(new Bishop(new Cell(5, 6)));
+        board.add(new Bishop(new Cell(0, 2)));
+        Cell[] positions = new Cell[]{
+                new Cell(3, 6),
+                new Cell(5, 5),
+                new Cell(0, 3),
+        };
+        boolean result = board.isAnyFigureInPositions(positions);
+        assertThat(result, is(false));
+    }
 }

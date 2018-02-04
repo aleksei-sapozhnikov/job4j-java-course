@@ -24,15 +24,6 @@ abstract class Figure {
     }
 
     /**
-     * Get the position of the figure.
-     *
-     * @return Position of the figure.
-     */
-    Cell getPosition() {
-        return this.position;
-    }
-
-    /**
      * Checks if figure is in cell.
      *
      * @param cell cell where to check.
@@ -55,7 +46,7 @@ abstract class Figure {
      * @param source Cell where figure starts from.
      * @param dest   Cell where we want it to go.
      * @return Array of cells which figure will pass going from source cell to destination.
-     * @throws ImpossibleMoveException if it it impossible to reach destination cell.
+     * @throws ImpossibleMoveException if figure movement cannot reach destination position.
      */
     abstract Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException;
 

@@ -12,12 +12,12 @@ class Cell {
     /**
      * Horizontal coordinate (left -> right)
      */
-    final int x;
+    private final int x;
 
     /**
      * Vertical coordinate (down --> up)
      */
-    final int y;
+    private final int y;
 
     /**
      * Constructor.
@@ -30,6 +30,33 @@ class Cell {
         this.y = y;
     }
 
+    /**
+     * Get horizontal coordinate.
+     *
+     * @return horizontal coordinate field value.
+     */
+    int getX() {
+        return this.x;
+    }
+
+    /**
+     * Get vertical coordinate.
+     *
+     * @return vertical coordinate field value.
+     */
+    int getY() {
+        return this.y;
+    }
+
+    /**
+     * Checks if cell coordinates are in the defined square range.
+     *
+     * @param xMin lower boundary of the range in horizontal axis.
+     * @param xMax higher boundary of the range in horizontal axis.
+     * @param yMin lower boundary of the range in vertical axis.
+     * @param yMax higher boundary of the range in horizontal axis.
+     * @return true if position is in range, false if out of range.
+     */
     boolean isInRange(int xMin, int xMax, int yMin, int yMax) {
         return this.x >= xMin
                 && this.x <= xMax
