@@ -30,6 +30,13 @@ class Cell {
         this.y = y;
     }
 
+    boolean isInRange(int xMin, int xMax, int yMin, int yMax) {
+        return this.x >= xMin
+                && this.x <= xMax
+                && this.y >= yMin
+                && this.y <= yMax;
+    }
+
     /**
      * Checks if two cells are equal.
      *
@@ -46,5 +53,15 @@ class Cell {
             }
         }
         return result;
+    }
+
+    /**
+     * Calculates hashCode of the object.
+     *
+     * @return integer hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return 31 * (this.x + this.y);
     }
 }

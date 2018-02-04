@@ -21,6 +21,17 @@ class Bishop extends Figure {
     }
 
     /**
+     * Creates figure in the cell.
+     *
+     * @param dest cell where to create figure.
+     * @return Figure with new coordinates.
+     */
+    @Override
+    Bishop copy(Cell dest) {
+        return new Bishop(dest);
+    }
+
+    /**
      * Returns an array of cells which figure will pass to go to destination cell.
      *
      * @param source Cell where figure starts from.
@@ -36,30 +47,17 @@ class Bishop extends Figure {
             throw new ImpossibleMoveException("Bishop figure cannot move like this.");
         }
         //move
-        boolean up = dest.x > source.x;
+        boolean goUp = dest.x > source.x;
         int posWay = 0;
         Cell[] tempWay = new Cell[100];
-        int xWay = up ? source.x + 1 : source.x - 1;
-        int yWay = up ? source.y + 1 : source.y - 1;
-        while (up ?
-                xWay <= dest.x :
-                xWay >= dest.x) {
-            tempWay[posWay++] = up ?
-                    new Cell(xWay++, yWay++) :
-                    new Cell(xWay--, yWay--);
+        int wayX = goUp ? source.x + 1 : source.x - 1;
+        int wayY = goUp ? source.y + 1 : source.y - 1;
+        while (goUp ? wayX <= dest.x : wayX >= dest.x) {
+            tempWay[posWay++] = goUp
+                    ? new Cell(wayX++, wayY++)
+                    : new Cell(wayX--, wayY--);
         }
         return Arrays.copyOf(tempWay, posWay);
-    }
-
-    /**
-     * Creates figure in the cell.
-     *
-     * @param dest cell where to create figure.
-     * @return Figure with new coordinates.
-     */
-    @Override
-    Figure copy(Cell dest) {
-        return new Bishop(dest);
     }
 
 

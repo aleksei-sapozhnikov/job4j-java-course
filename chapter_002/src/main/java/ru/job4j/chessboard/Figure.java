@@ -10,7 +10,7 @@ package ru.job4j.chessboard;
 abstract class Figure {
 
     /**
-     * Cell where the figure is now.
+     * Position of the figure on the board.
      */
     private final Cell position;
 
@@ -24,13 +24,30 @@ abstract class Figure {
     }
 
     /**
-     * Get the cell where the figure is.
+     * Get the position of the figure.
      *
-     * @return Cell where the figure is.
+     * @return Position of the figure.
      */
     Cell getPosition() {
         return this.position;
     }
+
+    /**
+     * Checks if figure is in cell.
+     *
+     * @param cell cell where to check.
+     */
+    boolean isInPosition(Cell cell) {
+        return this.position.equals(cell);
+    }
+
+    /**
+     * Creates figure in the cell.
+     *
+     * @param dest cell where to create figure.
+     * @return new figure with coordinates of the destination cell.
+     */
+    abstract Figure copy(Cell dest);
 
     /**
      * Returns an array of cells which figure will pass to go to destination cell.
@@ -42,11 +59,5 @@ abstract class Figure {
      */
     abstract Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException;
 
-    /**
-     * Creates figure in the cell.
-     *
-     * @param dest cell where to create figure.
-     * @return new figure with coordinates of the destination cell.
-     */
-    abstract Figure copy(Cell dest);
+
 }
