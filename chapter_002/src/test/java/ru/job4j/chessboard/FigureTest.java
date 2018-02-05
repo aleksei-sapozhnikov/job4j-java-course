@@ -20,7 +20,8 @@ public class FigureTest {
     @Test
     public void whenArrayOfFiguresInPositionThenArrayTrue() {
         Figure[] figures = new Figure[]{
-                new Bishop(new Cell(1, 2))
+                new Bishop(new Cell(1, 2)),
+                new Rook(new Cell(1, 2))
         };
         //result
         boolean[] result = new boolean[figures.length];
@@ -29,6 +30,7 @@ public class FigureTest {
         }
         //expected
         boolean[] expected = new boolean[]{
+                true,
                 true
         };
         //check
@@ -38,7 +40,8 @@ public class FigureTest {
     @Test
     public void whenArrayOfFiguresNotInPositionThenArrayFalse() {
         Figure[] figures = new Figure[]{
-                new Bishop(new Cell(1, 2))
+                new Bishop(new Cell(1, 2)),
+                new Rook(new Cell(1, 2))
         };
         //result
         boolean[] result = new boolean[figures.length];
@@ -47,6 +50,7 @@ public class FigureTest {
         }
         //expected
         boolean[] expected = new boolean[]{
+                false,
                 false
         };
         //check

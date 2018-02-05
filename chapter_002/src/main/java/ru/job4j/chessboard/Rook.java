@@ -2,7 +2,7 @@ package ru.job4j.chessboard;
 
 import java.util.Arrays;
 
-public class Rook extends Figure {
+class Rook extends Figure {
 
     /**
      * Constructor.
@@ -34,35 +34,33 @@ public class Rook extends Figure {
      */
     @Override
     Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
-        //check where to go
-        int step;
-        boolean vertical;
-        if (dest.getX() == source.getX() && dest.getY() != source.getY()) {
-            vertical = true;
-            step = dest.getX() > source.getX() ? 1 : -1;
-        }
-
-
-        if (dest.getX() != source.getX() && dest.getY() != dest.getY()) {
+        //check
+        if (source.getX() != dest.getX() && source.getY() != dest.getY()) {
             throw new ImpossibleMoveException("Rook figure cannot move like this.");
         }
+        //direction
+        boolean vertical = dest.getX() == source.getX();
+        int step;
+        if (vertical) {
+            step = dest.getY() > source.getY() ? 1 : -1;
+        } else {
+            step = dest.getX() > source.getX() ? 1 : -1;
+        }
         //move
-        boolean goRight = dest.getX() > source.getX();
-        boolean goingUp = dest.getY() > source.getY();
-        int dx = goRight ? 1 : -1;
-        int dy = goingUp ? 1 : -1;
-        int wayX = goRight ? source.getX() + 1 : source.getX() - 1;
-        int wayY = goingUp ? source.getY() + 1 : source.getY() - 1;
+        int wayX = vertical ? source.getX() : source.getX() + step;
+        int wayY = vertical ? source.getY() + step : source.getY();
         int positionWay = 0;
         Cell[] tempWay = new Cell[100];
-        while (goRight
-                ? wayX <= dest.getX()
-                : wayX >= dest.getX()
+        while (vertical
+                ? Math.abs(dest.getY() - wayY) != 0
+                : Math.abs(dest.getX() - wayX) != 0
                 ) {
             tempWay[positionWay++] = new Cell(wayX, wayY);
-            wayX += dx;
-            wayY += dy;
+            wayX += vertical ? 0 : step;
+            wayY += vertical ? step : 0;
         }
+        //last step
+        tempWay[positionWay++] = new Cell(wayX, wayY);
         return Arrays.copyOf(tempWay, positionWay);
     }
 
