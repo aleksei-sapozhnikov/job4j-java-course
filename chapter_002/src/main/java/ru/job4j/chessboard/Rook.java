@@ -2,21 +2,14 @@ package ru.job4j.chessboard;
 
 import java.util.Arrays;
 
-/**
- * Bishop chess figure.
- *
- * @author Aleksei Sapozhnikov (vermucht@gmail.com)
- * @version $Id$
- * @since 03.02.2018
- */
-class Bishop extends Figure {
+class Rook extends Figure {
 
     /**
      * Constructor.
      *
      * @param position Cell where the figure is.
      */
-    Bishop(Cell position) {
+    Rook(Cell position) {
         super(position);
     }
 
@@ -27,8 +20,8 @@ class Bishop extends Figure {
      * @return Figure with new coordinates.
      */
     @Override
-    Bishop copy(Cell dest) {
-        return new Bishop(dest);
+    Rook copy(Cell dest) {
+        return new Rook(dest);
     }
 
     /**
@@ -42,12 +35,19 @@ class Bishop extends Figure {
     @Override
     Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
         //check
-        if (Math.abs(source.horizontalDistanceTo(dest)) != Math.abs(source.verticalDistanceTo(dest))) {
-            throw new ImpossibleMoveException("Bishop figure cannot move like this.");
+        if (source.horizontalDistanceTo(dest) != 0 && source.verticalDistanceTo(dest) != 0) {
+            throw new ImpossibleMoveException("Rook figure cannot move like this.");
         }
-        //where to move
-        Enum hrzDirection = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
-        Enum vertDirection = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
+        //direction
+        Enum hrzDirection;
+        Enum vertDirection;
+        if (source.horizontalDistanceTo(dest) == 0) {
+            hrzDirection = Cell.HorizontalDirection.NONE;
+            vertDirection = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
+        } else {
+            vertDirection = Cell.VerticalDirection.NONE;
+            hrzDirection = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
+        }
         //move
         Cell[] tempWay = new Cell[100];
         int positionWay = 0;
@@ -61,6 +61,5 @@ class Bishop extends Figure {
         //result
         return Arrays.copyOf(tempWay, positionWay);
     }
-
 
 }

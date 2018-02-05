@@ -10,6 +10,20 @@ package ru.job4j.chessboard;
 class Cell {
 
     /**
+     * Possible horizontal directions.
+     */
+    enum HorizontalDirection {
+        NONE, LEFT, RIGHT
+    }
+
+    /**
+     * Possible vertical directions.
+     */
+    enum VerticalDirection {
+        NONE, UP, DOWN
+    }
+
+    /**
      * Horizontal coordinate (left -> right)
      */
     private final int x;
@@ -31,24 +45,6 @@ class Cell {
     }
 
     /**
-     * Get horizontal coordinate.
-     *
-     * @return horizontal coordinate field value.
-     */
-    int getX() {
-        return this.x;
-    }
-
-    /**
-     * Get vertical coordinate.
-     *
-     * @return vertical coordinate field value.
-     */
-    int getY() {
-        return this.y;
-    }
-
-    /**
      * Checks if cell coordinates are in the defined square range.
      *
      * @param xMin lower boundary of the range in horizontal axis.
@@ -62,6 +58,54 @@ class Cell {
                 && this.x <= xMax
                 && this.y >= yMin
                 && this.y <= yMax;
+    }
+
+    /**
+     * Calculates horizontal distance from this cell to another cell.
+     *
+     * @param other cell to calculate distance to.
+     * @return positive distance if other cell horizontal coordinate is bigger then that of this cell,
+     * negative distance otherwise, zero if horizontal coordinates are equal.
+     */
+    int horizontalDistanceTo(Cell other) {
+        return other.x - this.x;
+    }
+
+    /**
+     * Calculates vertical distance from this cell to another cell.
+     *
+     * @param other cell to calculate distance to.
+     * @return positive distance if other cell vertical coordinate is bigger then that of this cell,
+     * negative distance otherwise, zero if vertical coordinates are equal.
+     */
+    int verticalDistanceTo(Cell other) {
+        return other.y - this.y;
+    }
+
+    /**
+     * Returns a cell in specified direction, next to this cell.
+     *
+     * @param dirHorz where to look in horizontal direction.
+     * @param dirVert where to look in vertical direction.
+     * @return Next cell found.
+     */
+    Cell step(Enum dirHorz, Enum dirVert) {
+        //horizontal step
+        int stepHorz;
+        if (dirHorz == HorizontalDirection.NONE) {
+            stepHorz = 0;
+        } else {
+            stepHorz = dirHorz == HorizontalDirection.RIGHT ? 1 : -1;
+        }
+        //vertical step
+        int stepVert;
+        if (dirVert == VerticalDirection.NONE) {
+            stepVert = 0;
+        } else {
+            stepVert = dirVert == VerticalDirection.UP ? 1 : -1;
+        }
+        //result
+        return new Cell(this.x + stepHorz, this.y + stepVert);
     }
 
     /**
@@ -92,3 +136,4 @@ class Cell {
         return 31 * (this.x + this.y);
     }
 }
+

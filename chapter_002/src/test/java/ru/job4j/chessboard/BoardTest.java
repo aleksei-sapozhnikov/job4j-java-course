@@ -17,8 +17,9 @@ public class BoardTest {
     /**
      * Test move() method.
      */
+    //bishop
     @Test
-    public void whenLegalMoveThenTrue() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+    public void whenBishopLegalMoveThenTrue() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 1)));
         boolean result = board.move(new Cell(1, 1), new Cell(3, 3));
@@ -26,28 +27,28 @@ public class BoardTest {
     }
 
     @Test(expected = ImpossibleMoveException.class)
-    public void whenMoveIntoTheSameCellThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+    public void whenBishopMoveIntoTheSameCellThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
         board.add(new Bishop(new Cell(2, 1)));
         board.move(new Cell(2, 1), new Cell(2, 1));
     }
 
     @Test(expected = ImpossibleMoveException.class)
-    public void whenImpossibleMoveThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+    public void whenBishopImpossibleMoveThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 1)));
         board.move(new Cell(1, 1), new Cell(2, 3));
     }
 
     @Test(expected = ImpossibleMoveException.class)
-    public void whenMoveOutOfTheBoardThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+    public void whenBishopMoveOutOfTheBoardThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 1)));
         board.move(new Cell(1, 1), new Cell(4, 8));
     }
 
     @Test(expected = OccupiedWayException.class)
-    public void whenMoveToOccupiedCellThenOccupiedWayException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+    public void whenBishopMoveToOccupiedCellThenOccupiedWayException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 1)));
         board.add(new Bishop(new Cell(3, 3)));
@@ -55,9 +56,54 @@ public class BoardTest {
     }
 
     @Test(expected = FigureNotFoundException.class)
-    public void whenMoveFromEmptyCellThenFigureNotFoundException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+    public void whenBishopMoveFromEmptyCellThenFigureNotFoundException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 1)));
+        board.move(new Cell(2, 1), new Cell(4, 3));
+    }
+
+    //rook
+    @Test
+    public void whenRookLegalMoveThenTrue() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Rook(new Cell(1, 1)));
+        boolean result = board.move(new Cell(1, 1), new Cell(1, 3));
+        assertThat(result, is(true));
+    }
+
+    @Test(expected = ImpossibleMoveException.class)
+    public void whenRookMoveIntoTheSameCellThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Rook(new Cell(2, 1)));
+        board.move(new Cell(2, 1), new Cell(2, 1));
+    }
+
+    @Test(expected = ImpossibleMoveException.class)
+    public void whenRookImpossibleMoveThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Rook(new Cell(1, 1)));
+        board.move(new Cell(1, 1), new Cell(2, 3));
+    }
+
+    @Test(expected = ImpossibleMoveException.class)
+    public void whenRookMoveOutOfTheBoardThenImpossibleMoveException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Rook(new Cell(1, 1)));
+        board.move(new Cell(1, 1), new Cell(4, 8));
+    }
+
+    @Test(expected = OccupiedWayException.class)
+    public void whenRookMoveToOccupiedCellThenOccupiedWayException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Rook(new Cell(1, 1)));
+        board.add(new Bishop(new Cell(1, 3)));
+        board.move(new Cell(1, 1), new Cell(1, 3));
+    }
+
+    @Test(expected = FigureNotFoundException.class)
+    public void whenRookMoveFromEmptyCellThenFigureNotFoundException() throws ImpossibleMoveException, OccupiedWayException, FigureNotFoundException {
+        Board board = new Board();
+        board.add(new Rook(new Cell(1, 1)));
         board.move(new Cell(2, 1), new Cell(4, 3));
     }
 
@@ -68,7 +114,7 @@ public class BoardTest {
     public void whenIsAnyFigureInPositionsThenTrue() {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 2)));
-        board.add(new Bishop(new Cell(5, 6)));
+        board.add(new Rook(new Cell(5, 6)));
         board.add(new Bishop(new Cell(0, 2)));
         Cell[] positions = new Cell[]{
                 new Cell(3, 6),
@@ -83,7 +129,7 @@ public class BoardTest {
     public void whenNoAnyFigureInPositionsThenFalse() {
         Board board = new Board();
         board.add(new Bishop(new Cell(1, 2)));
-        board.add(new Bishop(new Cell(5, 6)));
+        board.add(new Rook(new Cell(5, 6)));
         board.add(new Bishop(new Cell(0, 2)));
         Cell[] positions = new Cell[]{
                 new Cell(3, 6),
