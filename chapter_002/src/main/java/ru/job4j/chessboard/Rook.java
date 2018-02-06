@@ -37,15 +37,12 @@ class Rook extends Figure {
         if (source.horizontalDistanceTo(dest) != 0 && source.verticalDistanceTo(dest) != 0) {
             throw new ImpossibleMoveException("Rook figure cannot move like this.");
         }
-        Enum horizontal;
-        Enum vertical;
-        if (source.horizontalDistanceTo(dest) == 0) {
-            horizontal = Cell.HorizontalDirection.NONE;
-            vertical = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
-        } else {
-            vertical = Cell.VerticalDirection.NONE;
-            horizontal = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
-        }
+        Enum horizontal = source.horizontalDistanceTo(dest) == 0
+                ? Cell.HorizontalDirection.NONE
+                : source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
+        Enum vertical = source.verticalDistanceTo(dest) == 0
+                ? Cell.VerticalDirection.NONE
+                : source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
         Cell[] temp = new Cell[100];
         int pos = 0;
         Cell current = source.step(horizontal, vertical);
