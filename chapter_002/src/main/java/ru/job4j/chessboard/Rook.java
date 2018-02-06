@@ -35,32 +35,30 @@ class Rook extends Figure {
     @Override
     Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
         //check
-        if (source.getX() != dest.getX() && source.getY() != dest.getY()) {
+        if (source.horizontalDistanceTo(dest) != 0 && source.verticalDistanceTo(dest) != 0) {
             throw new ImpossibleMoveException("Rook figure cannot move like this.");
         }
         //direction
-        boolean vertical = dest.getX() == source.getX();
-        int step;
-        if (vertical) {
-            step = dest.getY() > source.getY() ? 1 : -1;
+        Enum hrzDirection;
+        Enum vertDirection;
+        if (source.horizontalDistanceTo(dest) == 0) {
+            hrzDirection = Cell.HorizontalDirection.NONE;
+            vertDirection = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
         } else {
-            step = dest.getX() > source.getX() ? 1 : -1;
+            vertDirection = Cell.VerticalDirection.NONE;
+            hrzDirection = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
         }
         //move
-        int wayX = vertical ? source.getX() : source.getX() + step;
-        int wayY = vertical ? source.getY() + step : source.getY();
-        int positionWay = 0;
         Cell[] tempWay = new Cell[100];
-        while (vertical
-                ? Math.abs(dest.getY() - wayY) != 0
-                : Math.abs(dest.getX() - wayX) != 0
-                ) {
-            tempWay[positionWay++] = new Cell(wayX, wayY);
-            wayX += vertical ? 0 : step;
-            wayY += vertical ? step : 0;
+        int positionWay = 0;
+        Cell wayCell = source.step(hrzDirection, vertDirection);
+        while (!wayCell.equals(dest)) {
+            tempWay[positionWay++] = wayCell;
+            wayCell = wayCell.step(hrzDirection, vertDirection);
         }
         //last step
-        tempWay[positionWay++] = new Cell(wayX, wayY);
+        tempWay[positionWay++] = wayCell;
+        //result
         return Arrays.copyOf(tempWay, positionWay);
     }
 

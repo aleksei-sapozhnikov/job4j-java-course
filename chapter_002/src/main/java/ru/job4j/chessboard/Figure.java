@@ -49,6 +49,4 @@ abstract class Figure {
      * @throws ImpossibleMoveException if figure movement cannot reach destination position.
      */
     abstract Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException;
-
-
 }
