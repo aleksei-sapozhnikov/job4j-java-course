@@ -171,10 +171,10 @@ public class MenuTracker {
             try {
                 System.out.println();
                 System.out.println("------------ Delete item ------------");
-                String delId = input.ask("Enter item id : ");
+                String id = input.ask("Enter item id : ");
                 //confirm
                 if ("y".equals(input.ask("Confirm delete (y to continue)? : "))) {
-                    tracker.delete(delId);
+                    tracker.delete(id);
                     System.out.println("=== Item deleted.");
                 } else {
                     System.out.println("=== Operation aborted.");
@@ -245,8 +245,8 @@ public class MenuTracker {
             try {
                 System.out.println();
                 System.out.println("------------ Find item by id ------------");
-                String findId = input.ask("Enter item id : ");
-                Item item = tracker.findById(findId);
+                String id = input.ask("Enter item id : ");
+                Item item = tracker.findById(id);
                 System.out.println("=== Item information : ");
                 System.out.println(String.format("id : %s", item.getId()));
                 System.out.println(String.format("name : %s", item.getName()));
@@ -285,22 +285,22 @@ class EditItem extends BaseAction {
             System.out.println();
             System.out.println("------------ Edit item ------------");
             String editId = input.ask("Enter item id : ");
-            Item oldItem = tracker.findById(editId);
+            Item old = tracker.findById(editId);
             //show item data
-            System.out.println(String.format("id : %s", oldItem.getId()));
-            System.out.println(String.format("name : %s", oldItem.getName()));
-            System.out.println(String.format("description : %s", oldItem.getDescription()));
-            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(oldItem.getCreateTime()))));
+            System.out.println(String.format("id : %s", old.getId()));
+            System.out.println(String.format("name : %s", old.getName()));
+            System.out.println(String.format("description : %s", old.getDescription()));
+            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(old.getCreateTime()))));
             //get new data
             System.out.println();
             String name = input.ask("Enter item new name : ");
             String desc = input.ask("Enter item new description : ");
             //store old information
-            Item newItem = new Item(name, desc, oldItem.getCreateTime());
-            newItem.setId(oldItem.getId());
+            Item newer = new Item(name, desc, old.getCreateTime());
+            newer.setId(old.getId());
             //confirm
             if ("y".equals(input.ask("Confirm change (y to continue)? : "))) {
-                tracker.replace(editId, newItem);
+                tracker.replace(editId, newer);
                 System.out.println("=== Item information updated.");
             } else {
                 System.out.println("=== Operation aborted.");
@@ -335,8 +335,8 @@ class FindItemsByName extends BaseAction {
     public void execute(Input input, Tracker tracker) {
         System.out.println();
         System.out.println("------------ Find items with given name ------------");
-        String findName = input.ask("Enter name : ");
-        Item[] items = tracker.findByName(findName);
+        String name = input.ask("Enter name : ");
+        Item[] items = tracker.findByName(name);
         for (Item item : items) {
             System.out.println();
             System.out.println(String.format("== Item id : %s", item.getId()));

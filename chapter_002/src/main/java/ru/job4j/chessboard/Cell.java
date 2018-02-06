@@ -85,40 +85,40 @@ class Cell {
     /**
      * Returns a cell in specified direction, next to this cell.
      *
-     * @param dirHorz where to look in horizontal direction.
-     * @param dirVert where to look in vertical direction.
+     * @param horizontal where to look in horizontal direction.
+     * @param vertical where to look in vertical direction.
      * @return Next cell found.
      */
-    Cell step(Enum dirHorz, Enum dirVert) {
+    Cell step(Enum horizontal, Enum vertical) {
         //horizontal step
-        int stepHorz;
-        if (dirHorz == HorizontalDirection.NONE) {
-            stepHorz = 0;
+        int xStep;
+        if (horizontal == HorizontalDirection.NONE) {
+            xStep = 0;
         } else {
-            stepHorz = dirHorz == HorizontalDirection.RIGHT ? 1 : -1;
+            xStep = horizontal == HorizontalDirection.RIGHT ? 1 : -1;
         }
         //vertical step
-        int stepVert;
-        if (dirVert == VerticalDirection.NONE) {
-            stepVert = 0;
+        int yStep;
+        if (vertical == VerticalDirection.NONE) {
+            yStep = 0;
         } else {
-            stepVert = dirVert == VerticalDirection.UP ? 1 : -1;
+            yStep = vertical == VerticalDirection.UP ? 1 : -1;
         }
         //result
-        return new Cell(this.x + stepHorz, this.y + stepVert);
+        return new Cell(this.x + xStep, this.y + yStep);
     }
 
     /**
      * Checks if two cells are equal.
      *
-     * @param otherObject Another cell to check.
+     * @param oth Another cell to check.
      * @return true if equal, false if not.
      */
     @Override
-    public boolean equals(Object otherObject) {
+    public boolean equals(Object oth) {
         boolean result = false;
-        if (otherObject instanceof Cell) {
-            Cell other = (Cell) otherObject;
+        if (oth instanceof Cell) {
+            Cell other = (Cell) oth;
             if (this.x == other.x && this.y == other.y) {
                 result = true;
             }

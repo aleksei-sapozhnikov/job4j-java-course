@@ -41,10 +41,10 @@ public class Tracker {
      * @param item Item to store with the given id.
      */
     public void replace(String id, Item item) {
-        int repIndex = Arrays.asList(this.items).indexOf(
+        int index = Arrays.asList(this.items).indexOf(
                 this.findById(id)
         );
-        this.items[repIndex] = item;
+        this.items[index] = item;
     }
 
     /**
@@ -53,15 +53,15 @@ public class Tracker {
      * @param id Id of the item to delete.
      */
     public void delete(String id) {
-        int delIndex = Arrays.asList(this.items).indexOf(
+        int index = Arrays.asList(this.items).indexOf(
                 this.findById(id)
         );
         System.arraycopy(
                 this.items,
-                delIndex + 1,
+                index + 1,
                 this.items,
-                delIndex,
-                this.position-- - delIndex - 1
+                index,
+                this.position-- - index - 1
         );
     }
 

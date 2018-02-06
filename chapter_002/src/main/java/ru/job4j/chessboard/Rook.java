@@ -34,32 +34,27 @@ class Rook extends Figure {
      */
     @Override
     Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
-        //check
         if (source.horizontalDistanceTo(dest) != 0 && source.verticalDistanceTo(dest) != 0) {
             throw new ImpossibleMoveException("Rook figure cannot move like this.");
         }
-        //direction
-        Enum hrzDirection;
-        Enum vertDirection;
+        Enum horizontal;
+        Enum vertical;
         if (source.horizontalDistanceTo(dest) == 0) {
-            hrzDirection = Cell.HorizontalDirection.NONE;
-            vertDirection = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
+            horizontal = Cell.HorizontalDirection.NONE;
+            vertical = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
         } else {
-            vertDirection = Cell.VerticalDirection.NONE;
-            hrzDirection = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
+            vertical = Cell.VerticalDirection.NONE;
+            horizontal = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
         }
-        //move
-        Cell[] tempWay = new Cell[100];
-        int positionWay = 0;
-        Cell wayCell = source.step(hrzDirection, vertDirection);
-        while (!wayCell.equals(dest)) {
-            tempWay[positionWay++] = wayCell;
-            wayCell = wayCell.step(hrzDirection, vertDirection);
+        Cell[] temp = new Cell[100];
+        int pos = 0;
+        Cell current = source.step(horizontal, vertical);
+        while (!current.equals(dest)) {
+            temp[pos++] = current;
+            current = current.step(horizontal, vertical);
         }
-        //last step
-        tempWay[positionWay++] = wayCell;
-        //result
-        return Arrays.copyOf(tempWay, positionWay);
+        temp[pos++] = current;
+        return Arrays.copyOf(temp, pos);
     }
 
 }

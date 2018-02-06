@@ -41,25 +41,20 @@ class Bishop extends Figure {
      */
     @Override
     Cell[] way(Cell source, Cell dest) throws ImpossibleMoveException {
-        //check
         if (Math.abs(source.horizontalDistanceTo(dest)) != Math.abs(source.verticalDistanceTo(dest))) {
             throw new ImpossibleMoveException("Bishop figure cannot move like this.");
         }
-        //where to move
-        Enum hrzDirection = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
-        Enum vertDirection = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
-        //move
-        Cell[] tempWay = new Cell[100];
-        int positionWay = 0;
-        Cell wayCell = source.step(hrzDirection, vertDirection);
-        while (!wayCell.equals(dest)) {
-            tempWay[positionWay++] = wayCell;
-            wayCell = wayCell.step(hrzDirection, vertDirection);
+        Enum horizontal = source.horizontalDistanceTo(dest) > 0 ? Cell.HorizontalDirection.RIGHT : Cell.HorizontalDirection.LEFT;
+        Enum vertical = source.verticalDistanceTo(dest) > 0 ? Cell.VerticalDirection.UP : Cell.VerticalDirection.DOWN;
+        Cell[] temp = new Cell[100];
+        int pos = 0;
+        Cell current = source.step(horizontal, vertical);
+        while (!current.equals(dest)) {
+            temp[pos++] = current;
+            current = current.step(horizontal, vertical);
         }
-        //last step
-        tempWay[positionWay++] = wayCell;
-        //result
-        return Arrays.copyOf(tempWay, positionWay);
+        temp[pos++] = current;
+        return Arrays.copyOf(temp, pos);
     }
 
 

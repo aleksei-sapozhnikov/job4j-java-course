@@ -12,26 +12,26 @@ public class ArrayJoin {
     /**
      * Joins two ascending sorted arrays.
      *
-     * @param firstArray  First array, sorted in ascending order.
-     * @param secondArray Second array, sorted in ascending order.
+     * @param first  First array, sorted in ascending order.
+     * @param second Second array, sorted in ascending order.
      * @return new array, ascending sorted.
      */
-    public int[] joinSortedAscending(int[] firstArray, int[] secondArray) {
-        int[] resultArray = new int[firstArray.length + secondArray.length];
-        int firstIndex = 0;
-        int secondIndex = 0;
-        int resultIndex = 0;
-        while (firstIndex < firstArray.length && secondIndex < secondArray.length) {
-            resultArray[resultIndex++] = firstArray[firstIndex] < secondArray[secondIndex] ? firstArray[firstIndex++] : secondArray[secondIndex++];
+    public int[] joinSortedAscending(int[] first, int[] second) {
+        int[] result = new int[first.length + second.length];
+        int iFirst = 0;
+        int iSecond = 0;
+        int iResult = 0;
+        while (iFirst < first.length && iSecond < second.length) {
+            result[iResult++] = first[iFirst] < second[iSecond] ? first[iFirst++] : second[iSecond++];
         }
-        boolean copyFirst = firstIndex < firstArray.length;
+        boolean copyFirst = iFirst < first.length;
         System.arraycopy(
-                copyFirst ? firstArray : secondArray,
-                copyFirst ? firstIndex : secondIndex,
-                resultArray,
-                resultIndex,
-                copyFirst ? firstArray.length - firstIndex : secondArray.length - secondIndex
+                copyFirst ? first : second,
+                copyFirst ? iFirst : iSecond,
+                result,
+                iResult,
+                copyFirst ? first.length - iFirst : second.length - iSecond
         );
-        return resultArray;
+        return result;
     }
 }

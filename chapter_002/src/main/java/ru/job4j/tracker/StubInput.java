@@ -44,14 +44,14 @@ public class StubInput implements Input {
      */
     public int ask(String question, int[] range) {
         int key = Integer.valueOf(this.ask(question));
-        boolean inRange = false;
+        boolean inside = false;
         for (int item : range) {
             if (key == item) {
-                inRange = true;
+                inside = true;
                 break;
             }
         }
-        if (inRange) {
+        if (inside) {
             return key;
         } else {
             throw new MenuActionOutOfRangeException("Entered menu action is out of allowed range");

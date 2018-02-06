@@ -19,23 +19,23 @@ public class StringContains {
     public boolean contains(String origin, String sub) {
         boolean result = false;
         if (sub.length() <= origin.length()) {
-            char[] originArray = origin.toCharArray();
-            char[] subArray = sub.toCharArray();
+            char[] orig = origin.toCharArray();
+            char[] subs = sub.toCharArray();
             ready:
-            for (int originIndex = 0; originIndex < originArray.length; originIndex++) {
+            for (int iOrig = 0; iOrig < orig.length; iOrig++) {
                 if (result) {
                     break;
                 }
-                if (originIndex + subArray.length - 1 > originArray.length) {
+                if (iOrig + subs.length - 1 > orig.length) {
                     break;
                 }
-                int subIndex = 0;
-                while (originArray[originIndex + subIndex] == subArray[subIndex]) {
-                    if (subIndex == subArray.length - 1) {
+                int iSubs = 0;
+                while (orig[iOrig + iSubs] == subs[iSubs]) {
+                    if (iSubs == subs.length - 1) {
                         result = true;
                         continue ready;
                     } else {
-                        subIndex++;
+                        iSubs++;
                     }
                 }
             }

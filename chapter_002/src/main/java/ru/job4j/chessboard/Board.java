@@ -72,8 +72,8 @@ public class Board {
      */
     boolean isAnyFigureInPositions(Cell[] positions) {
         boolean result = false;
-        for (Cell tempCell : positions) {
-            if (this.findFigureByPosition(tempCell) != null) {
+        for (Cell temp : positions) {
+            if (this.findFigureByPosition(temp) != null) {
                 result = true;
                 break;
             }
@@ -99,15 +99,12 @@ public class Board {
             throw new FigureNotFoundException("No figure found in this cell.");
         }
         // Если фигура есть. Проверить может ли она так двигаться. Если нет то упадет исключение
-        // same cell
         if (source.equals(dest)) {
             throw new ImpossibleMoveException("Destination position is equal to the source position.");
         }
-        //out of board
         if (!dest.isInRange(MIN_X, MAX_X, MIN_Y, MAX_Y)) {
             throw new ImpossibleMoveException("Figure goes out of the chessboard.");
         }
-        //find way
         Cell[] way = figure.way(source, dest);
         // Проверить что полученный путь. не занят фигурами. Если занят выкинуть исключение
         if (this.isAnyFigureInPositions(way)) {

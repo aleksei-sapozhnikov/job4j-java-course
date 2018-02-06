@@ -16,13 +16,10 @@ public class Square {
      * @return Array with squares if bound > 0, empty array if value <= 0.
      */
     public int[] calculate(int bound) {
-        // array size cannot be < 0
         if (bound < 0) {
             bound = 0;
         }
         int[] result = new int[bound];
-        // Fill array with squares of values.
-        // Value index in array == value - 1 (because starting with 0)
         for (int i = 1; i < (result.length + 1); i++) {
             result[i - 1] = i * i;
         }
