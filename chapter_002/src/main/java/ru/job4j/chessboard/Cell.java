@@ -86,16 +86,25 @@ class Cell {
      * Returns a cell in specified direction, next to this cell.
      *
      * @param horizontal where to look in horizontal direction.
-     * @param vertical where to look in vertical direction.
+     * @param vertical   where to look in vertical direction.
      * @return Next cell found.
      */
     Cell step(Enum horizontal, Enum vertical) {
-        int xStep = horizontal == HorizontalDirection.NONE
-                ? 0
-                : horizontal == HorizontalDirection.RIGHT ? 1 : -1;
-        int yStep = vertical == VerticalDirection.NONE
-                ? 0
-                : vertical == VerticalDirection.UP ? 1 : -1;
+        //horizontal step
+        int xStep;
+        if (horizontal == HorizontalDirection.NONE) {
+            xStep = 0;
+        } else {
+            xStep = horizontal == HorizontalDirection.RIGHT ? 1 : -1;
+        }
+        //vertical step
+        int yStep;
+        if (vertical == VerticalDirection.NONE) {
+            yStep = 0;
+        } else {
+            yStep = vertical == VerticalDirection.UP ? 1 : -1;
+        }
+        //result
         return new Cell(this.x + xStep, this.y + yStep);
     }
 
