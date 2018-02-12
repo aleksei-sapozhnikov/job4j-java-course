@@ -13,6 +13,22 @@ import java.util.List;
 public class ConvertList {
 
     /**
+     * Converts List of int[] arrays into one List.
+     *
+     * @param list List of int[].
+     * @return List containing all elements of int[] arrays in given list of this arrays.
+     */
+    public List<Integer> convert(List<int[]> list) {
+        List<Integer> result = new ArrayList<>();
+        for (int[] array : list) {
+            for (int x : array) {
+                result.add(x);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Converts 2-dimensional array into ArrayList.
      *
      * @param array 2-dimensional array of int to convert.

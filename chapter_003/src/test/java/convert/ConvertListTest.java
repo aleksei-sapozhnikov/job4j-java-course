@@ -36,17 +36,17 @@ public class ConvertListTest {
             {
                 add(1);
                 add(2);
-                add(3);
+                add(8);
                 add(4);
                 add(5);
-                add(6);
+                add(-9);
             }
         };
         int rows = 2;
         int[][] result = new ConvertList().toArray(list, rows);
         int[][] expected = {
-                {1, 2, 3},
-                {4, 5, 6}
+                {1, 2, 8},
+                {4, 5, -9}
         };
         assertThat(result, is(expected));
     }
@@ -168,5 +168,72 @@ public class ConvertListTest {
         List<Integer> expected = new ArrayList<>();
         assertThat(result, is(expected));
     }
+
+    /**
+     * Test convert() method.
+     */
+    @Test
+    public void whenConvertListOfArraysThenResult() {
+        List<int[]> input = new ArrayList<int[]>() {
+            {
+                add(new int[]{3, 2, 5});
+                add(new int[]{2, 5, 4, 6, 4, 6});
+                add(new int[]{3, 2});
+                add(new int[]{});
+            }
+        };
+        List<Integer> result = new ConvertList().convert(input);
+        List<Integer> expected = new ArrayList<Integer>() {
+            {
+                add(3);
+                add(2);
+                add(5);
+                add(2);
+                add(5);
+                add(4);
+                add(6);
+                add(4);
+                add(6);
+                add(3);
+                add(2);
+            }
+        };
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenConvertListOfArraysThenResult2() {
+        List<int[]> input = new ArrayList<>();
+        input.add(new int[]{1, -2});
+        input.add(new int[]{3, 5, -5, 6});
+        List<Integer> result = new ConvertList().convert(input);
+        List<Integer> expected = new ArrayList<Integer>() {
+            {
+                add(1);
+                add(-2);
+                add(3);
+                add(5);
+                add(-5);
+                add(6);
+            }
+        };
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenConvertListOfEmptyArraysThenEmptyArray() {
+        List<int[]> input = new ArrayList<int[]>() {
+            {
+                add(new int[]{});
+                add(new int[]{});
+                add(new int[]{});
+                add(new int[]{});
+            }
+        };
+        List<Integer> result = new ConvertList().convert(input);
+        List<Integer> expected = new ArrayList<>();
+        assertThat(result, is(expected));
+    }
+
 
 }
