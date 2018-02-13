@@ -1,6 +1,8 @@
 package tracker;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -15,12 +17,7 @@ public class Tracker {
     /**
      * Array containing items : tasks, messages etc.
      */
-    private Item[] items = new Item[100];
-
-    /**
-     * Index where to put new item into array.
-     */
-    private int position = 0;
+    private List<Item> items = new ArrayList<>();
 
     /**
      * Add new item to array.
@@ -30,7 +27,7 @@ public class Tracker {
      */
     public Item add(Item item) {
         item.setId(this.generateId());
-        this.items[this.position++] = item;
+        this.items.add(item);
         return item;
     }
 
@@ -41,10 +38,9 @@ public class Tracker {
      * @param item Item to store with the given id.
      */
     public void replace(String id, Item item) {
-        int index = Arrays.asList(this.items).indexOf(
-                this.findById(id)
+        this.items.set(
+                this.items.indexOf(this.findById(id)), item
         );
-        this.items[index] = item;
     }
 
     /**
@@ -53,15 +49,8 @@ public class Tracker {
      * @param id Id of the item to delete.
      */
     public void delete(String id) {
-        int index = Arrays.asList(this.items).indexOf(
+        this.items.remove(
                 this.findById(id)
-        );
-        System.arraycopy(
-                this.items,
-                index + 1,
-                this.items,
-                index,
-                this.position-- - index - 1
         );
     }
 
@@ -74,9 +63,9 @@ public class Tracker {
     public Item findById(String id) {
         boolean found = false;
         Item result = null;
-        for (int i = 0; i < this.position; i++) {
-            if (id.equals(this.items[i].getId())) {
-                result = this.items[i];
+        for (Item temp : this.items) {
+            if (id.equals(temp.getId())) {
+                result = temp;
                 found = true;
                 break;
             }
@@ -89,20 +78,19 @@ public class Tracker {
     }
 
     /**
-     * Return all items whose "name" field is equal to given key.
+     * Return all items whose "name" field is equal to given name.
      *
-     * @param key Items with this name will be returned.
+     * @param name Items with this name will be returned.
      * @return Array of Items satisfying the condition.
      */
-    public Item[] findByName(String key) {
-        Item[] temp = new Item[this.position];
-        int index = 0;
-        for (int i = 0; i < temp.length; i++) {
-            if (key.equals(this.items[i].getName())) {
-                temp[index++] = this.items[i];
+    public List<Item> findByName(String name) {
+        List<Item> result = new ArrayList<>();
+        for (Item temp : this.items) {
+            if (name.equals(temp.getName())) {
+                result.add(temp);
             }
         }
-        return Arrays.copyOf(temp, index);
+        return result;
     }
 
     /**
@@ -110,8 +98,8 @@ public class Tracker {
      *
      * @return Array of Items stored in tracker (without null elements).
      */
-    public Item[] findAll() {
-        return Arrays.copyOf(this.items, this.position);
+    public List<Item> findAll() {
+        return Collections.unmodifiableList(this.items);
     }
 
     /**

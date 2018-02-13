@@ -6,6 +6,8 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.StringJoiner;
 
 import static org.hamcrest.core.Is.is;
@@ -52,7 +54,7 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Input input = new StubInput(new String[]{"0", "name1", "description1", "6"});
         new StartUI(input, tracker).init();
-        String result = tracker.findAll()[0].getDescription();
+        String result = tracker.findAll().get(0).getDescription();
         String expected = "description1";
         assertThat(result, is(expected));
     }
@@ -62,7 +64,7 @@ public class StartUITest {
         Tracker tracker = new Tracker();
         Input input = new StubInput(new String[]{"0", "name1", "description1", "6"});
         new StartUI(input, tracker).init();
-        String result = tracker.findAll()[0].getName();
+        String result = tracker.findAll().get(0).getName();
         String expected = "name1";
         assertThat(result, is(expected));
     }
@@ -101,8 +103,8 @@ public class StartUITest {
         Item item = tracker.add(new Item("name1", "desc1", System.currentTimeMillis()));
         Input input = new StubInput(new String[]{"3", item.getId(), "y", "6"});
         new StartUI(input, tracker).init();
-        Item[] result = tracker.findAll();
-        Item[] expected = {};
+        List<Item> result = tracker.findAll();
+        List<Item> expected = new ArrayList<>();
         assertThat(result, is(expected));
     }
 

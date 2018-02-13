@@ -2,6 +2,9 @@ package tracker;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Shows menu, launches user actions.
@@ -19,29 +22,9 @@ public class MenuTracker {
     private Tracker tracker;
 
     /**
-     * Array containing all possible user actions.
+     * Map containing all possible user actions.
      */
-    private UserAction[] userActions = new UserAction[7];
-
-    /**
-     * Numbers (keys) of actions which can be entered by user.
-     */
-    private int[] actionKeys = {0, 1, 2, 3, 4, 5, 6};
-
-    /**
-     * List of action names.
-     * Position in this array corresponds with the key in the actionKeys array.
-     * Action with key actionKeys[0] will have key actionKeys[0]
-     */
-    private String[] actionDescriptions = {
-            "Add new Item",
-            "Show all items",
-            "Edit item",
-            "Delete item",
-            "Find item by Id",
-            "Find items by name",
-            "Exit Program"
-    };
+    private Map<Integer, UserAction> userActions = new TreeMap<>();
 
     /**
      * Constructor.
@@ -54,53 +37,33 @@ public class MenuTracker {
         this.tracker = tracker;
     }
 
-    /**
-     * Get range of action numbers which user can enter.
-     *
-     * @return Array of action numbers (keys).
-     */
-    public int[] getActionKeys() {
-        return this.actionKeys;
+    public int[] getUserActionsKeys() {
+        int[] result = new int[this.userActions.keySet().size()];
+        int pos = 0;
+        for (Integer key : this.userActions.keySet()) {
+            result[pos++] = key;
+        }
+        return result;
     }
 
     /**
      * Fill array with possible actions.
      */
     public void fillUserActions() {
-        if (actionKeys.length == actionDescriptions.length) {
-            int position = 0;
-            this.userActions[position] = this.new AddItem(
-                    this.actionKeys[position], this.actionDescriptions[position++]
-            );
-            this.userActions[position] = new MenuTracker.ShowAllItems(
-                    this.actionKeys[position], this.actionDescriptions[position++]
-            );
-            this.userActions[position] = new EditItem(
-                    this.actionKeys[position], this.actionDescriptions[position++]
-            );
-            this.userActions[position] = this.new DeleteItem(
-                    this.actionKeys[position], this.actionDescriptions[position++]
-            );
-            this.userActions[position] = new MenuTracker.FindItemById(
-                    this.actionKeys[position], this.actionDescriptions[position++]
-            );
-            this.userActions[position] = new FindItemsByName(
-                    this.actionKeys[position], this.actionDescriptions[position++]
-            );
-            this.userActions[position] = new Exit(
-                    this.actionKeys[position], this.actionDescriptions[position]
-            );
-        } else {
-            throw new RuntimeException(
-                    "Length of array with action keys is not equal to length of array with actions descriptions."
-            );
-        }
+        int position = 0;
+        this.userActions.put(position, this.new AddItem(position++, "Add new Item"));
+        this.userActions.put(position, new ShowAllItems(position++, "Show all items"));
+        this.userActions.put(position, new EditItem(position++, "Edit item"));
+        this.userActions.put(position, this.new DeleteItem(position++, "Delete item"));
+        this.userActions.put(position, new FindItemById(position++, "Find item by Id"));
+        this.userActions.put(position, new FindItemsByName(position++, "Find items by name"));
+        this.userActions.put(position, new Exit(position, "Exit Program"));
     }
 
     public void show() {
         System.out.println();
         System.out.println("============ Action menu ============");
-        for (UserAction action : this.userActions) {
+        for (UserAction action : this.userActions.values()) {
             if (action != null) {
                 System.out.println(action.menuLine());
             }
@@ -113,7 +76,7 @@ public class MenuTracker {
      * @param key Action key.
      */
     public void launchAction(int key) {
-        this.userActions[key].execute(this.input, this.tracker);
+        this.userActions.get(key).execute(this.input, this.tracker);
     }
 
     /**
@@ -209,7 +172,7 @@ public class MenuTracker {
         public void execute(Input input, Tracker tracker) {
             System.out.println();
             System.out.println("------------ Show all items contained ------------");
-            Item[] items = tracker.findAll();
+            List<Item> items = tracker.findAll();
             for (Item item : items) {
                 System.out.println();
                 System.out.println(String.format("=== Item id : %s", item.getId()));
@@ -336,7 +299,7 @@ class FindItemsByName extends BaseAction {
         System.out.println();
         System.out.println("------------ Find items with given name ------------");
         String name = input.ask("Enter name : ");
-        Item[] items = tracker.findByName(name);
+        List<Item> items = tracker.findByName(name);
         for (Item item : items) {
             System.out.println();
             System.out.println(String.format("== Item id : %s", item.getId()));
