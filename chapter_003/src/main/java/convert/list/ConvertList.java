@@ -1,10 +1,10 @@
-package convert;
+package convert.list;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Converts 2-dimensional array ino ArrayList and vice versa.
+ * Converts 2-dimensional array into ArrayList and vice versa.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$

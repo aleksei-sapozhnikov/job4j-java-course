@@ -1,4 +1,4 @@
-package convert;
+package convert.list;
 
 import org.junit.Test;
 
