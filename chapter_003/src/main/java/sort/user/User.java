@@ -10,7 +10,7 @@ import java.util.Objects;
  * @version $Id$
  * @since 13.02.2018
  */
-public class User implements Comparable<Integer> {
+public class User implements Comparable<User> {
 
     /**
      * User name.
@@ -34,22 +34,10 @@ public class User implements Comparable<Integer> {
     }
 
     /**
-     * Compare two user objects by age.
-     *
-     * @param other Object to compare to.
-     * @return a negative integer, zero, or a positive integer as this User object
-     * is less than, equal to, or greater than the specified User object.
-     */
-    @Override
-    public int compareTo(Integer other) {
-        return this.age - other;
-    }
-
-    /**
      * Check if this User object is equal to another object.
      *
-     * @param o Object to compare to.
-     * @return true or false as this User object is equal to another object or not.
+     * @param o Other object.
+     * @return true or false, if objects are equal or not.
      */
     @Override
     public boolean equals(Object o) {
@@ -65,12 +53,24 @@ public class User implements Comparable<Integer> {
     }
 
     /**
-     * Return hashcode for the User object.
+     * Returns hashcode
      *
-     * @return integer hashcode.
+     * @return Integer hashcode.
      */
     @Override
     public int hashCode() {
         return Objects.hash(name, age);
+    }
+
+    /**
+     * Compare two user objects by age.
+     *
+     * @param o Object to compare to.
+     * @return a negative integer, zero, or a positive integer as this User object
+     * is less than, equal to, or greater than the specified User object.
+     */
+    @Override
+    public int compareTo(User o) {
+        return Integer.compare(this.age, o.age);
     }
 }
