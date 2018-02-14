@@ -1,7 +1,5 @@
 package tracker;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -178,7 +176,6 @@ public class MenuTracker {
                 System.out.println(String.format("=== Item id : %s", item.getId()));
                 System.out.println(String.format("name : %s", item.getName()));
                 System.out.println(String.format("description : %s", item.getDescription()));
-                System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
             }
         }
     }
@@ -214,7 +211,6 @@ public class MenuTracker {
                 System.out.println(String.format("id : %s", item.getId()));
                 System.out.println(String.format("name : %s", item.getName()));
                 System.out.println(String.format("description : %s", item.getDescription()));
-                System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
             } catch (NoSuchIdException nside) {
                 System.out.println("=== Exception : Item with such id not found. Try again.");
             }
@@ -253,7 +249,6 @@ class EditItem extends BaseAction {
             System.out.println(String.format("id : %s", old.getId()));
             System.out.println(String.format("name : %s", old.getName()));
             System.out.println(String.format("description : %s", old.getDescription()));
-            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(old.getCreateTime()))));
             //get new data
             System.out.println();
             String name = input.ask("Enter item new name : ");
@@ -305,7 +300,6 @@ class FindItemsByName extends BaseAction {
             System.out.println(String.format("== Item id : %s", item.getId()));
             System.out.println(String.format("name : %s", item.getName()));
             System.out.println(String.format("description : %s", item.getDescription()));
-            System.out.println(String.format("created : %s", new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date(item.getCreateTime()))));
         }
     }
 }
