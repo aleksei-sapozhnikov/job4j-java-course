@@ -49,4 +49,99 @@ public class SortUserTest {
         assertThat(result, is(expected));
     }
 
+    /**
+     * Test sortNameLength() method
+     */
+    @Test
+    public void whenDifferentNameLengthsThenSortedByLength() {
+        List<User> input = new ArrayList<>(Arrays.asList(
+                new User("Ivan", 5),
+                new User("Kuharka", 3),
+                new User("Ya", 23)
+        ));
+        List<User> result = new SortUser().sortNameLength(input);
+        List<User> expected = new ArrayList<>(Arrays.asList(
+                new User("Ya", 23),
+                new User("Ivan", 5),
+                new User("Kuharka", 3)
+        ));
+        assertThat(result, is(expected));
+    }
+
+    /**
+     * Test sortByAllFields() method
+     */
+    @Test
+    public void whenEqualNamesThenSortedByAge() {
+        List<User> input = new ArrayList<>(Arrays.asList(
+                new User("John", 87),
+                new User("John", 2),
+                new User("John", 54),
+                new User("John", 23)
+
+        ));
+        List<User> result = new SortUser().sortByAllFields(input);
+        List<User> expected = new ArrayList<>(Arrays.asList(
+                new User("John", 2),
+                new User("John", 23),
+                new User("John", 54),
+                new User("John", 87)
+        ));
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenEqualAgesThenSortedByName() {
+        List<User> input = new ArrayList<>(Arrays.asList(
+                new User("John", 87),
+                new User("Yan", 87),
+                new User("Anna", 87)
+        ));
+        List<User> result = new SortUser().sortByAllFields(input);
+        List<User> expected = new ArrayList<>(Arrays.asList(
+                new User("Anna", 87),
+                new User("John", 87),
+                new User("Yan", 87)
+        ));
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenDifferentNameAndAgeThenSortedByNameThenByAge() {
+        List<User> input = new ArrayList<>(Arrays.asList(
+                new User("John", 87),
+                new User("Yan", 87),
+                new User("Anna", 87),
+                new User("John", 23),
+                new User("Anna", 12)
+        ));
+        List<User> result = new SortUser().sortByAllFields(input);
+        List<User> expected = new ArrayList<>(Arrays.asList(
+                new User("Anna", 12),
+                new User("Anna", 87),
+                new User("John", 23),
+                new User("John", 87),
+                new User("Yan", 87)
+        ));
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenDifferentNameAndAgeThenSortedByNameThenByAge2() {
+        List<User> input = new ArrayList<>(Arrays.asList(
+                new User("Сергей", 25),
+                new User("Иван", 30),
+                new User("Сергей", 20),
+                new User("Иван", 25)
+        ));
+        List<User> result = new SortUser().sortByAllFields(input);
+        List<User> expected = new ArrayList<>(Arrays.asList(
+                new User("Иван", 25),
+                new User("Иван", 30),
+                new User("Сергей", 20),
+                new User("Сергей", 25)
+        ));
+        assertThat(result, is(expected));
+    }
+
 }

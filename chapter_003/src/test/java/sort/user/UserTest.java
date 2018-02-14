@@ -15,6 +15,28 @@ import static org.junit.Assert.assertThat;
 public class UserTest {
 
     /**
+     * Test getName() method.
+     */
+    @Test
+    public void whenGetNameThenName() {
+        User user = new User("Katy", 23);
+        String result = user.name();
+        String expected = "Katy";
+        assertThat(result, is(expected));
+    }
+
+    /**
+     * Test getAge() method.
+     */
+    @Test
+    public void whenGetAgeThenAge() {
+        User user = new User("Katy", 23);
+        int result = user.age();
+        int expected = 23;
+        assertThat(result, is(expected));
+    }
+
+    /**
      * Test compareTo() method.
      */
     @Test

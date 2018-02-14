@@ -34,6 +34,24 @@ public class User implements Comparable<User> {
     }
 
     /**
+     * Get name.
+     *
+     * @return name field value.
+     */
+    public String name() {
+        return this.name;
+    }
+
+    /**
+     * Get age.
+     *
+     * @return age field value.
+     */
+    public int age() {
+        return this.age;
+    }
+
+    /**
      * Check if this User object is equal to another object.
      *
      * @param o Other object.
