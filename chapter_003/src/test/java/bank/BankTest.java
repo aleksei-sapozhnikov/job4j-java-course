@@ -1,8 +1,10 @@
 package bank;
 
 import bank.exceptions.AlreadyExistsException;
+import bank.exceptions.NotFoundException;
 import org.junit.Test;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -39,31 +41,199 @@ public class BankTest {
         bank.addUser(new User("123-45", "John"));
     }
 
+    /**
+     * Test deleteUser() method.
+     */
     @Test
-    public void deleteUser() {
+    public void whenDeleteUserOfTwoThenOneLeft() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addUser(new User("323-43", "Petya"));
+        bank.deleteUser(new User("323-43", "Petya"));
+        Set<User> result = bank.showAllUsers();
+        Set<User> expected = new HashSet<>(Arrays.asList(new User("123-45", "Vasya")));
+        assertThat(result, is(expected));
     }
 
     @Test
-    public void addAccountToUser() {
+    public void whenDeleteLastUserThenEmptyUserList() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.deleteUser(new User("123-45", "Vasya"));
+        Set<User> result = bank.showAllUsers();
+        Set<User> expected = new HashSet<>();
+        assertThat(result, is(expected));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void whenDeleteNonExistentUserThenNotFoundException() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addUser(new User("323-43", "Petya"));
+        bank.deleteUser(new User("759-43", "Anna"));
+    }
+
+    /**
+     * Test addAccountToUser() method.
+     */
+    @Test
+    public void whenAddAccountThenItIsInUserAccountList() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        Set<Account> result = bank.getUserAccounts("123-45");
+        Set<Account> expected = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("123.45"))));
+        assertThat(result, is(expected));
     }
 
     @Test
-    public void deleteAccountFromUser() {
+    public void whenAddThreeAccountsTheyAreInUserAccountList() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addAccountToUser("123-45", new Account("N-54", new BigDecimal("443.45")));
+        bank.addAccountToUser("123-45", new Account("N-23", new BigDecimal("1545")));
+        Set<Account> result = bank.getUserAccounts("123-45");
+        Set<Account> expected = new HashSet<>(Arrays.asList(
+                new Account("N-82", new BigDecimal("123.45")),
+                new Account("N-54", new BigDecimal("443.45")),
+                new Account("N-23", new BigDecimal("1545"))
+        ));
+        assertThat(result, is(expected));
+    }
+
+    @Test(expected = AlreadyExistsException.class)
+    public void whenAbsolutelyTheSameAccountAlreadyExistsThenAlreadyExistsException() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("653.45")));
     }
 
     @Test
-    public void getUserAndAccounts() {
+    public void whenDifferentUsersThenCanHaveTheSameAccounts() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addUser(new User("543-21", "Lena"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addAccountToUser("543-21", new Account("N-82", new BigDecimal("653.45")));
+        Set<Account> resultOne = bank.getUserAccounts("123-45");
+        Set<Account> resultTwo = bank.getUserAccounts("543-21");
+        Set<Account> expectedOne = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("123.45"))));
+        Set<Account> expectedTwo = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("653.45"))));
+        assertThat(resultOne, is(expectedOne));
+        assertThat(resultTwo, is(expectedTwo));
+    }
+
+    /**
+     * Test deleteAccountFromUser() method.
+     */
+    @Test
+    public void whenDeleteAccountFromTwoThenOneAccountLeft() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addAccountToUser("123-45", new Account("G-642", new BigDecimal("653.45")));
+        bank.deleteAccountFromUser("123-45", new Account("G-642", new BigDecimal("653.45")));
+        Set<Account> result = bank.getUserAccounts("123-45");
+        Set<Account> expected = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("123.45"))));
+        assertThat(result, is(expected));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void whenDeleteAccountNotFoundThenNotFoundException() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.deleteAccountFromUser("123-45", new Account("G-642", new BigDecimal("653.45")));
+    }
+
+    @Test(expected = NotFoundException.class)
+    public void whenDeleteAccountUserNotFoundThenNotFoundException() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.deleteAccountFromUser("222-444", new Account("N-82", new BigDecimal("123.45")));
+    }
+
+    /**
+     * Test getAccountByRequisites() method.
+     */
+    @Test
+    public void whenExistingRequisitesThenAccount() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        Account result = bank.getAccountByRequisites(bank.getUserAccounts("123-45"), "N-82");
+        Account expected = new Account("N-82", new BigDecimal("123.45"));
+        assertThat(result, is(expected));
     }
 
     @Test
-    public void getAccountByRequisites() {
+    public void whenAccountNotFoundByRequisitesThenNull() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        Account result = bank.getAccountByRequisites(bank.getUserAccounts("123-45"), "G-64");
+        Account expected = null;
+        assertThat(result, is(expected));
+    }
+
+    /**
+     * Test transferMoney() method.
+     */
+    @Test
+    public void whenTransferMoneyFromUserToAnotherUserThenValueChangesRight() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addUser(new User("543-21", "Petya"));
+        bank.addAccountToUser("543-21", new Account("G-64", new BigDecimal("78.15")));
+        bank.transferMoney("123-45", "N-82", "543-21", "G-64", new BigDecimal("12.15"));
+        Set<Account> resultOne = bank.getUserAccounts("123-45");
+        Set<Account> resultTwo = bank.getUserAccounts("543-21");
+        Set<Account> expectedOne = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("111.30"))));
+        Set<Account> expectedTwo = new HashSet<>(Arrays.asList(new Account("G-64", new BigDecimal("90.30"))));
+        assertThat(resultOne, is(expectedOne));
+        assertThat(resultTwo, is(expectedTwo));
     }
 
     @Test
-    public void replace() {
+    public void whenTransferMoneyFromUserToTheSameUserDifferentAccountThenValueChangesRight() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addAccountToUser("123-45", new Account("G-64", new BigDecimal("78.15")));
+        bank.transferMoney("123-45", "N-82", "123-45", "G-64", new BigDecimal("12.15"));
+        Set<Account> result = bank.getUserAccounts("123-45");
+        Set<Account> expected = new HashSet<>(Arrays.asList(
+                new Account("N-82", new BigDecimal("111.30")),
+                new Account("G-64", new BigDecimal("90.30"))
+        ));
+        assertThat(result, is(expected));
     }
 
     @Test
-    public void transferMoney() {
+    public void whenTransferMoneyFromAccountToTheSameAccountThenFalseAndNoAccountChange() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        boolean resultOne = bank.transferMoney("123-45", "N-82", "123-45", "N-82", new BigDecimal("12.15"));
+        Set<Account> resultTwo = bank.getUserAccounts("123-45");
+        Set<Account> expectedTwo = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("123.45"))));
+        assertThat(resultOne, is(false));
+        assertThat(resultTwo, is(expectedTwo));
     }
+
+    @Test
+    public void whenNotEnoughMoneyToTransferThenFalse() throws AlreadyExistsException, NotFoundException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addUser(new User("543-21", "Anna"));
+        bank.addAccountToUser("543-21", new Account("G-64", new BigDecimal("543.21")));
+        boolean result = bank.transferMoney("123-45", "N-82", "543-21", "G-64", new BigDecimal("250.00"));
+        assertThat(result, is(false));
+    }
+
 }

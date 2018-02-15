@@ -7,14 +7,14 @@ package bank.exceptions;
  * @version $Id$
  * @since 15.02.2018
  */
-public class NotEnoughMoneyException extends Exception {
+public class UnablePerformOperationException extends Exception {
 
     /**
      * Constructor.
      *
      * @param msg messae to show.
      */
-    public NotEnoughMoneyException(String msg) {
+    public UnablePerformOperationException(String msg) {
         super(msg);
     }
 }

@@ -1,12 +1,14 @@
 package bank;
 
 import bank.exceptions.AlreadyExistsException;
-import bank.exceptions.NotEnoughMoneyException;
 import bank.exceptions.NotFoundException;
-import javafx.util.Pair;
+import bank.exceptions.UnablePerformOperationException;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Bank with users and accounts.
@@ -22,7 +24,7 @@ public class Bank {
      * Users of the bank.
      * Each user can have several accounts.
      */
-    private Map<User, List<Account>> users = new HashMap<>();
+    private Map<User, Set<Account>> users = new HashMap<>();
 
     /**
      * Add user to bank.
@@ -30,7 +32,7 @@ public class Bank {
      * @param user to add.
      */
     public void addUser(User user) throws AlreadyExistsException {
-        List<Account> result = (this.users.putIfAbsent(user, new ArrayList<>()));
+        Set<Account> result = (this.users.putIfAbsent(user, new HashSet<>()));
         if (result != null) {
             throw new AlreadyExistsException("Adding user to bank: user already exists.");
         }
@@ -42,7 +44,7 @@ public class Bank {
      * @param user user to delete.
      */
     public void deleteUser(User user) throws NotFoundException {
-        List<Account> result = this.users.remove(user);
+        Set<Account> result = this.users.remove(user);
         if (result == null) {
             throw new NotFoundException("Removing user from bank: user not found.");
         }
@@ -52,21 +54,47 @@ public class Bank {
      * Show all users stored in bank map.
      */
     public Set<User> showAllUsers() {
-        return new HashSet<>(users.keySet());
+        return new HashSet<>(this.users.keySet());
+    }
+
+    /**
+     * Find user by his passport.
+     *
+     * @param passport user passport (identifier).
+     * @return first corresponding user found or null, if not found any.
+     */
+    private User getUserByPassport(String passport) {
+        User result = null;
+        for (User temp : this.users.keySet()) {
+            if (passport.equals(temp.passport())) {
+                result = temp;
+                break;
+            }
+        }
+        return result;
     }
 
     /**
      * Add new bank accounts for existing user.
+     * (
      *
      * @param passport passport (identifier) of the user.
      * @param account  account to add.
      */
-    public void addAccountToUser(String passport, Account account) {
-        Pair<User, List<Account>> pair = this.getUserAndAccounts(passport);
-        User user = pair.getKey();
-        List<Account> accounts = pair.getValue();
+    public void addAccountToUser(String passport, Account account) throws AlreadyExistsException {
+        Set<Account> accounts = this.getUserAccounts(passport);
+        boolean exists = false;
+        String requisites = account.requisites();
+        for (Account acc : accounts) {
+            if (requisites.equals(acc.requisites())) {
+                exists = true;
+                break;
+            }
+        }
+        if (exists) {
+            throw new AlreadyExistsException("Adding account: account already exists for this user.");
+        }
         accounts.add(account);
-        this.users.put(user, accounts);
     }
 
     /**
@@ -75,40 +103,35 @@ public class Bank {
      * @param passport passport (identifier) of the user.
      * @param account  account to delete.
      */
-    public void deleteAccountFromUser(String passport, Account account) {
-        Pair<User, List<Account>> pair = this.getUserAndAccounts(passport);
-        User user = pair.getKey();
-        List<Account> accounts = pair.getValue();
-        accounts.remove(account);
-        this.users.put(user, accounts);
+    public void deleteAccountFromUser(String passport, Account account) throws NotFoundException {
+        Set<Account> accounts = this.getUserAccounts(passport);
+        if (accounts == null) {
+            throw new NotFoundException("Deleting account: user not found.");
+        }
+        boolean result = accounts.remove(account);
+        if (!result) {
+            throw new NotFoundException("Deleting account: account not found.");
+        }
     }
 
     /**
-     * Get user and his accounts by passport.
+     * Get list of user accounts by his passport.
      *
      * @param passport passport (identifier) of the user.
-     * @return Pair, where key is the first found corresponding user,
-     * value is his accounts list; or null if couldn't find any corresponding user.
+     * @return the first found corresponding user, or null if such user not found.
      */
-    public Pair<User, List<Account>> getUserAndAccounts(String passport) {
-        Pair<User, List<Account>> result = null;
-        for (Map.Entry<User, List<Account>> entry : this.users.entrySet()) {
-            if (passport.equals(entry.getKey().passport())) {
-                result = new Pair<>(entry.getKey(), entry.getValue());
-                break;
-            }
-        }
-        return result;
+    public Set<Account> getUserAccounts(String passport) {
+        User user = this.getUserByPassport(passport);
+        return this.users.get(user);
     }
 
     /**
-     * Get an account from account list by his requisites.
+     * Get account from list by requisites.
      *
-     * @param accounts   list of accounts.
-     * @param requisites requisites of the needed account.
-     * @return first found corresponding account, or null if not found any.
+     * @param requisites account requisites.
+     * @return the first found corresponding account, or null if such account not found.
      */
-    public Account getAccountByRequisites(List<Account> accounts, String requisites) {
+    public Account getAccountByRequisites(Set<Account> accounts, String requisites) {
         Account result = null;
         for (Account acc : accounts) {
             if (requisites.equals(acc.requisites())) {
@@ -117,18 +140,6 @@ public class Bank {
             }
         }
         return result;
-    }
-
-    /**
-     * Get an account from account list by his requisites.
-     *
-     * @param accounts list of accounts.
-     * @param oldAcc   account to replace.
-     * @param newAcc   replacement account.
-     */
-    public void replace(List<Account> accounts, Account oldAcc, Account newAcc) {
-        accounts.remove(oldAcc);
-        accounts.add(newAcc);
     }
 
     /**
@@ -144,29 +155,25 @@ public class Bank {
      * @return true as transfer was successfully completed.
      */
     public boolean transferMoney(String srcPassport, String srcRequisites, String dstPassport, String dstRequisites, BigDecimal amount)
-            throws NotEnoughMoneyException {
-
-        Pair<User, List<Account>> srcPair = this.getUserAndAccounts(srcPassport);
-        Pair<User, List<Account>> dstPair = this.getUserAndAccounts(dstPassport);
-        User srcUser = srcPair.getKey();
-        User dstUser = dstPair.getKey();
-        List<Account> srcAccounts = srcPair.getValue();
-        List<Account> dstAccounts = dstPair.getValue();
-        Account srcAcc = this.getAccountByRequisites(srcAccounts, srcRequisites);
-        Account dstAcc = this.getAccountByRequisites(dstAccounts, dstRequisites);
-
-        BigDecimal srcValue = srcAcc.value();
-        if (srcValue.compareTo(amount) < 0) {
-            throw new NotEnoughMoneyException("Money transfer: not enough money in source to transfer.");
+            throws NotFoundException, AlreadyExistsException {
+        try {
+            if (srcPassport.equals(dstPassport) && srcRequisites.equals(dstRequisites)) {
+                throw new UnablePerformOperationException("Unable to transfer money: source and destination accounts are the same.");
+            }
+            Account srcAcc = this.getAccountByRequisites(this.getUserAccounts(srcPassport), srcRequisites);
+            Account dstAcc = this.getAccountByRequisites(this.getUserAccounts(dstPassport), dstRequisites);
+            BigDecimal srcValue = srcAcc.value().subtract(amount);
+            if (srcValue.signum() < 0) {
+                throw new UnablePerformOperationException("Unable to transfer money: money is source account is less than amount to transfer.");
+            }
+            BigDecimal dstValue = dstAcc.value().add(amount);
+            this.deleteAccountFromUser(srcPassport, srcAcc);
+            this.addAccountToUser(srcPassport, new Account(srcRequisites, srcValue));
+            this.deleteAccountFromUser(dstPassport, dstAcc);
+            this.addAccountToUser(dstPassport, new Account(dstRequisites, dstValue));
+            return true;
+        } catch (UnablePerformOperationException upoe) {
+            return false;
         }
-        BigDecimal dstValue = dstAcc.value();
-        srcValue = srcValue.subtract(amount);
-        dstValue = dstValue.add(amount);
-
-        srcAccounts.remove(srcAcc);
-        srcAccounts.add(new Account(srcRequisites, srcValue));
-        dstAccounts.remove(dstAcc);
-        dstAccounts.add(new Account(dstRequisites, dstValue));
-        return true;
     }
 }
