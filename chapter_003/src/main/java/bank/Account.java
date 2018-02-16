@@ -28,7 +28,7 @@ public class Account {
      * @param requisites account requisites.
      * @param value      money stored in account.
      */
-    public Account(String requisites, BigDecimal value) {
+    Account(String requisites, BigDecimal value) {
         this.requisites = requisites;
         this.value = value;
     }
@@ -78,9 +78,5 @@ public class Account {
     @Override
     public int hashCode() {
         return Objects.hash(this.value, this.requisites);
-    }
-
-    public String toString() {
-        return "[req = " + this.requisites + ", value = " + this.value + "] ";
     }
 }

@@ -52,6 +52,29 @@ public class UserTest {
         assertThat(result, is(false));
     }
 
+    @Test
+    public void whenComparedToItselfThenTrue() {
+        User user = new User("123-45-67", "Vasya");
+        boolean result = user.equals(user);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenComparedToOtherClassThenFalse() {
+        User user = new User("123-45-67", "Vasya");
+        String str = "User";
+        boolean result = user.equals(str);
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void whenComparedToNullThenFalse() {
+        User user = new User("123-45-67", "Vasya");
+        String str = null;
+        boolean result = user.equals(null);
+        assertThat(result, is(false));
+    }
+
     /**
      * Test hashCode() method.
      */
