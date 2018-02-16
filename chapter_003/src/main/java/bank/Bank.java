@@ -76,7 +76,6 @@ public class Bank {
 
     /**
      * Add new bank accounts for existing user.
-     * (
      *
      * @param passport passport (identifier) of the user.
      * @param account  account to add.
