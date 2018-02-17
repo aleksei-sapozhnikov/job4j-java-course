@@ -196,45 +196,12 @@ public class BankTest {
      * Test transferMoney() method.
      */
     @Test
-    public void whenTransferMoneyFromUserToAnotherUserThenValueChangesRight() throws AlreadyExistsException {
+    public void whenTransferMoneyFromAccountToTheSameAccountThenFalse() throws AlreadyExistsException {
         Bank bank = new Bank();
         bank.addUser(new User("123-45", "Vasya"));
         bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
-        bank.addUser(new User("543-21", "Petya"));
-        bank.addAccountToUser("543-21", new Account("G-64", new BigDecimal("78.15")));
-        bank.transferMoney("123-45", "N-82", "543-21", "G-64", new BigDecimal("12.15"));
-        Set<Account> resultOne = bank.getUserAccounts("123-45");
-        Set<Account> resultTwo = bank.getUserAccounts("543-21");
-        Set<Account> expectedOne = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("111.30"))));
-        Set<Account> expectedTwo = new HashSet<>(Arrays.asList(new Account("G-64", new BigDecimal("90.30"))));
-        assertThat(resultOne, is(expectedOne));
-        assertThat(resultTwo, is(expectedTwo));
-    }
-
-    @Test
-    public void whenTransferMoneyFromUserToTheSameUserDifferentAccountThenValueChangesRight() throws AlreadyExistsException {
-        Bank bank = new Bank();
-        bank.addUser(new User("123-45", "Vasya"));
-        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
-        bank.addAccountToUser("123-45", new Account("G-64", new BigDecimal("78.15")));
-        bank.transferMoney("123-45", "N-82", "123-45", "G-64", new BigDecimal("12.15"));
-        Set<Account> result = bank.getUserAccounts("123-45");
-        Set<Account> expected = new HashSet<>();
-        expected.add(new Account("N-82", new BigDecimal("111.30")));
-        expected.add(new Account("G-64", new BigDecimal("90.30")));
-        assertThat(result, is(expected));
-    }
-
-    @Test
-    public void whenTransferMoneyFromAccountToTheSameAccountThenFalseAndNoAccountChange() throws AlreadyExistsException {
-        Bank bank = new Bank();
-        bank.addUser(new User("123-45", "Vasya"));
-        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
-        boolean resultOne = bank.transferMoney("123-45", "N-82", "123-45", "N-82", new BigDecimal("12.15"));
-        Set<Account> resultTwo = bank.getUserAccounts("123-45");
-        Set<Account> expectedTwo = new HashSet<>(Arrays.asList(new Account("N-82", new BigDecimal("123.45"))));
-        assertThat(resultOne, is(false));
-        assertThat(resultTwo, is(expectedTwo));
+        boolean result = bank.transferMoney("123-45", "N-82", "123-45", "N-82", new BigDecimal("12.15"));
+        assertThat(result, is(false));
     }
 
     @Test
@@ -248,4 +215,30 @@ public class BankTest {
         assertThat(result, is(false));
     }
 
+    @Test
+    public void whenTransferMoneyToAnotherAccountThenTrue() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addUser(new User("543-21", "Anna"));
+        bank.addAccountToUser("543-21", new Account("G-64", new BigDecimal("543.21")));
+        boolean result = bank.transferMoney("123-45", "N-82", "543-21", "G-64", new BigDecimal("100.00"));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenTransferMoneyToAnotherAccountThenRightAmountOfMoneyInAccounts() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        Account source = new Account("N-82", new BigDecimal("123.45"));
+        Account destin = new Account("G-64", new BigDecimal("543.21"));
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", source);
+        bank.addUser(new User("543-21", "Anna"));
+        bank.addAccountToUser("543-21", destin);
+        bank.transferMoney("123-45", "N-82", "543-21", "G-64", new BigDecimal("100.00"));
+        boolean resultOne = source.hasValue(new BigDecimal("23.45"));
+        boolean resultTwo = destin.hasValue(new BigDecimal("643.21"));
+        assertThat(resultOne, is(true));
+        assertThat(resultTwo, is(true));
+    }
 }

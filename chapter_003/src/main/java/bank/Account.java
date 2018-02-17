@@ -45,19 +45,31 @@ public class Account {
     }
 
     /**
+     * Checks if value in account is as given.
+     *
+     * @param value given value.
+     * @return true or false as given value equal actual or not.
+     */
+    boolean hasValue(BigDecimal value) {
+        return value.compareTo(this.value) == 0;
+    }
+
+    /**
      * Transfer amount of money to another account if there is enough money to transfer.
      *
      * @param other  account to transfer money to.
      * @param amount amount of money to transfer.
+     * @return true if transfer happened.
      * @throws UnablePerformOperationException if money in account is less then amount to transfer.
      */
-    void transferToIfEnough(Account other, BigDecimal amount) throws UnablePerformOperationException {
+    boolean transferToIfEnough(Account other, BigDecimal amount) throws UnablePerformOperationException {
         BigDecimal left = this.value.subtract(amount);
         if (left.signum() < 0) {
             throw new UnablePerformOperationException("Transfer from account: not enough money.");
         }
         this.value = left;
         other.value = other.value.add(amount);
+        return true;
     }
 
     /**

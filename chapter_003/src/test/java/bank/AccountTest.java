@@ -1,5 +1,6 @@
 package bank;
 
+import bank.exceptions.UnablePerformOperationException;
 import org.junit.Test;
 
 import java.math.BigDecimal;
@@ -21,10 +22,63 @@ public class AccountTest {
      */
     @Test
     public void whenRequisitesThenRequisites() {
-        Account acc = new Account("32-32-12", new BigDecimal(1200.34));
+        Account acc = new Account("32-32-12", new BigDecimal("1200.34"));
         String result = acc.requisites();
         String expected = "32-32-12";
         assertThat(result, is(expected));
+    }
+
+    /**
+     * Test hasValue() method.
+     */
+    @Test
+    public void whenGivenValueEqualsActualValueThenTrue() {
+        Account acc = new Account("32-32-12", new BigDecimal("1200.34"));
+        BigDecimal value = new BigDecimal("1200.34");
+        boolean result = acc.hasValue(value);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenGivenValueNotEqualToActualValueThenFalse() {
+        Account acc = new Account("32-32-12", new BigDecimal("1200.34"));
+        BigDecimal value = new BigDecimal("430.32");
+        boolean result = acc.hasValue(value);
+        assertThat(result, is(false));
+    }
+
+    /**
+     * Test transferToIfEnough() method.
+     */
+    @Test
+    public void whenEnoughMoneyThenTransferToIfEnoughTrue() throws UnablePerformOperationException {
+        Account source = new Account("N-82", new BigDecimal("34.23"));
+        Account destination = new Account("G-64", new BigDecimal("12.43"));
+        boolean result = source.transferToIfEnough(destination, new BigDecimal("34.23"));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenEnoughMoneyThenTransferToIfEnoughTrue2() throws UnablePerformOperationException {
+        Account source = new Account("N-82", new BigDecimal("34.23"));
+        Account destination = new Account("G-64", new BigDecimal("12.43"));
+        boolean result = source.transferToIfEnough(destination, new BigDecimal("12.14"));
+        assertThat(result, is(true));
+    }
+
+    @Test(expected = UnablePerformOperationException.class)
+    public void whenNotEnoughMoneyThenUnablePerformOperationException() throws UnablePerformOperationException {
+        Account source = new Account("N-82", new BigDecimal("34.23"));
+        Account destination = new Account("G-64", new BigDecimal("12.43"));
+        source.transferToIfEnough(destination, new BigDecimal("78.23"));
+    }
+
+    @Test
+    public void whenTransferToTheSameAccountThenValueTheSame() throws UnablePerformOperationException {
+        Account source = new Account("N-82", new BigDecimal("34.23"));
+        source.transferToIfEnough(source, new BigDecimal("11.32"));
+        boolean result = source.hasValue(new BigDecimal("34.23"));
+        assertThat(result, is(true));
     }
 
     /**
