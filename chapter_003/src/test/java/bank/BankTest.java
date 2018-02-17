@@ -238,7 +238,7 @@ public class BankTest {
     }
 
     @Test
-    public void whenNotEnoughMoneyToTransferThenFalse() throws AlreadyExistsException{
+    public void whenNotEnoughMoneyToTransferThenFalse() throws AlreadyExistsException {
         Bank bank = new Bank();
         bank.addUser(new User("123-45", "Vasya"));
         bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
