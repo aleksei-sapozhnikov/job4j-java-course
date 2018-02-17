@@ -15,12 +15,12 @@ public class User {
      * User passport number.
      * That is the unique user identifier.
      */
-    private String passport;
+    private final String passport;
 
     /**
      * User name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Constructor

@@ -17,17 +17,6 @@ import static org.junit.Assert.assertThat;
 public class AccountTest {
 
     /**
-     * Test value() method.
-     */
-    @Test
-    public void whenValueThenValue() {
-        Account acc = new Account("32-32-12", new BigDecimal(1200.34));
-        BigDecimal result = acc.value();
-        BigDecimal expected = new BigDecimal(1200.34);
-        assertThat(result, is(expected));
-    }
-
-    /**
      * Test requisites() method.
      */
     @Test
@@ -74,11 +63,11 @@ public class AccountTest {
     }
 
     @Test
-    public void whenNotEqualAccountValuesThenFalse() {
+    public void whenSameRequisitesAndDifferentValuesThenTrue() {
         Account left = new Account("N-82", new BigDecimal("456.45"));
         Account right = new Account("N-82", new BigDecimal("123.45"));
         boolean result = left.equals(right);
-        assertThat(result, is(false));
+        assertThat(result, is(true));
     }
 
     @Test

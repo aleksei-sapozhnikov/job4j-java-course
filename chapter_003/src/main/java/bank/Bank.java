@@ -54,7 +54,7 @@ public class Bank {
      * Show all users stored in bank map.
      */
     public Set<User> showAllUsers() {
-        return new HashSet<>(this.users.keySet());
+        return this.users.keySet();
     }
 
     /**
@@ -82,18 +82,10 @@ public class Bank {
      */
     public void addAccountToUser(String passport, Account account) throws AlreadyExistsException {
         Set<Account> accounts = this.getUserAccounts(passport);
-        boolean exists = false;
-        String requisites = account.requisites();
-        for (Account acc : accounts) {
-            if (requisites.equals(acc.requisites())) {
-                exists = true;
-                break;
-            }
-        }
-        if (exists) {
+        boolean result = accounts.add(account);
+        if (!result) {
             throw new AlreadyExistsException("Adding account: account already exists for this user.");
         }
-        accounts.add(account);
     }
 
     /**
@@ -151,25 +143,16 @@ public class Bank {
      * @param dstPassport   destination user identifier.
      * @param dstRequisites destination user bank account identifier.
      * @param amount        amount of money to transfer.
-     * @return true as transfer was successfully completed.
+     * @return true as transfer was successfully completed, false if couldn't perform transfer.
      */
-    public boolean transferMoney(String srcPassport, String srcRequisites, String dstPassport, String dstRequisites, BigDecimal amount)
-            throws NotFoundException, AlreadyExistsException {
+    public boolean transferMoney(String srcPassport, String srcRequisites, String dstPassport, String dstRequisites, BigDecimal amount) {
         try {
             if (srcPassport.equals(dstPassport) && srcRequisites.equals(dstRequisites)) {
                 throw new UnablePerformOperationException("Unable to transfer money: source and destination accounts are the same.");
             }
             Account srcAcc = this.getAccountByRequisites(this.getUserAccounts(srcPassport), srcRequisites);
             Account dstAcc = this.getAccountByRequisites(this.getUserAccounts(dstPassport), dstRequisites);
-            BigDecimal srcValue = srcAcc.value().subtract(amount);
-            if (srcValue.signum() < 0) {
-                throw new UnablePerformOperationException("Unable to transfer money: money is source account is less than amount to transfer.");
-            }
-            BigDecimal dstValue = dstAcc.value().add(amount);
-            this.deleteAccountFromUser(srcPassport, srcAcc);
-            this.addAccountToUser(srcPassport, new Account(srcRequisites, srcValue));
-            this.deleteAccountFromUser(dstPassport, dstAcc);
-            this.addAccountToUser(dstPassport, new Account(dstRequisites, dstValue));
+            srcAcc.transferToIfEnough(dstAcc, amount);
             return true;
         } catch (UnablePerformOperationException upoe) {
             return false;

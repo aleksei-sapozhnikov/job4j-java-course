@@ -1,5 +1,7 @@
 package bank;
 
+import bank.exceptions.UnablePerformOperationException;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
@@ -15,7 +17,7 @@ public class Account {
     /**
      * Money in this account.
      */
-    private final BigDecimal value;
+    private BigDecimal value;
 
     /**
      * Information to identify account.
@@ -34,21 +36,28 @@ public class Account {
     }
 
     /**
-     * Get value stored in the account.
-     *
-     * @return copy of the value field.
-     */
-    BigDecimal value() {
-        return this.value;
-    }
-
-    /**
      * Get requisites.
      *
      * @return requisi
      */
     String requisites() {
         return this.requisites;
+    }
+
+    /**
+     * Transfer amount of money to another account if there is enough money to transfer.
+     *
+     * @param other  account to transfer money to.
+     * @param amount amount of money to transfer.
+     * @throws UnablePerformOperationException if money in account is less then amount to transfer.
+     */
+    void transferToIfEnough(Account other, BigDecimal amount) throws UnablePerformOperationException {
+        BigDecimal left = this.value.subtract(amount);
+        if (left.signum() < 0) {
+            throw new UnablePerformOperationException("Transfer from account: not enough money.");
+        }
+        this.value = left;
+        other.value = other.value.add(amount);
     }
 
     /**
@@ -66,8 +75,7 @@ public class Account {
             return false;
         }
         Account account = (Account) other;
-        return Objects.equals(this.value, account.value)
-                && Objects.equals(this.requisites, account.requisites);
+        return Objects.equals(this.requisites, account.requisites);
     }
 
     /**
@@ -77,6 +85,6 @@ public class Account {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.value, this.requisites);
+        return Objects.hash(this.requisites);
     }
 }

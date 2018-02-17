@@ -157,6 +157,19 @@ public class BankTest {
     }
 
     /**
+     * Test getUserAccounts() method.
+     */
+    @Test
+    public void whenGetUserAccountsThenAccounts() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("G-942", new BigDecimal("123.45")));
+        Set<Account> result = bank.getUserAccounts("123-45");
+        Set<Account> expected = new HashSet<>(Arrays.asList(new Account("G-942", new BigDecimal("123.45"))));
+        assertThat(result, is(expected));
+    }
+
+    /**
      * Test getAccountByRequisites() method.
      */
     @Test
@@ -183,7 +196,7 @@ public class BankTest {
      * Test transferMoney() method.
      */
     @Test
-    public void whenTransferMoneyFromUserToAnotherUserThenValueChangesRight() throws AlreadyExistsException, NotFoundException {
+    public void whenTransferMoneyFromUserToAnotherUserThenValueChangesRight() throws AlreadyExistsException {
         Bank bank = new Bank();
         bank.addUser(new User("123-45", "Vasya"));
         bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
@@ -199,22 +212,21 @@ public class BankTest {
     }
 
     @Test
-    public void whenTransferMoneyFromUserToTheSameUserDifferentAccountThenValueChangesRight() throws AlreadyExistsException, NotFoundException {
+    public void whenTransferMoneyFromUserToTheSameUserDifferentAccountThenValueChangesRight() throws AlreadyExistsException {
         Bank bank = new Bank();
         bank.addUser(new User("123-45", "Vasya"));
         bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
         bank.addAccountToUser("123-45", new Account("G-64", new BigDecimal("78.15")));
         bank.transferMoney("123-45", "N-82", "123-45", "G-64", new BigDecimal("12.15"));
         Set<Account> result = bank.getUserAccounts("123-45");
-        Set<Account> expected = new HashSet<>(Arrays.asList(
-                new Account("N-82", new BigDecimal("111.30")),
-                new Account("G-64", new BigDecimal("90.30"))
-        ));
+        Set<Account> expected = new HashSet<>();
+        expected.add(new Account("N-82", new BigDecimal("111.30")));
+        expected.add(new Account("G-64", new BigDecimal("90.30")));
         assertThat(result, is(expected));
     }
 
     @Test
-    public void whenTransferMoneyFromAccountToTheSameAccountThenFalseAndNoAccountChange() throws AlreadyExistsException, NotFoundException {
+    public void whenTransferMoneyFromAccountToTheSameAccountThenFalseAndNoAccountChange() throws AlreadyExistsException {
         Bank bank = new Bank();
         bank.addUser(new User("123-45", "Vasya"));
         bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
@@ -226,7 +238,7 @@ public class BankTest {
     }
 
     @Test
-    public void whenNotEnoughMoneyToTransferThenFalse() throws AlreadyExistsException, NotFoundException {
+    public void whenNotEnoughMoneyToTransferThenFalse() throws AlreadyExistsException{
         Bank bank = new Bank();
         bank.addUser(new User("123-45", "Vasya"));
         bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
