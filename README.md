@@ -3,7 +3,7 @@
 
 # Aleksei Sapozhnikov (vermucht@gmail.com)
 
-This repository is intended for tasks in the "From zero to job" 
+This repository is intended for tasks in the "From Zero To Job" 
 Java developing course by Petr Arsentjev http://job4j.ru
 
 Modules structure corresponds with the course programme:
