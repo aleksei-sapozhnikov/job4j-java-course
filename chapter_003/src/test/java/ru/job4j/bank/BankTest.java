@@ -205,13 +205,23 @@ public class BankTest {
     }
 
     @Test
-    public void whenTransferMoneyFromAccountToAnotherUserAndequalAccountThenTrue() throws AlreadyExistsException {
+    public void whenTransferMoneyFromAccountToAnotherUserAndEqualAccountThenTrue() throws AlreadyExistsException {
         Bank bank = new Bank();
         bank.addUser(new User("123-45", "Vasya"));
         bank.addUser(new User("543-21", "Petya"));
         bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
         bank.addAccountToUser("543-21", new Account("N-82", new BigDecimal("123.45")));
         boolean result = bank.transferMoney("123-45", "N-82", "543-21", "N-82", new BigDecimal("12.15"));
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenTransferMoneyFromAccountToTheSameUserAndAnotherAccountThenTrue() throws AlreadyExistsException {
+        Bank bank = new Bank();
+        bank.addUser(new User("123-45", "Vasya"));
+        bank.addAccountToUser("123-45", new Account("N-82", new BigDecimal("123.45")));
+        bank.addAccountToUser("123-45", new Account("G-64", new BigDecimal("434.12")));
+        boolean result = bank.transferMoney("123-45", "N-82", "123-45", "G-64", new BigDecimal("12.15"));
         assertThat(result, is(true));
     }
 
