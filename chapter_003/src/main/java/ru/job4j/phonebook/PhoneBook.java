@@ -27,19 +27,18 @@ public class PhoneBook {
     }
 
     /**
-     * Return all users containing given key in any field.
+     * Return all persons containing given key in any field.
      *
      * @param key key to search.
-     * @return list of satisfying users.
+     * @return list of satisfying persons.
      */
     public List<Person> find(String key) {
         List<Person> result = new ArrayList<>();
         for (Person person : this.persons) {
-            if (person.info().contains(key)) {
+            if (person.containsInAnyField(key)) {
                 result.add(person);
             }
         }
         return result;
-
     }
 }

@@ -15,13 +15,89 @@ import static org.junit.Assert.assertThat;
 public class PersonTest {
 
     /**
-     * Test info() method.
+     * Test containsInAnyField() method.
      */
     @Test
-    public void whenInfoThenStringInfo() {
+    public void whenContainsKeyInAnyFieldThenTrue() {
         Person person = new Person("Ivan", "Demidov", "12345678", "Moscow");
-        String result = person.info();
-        String expected = "Ivan, Demidov, 12345678, Moscow";
-        assertThat(result, is(expected));
+        boolean result = person.containsInAnyField("Demi");
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenNotContainsKeyInAnyFieldThenFalse() {
+        Person person = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        boolean result = person.containsInAnyField("Kozlov");
+        assertThat(result, is(false));
+    }
+
+    /**
+     * Test containsInAnyFieldReflectAPI() method.
+     */
+    @Test
+    public void whenContainsKeyInAnyFieldThenTrueReflectAPI() {
+        Person person = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        boolean result = person.containsInAnyFieldReflectAPI("Demi");
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenNotContainsKeyInAnyFieldThenFalseReflectAPI() {
+        Person person = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        boolean result = person.containsInAnyFieldReflectAPI("Kozlov");
+        assertThat(result, is(false));
+    }
+
+    /**
+     * Test equals() method.
+     */
+    @Test
+    public void whenEqualPersonsThenTrue() {
+        Person left = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        Person right = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        boolean result = left.equals(right);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenNotEqualPersonsThenFalse() {
+        Person left = new Person("Grigory", "Demidov", "12345678", "Moscow");
+        Person right = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        boolean result = left.equals(right);
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void whenTheSameObjectThenEqualsTrue() {
+        Person person = new Person("Grigory", "Demidov", "12345678", "Moscow");
+        boolean result = person.equals(person);
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void whenDifferentClassThenThenEqualsFalse() {
+        Person person = new Person("Grigory", "Demidov", "12345678", "Moscow");
+        String other = "Person";
+        boolean result = person.equals(other);
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void whenNullThenEqualsFalse() {
+        Person left = new Person("Grigory", "Demidov", "12345678", "Moscow");
+        Person right = null;
+        boolean result = left.equals(right);
+        assertThat(result, is(false));
+    }
+
+    /**
+     * Test hashcode() method.
+     */
+    @Test
+    public void whenEqualPersonsThenHashCodeTheSame() {
+        Person left = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        Person right = new Person("Ivan", "Demidov", "12345678", "Moscow");
+        boolean result = left.hashCode() == right.hashCode();
+        assertThat(result, is(true));
     }
 }

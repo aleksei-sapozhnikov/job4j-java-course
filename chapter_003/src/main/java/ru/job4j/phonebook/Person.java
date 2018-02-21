@@ -1,5 +1,8 @@
 package ru.job4j.phonebook;
 
+import java.lang.reflect.Field;
+import java.util.Objects;
+
 /**
  * Person for a phone book.
  *
@@ -12,22 +15,22 @@ public class Person {
     /**
      * Name.
      */
-    private String name;
+    private final String name;
 
     /**
      * Surname.
      */
-    private String surname;
+    private final String surname;
 
     /**
      * Phone number.
      */
-    private String phone;
+    private final String phone;
 
     /**
      * Address, place of living.
      */
-    private String address;
+    private final String address;
 
     /**
      * Constructor.
@@ -45,11 +48,78 @@ public class Person {
     }
 
     /**
-     * Give information about current user.
+     * Checks if given key is found in any of the person's fields.
      *
-     * @return string with this user field values.
+     * @param key string to look for in the person's fields.
+     * @return true or false, as key was found in any of fields or not.
      */
-    String info() {
-        return String.format("%s, %s, %s, %s", this.name, this.surname, this.phone, this.address);
+    boolean containsInAnyField(String key) {
+        return this.name.contains(key)
+                || this.surname.contains(key)
+                || this.phone.contains(key)
+                || this.address.contains(key);
+    }
+
+    /**
+     * Делает то же, что и метод containsInAnyField(), но используя Reflection API.
+     * Захотелось немножко поизвращаться. В книге прочитал, а попробовать негде было.
+     * <p>
+     * Метод запрашивает все поля класса, затем у всех String-ов проверяет, содержат ли они key.
+     * Тесты на него те же, что и на containsInAnyField().
+     *
+     * @param key ключ, который ищем.
+     * @return true или false, если key найден в каком-то из String-полей key или нет.
+     * Также возвращает false, если случился IllegalAccessException - запросили доступ к полю или методу,
+     * к которому, по замыслу автора класса, не должно быть доступа отсюда.
+     */
+    boolean containsInAnyFieldReflectAPI(String key) {
+        try {
+            boolean result = false;
+            for (Field field : this.getClass().getDeclaredFields()) {
+                Object temp = field.get(this);
+                if (temp instanceof String) {
+                    String str = (String) temp;
+                    if (str.contains(key)) {
+                        result = true;
+                        break;
+                    }
+                }
+            }
+            return result;
+        } catch (IllegalAccessException iae) {
+            iae.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Checks if this person is equal to another object.
+     *
+     * @param other object to compare to.
+     * @return true of false, as objects are equal or not.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Person person = (Person) other;
+        return Objects.equals(this.name, person.name)
+                && Objects.equals(this.surname, person.surname)
+                && Objects.equals(this.phone, person.phone)
+                && Objects.equals(this.address, person.address);
+    }
+
+    /**
+     * Calculate integer hashcode for this person.
+     *
+     * @return integer hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.name, this.surname, this.phone, this.address);
     }
 }
