@@ -1,6 +1,9 @@
 package ru.job4j.sort.departments;
 
-public class Department {
+import java.util.Comparator;
+import java.util.Objects;
+
+public class Department implements Comparable<Department> {
 
     /**
      * Department over this.
@@ -39,4 +42,54 @@ public class Department {
         }
         return buffer.toString();
     }
+
+    /**
+     * Checks if this department is equal to another object.
+     *
+     * @param other object to compare to.
+     * @return true or false, as objects are equal or not.
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        Department that = (Department) other;
+        return Objects.equals(parent, that.parent)
+                && Objects.equals(name, that.name);
+    }
+
+    /**
+     * Calculates integer hashcode for this department.
+     *
+     * @return integer hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(parent, name);
+    }
+
+    /**
+     * Compares two departments.
+     *
+     * @param other department to compare to.
+     * @return positive, zero or negative value as this department is higher, equal or lower then other.
+     */
+    @Override
+    public int compareTo(Department other) {
+        int result;
+        if (this.parent != null && other.parent != null) {
+            int res = this.parent.compareTo(other.parent);
+            result = res != 0 ? res : this.name.compareTo(other.name);
+        } else if (this.parent == null && other.parent == null) {
+            result = this.name.compareTo(other.name);
+        } else {
+            result = this.parent == null ? 1 : -1;
+        }
+        return result;
+    }
 }
+
