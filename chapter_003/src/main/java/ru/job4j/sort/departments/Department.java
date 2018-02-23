@@ -17,6 +17,12 @@ public class Department implements Comparable<Department> {
     private String name;
 
     /**
+     * Level in hierarchy.
+     * From 0 (the highest) to 1, 2, 3... etc.
+     */
+    private int level;
+
+    /**
      * Constructor.
      *
      * @param parent department over this.
@@ -24,6 +30,35 @@ public class Department implements Comparable<Department> {
     Department(String name, Department parent) {
         this.name = name;
         this.parent = parent;
+        this.level = this.findLevel();
+    }
+
+    private int findLevel() {
+        Department temp = this;
+        int result = 0;
+        while (temp.parent != null) {
+            temp = temp.parent;
+            result++;
+        }
+        return result;
+    }
+
+    /**
+     * Get level in hierarchy.
+     *
+     * @return this department "level" field value.
+     */
+    int level() {
+        return this.level;
+    }
+
+    /**
+     * Get name of the department.
+     *
+     * @return department name.
+     */
+    String name() {
+        return this.name;
     }
 
     /**
@@ -80,16 +115,26 @@ public class Department implements Comparable<Department> {
      */
     @Override
     public int compareTo(Department other) {
-        int result;
+        int result = Integer.MAX_VALUE;
         if (this.parent != null && other.parent != null) {
-            int res = this.parent.compareTo(other.parent);
-            result = res != 0 ? res : this.name.compareTo(other.name);
-        } else if (this.parent == null && other.parent == null) {
-            result = this.name.compareTo(other.name);
-        } else {
-            result = this.parent == null ? 1 : -1;
+            int first = Integer.compare(this.level, other.level);
+            int second = first == 0 ? this.name.compareTo(other.name) : first;
+            result = second == 0 ? this.parent.name.compareTo(other.parent.name) : second;
         }
+        if (result == Integer.MAX_VALUE)
+            if (this.parent == null) {
+                result = other.parent == null ? this.name.compareTo(other.name) : 1;
+            } else {
+                result = -1;
+            }
         return result;
     }
+
+    @Override
+    public String toString() {
+        return this.hierarchyString("\\");
+    }
+
+
 }
 
