@@ -14,20 +14,12 @@ public class Sorter {
     /**
      * Set of head departments.
      */
-    private Set<Node> headNodes;
+    private final Set<Node> headNodes;
 
     /**
      * Comparator for nodes and sub-nodes.
      */
-    private Comparator<Node> comparator;
-
-    /**
-     * Default constructor, use natural order sort for nodes and sub-nodes.
-     */
-    Sorter() {
-        this.comparator = Comparator.naturalOrder();
-        this.headNodes = new TreeSet<>();
-    }
+    private final Comparator<Node> comparator;
 
     /**
      * Constructor with given comparator.
@@ -37,6 +29,58 @@ public class Sorter {
     Sorter(Comparator<Node> comparator) {
         this.comparator = comparator;
         this.headNodes = new TreeSet<>(comparator);
+    }
+
+    /**
+     * Default constructor, use natural order sort for nodes and sub-nodes.
+     */
+    Sorter() {
+        this(Comparator.naturalOrder());
+    }
+
+    /**
+     * Sort given hierarchy array and return sorted Array.
+     *
+     * @param arr given array.
+     */
+    String[] sortArray(String[] arr) {
+        this.parseArray(arr);
+        return this.toStringArray();
+    }
+
+    /**
+     * Parse array of strings with node hierarchy.
+     *
+     * @param arr array of string to parse.
+     */
+    private void parseArray(String[] arr) {
+        for (String str : arr) {
+            this.parseString(str);
+        }
+    }
+
+    /**
+     * Parse string with node hierarchy and add elements to set.
+     *
+     * @param hierarchy given string.
+     */
+    private void parseString(String hierarchy) {
+        String[] str = hierarchy.split("\\\\");
+        Node current = addOrGet(new Node(str[0], this.comparator));
+        for (int i = 1; i < str.length; i++) {
+            current = current.addOrGetSub(new Node(str[i], this.comparator));
+        }
+    }
+
+    /**
+     * Return array of strings with node hierarchy stored now.
+     */
+    private String[] toStringArray() {
+        List<String> buffer = new LinkedList<>();
+        for (Node head : this.headNodes) {
+            buffer.addAll(Arrays.asList(head.toStringArray()));
+        }
+        return buffer.toArray(new String[0]);
     }
 
     /**
@@ -65,50 +109,4 @@ public class Sorter {
         }
         return result;
     }
-
-    /**
-     * Parse string with node hierarchy and add elements to set.
-     *
-     * @param str given string.
-     */
-    private void parseString(String str) {
-        String[] hierarchy = str.split("\\\\");
-        Node current = addOrGet(new Node(hierarchy[0], this.comparator));
-        for (int i = 1; i < hierarchy.length; i++) {
-            current = current.addOrGetSub(new Node(hierarchy[i], this.comparator));
-        }
-    }
-
-    /**
-     * Parse array of strings with node hierarchy.
-     *
-     * @param arr array of string to parse.
-     */
-    private void parseArray(String[] arr) {
-        for (String str : arr) {
-            this.parseString(str);
-        }
-    }
-
-    /**
-     * Return array of strings with node hierarchy stored now.
-     */
-    private String[] toStringArray() {
-        List<String> buffer = new LinkedList<>();
-        for (Node head : this.headNodes) {
-            buffer.addAll(Arrays.asList(head.toStringArray()));
-        }
-        return buffer.toArray(new String[0]);
-    }
-
-    /**
-     * Sort given hierarchy array and return sorted Array.
-     *
-     * @param arr given array.
-     */
-    String[] sortArray(String[] arr) {
-        this.parseArray(arr);
-        return this.toStringArray();
-    }
-
 }

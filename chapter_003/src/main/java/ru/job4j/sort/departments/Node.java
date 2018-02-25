@@ -24,12 +24,12 @@ public class Node implements Comparable<Node> {
     /**
      * Constructor.
      *
-     * @param name       node's name.
-     * @param comparator comparator to sort nodes.
+     * @param name          node's name.
+     * @param subComparator comparator to sort nodes.
      */
-    Node(String name, Comparator<Node> comparator) {
+    Node(String name, Comparator<Node> subComparator) {
         this.name = name;
-        this.subNodes = new TreeSet<>(comparator);
+        this.subNodes = new TreeSet<>(subComparator);
     }
 
     /**
@@ -91,7 +91,7 @@ public class Node implements Comparable<Node> {
     }
 
     /**
-     * Compare this node and other node.
+     * Natural order for the nodes.
      *
      * @param other other node.
      * @return negative, zero or positive integer, as this node is smaller, equal or larger then other node.
