@@ -7,7 +7,7 @@ import java.util.*;
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
- * @since 24.02.2018
+ * @since 22.02.2018
  */
 public class Sorter {
 
