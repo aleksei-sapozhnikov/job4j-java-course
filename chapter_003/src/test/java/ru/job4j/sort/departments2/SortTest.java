@@ -1,23 +1,21 @@
-package ru.job4j.sort.departments;
+package ru.job4j.sort.departments2;
 
 import org.junit.Test;
-
-import java.util.Comparator;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Tests for the HeadNodes class.
+ * Tests for the Sort class.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
- * @since 24.02.2018
+ * @since 25.02.2018
  */
-public class SorterTest {
+public class SortTest {
 
     /**
-     * Test parseArray() method.
+     * Test sortArray(String array)
      */
     @Test
     public void whenArrayThenNewArrayNaturalOrder() {
@@ -30,7 +28,7 @@ public class SorterTest {
                 "K2\\SK1\\SSK1",
                 "K2"
         };
-        String[] result = new Sorter().sortArray(input);
+        String[] result = new Sort(new ComparatorHierarchic(true)).sortArray(input);
         String[] expected = {
                 "K1",
                 "K1\\SK1",
@@ -51,12 +49,12 @@ public class SorterTest {
                 "K1\\SK1\\SSK2",
                 "K1\\SK2",
                 "K1\\SK1\\SSK1",
-                "K2\\SK1\\SSK2",
                 "K1\\SK1",
-                "K2\\SK1\\SSK1",
-                "K2"
+                "K2\\SK1\\SSK2",
+                "K2",
+                "K2\\SK1\\SSK1"
         };
-        String[] result = new Sorter(Comparator.reverseOrder()).sortArray(input);
+        String[] result = new Sort(new ComparatorHierarchic(false)).sortArray(input);
         String[] expected = {
                 "K2",
                 "K2\\SK1",
