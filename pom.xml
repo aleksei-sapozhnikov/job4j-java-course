@@ -14,10 +14,10 @@
     </properties>
 
     <modules>
-        <module>001_Trainee_chapter_001</module>
-        <module>001_Trainee_chapter_002</module>
-        <module>001_Trainee_chapter_003</module>
-        <module>002_Junior_chapter_001</module>
+        <module>001_trainee_chapter_001</module>
+        <module>001_trainee_chapter_002</module>
+        <module>001_trainee_chapter_003</module>
+        <module>002_junior_chapter_001</module>
     </modules>
 
     <dependencies>
