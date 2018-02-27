@@ -162,5 +162,12 @@ public class IteratorArray2DTest {
         itWithEmpty.next();
     }
 
+    @Test
+    public void whenFirstSubArrayEmptyThenMoveToNeededElementAtStart() {
+        Iterator<Integer> it = new IteratorArray2D(new int[][]{{}, {}, {}, {3, 4}, {}});
+        assertThat(it.next(), is(3));
+        assertThat(it.next(), is(4));
+    }
+
 
 }

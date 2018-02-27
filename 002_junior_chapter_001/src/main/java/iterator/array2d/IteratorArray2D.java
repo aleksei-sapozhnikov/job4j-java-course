@@ -1,8 +1,7 @@
 package iterator.array2d;
 
-import jdk.nashorn.internal.runtime.arrays.ArrayLikeIterator;
-
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
  * Iterator for the 2-dimensional array (including jagged arrays).
@@ -28,8 +27,9 @@ public class IteratorArray2D implements Iterator<Integer> {
      */
     private final int[][] values;
 
-    IteratorArray2D(int[][] values) {
+    IteratorArray2D(final int[][] values) {
         this.values = values;
+        this.moveCursorToNext();
     }
 
     /**
@@ -42,7 +42,7 @@ public class IteratorArray2D implements Iterator<Integer> {
     @Override
     public boolean hasNext() {
         return this.row < this.values.length
-                && this.column < this.values[row].length;
+                && this.column < this.values[this.row].length;
     }
 
     /**
@@ -56,22 +56,22 @@ public class IteratorArray2D implements Iterator<Integer> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        Integer result = this.values[row][column];
-        moveCursor();
+        Integer result = this.values[this.row][this.column];
+        this.column++;
+        this.moveCursorToNext();
         return result;
     }
 
     /**
      * Move cursor to the next element.
      */
-    private void moveCursor() {
-        if (++this.column >= this.values[this.row].length) {
+    private void moveCursorToNext() {
+        if (this.column >= this.values[this.row].length) {
             this.column = 0;
-            row++;
+            this.row++;
         }
         while (this.row < this.values.length && this.column >= this.values[this.row].length) {
             this.row++;
         }
     }
-
 }
