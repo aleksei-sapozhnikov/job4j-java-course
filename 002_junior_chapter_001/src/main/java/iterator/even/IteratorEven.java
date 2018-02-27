@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 public class IteratorEven implements Iterator<Integer> {
 
     /**
-     * Current cursor outer array position(row of matrix).
+     * Current cursor outer array position.
      */
     private int cursor = 0;
 
