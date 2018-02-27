@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
- * @since 26.02.2018
+ * @since 27.02.2018
  */
 public class IteratorEven implements Iterator<Integer> {
 

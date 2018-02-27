@@ -9,6 +9,13 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests for IteratorEven class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 27.02.2018
+ */
 public class IteratorEvenTest {
 
     private Iterator<Integer> it;
