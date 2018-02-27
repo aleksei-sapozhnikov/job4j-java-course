@@ -1,16 +1,16 @@
-package iterator.even;
+package ru.job4j.iterator.prime;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Array iterator, returning only even numbers.
+ * Array iterator, returning only prime numbers.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
  * @since 27.02.2018
  */
-public class IteratorEven implements Iterator<Integer> {
+public class IteratorPrime implements Iterator<Integer> {
 
     /**
      * Current cursor position.
@@ -22,9 +22,9 @@ public class IteratorEven implements Iterator<Integer> {
      */
     private final int[] values;
 
-    IteratorEven(final int[] values) {
+    IteratorPrime(final int[] values) {
         this.values = values;
-        this.moveCursorToEven();
+        this.moveCursorToPrime();
     }
 
     /**
@@ -52,17 +52,37 @@ public class IteratorEven implements Iterator<Integer> {
         }
         Integer result = this.values[this.cursor];
         cursor++;
-        this.moveCursorToEven();
+        this.moveCursorToPrime();
         return result;
     }
 
     /**
      * Move cursor to the next even number element.
      */
-    private void moveCursorToEven() {
-        while (this.cursor < this.values.length && this.values[this.cursor] % 2 != 0) {
+    private void moveCursorToPrime() {
+        while (this.cursor < this.values.length
+                && !this.isPrime(this.values[this.cursor])) {
             this.cursor++;
         }
+    }
+
+    /**
+     * Check if given number is prime number.
+     *
+     * @param n number to check.
+     * @return {@code true} of {@code false} if given number is prime number or not.
+     */
+    private boolean isPrime(int n) {
+        boolean result = n == 2;
+        boolean mayBe = n > 2;
+        if (!result && mayBe) {
+            int max = (int) Math.ceil(Math.sqrt(n));
+            for (int i = 2; mayBe && i <= max; i++) {
+                mayBe = n % i != 0;
+            }
+            result = mayBe;
+        }
+        return result;
     }
 
 }

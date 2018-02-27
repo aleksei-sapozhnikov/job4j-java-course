@@ -1,4 +1,4 @@
-package iterator.even;
+package ru.job4j.iterator.even;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -1,4 +1,4 @@
-package iterator.array2d;
+package ru.job4j.iterator.array2d;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;

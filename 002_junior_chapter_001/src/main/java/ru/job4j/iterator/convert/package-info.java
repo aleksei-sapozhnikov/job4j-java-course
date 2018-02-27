@@ -5,4 +5,4 @@
  * @version $Id$
  * @since 27.02.2018
  */
-package iterator.convert;
+package ru.job4j.iterator.convert;

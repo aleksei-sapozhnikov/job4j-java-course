@@ -5,4 +5,4 @@
  * @version $Id$
  * @since 27.02.2018
  */
-package iterator.even;
+package ru.job4j.iterator.even;
