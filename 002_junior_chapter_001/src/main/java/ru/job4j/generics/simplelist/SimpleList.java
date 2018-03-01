@@ -92,7 +92,7 @@ public class SimpleList<T> implements Iterable<T> {
              */
             @Override
             public boolean hasNext() {
-                return this.cursor < values.length;
+                return this.cursor < position;
             }
 
             /**
