@@ -111,4 +111,17 @@ public class SimpleListTest {
         assertThat(iterator.hasNext(), is(false));
         iterator.next();
     }
+
+    /**
+     * Test growing of capacity if needed.
+     */
+    @Test
+    public void whenCapacityNotEnoughThenGrowCapacity() {
+        SimpleList<String> list = new SimpleList<>(3);
+        list.add("1");
+        list.add("2");
+        list.add("3"); //new capacity: 3 * 3 / 2 + 1 = 5
+        list.add("4");
+        list.add("5");
+    }
 }

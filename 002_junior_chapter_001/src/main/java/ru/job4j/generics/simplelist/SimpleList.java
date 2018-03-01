@@ -4,7 +4,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Simple array-based list with fixed size.
+ * Simple array-based list.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
@@ -15,7 +15,7 @@ public class SimpleList<T> implements Iterable<T> {
     /**
      * Stored objects.
      */
-    private final T[] values;
+    private T[] values;
 
     /**
      * Position where to add next object.
@@ -36,6 +36,7 @@ public class SimpleList<T> implements Iterable<T> {
      * @param value value to add.
      */
     void add(T value) {
+        growIfSizeNotEnough(position + 1);
         this.values[position++] = value;
     }
 
@@ -57,6 +58,38 @@ public class SimpleList<T> implements Iterable<T> {
     void delete(int index) {
         System.arraycopy(this.values, index + 1, this.values, index, --this.position - index);
         this.values[this.position] = null;
+    }
+
+    /**
+     * Grow list capacity if now it is not enough.
+     *
+     * @param neededCapacity capacity needed now.
+     */
+    private void growIfSizeNotEnough(int neededCapacity) {
+        if (!this.ensureCapacity(neededCapacity)) {
+            this.grow();
+        }
+    }
+
+    /**
+     * Ensure that list has the needed capacity.
+     *
+     * @param needed capacity needed.
+     * @return {@code true} or {@code false} if the list has needed capacity or not.
+     */
+    private boolean ensureCapacity(int needed) {
+        return this.position < this.values.length - 1;
+    }
+
+    /**
+     * Grow list to the new size.
+     */
+    @SuppressWarnings("unchecked")
+    private void grow() {
+        int newCapacity = this.values.length * 3 / 2 + 1;
+        T[] newValues = (T[]) new Object[newCapacity];
+        System.arraycopy(this.values, 0, newValues, 0, this.values.length);
+        this.values = newValues;
     }
 
     /**
