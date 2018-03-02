@@ -13,14 +13,13 @@ import java.util.NoSuchElementException;
 public class IteratorPrime implements Iterator<Integer> {
 
     /**
-     * Current cursor position.
-     */
-    private int cursor = 0;
-
-    /**
      * Array to iterate.
      */
     private final int[] values;
+    /**
+     * Current cursor position.
+     */
+    private int cursor = 0;
 
     IteratorPrime(final int[] values) {
         this.values = values;

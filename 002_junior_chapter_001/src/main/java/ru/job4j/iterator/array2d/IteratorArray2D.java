@@ -13,19 +13,17 @@ import java.util.NoSuchElementException;
 public class IteratorArray2D implements Iterator<Integer> {
 
     /**
+     * Array to iterate.
+     */
+    private final int[][] values;
+    /**
      * Current cursor outer array position(row of matrix).
      */
     private int row = 0;
-
     /**
      * Current cursor inner position (column of matrix).
      */
     private int column = 0;
-
-    /**
-     * Array to iterate.
-     */
-    private final int[][] values;
 
     IteratorArray2D(final int[][] values) {
         this.values = values;

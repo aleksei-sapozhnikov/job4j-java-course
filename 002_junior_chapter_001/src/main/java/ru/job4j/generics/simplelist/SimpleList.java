@@ -26,7 +26,7 @@ public class SimpleList<T> implements Iterable<T> {
      * @param size size of the list.
      */
     @SuppressWarnings("unchecked")
-    SimpleList(int size) {
+    public SimpleList(int size) {
         this.values = (T[]) new Object[size];
     }
 
@@ -35,8 +35,8 @@ public class SimpleList<T> implements Iterable<T> {
      *
      * @param value value to add.
      */
-    void add(T value) {
-        growIfSizeNotEnough(position + 1);
+    public void add(T value) {
+        growIfSizeNotEnough();
         this.values[position++] = value;
     }
 
@@ -46,7 +46,7 @@ public class SimpleList<T> implements Iterable<T> {
      * @param index index of the element to replace.
      * @param value new value.
      */
-    void set(int index, T value) {
+    public void set(int index, T value) {
         this.values[index] = value;
     }
 
@@ -55,18 +55,33 @@ public class SimpleList<T> implements Iterable<T> {
      *
      * @param index position of the element to delete.
      */
-    void delete(int index) {
+    public void delete(int index) {
         System.arraycopy(this.values, index + 1, this.values, index, --this.position - index);
         this.values[this.position] = null;
     }
 
     /**
-     * Grow list capacity if now it is not enough.
+     * Find index of the given element.
      *
-     * @param neededCapacity capacity needed now.
+     * @param element given element.
+     * @return index of the element if found or {@code -1} if not found.
      */
-    private void growIfSizeNotEnough(int neededCapacity) {
-        if (!this.ensureCapacity(neededCapacity)) {
+    public int indexOf(T element) {
+        int result = -1;
+        for (int i = 0; i < this.position; i++) {
+            if (element.equals(this.values[i])) {
+                result = i;
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Grow list capacity if it is not enough.
+     */
+    private void growIfSizeNotEnough() {
+        if (!this.ensureCapacity()) {
             this.grow();
         }
     }
@@ -74,11 +89,10 @@ public class SimpleList<T> implements Iterable<T> {
     /**
      * Ensure that list has the needed capacity.
      *
-     * @param needed capacity needed.
      * @return {@code true} or {@code false} if the list has needed capacity or not.
      */
-    private boolean ensureCapacity(int needed) {
-        return this.position < this.values.length - 1;
+    private boolean ensureCapacity() {
+        return this.position < this.values.length;
     }
 
     /**

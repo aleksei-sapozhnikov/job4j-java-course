@@ -115,13 +115,30 @@ public class SimpleListTest {
     /**
      * Test growing of capacity if needed.
      */
-    @Test
+    @Test(expected = ArrayIndexOutOfBoundsException.class)
     public void whenCapacityNotEnoughThenGrowCapacity() {
         SimpleList<String> list = new SimpleList<>(3);
+        list.add("0");
         list.add("1");
         list.add("2");
-        list.add("3");
-        list.add("4"); //new capacity: 3 * 3 / 2 + 1 = 5
-        list.add("5");
+        list.add("3"); //new capacity: 3 * 3 / 2 + 1 = 5
+        list.add("4");
+        assertThat(list.get(4), is("4"));
+        list.get(5);
+    }
+
+    /**
+     * Test indexOf.
+     */
+    @Test
+    public void whenIndexOfThenIndex() {
+        SimpleList<String> list = new SimpleList<>(3);
+        list.add("0");
+        list.add("1");
+        list.add("2");
+        assertThat(list.indexOf("2"), is(2));
+        assertThat(list.indexOf("1"), is(1));
+        assertThat(list.indexOf("0"), is(0));
+
     }
 }
