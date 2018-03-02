@@ -13,7 +13,7 @@ public class Square {
      * Creates an array filled with squares of values from 1 to given value.
      *
      * @param bound Last value of the range (inclusive).
-     * @return Array with squares if bound > 0, empty array if value <= 0.
+     * @return Array with squares if bound is more than 0, empty array if value is less or equal to 0.
      */
     public int[] calculate(int bound) {
         if (bound < 0) {
