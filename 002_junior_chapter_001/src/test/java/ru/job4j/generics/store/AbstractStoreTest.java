@@ -33,7 +33,7 @@ public class AbstractStoreTest {
      * Test delete()
      */
     @Test
-    public void whenDeleteExistingThenTrueNotFoundOld() {
+    public void whenDeleteExistingThenTrueAndNotFoundOld() {
         UserStore users = new UserStore();
         RoleStore roles = new RoleStore();
         users.add(new User("123"));

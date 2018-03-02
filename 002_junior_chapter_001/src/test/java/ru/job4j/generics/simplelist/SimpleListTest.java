@@ -131,7 +131,7 @@ public class SimpleListTest {
      * Test indexOf.
      */
     @Test
-    public void whenIndexOfThenIndex() {
+    public void whenIndexOfElementThenIndex() {
         SimpleList<String> list = new SimpleList<>(3);
         list.add("0");
         list.add("1");
@@ -139,6 +139,6 @@ public class SimpleListTest {
         assertThat(list.indexOf("2"), is(2));
         assertThat(list.indexOf("1"), is(1));
         assertThat(list.indexOf("0"), is(0));
-
     }
+
 }
