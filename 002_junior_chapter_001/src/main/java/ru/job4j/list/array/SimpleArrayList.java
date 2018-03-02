@@ -1,5 +1,7 @@
 package ru.job4j.list.array;
 
+import ru.job4j.list.SimpleContainer;
+
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -87,7 +89,7 @@ public class SimpleArrayList<E> implements SimpleContainer<E> {
             /**
              * Modification count value at the time when the iterator was created.
              * If collection will change during the work of iterator, there will be {@code }ConcurrentModificationException}.
-             * */
+             */
             private final int expectedModCount = modCount;
 
             /**

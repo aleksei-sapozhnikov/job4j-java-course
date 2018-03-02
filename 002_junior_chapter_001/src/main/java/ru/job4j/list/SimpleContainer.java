@@ -1,4 +1,4 @@
-package ru.job4j.list.array;
+package ru.job4j.list;
 
 /**
  * Allows to store, add and get elements.
