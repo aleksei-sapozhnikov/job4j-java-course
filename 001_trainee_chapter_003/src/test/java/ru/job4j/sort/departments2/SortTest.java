@@ -68,4 +68,32 @@ public class SortTest {
         };
         assertThat(result, is(expected));
     }
+
+    @Test
+    public void trickyQuestionFromPetrArsentevWhatIfInputLikeThis() {
+        String[] input = {
+                "1\\2\\1",
+                "1\\1\\1",
+        };
+        String[] resultNatural = new Sort(new ComparatorHierarchic(true)).sortArray(input);
+        String[] resultReverse = new Sort(new ComparatorHierarchic(false)).sortArray(input);
+        String[] expectedNatural = {
+                "1",
+                "1\\1",
+                "1\\1\\1",
+                "1\\2",
+                "1\\2\\1"
+        };
+        String[] expectedReverse = {
+                "1",
+                "1\\2",
+                "1\\2\\1",
+                "1\\1",
+                "1\\1\\1"
+        };
+        assertThat(resultNatural, is(expectedNatural));
+        assertThat(resultReverse, is(expectedReverse));
+    }
+
+
 }
