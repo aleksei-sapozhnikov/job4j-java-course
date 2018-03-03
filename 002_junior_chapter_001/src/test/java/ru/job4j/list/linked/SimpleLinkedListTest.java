@@ -26,6 +26,43 @@ public class SimpleLinkedListTest {
     }
 
     /**
+     * Test removeFirst()
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void whenRemoveFirstThenReturnsElementAndOtherElementsChangePosition() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        list.add("0");
+        list.add("1");
+        list.add("2");
+        assertThat(list.removeFirst(), is("0"));
+        assertThat(list.get(0), is("1"));
+        assertThat(list.removeFirst(), is("1"));
+        assertThat(list.get(0), is("2"));
+        assertThat(list.removeFirst(), is("2"));
+        assertThat(list.get(0), is((String) null));
+        list.removeFirst();
+    }
+
+    /**
+     * Test removeLast()
+     */
+    @Test(expected = NoSuchElementException.class)
+    public void whenRemoveLastThenReturnsElementAndOtherElementsDoNotChangePosition() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        list.add("0");
+        list.add("1");
+        list.add("2");
+        assertThat(list.get(2), is("2"));
+        assertThat(list.removeLast(), is("2"));
+        assertThat(list.get(1), is("1"));
+        assertThat(list.removeLast(), is("1"));
+        assertThat(list.get(0), is("0"));
+        assertThat(list.removeLast(), is("0"));
+        assertThat(list.get(0), is((String) null));
+        list.removeLast();
+    }
+
+    /**
      * Test iterator()
      */
     @Test(expected = NoSuchElementException.class)

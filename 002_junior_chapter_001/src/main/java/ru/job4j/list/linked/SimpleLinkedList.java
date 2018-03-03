@@ -70,6 +70,66 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
     }
 
     /**
+     * Removes and returns the first element from this list.
+     *
+     * @return the first element from this list.
+     * @throws NoSuchElementException if this list is empty (first element == null).
+     */
+    public E removeFirst() {
+        if (this.first == null) {
+            throw new NoSuchElementException();
+        }
+        return unlinkFirst();
+    }
+
+    /**
+     * Unlinks non-null first node.
+     *
+     * @return element contained in the first node
+     */
+    private E unlinkFirst() {
+        final E element = this.first.item;
+        this.first = this.first.next;
+        if (this.first == null) {
+            this.last = null;
+        } else {
+            this.first.prev = null;
+        }
+        this.modCount++;
+        return element;
+    }
+
+    /**
+     * Removes and returns the first element from this list.
+     *
+     * @return the first element from this list.
+     * @throws NoSuchElementException if this list is empty (first element == null).
+     */
+    public E removeLast() {
+        if (this.last == null) {
+            throw new NoSuchElementException();
+        }
+        return unlinkLast();
+    }
+
+    /**
+     * Unlinks non-null first node.
+     *
+     * @return element contained in the first node
+     */
+    private E unlinkLast() {
+        final E element = this.last.item;
+        this.last = this.last.prev;
+        if (this.last == null) {
+            this.first = null;
+        } else {
+            this.last.next = null;
+        }
+        this.modCount++;
+        return element;
+    }
+
+    /**
      * Returns the (non-null) Node at the specified element index.
      *
      * @return Node if found or {@code null} if not.
