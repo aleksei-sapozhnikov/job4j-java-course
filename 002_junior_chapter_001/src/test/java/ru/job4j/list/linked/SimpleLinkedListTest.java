@@ -1,6 +1,7 @@
 package ru.job4j.list.linked;
 
 import org.junit.Test;
+import ru.job4j.list.linked.SimpleLinkedList.Node;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -127,4 +128,94 @@ public class SimpleLinkedListTest {
         iterator.next();
     }
 
+    /**
+     * Test hasCycleFloydAlgorithm() and hasCycleBrentAlgorithm()
+     */
+    @Test
+    public void whenOddNumberOfElementsWithCycleInTheEndThenFindsCycleTrue() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        Node[] nodes = new Node[11]; // imported ru.job4j.list.linked.SimpleLinkedList.Node
+        nodes[0] = new Node<>(null, 0, null);
+        for (int i = 1; i < nodes.length; i++) {
+            nodes[i] = new Node<Integer>(nodes[i - 1], i, null);
+            nodes[i - 1].next = nodes[i];
+        }
+        nodes[10].next = nodes[0]; // make cycle
+        list.fillWithLinkedNodesArray(nodes);
+        assertThat(list.hasCycleFloydAlgorithm(), is(true));
+        assertThat(list.hasCycleBrentAlgorithm(), is(true));
+    }
+
+    @Test
+    public void whenOddNumberOfElementsWithCycleInTheCenterThenFindsCycleTrue() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        Node[] nodes = new Node[11]; // imported ru.job4j.list.linked.SimpleLinkedList.Node
+        nodes[0] = new Node<>(null, 0, null);
+        for (int i = 1; i < nodes.length; i++) {
+            nodes[i] = new Node<Integer>(nodes[i - 1], i, null);
+            nodes[i - 1].next = nodes[i];
+        }
+        nodes[7].next = nodes[3]; // make cycle
+        list.fillWithLinkedNodesArray(nodes);
+        assertThat(list.hasCycleFloydAlgorithm(), is(true));
+        assertThat(list.hasCycleBrentAlgorithm(), is(true));
+    }
+
+    @Test
+    public void whenEvenNumberOfElementsWithCycleInTheEndThenFindsCycleTrue() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        Node[] nodes = new Node[10]; // imported ru.job4j.list.linked.SimpleLinkedList.Node
+        nodes[0] = new Node<>(null, 0, null);
+        for (int i = 1; i < nodes.length; i++) {
+            nodes[i] = new Node<Integer>(nodes[i - 1], i, null);
+            nodes[i - 1].next = nodes[i];
+        }
+        nodes[9].next = nodes[0]; // make cycle
+        list.fillWithLinkedNodesArray(nodes);
+        assertThat(list.hasCycleFloydAlgorithm(), is(true));
+        assertThat(list.hasCycleBrentAlgorithm(), is(true));
+    }
+
+    @Test
+    public void whenEvenNumberOfElementsWithCycleInTheCenterThenFindsCycleTrue() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        Node[] nodes = new Node[10]; // imported ru.job4j.list.linked.SimpleLinkedList.Node
+        nodes[0] = new Node<>(null, 0, null);
+        for (int i = 1; i < nodes.length; i++) {
+            nodes[i] = new Node<Integer>(nodes[i - 1], i, null);
+            nodes[i - 1].next = nodes[i];
+        }
+        nodes[7].next = nodes[3]; // make cycle
+        list.fillWithLinkedNodesArray(nodes);
+        assertThat(list.hasCycleFloydAlgorithm(), is(true));
+        assertThat(list.hasCycleBrentAlgorithm(), is(true));
+    }
+
+    @Test
+    public void whenOddNumberOfElementsWithoutCycleThenFindsCycleFalse() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        Node[] nodes = new Node[11]; // imported ru.job4j.list.linked.SimpleLinkedList.Node
+        nodes[0] = new Node<>(null, 0, null);
+        for (int i = 1; i < nodes.length; i++) {
+            nodes[i] = new Node<Integer>(nodes[i - 1], i, null);
+            nodes[i - 1].next = nodes[i];
+        }
+        list.fillWithLinkedNodesArray(nodes);
+        assertThat(list.hasCycleFloydAlgorithm(), is(false));
+        assertThat(list.hasCycleBrentAlgorithm(), is(false));
+    }
+
+    @Test
+    public void whenEvenNumberOfElementsWithoutCycleThenFindsCycleFalse() {
+        SimpleLinkedList<String> list = new SimpleLinkedList<>();
+        Node[] nodes = new Node[10]; // imported ru.job4j.list.linked.SimpleLinkedList.Node
+        nodes[0] = new Node<>(null, 0, null);
+        for (int i = 1; i < nodes.length; i++) {
+            nodes[i] = new Node<Integer>(nodes[i - 1], i, null);
+            nodes[i - 1].next = nodes[i];
+        }
+        list.fillWithLinkedNodesArray(nodes);
+        assertThat(list.hasCycleFloydAlgorithm(), is(false));
+        assertThat(list.hasCycleBrentAlgorithm(), is(false));
+    }
 }

@@ -130,6 +130,73 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
     }
 
     /**
+     * Finding cycle using Floyd's cycle-finding algorithm ('The hare and the tortoise').
+     * <p>
+     * There are two pointers travelling over the list node-by-node: the hare (fast) and the tortoise (slow).
+     * Every iteration the hare makes two steps, and the turtle makes one step forward.
+     * If there are no loops in the list, hare will come to the end first (his next element will be null).
+     * If there is a loop, the hare will finally run behind the tortoise and then get it (they will point to the same node).
+     *
+     * @return {@code true} if found cycle, {@code false} if not.
+     */
+    public boolean hasCycleFloydAlgorithm() {
+        Node<E> fast = this.first;
+        Node<E> slow = this.first;
+        boolean cycle = false;
+        while (!cycle && fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) { // yes, the same object!
+                cycle = true;
+            }
+        }
+        return cycle;
+    }
+
+    /**
+     * Finding cycle using Richard Brent's cycle-finding algorithm.
+     * This is an improved version of Floyd's algorithm, called 'teleporting turtle".
+     * http://www.siafoo.net/algorithm.
+     * <p>
+     * The main change is that turtle doesn't move constantly to one step forward and the hare makes only one step at a time.
+     * The turtle stays in the same place until the hare makes some maximum amount of steps. After that the turtle
+     * 'teleports' and waits the rabbit again. The amount of hare's maximum steps increases at each 'teleportation' as
+     * there are more and more elements behind the turtle, and she needs to wait for possible rabbit's coming.
+     *
+     * @return {@code true} if found cycle, {@code false} if not.
+     */
+    public boolean hasCycleBrentAlgorithm() {
+        Node<E> fast = this.first;
+        Node<E> slow = this.first;
+        int taken = 0;
+        int max = 2;
+        boolean cycle = false;
+        while (!cycle && fast.next != null) {
+            fast = fast.next;
+            taken++;
+            cycle = slow == fast;
+            if (!cycle && taken == max) {
+                taken = 0;
+                max *= 2;
+                slow = fast;
+            }
+        }
+        return cycle;
+    }
+
+    /**
+     * Method is just for for tests, fills list with array of nodes.
+     * Assuming all nodes are already connected to each other.
+     * First node in the array will be the first, last - the last.
+     *
+     * @param nodes array of nodes, linked to each other.
+     */
+    void fillWithLinkedNodesArray(Node<E>[] nodes) {
+        this.first = nodes[0];
+        this.last = nodes[nodes.length - 1];
+    }
+
+    /**
      * Returns the (non-null) Node at the specified element index.
      *
      * @return Node if found or {@code null} if not.
@@ -208,7 +275,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
      *
      * @param <E> generic parameter this node stores.
      */
-    private static class Node<E> {
+    static class Node<E> {
 
         /**
          * Item contained.
@@ -218,19 +285,19 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
         /**
          * Link to next Node.
          */
-        private Node<E> next;
+        Node<E> next;
 
         /**
          * Link to previous node.
          */
-        private Node<E> prev;
+        Node<E> prev;
 
         /**
          * @param prev    previous node in the list.
          * @param element item to store in this node.
          * @param next    next node in the list.
          */
-        private Node(Node<E> prev, E element, Node<E> next) {
+        Node(Node<E> prev, E element, Node<E> next) {
             this.item = element;
             this.next = next;
             this.prev = prev;
