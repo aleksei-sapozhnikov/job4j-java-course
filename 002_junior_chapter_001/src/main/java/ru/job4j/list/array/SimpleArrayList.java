@@ -40,16 +40,16 @@ public class SimpleArrayList<E> implements SimpleContainer<E> {
     /**
      * Default constructor.
      */
-    @SuppressWarnings("unchecked")
-    SimpleArrayList() {
-        this.container = (E[]) new Object[DEFAULT_CAPACITY];
+
+    public SimpleArrayList() {
+        this(DEFAULT_CAPACITY);
     }
 
     /**
      * @param size initial list capacity.
      */
     @SuppressWarnings("unchecked")
-    SimpleArrayList(int size) {
+    public SimpleArrayList(int size) {
         this.container = (E[]) new Object[size];
     }
 

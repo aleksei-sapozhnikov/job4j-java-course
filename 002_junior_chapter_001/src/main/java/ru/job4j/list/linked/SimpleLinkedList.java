@@ -131,6 +131,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
 
     /**
      * Finding cycle using Floyd's cycle-finding algorithm ('The hare and the tortoise').
+     * http://www.siafoo.net/algorithm/10
      * <p>
      * There are two pointers travelling over the list node-by-node: the hare (fast) and the tortoise (slow).
      * Every iteration the hare makes two steps, and the turtle makes one step forward.
@@ -156,7 +157,7 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
     /**
      * Finding cycle using Richard Brent's cycle-finding algorithm.
      * This is an improved version of Floyd's algorithm, called 'teleporting turtle".
-     * http://www.siafoo.net/algorithm.
+     * http://www.siafoo.net/algorithm/11.
      * <p>
      * The main change is that turtle doesn't move constantly to one step forward and the hare makes only one step at a time.
      * The turtle stays in the same place until the hare makes some maximum amount of steps. After that the turtle
