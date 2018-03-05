@@ -1,5 +1,5 @@
 /**
- * Simple set based on array.
+ * Simple set based on array or linked list.
  * Allows to store, add and get unique elements.
  * Grows if capacity not enough to add element.
  *
