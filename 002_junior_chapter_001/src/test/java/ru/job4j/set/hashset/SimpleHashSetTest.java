@@ -107,24 +107,26 @@ public class SimpleHashSetTest {
     }
 
     /**
-     * Test changeNumberOfBuckets()
+     * Test growIfNeeded()
      */
     @Test
-    public void whenChangeNumberOfBucketsThenElementsGoToCorrespondingNewBuckets() {
-        SimpleHashSet<String> set = new SimpleHashSet<>(4);
-        set.add("5"); // hash = 53 : 53 % 4 == 1 => bucket # 1
-        set.add("6"); // hash = 54 => bucket # 2
-        set.add("8"); // hash = 56 => bucket # 0
-        set.changeNumberOfBuckets(7); // element "5" => bucket #4; "6" => #5; 8 => #0
+    public void whenHashSetIfFullEnoughThenEnlarges() {
+        SimpleHashSet<String> set = new SimpleHashSet<>(5);
+        set.add("2"); // hash == 50 => bucket # 0
+        set.add("3"); // bucket # 1
+        set.add("4"); // bucket # 2
+        set.add("5"); // bucket # 3, filled: 4 / 5 == 80%
+        set.add("6"); // grow, new size = 5 * 3 / 2 + 1 = 8
         String result = set.toString();
-        String expected = new StringJoiner(System.lineSeparator())
-                .add("bucket 0: 8")
+        String expected = new StringJoiner(System.lineSeparator())  // now "2" bucket must be # 2 (50 % 8 == 2)
+                .add("bucket 0: null")
                 .add("bucket 1: null")
-                .add("bucket 2: null")
-                .add("bucket 3: null")
-                .add("bucket 4: 5")
-                .add("bucket 5: 6")
-                .add("bucket 6: null")
+                .add("bucket 2: 2")
+                .add("bucket 3: 3")
+                .add("bucket 4: 4")
+                .add("bucket 5: 5")
+                .add("bucket 6: 6")
+                .add("bucket 7: null")
                 .toString();
         assertThat(result, is(expected));
     }

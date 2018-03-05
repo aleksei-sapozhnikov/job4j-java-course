@@ -17,14 +17,19 @@ public class SimpleHashSet<E> {
     private static final int DEFAULT_NUMBER_OF_BUCKETS = 16;
 
     /**
+     * When percent of buckets filled with elements is more than this, the number of buckets must be enlarged.
+     */
+    private static final int MAX_PERCENT_OF_BUCKETS_FILLED = 75;
+
+    /**
      * Container for elements.
      */
     private E[] buckets;
 
     /**
-     * Modifications count (to prevent concurrent modification in iterator).
+     * Number of buckets filled with elements.
      */
-    private int modCount = 0;
+    private int filledBuckets = 0;
 
     /**
      * Constructs set with given number of buckets.
@@ -51,13 +56,14 @@ public class SimpleHashSet<E> {
      * {@code false} otherwise.
      */
     public boolean add(E value) {
+        growIfNeeded();
         boolean adding = !this.contains(value);
         if (adding) {
             try {
                 int index = Math.abs(value.hashCode() % this.buckets.length);
                 this.checkCollision(index);
                 this.buckets[index] = value;
-                this.modCount++;
+                this.filledBuckets++;
             } catch (Exception e) {
                 e.printStackTrace();
                 adding = false;
@@ -76,6 +82,43 @@ public class SimpleHashSet<E> {
         if (this.buckets[index] != null) {
             throw new Exception("Hashcode collision happened");
         }
+    }
+
+    /**
+     * Checks if the hash table in the set is full (most of the buckets are filled).
+     *
+     * @return {@code true} if hash table is full enough, {@code false} otherwise.
+     */
+    private boolean isFull() {
+        return this.buckets.length > 0
+                && this.filledBuckets * 100 / this.buckets.length > MAX_PERCENT_OF_BUCKETS_FILLED;
+    }
+
+    /**
+     * Checks if there is need to grow bucket and makes it grow if needed.
+     */
+    private void growIfNeeded() {
+        if (this.isFull()) {
+            this.changeNumberOfBuckets(this.buckets.length * 3 / 2 + 1);
+        }
+    }
+
+    /**
+     * Changes number of buckets in the hast able of the set.
+     * Also moves elements to the new hash table.
+     *
+     * @param newNumber new number of buckets.
+     */
+    @SuppressWarnings("unchecked")
+    private void changeNumberOfBuckets(int newNumber) {
+        E[] newBuckets = (E[]) new Object[newNumber];
+        for (E temp : this.buckets) {
+            if (temp != null) {
+                int newIndex = temp.hashCode() % newBuckets.length;
+                newBuckets[newIndex] = temp;
+            }
+        }
+        this.buckets = newBuckets;
     }
 
     /**
@@ -100,30 +143,13 @@ public class SimpleHashSet<E> {
         if (removing) {
             int index = value.hashCode() % this.buckets.length;
             this.buckets[index] = null;
+            this.filledBuckets--;
         }
         return removing;
     }
 
     /**
-     * Changes number of buckets in the hastable of the set.
-     * Also moves elements to the new hashtable.
-     *
-     * @param newNumber new number of buckets.
-     */
-    @SuppressWarnings("unchecked")
-    void changeNumberOfBuckets(int newNumber) {
-        E[] newBuckets = (E[]) new Object[newNumber];
-        for (E temp : this.buckets) {
-            if (temp != null) {
-                int newIndex = temp.hashCode() % newBuckets.length;
-                newBuckets[newIndex] = temp;
-            }
-        }
-        this.buckets = newBuckets;
-    }
-
-    /**
-     * Returns an array of elements contained in buckets.
+     * Prints current status of set and elements contained.
      */
     @Override
     public String toString() {
