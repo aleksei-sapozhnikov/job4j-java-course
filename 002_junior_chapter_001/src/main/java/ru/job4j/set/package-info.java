@@ -7,4 +7,4 @@
  * @version $Id$
  * @since 05.03.2018
  */
-package ru.job4j.set.array;
+package ru.job4j.set;

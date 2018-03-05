@@ -1,4 +1,4 @@
-package ru.job4j.set.array;
+package ru.job4j.set;
 
 import org.junit.Test;
 
@@ -10,20 +10,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Tests for the SimpleArraySet class.
+ * Tests for the SimpleArraySet class for the set based on array list.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
  * @since 05.03.2018
  */
-public class SimpleArraySetTest {
+public class SimpleSetOnLinkedListTest {
 
     /**
      * Test add()
      */
     @Test
     public void whenAddElementsThenFalseIfAlreadyContainedThemAndTrueIfDidnt() {
-        SimpleArraySet<String> set = new SimpleArraySet<>();
+        SimpleSet<String> set = new SimpleSet<>(SimpleSet.ContainerType.LINKED_LIST);
         assertThat(set.add("0"), is(true));
         assertThat(set.add("1"), is(true));
         assertThat(set.add("1"), is(false));
@@ -32,23 +32,12 @@ public class SimpleArraySetTest {
 
     }
 
-    @Test
-    public void whenSizeNotEnoughThenGrows() {
-        SimpleArraySet<String> set = new SimpleArraySet<>(2);
-        assertThat(set.add("0"), is(true));
-        assertThat(set.add("1"), is(true)); // full
-        assertThat(set.add("2"), is(true)); // grew
-        assertThat(set.add("3"), is(true));
-        assertThat(set.add("4"), is(true));
-        assertThat(set.add("5"), is(true));
-    }
-
     /**
      * Test contains()
      */
     @Test
     public void whenContainsElementThenTrueAndFalseOtherwise() {
-        SimpleArraySet<String> set = new SimpleArraySet<>();
+        SimpleSet<String> set = new SimpleSet<>(SimpleSet.ContainerType.LINKED_LIST);
         set.add("0");
         set.add("2");
         set.add("3");
@@ -64,7 +53,7 @@ public class SimpleArraySetTest {
      */
     @Test(expected = NoSuchElementException.class)
     public void whenIteratorThenIteratorShowsAllValues() {
-        SimpleArraySet<String> set = new SimpleArraySet<>(3);
+        SimpleSet<String> set = new SimpleSet<>(SimpleSet.ContainerType.LINKED_LIST, 3);
         set.add("0");
         set.add("1");
         set.add("2");
@@ -84,7 +73,7 @@ public class SimpleArraySetTest {
 
     @Test(expected = ConcurrentModificationException.class)
     public void whenConcurrentAddElementThenHasNextReturnsConcurrentModificationException() {
-        SimpleArraySet<String> set = new SimpleArraySet<>(3);
+        SimpleSet<String> set = new SimpleSet<>(SimpleSet.ContainerType.LINKED_LIST, 3);
         set.add("0");
         set.add("1");
         Iterator<String> iterator = set.iterator();
@@ -96,7 +85,7 @@ public class SimpleArraySetTest {
 
     @Test(expected = ConcurrentModificationException.class)
     public void whenConcurrentAddElementThenNextReturnsConcurrentModificationException() {
-        SimpleArraySet<String> set = new SimpleArraySet<>(3);
+        SimpleSet<String> set = new SimpleSet<>(SimpleSet.ContainerType.LINKED_LIST, 3);
         set.add("0");
         set.add("1");
         Iterator<String> iterator = set.iterator();
@@ -108,7 +97,7 @@ public class SimpleArraySetTest {
 
     @Test
     public void whenConcurrentGetThenNoConcurrentModificationException() {
-        SimpleArraySet<String> set = new SimpleArraySet<>(3);
+        SimpleSet<String> set = new SimpleSet<>(SimpleSet.ContainerType.LINKED_LIST, 3);
         set.add("0");
         set.add("1");
         set.add("2");
@@ -120,6 +109,5 @@ public class SimpleArraySetTest {
         assertThat(iterator.hasNext(), is(true));
         assertThat(iterator.next(), is("1"));
     }
-
 
 }

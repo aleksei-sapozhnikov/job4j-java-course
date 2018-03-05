@@ -1,7 +1,8 @@
-package ru.job4j.set.array;
+package ru.job4j.set;
 
 import ru.job4j.list.SimpleContainer;
 import ru.job4j.list.array.SimpleArrayList;
+import ru.job4j.list.linked.SimpleLinkedList;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -15,16 +16,18 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since 05.03.2018
  */
-public class SimpleArraySet<E> implements Iterable<E> {
+public class SimpleSet<E> implements Iterable<E> {
 
     /**
-     * Default size for the new set.
+     * Default size for the new set based on Array.
      */
     private static final int DEFAULT_SIZE = 10;
+
     /**
      * Container for elements.
      */
     private SimpleContainer<E> container;
+
     /**
      * Modifications count (to prevent concurrent modification in iterator).
      */
@@ -33,18 +36,32 @@ public class SimpleArraySet<E> implements Iterable<E> {
     /**
      * Constructs set with given initial size.
      *
-     * @param size initial size of the set.
+     * @param size initial size of the set based on array
+     *             (ignored if the container type is linked list).
      */
-    public SimpleArraySet(int size) {
-        this.container = new SimpleArrayList<>(size);
+    public SimpleSet(ContainerType cont, int size) {
+        if (cont == ContainerType.ARRAY_LIST) {
+            this.container = new SimpleArrayList<>(size);
+        } else {
+            this.container = new SimpleLinkedList<>();
+        }
     }
 
     /**
-     * Constructs set with default initial size (== 10).
+     * Constructs set with default initial size of array (== 10).
+     * If the container type is linked list, the size is ignored.
      */
-    public SimpleArraySet() {
-        this(DEFAULT_SIZE);
+    public SimpleSet(ContainerType cont) {
+        this(cont, DEFAULT_SIZE);
     }
+
+    /**
+     * Available types of elements containers for the set.
+     */
+    public enum ContainerType {
+        ARRAY_LIST, LINKED_LIST
+    }
+
 
     /**
      * Adds the specified element to this set if it is not already present.
