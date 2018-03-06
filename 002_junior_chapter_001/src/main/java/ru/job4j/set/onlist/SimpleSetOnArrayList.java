@@ -22,6 +22,6 @@ public class SimpleSetOnArrayList<E> extends AbstractSetOnSimpleContainer<E> {
      * Constructs set with array list as a container, with default initial size.
      */
     public SimpleSetOnArrayList() {
-        super(new SimpleArrayList<>(DEFAULT_SIZE));
+        this(DEFAULT_SIZE);
     }
 }
