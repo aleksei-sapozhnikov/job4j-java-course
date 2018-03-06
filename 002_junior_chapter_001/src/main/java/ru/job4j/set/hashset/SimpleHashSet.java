@@ -56,10 +56,10 @@ public class SimpleHashSet<E> {
      * {@code false} otherwise.
      */
     public boolean add(E value) {
-        growIfNeeded();
         boolean adding = !this.contains(value);
         if (adding) {
             try {
+                growIfNeeded();
                 int index = Math.abs(value.hashCode() % this.buckets.length);
                 this.checkCollision(index);
                 this.buckets[index] = value;
@@ -90,8 +90,7 @@ public class SimpleHashSet<E> {
      * @return {@code true} if hash table is full enough, {@code false} otherwise.
      */
     private boolean isFull() {
-        return this.buckets.length > 0
-                && this.filledBuckets * 100 / this.buckets.length > MAX_PERCENT_OF_BUCKETS_FILLED;
+        return this.filledBuckets * 100 / this.buckets.length > MAX_PERCENT_OF_BUCKETS_FILLED;
     }
 
     /**
