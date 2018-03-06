@@ -1,8 +1,6 @@
-package ru.job4j.set;
+package ru.job4j.set.onlist;
 
 import ru.job4j.list.SimpleContainer;
-import ru.job4j.list.array.SimpleArrayList;
-import ru.job4j.list.linked.SimpleLinkedList;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -16,12 +14,7 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since 05.03.2018
  */
-public class SimpleSet<E> implements Iterable<E> {
-
-    /**
-     * Default size for the new set based on Array.
-     */
-    private static final int DEFAULT_SIZE = 10;
+public class AbstractSetOnSimpleContainer<E> implements Iterable<E> {
 
     /**
      * Container for elements.
@@ -34,34 +27,13 @@ public class SimpleSet<E> implements Iterable<E> {
     private int modCount = 0;
 
     /**
-     * Constructs set with given initial size.
+     * Assures initialization of inner container.
      *
-     * @param size initial size of the set based on array
-     *             (ignored if the container type is linked list).
+     * @param container inner container.
      */
-    public SimpleSet(ContainerType cont, int size) {
-        if (cont == ContainerType.ARRAY_LIST) {
-            this.container = new SimpleArrayList<>(size);
-        } else {
-            this.container = new SimpleLinkedList<>();
-        }
+    protected AbstractSetOnSimpleContainer(SimpleContainer<E> container) {
+        this.container = container;
     }
-
-    /**
-     * Constructs set with default initial size of array (== 10).
-     * If the container type is linked list, the size is ignored.
-     */
-    public SimpleSet(ContainerType cont) {
-        this(cont, DEFAULT_SIZE);
-    }
-
-    /**
-     * Available types of elements containers for the set.
-     */
-    public enum ContainerType {
-        ARRAY_LIST, LINKED_LIST
-    }
-
 
     /**
      * Adds the specified element to this set if it is not already present.
