@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since 05.03.2018
  */
-public class AbstractSetOnSimpleContainer<E> implements Iterable<E> {
+public abstract class AbstractSetOnSimpleContainer<E> implements Iterable<E> {
 
     /**
      * Container for elements.
