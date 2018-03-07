@@ -141,4 +141,13 @@ public class SimpleListTest {
         assertThat(list.indexOf("0"), is(0));
     }
 
+    @Test
+    public void whenIndexOfNotContainingElementThenNull() {
+        SimpleList<String> list = new SimpleList<>(3);
+        list.add("0");
+        list.add("1");
+        list.add("2");
+        assertThat(list.indexOf("5"), is(-1));
+    }
+
 }
