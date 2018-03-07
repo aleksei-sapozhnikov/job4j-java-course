@@ -25,7 +25,6 @@ public class IteratorArray2DTest {
         itMatrix = new IteratorArray2D(new int[][]{{1, 2, 3}, {4, 5, 6}});
         itJagged = new IteratorArray2D(new int[][]{{1}, {3, 4}, {7}});
         itWithEmpty = new IteratorArray2D(new int[][]{{1}, {}, {5, 7}, {}});
-
     }
 
     /**
@@ -167,6 +166,13 @@ public class IteratorArray2DTest {
         Iterator<Integer> it = new IteratorArray2D(new int[][]{{}, {}, {}, {3, 4}, {}});
         assertThat(it.next(), is(3));
         assertThat(it.next(), is(4));
+    }
+
+    @Test(expected = NoSuchElementException.class)
+    public void whenEmptyArrayThenStillWorksFine() {
+        Iterator<Integer> it = new IteratorArray2D(new int[][]{});
+        assertThat(it.hasNext(), is(false));
+        it.next();
     }
 
 

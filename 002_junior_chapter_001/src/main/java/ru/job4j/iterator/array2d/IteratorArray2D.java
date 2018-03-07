@@ -27,7 +27,9 @@ public class IteratorArray2D implements Iterator<Integer> {
 
     IteratorArray2D(final int[][] values) {
         this.values = values;
-        this.moveCursorToNext();
+        if (this.values.length > 0) {
+            this.moveCursorToNext();
+        }
     }
 
     /**

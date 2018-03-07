@@ -45,6 +45,17 @@ public class UserEqualsTest {
     }
 
     @Test
+    public void whenSomeFieldIsNotTheSameThenFalse() {
+        UserEquals origin = new UserEquals("Ivan", 12, LocalDate.of(1961, 4, 12));
+        UserEquals otherName = new UserEquals("Alena", 12, LocalDate.of(1961, 4, 12));
+        UserEquals otherChlidren = new UserEquals("Ivan", 5, LocalDate.of(1961, 4, 12));
+        UserEquals otherBirthday = new UserEquals("Ivan", 12, LocalDate.of(2008, 7, 1));
+        assertThat(origin.equals(otherName), is(false));
+        assertThat(origin.equals(otherChlidren), is(false));
+        assertThat(origin.equals(otherBirthday), is(false));
+    }
+
+    @Test
     public void whenOtherObjectOfAnotherClassThenEqualsFalse() {
         UserEquals first = new UserEquals("Ivan", 12, LocalDate.of(1961, 4, 12));
         String second = "I'm equal!";
