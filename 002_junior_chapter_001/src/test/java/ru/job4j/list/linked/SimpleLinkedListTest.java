@@ -24,6 +24,7 @@ public class SimpleLinkedListTest {
         assertThat(list.get(0), is("0"));
         assertThat(list.get(1), is("1"));
         assertThat(list.get(2), is("2"));
+        assertThat(list.get(45), is((String) null));
     }
 
     /**

@@ -200,13 +200,17 @@ public class SimpleLinkedList<E> implements SimpleContainer<E> {
     /**
      * Returns the (non-null) Node at the specified element index.
      *
+     * @param index index in the list of the node to return.
      * @return Node if found or {@code null} if not.
      */
     private Node<E> node(int index) {
         Node<E> result = this.first;
         if (result != null && index != 0) {
-            for (int i = 0; i < index && result.next != null; i++) {
+            for (int i = 0; i < index; i++) {
                 result = result.next;
+                if (result == null) {
+                    break;
+                }
             }
         }
         return result;
