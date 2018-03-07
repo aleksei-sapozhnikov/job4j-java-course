@@ -182,5 +182,12 @@ public class IteratorArray2DTest {
         it.next();
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void whenArrayWithTwoEmptySubArraysThenStillWorksFine() {
+        Iterator<Integer> it = new IteratorArray2D(new int[][]{{}, {}, {}});
+        assertThat(it.hasNext(), is(false));
+        it.next();
+    }
+
 
 }

@@ -41,8 +41,7 @@ public class IteratorArray2D implements Iterator<Integer> {
      */
     @Override
     public boolean hasNext() {
-        return this.row < this.values.length
-                && this.column < this.values[this.row].length;
+        return this.row < this.values.length;
     }
 
     /**
