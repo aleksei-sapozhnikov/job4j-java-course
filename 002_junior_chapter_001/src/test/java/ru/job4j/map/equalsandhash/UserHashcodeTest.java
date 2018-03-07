@@ -36,7 +36,7 @@ public class UserHashcodeTest {
      * Test adding to map
      */
     @Test
-    public void whenTwoUsersSameFieldsAddedToMapThenTwoKeys() {
+    public void whenTwoUsersWithTheSameFieldsAddedToMapThenTwoKeys() {
         Map<UserHashcode, String> map = new HashMap<>();
         UserHashcode first = new UserHashcode("Ivan", 12, LocalDate.of(1961, 4, 12));
         UserHashcode second = new UserHashcode("Ivan", 12, LocalDate.of(1961, 4, 12));
