@@ -1,4 +1,4 @@
-package ru.job4j.map.equalshashcode;
+package ru.job4j.map.equalsandhash;
 
 import java.time.LocalDate;
 
@@ -9,7 +9,7 @@ import java.time.LocalDate;
  * @version $Id$
  * @since 07.03.2018
  */
-abstract class AbstractUser {
+class User {
 
     /**
      * Name.
@@ -33,7 +33,7 @@ abstract class AbstractUser {
      * @param children number of children.
      * @param birthday birth date.
      */
-    AbstractUser(String name, int children, LocalDate birthday) {
+    User(String name, int children, LocalDate birthday) {
         this.name = name;
         this.children = children;
         this.birthday = birthday;
