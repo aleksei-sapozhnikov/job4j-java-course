@@ -3,7 +3,7 @@ package ru.job4j.map.equalsandhash;
 import java.time.LocalDate;
 
 /**
- * Basic user class to extend for testing equals() and hashcode().
+ * User class without overriding equals() and hashcode().
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
@@ -50,6 +50,21 @@ class User {
                 "[name: %s, children: %s, birthday: %s]", this.name, this.children, this.birthday
         );
     }
+
+    /**
+     * Hashcode()
+     *
+     * @return integer hashcode.
+     */
+    @Override
+    public int hashCode() {
+        int result = 1; // let's do it manually
+        result = 31 * result + this.name.hashCode();
+        result = 31 * result + this.children;
+        result = 31 * result + this.birthday.hashCode();
+        return result;
+    }
+
 
 }
 
