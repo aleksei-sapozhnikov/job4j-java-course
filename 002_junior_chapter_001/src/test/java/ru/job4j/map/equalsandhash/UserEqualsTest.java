@@ -12,6 +12,18 @@ import static org.junit.Assert.assertThat;
 public class UserEqualsTest {
 
     /**
+     * Test adding to map
+     */
+    @Test
+    public void whenTwoUsersWithTheSameFieldsAddedToMapThenTwoKeys() {
+        Map<UserEquals, String> map = new HashMap<>();
+        UserEquals first = new UserEquals("Ivan", 12, LocalDate.of(1961, 4, 12));
+        UserEquals second = new UserEquals("Ivan", 12, LocalDate.of(1961, 4, 12));
+        assertThat(map.put(first, "first"), is((String) null));
+        assertThat(map.put(second, "second"), is((String) null));
+    }
+
+    /**
      * Test toString()
      */
     @Test
@@ -46,16 +58,10 @@ public class UserEqualsTest {
         assertThat(first.equals(second), is(false));
     }
 
-    /**
-     * Test adding to map
-     */
     @Test
-    public void whenTwoUsersWithTheSameFieldsAddedToMapThenTwoKeys() {
-        Map<UserEquals, String> map = new HashMap<>();
+    public void whenTheSameObjectThenEqualsTrue() {
         UserEquals first = new UserEquals("Ivan", 12, LocalDate.of(1961, 4, 12));
-        UserEquals second = new UserEquals("Ivan", 12, LocalDate.of(1961, 4, 12));
-        assertThat(map.put(first, "first"), is((String) null));
-        assertThat(map.put(second, "second"), is((String) null));
+        assertThat(first.equals(first), is(true));
     }
 
 }

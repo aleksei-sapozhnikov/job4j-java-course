@@ -12,6 +12,18 @@ import static org.junit.Assert.assertThat;
 public class UserTest {
 
     /**
+     * Test adding to map
+     */
+    @Test
+    public void whenTwoUsersWithTheSameFieldsAddedToMapThenTwoKeys() {
+        Map<User, String> map = new HashMap<>();
+        User first = new User("Ivan", 12, LocalDate.of(1961, 4, 12));
+        User second = new User("Ivan", 12, LocalDate.of(1961, 4, 12));
+        assertThat(map.put(first, "first"), is((String) null));
+        assertThat(map.put(second, "second"), is((String) null));
+    }
+
+    /**
      * Test toString()
      */
     @Test
@@ -30,18 +42,6 @@ public class UserTest {
         User first = new User("Ivan", 12, LocalDate.of(1961, 4, 12));
         User second = new User("Ivan", 12, LocalDate.of(1961, 4, 12));
         assertThat(first.hashCode() == second.hashCode(), is(true));
-    }
-
-    /**
-     * Test adding to map
-     */
-    @Test
-    public void whenTwoUsersWithTheSameFieldsAddedToMapThenTwoKeys() {
-        Map<User, String> map = new HashMap<>();
-        User first = new User("Ivan", 12, LocalDate.of(1961, 4, 12));
-        User second = new User("Ivan", 12, LocalDate.of(1961, 4, 12));
-        assertThat(map.put(first, "first"), is((String) null));
-        assertThat(map.put(second, "second"), is((String) null));
     }
 
 }
