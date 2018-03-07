@@ -129,5 +129,14 @@ public class ConverterTest {
         itOfIt.next();
     }
 
+    @Test(expected = NoSuchElementException.class)
+    public void whenNoGivenIteratorsThenIteratorHasNextFalseAndNextThrowsException() {
+        Iterator<Iterator<Integer>> its = Arrays.<Iterator<Integer>>asList().iterator();
+        Converter converter = new Converter();
+        itOfIt = converter.convert(its);
+        assertThat(itOfIt.hasNext(), is(false));
+        itOfIt.next();
+    }
+
 
 }
