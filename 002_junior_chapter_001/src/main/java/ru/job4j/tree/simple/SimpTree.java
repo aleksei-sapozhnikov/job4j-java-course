@@ -39,7 +39,6 @@ public class SimpTree<E extends Comparable<E>> implements SimpleTree<E> {
         return result;
     }
 
-
     /**
      * Finds node by its value.
      *
@@ -55,6 +54,23 @@ public class SimpTree<E extends Comparable<E>> implements SimpleTree<E> {
             Node<E> node = data.poll();
             if (node.valueIs(value)) {
                 result = Optional.of(node);
+                break;
+            }
+            for (Node<E> child : node.children()) {
+                data.offer(child);
+            }
+        }
+        return result;
+    }
+
+    public boolean isBinary() {
+        boolean result = true;
+        Queue<Node<E>> data = new LinkedList<>();
+        data.offer(this.root);
+        while (!data.isEmpty()) {
+            Node<E> node = data.poll();
+            if (node.children().size() > 2) {
+                result = false;
                 break;
             }
             for (Node<E> child : node.children()) {

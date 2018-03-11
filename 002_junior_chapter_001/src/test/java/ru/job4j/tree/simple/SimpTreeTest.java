@@ -67,4 +67,22 @@ public class SimpTreeTest {
         iterator.next();
     }
 
+    /**
+     * Test isBinary()
+     */
+    @Test
+    public void whenBinaryThenIsBinaryReturnsTrueAndViceVersa() {
+        SimpTree<String> tree = new SimpTree<>("1");
+        tree.add("1", "1-1");
+        tree.add("1", "1-2");
+        tree.add("1-1", "1-1-1");
+        tree.add("1-2", "1-2-1");
+        tree.add("1-2", "1-2-2");
+        tree.add("1-1-1", "1-1-1-1");
+        tree.add("1-1-1", "1-1-1-2");
+        assertThat(tree.isBinary(), is(true));
+        tree.add("1-1-1", "1-1-1-3"); // now not binary
+        assertThat(tree.isBinary(), is(false));
+    }
+
 }
