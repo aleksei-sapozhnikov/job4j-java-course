@@ -7,6 +7,13 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests for the Node class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 10.03.2018
+ */
 public class NodeTest {
 
     /**

@@ -8,6 +8,13 @@ import java.util.NoSuchElementException;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests for the SimpTree class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 10.03.2018
+ */
 public class SimpTreeTest {
 
     /**

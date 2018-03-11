@@ -1,7 +1,5 @@
 /**
- * Simple set based on array or linked list.
- * Allows to store, add and get unique elements.
- * Grows if capacity not enough to add element.
+ * Tasks connected with set data structures.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$

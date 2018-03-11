@@ -2,6 +2,13 @@ package ru.job4j.tree.simple;
 
 import java.util.*;
 
+/**
+ * Simple tree with multiple possible leaves. Can add and store elements.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 10.03.2018
+ */
 public class SimpTree<E extends Comparable<E>> implements SimpleTree<E> {
 
     /**
