@@ -9,7 +9,7 @@ public class Exchange {
     void add(Task task) {
         OrderBook book = this.findOrderBook(task.issuer());
 
-        if (task.action() == Task.actionEnum.ADD) {
+        if (task.action() == Task.ActionEnum.ADD) {
             book.add(task);
         } else {
             book.delete(task);

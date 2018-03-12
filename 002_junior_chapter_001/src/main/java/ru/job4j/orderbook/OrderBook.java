@@ -23,7 +23,7 @@ public class OrderBook {
      * @param task task to add.
      */
     void add(Task task) {
-        if (task.operation() == Task.operationEnum.ASK) {
+        if (task.operation() == Task.OperationEnum.ASK) {
             this.addToSet(this.asks, task);
         } else {
             this.addToSet(this.bids, task);
@@ -33,7 +33,7 @@ public class OrderBook {
 
     // Удалить заявку из стакана.
     boolean delete(Task task) {
-        return task.operation() == Task.operationEnum.ASK
+        return task.operation() == Task.OperationEnum.ASK
                 ? this.deleteFromSet(this.asks, task)
                 : this.deleteFromSet(this.bids, task);
     }

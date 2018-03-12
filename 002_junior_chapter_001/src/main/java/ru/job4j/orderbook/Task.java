@@ -11,11 +11,11 @@ public class Task {
     /**
      * Add or delete this item.
      */
-    private actionEnum action;
+    private ActionEnum action;
     /**
      * Type of the operation: buy shares or sell shares.
      */
-    private operationEnum operation;
+    private OperationEnum operation;
     /**
      * Share issuer.
      */
@@ -39,7 +39,7 @@ public class Task {
      * @param price     price to buy/sell for.
      * @param volume    amount of shares to buy/sell.
      */
-    Task(String id, actionEnum action, operationEnum operation, String issuer, BigDecimal price, int volume) {
+    Task(String id, ActionEnum action, OperationEnum operation, String issuer, BigDecimal price, int volume) {
         this.id = id;
         this.action = action;
         this.operation = operation;
@@ -62,7 +62,7 @@ public class Task {
      *
      * @return action field value.
      */
-    actionEnum action() {
+    ActionEnum action() {
         return action;
     }
 
@@ -71,7 +71,7 @@ public class Task {
      *
      * @return operation field value.
      */
-    public operationEnum operation() {
+    public OperationEnum operation() {
         return this.operation;
     }
 
@@ -95,14 +95,14 @@ public class Task {
     /**
      * Enum: add or delete this item.
      */
-    enum actionEnum {
+    enum ActionEnum {
         ADD, DELETE
     }
 
     /**
      * Enum: action of the operation: buy shares or sell shares.
      */
-    enum operationEnum {
+    enum OperationEnum {
         ASK, BID
     }
 
