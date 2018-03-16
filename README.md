@@ -8,11 +8,11 @@ Java developing course by Petr Arsentjev http://job4j.ru
 
 Modules structure corresponds with the course programme:
 
-- chapter_001. Basic syntax and structures of Java language.
+- 001_trainee_chapter_001. Basic syntax and structures of Java language.
 
-- chapter_002. Basics of object-oriented programming.
+- 001_trainee_chapter_002. Basics of object-oriented programming.
 
-- chapter_003. Basics of collections.
+- 001_trainee_chapter_003. Basics of collections.
 
 # Алексей Сапожников (vermucht@gmail.com)
 
@@ -21,8 +21,8 @@ Modules structure corresponds with the course programme:
 
 Структура модулей соответствует программе обучения:
 
-- chapter_001. Базовый синтаксис и структуры языка Java.
+- 001_trainee_chapter_001. Базовый синтаксис и структуры языка Java.
 
-- chapter_002. Основы объектно-ориентированного программирования.
+- 001_trainee_chapter_002. Основы объектно-ориентированного программирования.
 
-- chapter_003. Основы коллекций.
+- 001_trainee_chapter_003. Основы коллекций.
