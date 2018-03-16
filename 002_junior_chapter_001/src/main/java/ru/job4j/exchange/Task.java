@@ -75,6 +75,15 @@ public class Task {
         return this.operation;
     }
 
+    /**
+     * Add amount of shares taken by this task.
+     *
+     * @param addition
+     */
+    void addVolumeOfTask(Task addition) {
+        this.volume += addition.volume;
+    }
+
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -91,19 +100,4 @@ public class Task {
     public int hashCode() {
         return id.hashCode();
     }
-
-    /**
-     * Enum: add or delete this item.
-     */
-    enum ActionEnum {
-        ADD, DELETE
-    }
-
-    /**
-     * Enum: action of the operation: buy shares or sell shares.
-     */
-    enum OperationEnum {
-        ASK, BID
-    }
-
 }

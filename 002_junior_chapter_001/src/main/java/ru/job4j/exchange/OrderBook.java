@@ -18,12 +18,21 @@ public class OrderBook {
     private Set<Task> bids = new TreeSet<>();
 
     /**
+     * Get issuer.
+     *
+     * @return issuer field value.
+     */
+    String issuer() {
+        return this.issuer;
+    }
+
+    /**
      * Add new task to the book.
      *
      * @param task task to add.
      */
     void add(Task task) {
-        if (task.operation() == Task.OperationEnum.ASK) {
+        if (task.operation() == OperationEnum.ASK) {
             this.addToSet(this.asks, task);
         } else {
             this.addToSet(this.bids, task);
@@ -31,9 +40,14 @@ public class OrderBook {
         this.uniteTasks();
     }
 
-    // Удалить заявку из стакана.
+    /**
+     * Deletes task from the order book (by id number).
+     *
+     * @param task task to delete.
+     * @return true if deleted, false if task not found.
+     */
     boolean delete(Task task) {
-        return task.operation() == Task.OperationEnum.ASK
+        return task.operation() == OperationEnum.ASK
                 ? this.deleteFromSet(this.asks, task)
                 : this.deleteFromSet(this.bids, task);
     }
@@ -44,10 +58,25 @@ public class OrderBook {
 
     }
 
-    // перебираем заявки с ценой. Если найдем такую же цену - добавляем к ней amount.
-    // не найдем - добавляем новую.
+    /**
+     * Adds new task to set or adds to the volume of existent if task with that price is already in the set.
+     *
+     * @param set  set where to add task.
+     * @param task task to add.
+     * @return true
+     */
     private void addToSet(Set<Task> set, Task task) {
-
+        boolean finished = false;
+        for (Task existent : set) {
+            if (task.equals(existent)) {
+                existent.addVolumeOfTask(task);
+                finished = true;
+                break;
+            }
+        }
+        if (!finished) {
+            set.add(task);
+        }
     }
 
     /**
