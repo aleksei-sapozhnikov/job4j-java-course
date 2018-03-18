@@ -1,8 +1,5 @@
 package ru.job4j.exchange;
 
-import java.math.BigDecimal;
-import java.util.Objects;
-
 public class Task {
     /**
      * Unique id of the item.
@@ -23,7 +20,7 @@ public class Task {
     /**
      * Price to buy/sell for.
      */
-    private BigDecimal price;
+    private int price;
     /**
      * How many shares to buy/sell.
      */
@@ -39,22 +36,13 @@ public class Task {
      * @param price     price to buy/sell for.
      * @param volume    amount of shares to buy/sell.
      */
-    Task(String id, ActionEnum action, OperationEnum operation, String issuer, BigDecimal price, int volume) {
+    Task(String id, ActionEnum action, OperationEnum operation, String issuer, int price, int volume) {
         this.id = id;
         this.action = action;
         this.operation = operation;
         this.issuer = issuer;
         this.price = price;
         this.volume = volume;
-    }
-
-    /**
-     * Get shares issuer.
-     *
-     * @return issuer field value.
-     */
-    String issuer() {
-        return this.issuer;
     }
 
     /**
@@ -71,19 +59,37 @@ public class Task {
      *
      * @return operation field value.
      */
-    public OperationEnum operation() {
+    OperationEnum operation() {
         return this.operation;
     }
 
     /**
-     * Add amount of shares taken by this task.
+     * Get shares issuer.
      *
-     * @param addition
+     * @return issuer field value.
      */
-    void addVolumeOfTask(Task addition) {
-        this.volume += addition.volume;
+    String issuer() {
+        return this.issuer;
     }
 
+    public int volume() {
+        return this.volume;
+    }
+
+    public int price() {
+        return price;
+    }
+
+    void subtractVolume(int volume) {
+        this.volume -= volume;
+    }
+
+    /**
+     * Checks equality of this object to another object.
+     *
+     * @param other another object.
+     * @return <tt>true</tt> if this and another objects are equal, <tt>false otherwise</tt>
+     */
     @Override
     public boolean equals(Object other) {
         if (this == other) {
@@ -93,9 +99,14 @@ public class Task {
             return false;
         }
         Task task = (Task) other;
-        return Objects.equals(this.id, task.id);
+        return this.id.equals(task.id);
     }
 
+    /**
+     * Returns integer hashcode of the object fields.
+     *
+     * @return integer hashcode.
+     */
     @Override
     public int hashCode() {
         return id.hashCode();

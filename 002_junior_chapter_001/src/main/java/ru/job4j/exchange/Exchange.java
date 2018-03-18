@@ -1,28 +1,28 @@
 package ru.job4j.exchange;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class Exchange {
     private Set<OrderBook> books = new HashSet<>();
 
-    void add(Task task) {
-        OrderBook book = this.findOrderBook(task.issuer());
+    public static void main(String[] args) {
+        List<String> list = new LinkedList<>();
+        list.add("1");
+        list.add("2");
+        list.add("3");
+        ListIterator<String> it = list.listIterator(list.size());
+        System.out.println(it.previous());
+        System.out.println(it.previous());
+        System.out.println(it.previous());
 
-        if (task.action() == ActionEnum.ADD) {
-            book.add(task);
-        } else {
-            book.delete(task);
-        }
     }
 
-    /**
-     * Returns order book with the needed issuer.
-     *
-     * @param issuer issuer we are looking for.
-     * @return order book with the needed issuer or <tt>null</tt> if such a book not found.
-     */
-    OrderBook findOrderBook(String issuer) {
+    void processNew(Task task) {
+        OrderBook book = getOrderBook(task.issuer());
+        book.processNew(task);
+    }
+
+    private OrderBook getOrderBook(String issuer) {
         OrderBook result = null;
         for (OrderBook temp : this.books) {
             if (issuer.equals(temp.issuer())) {
@@ -30,7 +30,21 @@ public class Exchange {
                 break;
             }
         }
+        if (result == null) {
+            result = new OrderBook(issuer);
+            this.books.add(result);
+        }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        StringJoiner buffer = new StringJoiner(System.lineSeparator());
+        for (OrderBook temp : this.books) {
+            buffer.add(temp.toString());
+            buffer.add("");
+        }
+        return buffer.toString();
     }
 
 }

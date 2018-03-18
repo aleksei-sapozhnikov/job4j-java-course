@@ -1,95 +1,160 @@
 package ru.job4j.exchange;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 
 public class OrderBook {
-    /**
-     * Shares issuer (company).
-     */
+
     private String issuer;
-    /**
-     * Asks to buy shares.
-     */
-    private Set<Task> asks = new TreeSet<>();
-    /**
-     * Shares for selling.
-     */
-    private Set<Task> bids = new TreeSet<>();
 
-    /**
-     * Get issuer.
-     *
-     * @return issuer field value.
-     */
-    String issuer() {
-        return this.issuer;
+    private List<Task> buyList = new ArrayList<>();
+
+    private List<Task> sellList = new ArrayList<>();
+
+    OrderBook(String issuer) {
+        this.issuer = issuer;
     }
 
-    /**
-     * Add new task to the book.
-     *
-     * @param task task to add.
-     */
-    void add(Task task) {
+    public String issuer() {
+        return issuer;
+    }
+
+    void processNew(Task task) {
         if (task.operation() == OperationEnum.ASK) {
-            this.addToSet(this.asks, task);
+            this.addToListByPrice(this.buyList, task);
+            this.uniteWithTasksInOppositeList(task);
         } else {
-            this.addToSet(this.bids, task);
+            this.addToListByPrice(this.sellList, task);
+            this.uniteWithTasksInOppositeList(task);
         }
-        this.uniteTasks();
     }
 
-    /**
-     * Deletes task from the order book (by id number).
-     *
-     * @param task task to delete.
-     * @return true if deleted, false if task not found.
-     */
-    boolean delete(Task task) {
-        return task.operation() == OperationEnum.ASK
-                ? this.deleteFromSet(this.asks, task)
-                : this.deleteFromSet(this.bids, task);
-    }
-
-
-    // сверяем заявки в bids и asks и выбираем, можно ли продать акций.
-    private void uniteTasks() {
-
-    }
-
-    /**
-     * Adds new task to set or adds to the volume of existent if task with that price is already in the set.
-     *
-     * @param set  set where to add task.
-     * @param task task to add.
-     * @return true
-     */
-    private void addToSet(Set<Task> set, Task task) {
-        boolean finished = false;
-        for (Task existent : set) {
-            if (task.equals(existent)) {
-                existent.addVolumeOfTask(task);
-                finished = true;
+    private void addToListByPrice(List<Task> list, Task task) {
+        boolean added = false;
+        ListIterator<Task> it = list.listIterator();
+        while (it.hasNext()) {
+            if (task.price() > it.next().price()) {
+                it.previous();
+                it.add(task);
+                added = true;
                 break;
             }
         }
-        if (!finished) {
-            set.add(task);
+        if (!added) {
+            it.add(task);
         }
     }
 
-    /**
-     * Delete task from the set.
-     *
-     * @param task task to delete.
-     * @return <tt>true</tt> if found and deleted, <tt>false</tt> if not found.
-     */
-    private boolean deleteFromSet(Set<Task> set, Task task) {
-        boolean result = set.contains(task);
-        if (result) {
-            set.remove(task);
+    private void uniteWithTasksInOppositeList(Task added) {
+        boolean buy = added.operation() == OperationEnum.ASK;
+        if (buy) {
+            for (int i = this.sellList.size() - 1; i >= 0; i--) {
+                Task temp = this.sellList.get(i);
+                if (added.price() < temp.price()) {
+                    break;
+                }
+                if (this.uniteTasksAndStop(added, temp, this.buyList, this.sellList)) {
+                    break;
+                }
+            }
+        } else {
+            for (int i = 0; i < this.buyList.size(); i++) {
+                Task temp = this.buyList.get(i);
+                if (added.price() > temp.price()) {
+                    break;
+                }
+                if (this.uniteTasksAndStop(added, temp, this.sellList, this.buyList)) {
+                    break;
+                } else {
+                    i--;
+                }
+            }
         }
-        return result;
+    }
+
+    private boolean uniteTasksAndStop(Task added, Task existing, List<Task> addedList, List<Task> oppositeList) {
+        boolean stop = false;
+        if (added.volume() < existing.volume()) {
+            existing.subtractVolume(added.volume());
+            addedList.remove(added);
+            stop = true;
+        } else if (added.volume() == existing.volume()) {
+            addedList.remove(added);
+            oppositeList.remove(existing);
+            stop = true;
+        } else {
+            added.subtractVolume(existing.volume());
+            oppositeList.remove(existing);
+        }
+        return stop;
+    }
+
+    @Override
+    public String toString() {
+        String format = "%12s%8s%12s";
+        StringJoiner buffer = new StringJoiner(System.lineSeparator());
+        buffer.add(String.format("%s", this.issuer));
+        buffer.add(String.format(format, "[Продажа]", "[Цена]", "[Покупка]"));
+        Iterator<Task> buyIt = this.buyList.iterator();
+        Iterator<Task> sellIt = this.sellList.iterator();
+        Task buy = buyIt.hasNext() ? buyIt.next() : null;
+        Task sell = sellIt.hasNext() ? sellIt.next() : null;
+        while (buy != null && sell != null) {
+            if (buy.price() > sell.price()) {
+                int amount = buy.volume();
+                Task buyNext = buyIt.hasNext() ? buyIt.next() : null;
+                while (buyNext != null && buy.price() == buyNext.price()) {
+                    amount += buyNext.volume();
+                    buyNext = buyIt.hasNext() ? buyIt.next() : null;
+                }
+                buffer.add(String.format(format, "", buy.price(), amount));
+                buy = buyNext;
+            } else if (buy.price() == sell.price()) {
+                int amountBuy = buy.volume();
+                int amountSell = sell.volume();
+                Task buyNext = buyIt.hasNext() ? buyIt.next() : null;
+                Task sellNext = sellIt.hasNext() ? buyIt.next() : null;
+                while (buyNext != null && buy.price() == buyNext.price()) {
+                    amountBuy += buyNext.volume();
+                    buyNext = buyIt.hasNext() ? buyIt.next() : null;
+                }
+                while (sellNext != null && sell.price() == sellNext.price()) {
+                    amountSell += sellNext.volume();
+                    sellNext = sellIt.hasNext() ? sellIt.next() : null;
+                }
+                buffer.add(String.format(format, amountSell, buy.price(), amountBuy));
+                buy = buyNext;
+                sell = sellNext;
+            } else {
+                int amount = sell.volume();
+                Task sellNext = sellIt.hasNext() ? sellIt.next() : null;
+                while (sellNext != null && sell.price() == sellNext.price()) {
+                    amount += sellNext.volume();
+                    sellNext = sellIt.hasNext() ? sellIt.next() : null;
+                }
+                buffer.add(String.format(format, amount, sell.price(), ""));
+                sell = sellNext;
+            }
+        }
+        while (buy != null) {
+            int amount = buy.volume();
+            Task buyNext = buyIt.hasNext() ? buyIt.next() : null;
+            while (buyNext != null && buy.price() == buyNext.price()) {
+                amount += buyNext.volume();
+                buyNext = buyIt.hasNext() ? buyIt.next() : null;
+            }
+            buffer.add(String.format(format, "", buy.price(), amount));
+            buy = buyNext;
+        }
+        while (sell != null) {
+            int amount = sell.volume();
+            Task sellNext = sellIt.hasNext() ? sellIt.next() : null;
+            while (sellNext != null && sell.price() == sellNext.price()) {
+                amount += sellNext.volume();
+                sellNext = sellIt.hasNext() ? sellIt.next() : null;
+            }
+            buffer.add(String.format(format, amount, sell.price(), ""));
+            sell = sellNext;
+        }
+        return buffer.toString();
     }
 }
