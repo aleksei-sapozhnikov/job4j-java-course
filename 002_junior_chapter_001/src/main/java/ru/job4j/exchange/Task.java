@@ -45,6 +45,10 @@ public class Task {
         this.volume = volume;
     }
 
+    public String id() {
+        return this.id;
+    }
+
     /**
      * Get action: add or delete task.
      *

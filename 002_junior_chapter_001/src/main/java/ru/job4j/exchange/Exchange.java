@@ -17,9 +17,9 @@ public class Exchange {
 
     }
 
-    void processNew(Task task) {
+    boolean processTask(Task task) {
         OrderBook book = getOrderBook(task.issuer());
-        book.processNew(task);
+        return book.processTask(task);
     }
 
     private OrderBook getOrderBook(String issuer) {
@@ -37,11 +37,10 @@ public class Exchange {
         return result;
     }
 
-    @Override
-    public String toString() {
+    public String toStringForTests() {
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
         for (OrderBook temp : this.books) {
-            buffer.add(temp.toString());
+            buffer.add(temp.toStringForTests());
             buffer.add("");
         }
         return buffer.toString();

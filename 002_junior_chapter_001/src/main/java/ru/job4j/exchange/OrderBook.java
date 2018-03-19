@@ -18,14 +18,18 @@ public class OrderBook {
         return issuer;
     }
 
-    void processNew(Task task) {
-        if (task.operation() == OperationEnum.ASK) {
-            this.addToListByPrice(this.buyList, task);
-            this.uniteWithTasksInOppositeList(task);
-        } else {
-            this.addToListByPrice(this.sellList, task);
-            this.uniteWithTasksInOppositeList(task);
+    boolean processTask(Task task) {
+        boolean result = task.issuer().equals(this.issuer);
+        if (result) {
+            if (task.operation() == OperationEnum.ASK) {
+                this.addToListByPrice(this.buyList, task);
+                this.uniteWithTasksInOppositeList(task);
+            } else {
+                this.addToListByPrice(this.sellList, task);
+                this.uniteWithTasksInOppositeList(task);
+            }
         }
+        return result;
     }
 
     private void addToListByPrice(List<Task> list, Task task) {
@@ -88,8 +92,25 @@ public class OrderBook {
         return stop;
     }
 
-    @Override
-    public String toString() {
+    Task getTask(String id) {
+        Task result = this.getTaskByIdFromList(this.buyList, id);
+        result = result != null ? result : this.getTaskByIdFromList(this.sellList, id);
+        return result;
+
+    }
+
+    private Task getTaskByIdFromList(List<Task> list, String id) {
+        Task result = null;
+        for (Task temp : list) {
+            if (id.equals(temp.id())) {
+                result = temp;
+                break;
+            }
+        }
+        return result;
+    }
+
+    public String toStringForTests() {
         String format = "%12s%8s%12s";
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
         buffer.add(String.format("%s", this.issuer));
