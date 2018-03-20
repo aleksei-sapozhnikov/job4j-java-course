@@ -16,17 +16,33 @@ import static ru.job4j.exchange.OperationEnum.ASK;
  * @since 12.03.2018
  */
 class OrderBook {
-
+    /**
+     * Shares issuer.
+     */
     private String issuer;
-
+    /**
+     * List of tasks buying shares.
+     */
     private List<Task> buyList = new ArrayList<>();
-
+    /**
+     * List of tasks selling shares.
+     */
     private List<Task> sellList = new ArrayList<>();
 
+    /**
+     * Constructs new order book for given issuer.
+     *
+     * @param issuer shares issuer.
+     */
     OrderBook(String issuer) {
         this.issuer = issuer;
     }
 
+    /**
+     * Get issuer.
+     *
+     * @return issuer field value.
+     */
     public String issuer() {
         return issuer;
     }
@@ -65,6 +81,8 @@ class OrderBook {
     }
 
     /**
+     * Finds task by id and removes it.
+     *
      * @param task task to delete (using only task's id to find task in the order book).
      * @return <tt>true if deleted</tt>, <tt>false</tt> if task not found.
      */

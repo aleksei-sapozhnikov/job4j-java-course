@@ -52,6 +52,11 @@ class Task {
         this.volume = volume;
     }
 
+    /**
+     * Get id.
+     *
+     * @return id field value.
+     */
     public String id() {
         return this.id;
     }
@@ -83,14 +88,29 @@ class Task {
         return this.issuer;
     }
 
+    /**
+     * Get volume.
+     *
+     * @return volume field value.
+     */
     public int volume() {
         return this.volume;
     }
 
+    /**
+     * Get price.
+     *
+     * @return price field value.
+     */
     public int price() {
         return price;
     }
 
+    /**
+     * Subtracts given volume from the task's volume.
+     *
+     * @param volume volume to subtract.
+     */
     void subtractVolume(int volume) {
         this.volume -= volume;
     }
