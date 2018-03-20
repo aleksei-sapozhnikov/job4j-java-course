@@ -1,10 +1,21 @@
 package ru.job4j.exchange;
 
+import javafx.util.Pair;
+
 import java.util.*;
 
+import static ru.job4j.exchange.ActionEnum.ADD;
 import static ru.job4j.exchange.OperationEnum.ASK;
 
-public class OrderBook {
+/**
+ * Order book for shares. Can process addition and deletion tasks.
+ * Processes opposite corresponding buy/sell tasks and deletes if they are processed fully.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 12.03.2018
+ */
+class OrderBook {
 
     private String issuer;
 
@@ -20,7 +31,26 @@ public class OrderBook {
         return issuer;
     }
 
-    boolean processTask(Task task) {
+    /**
+     * Processes new task - adds or removes it.
+     * When removing task - finds it by given task's id and action "DELETE"
+     *
+     * @param task new task added to the order book.
+     * @return <tt>true</tt> if processed successfully, <tt>false</tt> if task was not added or removed.
+     */
+    boolean processNewTask(Task task) {
+        return task.action() == ADD
+                ? this.addNewTask(task)
+                : this.findAndRemoveTask(task);
+    }
+
+    /**
+     * Adds new task to the order book.
+     *
+     * @param task task to add.
+     * @return <tt>true</tt> if added successfully, <tt>false</tt> if not.
+     */
+    private boolean addNewTask(Task task) {
         boolean result = task.issuer().equals(this.issuer);
         if (result) {
             if (task.operation() == ASK) {
@@ -34,6 +64,26 @@ public class OrderBook {
         return result;
     }
 
+    /**
+     * @param task task to delete (using only task's id to find task in the order book).
+     * @return <tt>true if deleted</tt>, <tt>false</tt> if task not found.
+     */
+    private boolean findAndRemoveTask(Task task) {
+        boolean result = false;
+        Pair<Task, List<Task>> found = this.findTaskAndListById(task.id());
+        if (found != null) {
+            result = found.getValue().remove(found.getKey()); //second check
+        }
+        return result;
+    }
+
+    /**
+     * Adds new task to list, placing it to the needed place to save ordering.
+     * Ordering: from the biggest price to the lowest.
+     *
+     * @param list list where we are adding the task.
+     * @param task task to add.
+     */
     private void addToListByPrice(List<Task> list, Task task) {
         boolean added = false;
         ListIterator<Task> it = list.listIterator();
@@ -50,6 +100,12 @@ public class OrderBook {
         }
     }
 
+    /**
+     * Checks if the newly added task can be combined with opposite existing tasks.
+     * If possible, unites the tasks.
+     *
+     * @param added task newly added to the order book.
+     */
     private void uniteWithTasksInOppositeList(Task added) {
         boolean buy = added.operation() == ASK;
         int i = buy ? this.sellList.size() - 1 : 0;
@@ -63,6 +119,15 @@ public class OrderBook {
         }
     }
 
+    /**
+     * Unites two opposite-operation tasks.
+     * If one of the tasks becomes empty (volume == 0) it is removed from the order list.
+     *
+     * @param added    task newly added to the order book.
+     * @param existing already existing task.
+     * @return <tt>false</tt> if needed to continue searching tasks to unite,
+     * <tt>true</tt> if we must stop because added task was removed from its list.
+     */
     private boolean uniteTasksAndStop(Task added, Task existing) {
         boolean stop = false;
         List<Task> addedList = added.operation() == ASK ? this.buyList : this.sellList;
@@ -82,14 +147,39 @@ public class OrderBook {
         return stop;
     }
 
-    Task getTask(String id) {
-        Task result = this.getTaskByIdFromList(this.buyList, id);
-        result = result != null ? result : this.getTaskByIdFromList(this.sellList, id);
-        return result;
-
+    /**
+     * Finds task by id in the order book.
+     *
+     * @param id task's id.
+     * @return task with given id or <tt>null</tt> if task not found.
+     */
+    Task findTaskById(String id) {
+        Pair<Task, List<Task>> found = this.findTaskAndListById(id);
+        return found != null ? found.getKey() : null;
     }
 
-    private Task getTaskByIdFromList(List<Task> list, String id) {
+    /**
+     * Returns pair with task and list where it is contained.
+     *
+     * @param id task's id.
+     * @return pair of found task and list containing or <tt>null</tt> if task was not found.
+     */
+    private Pair<Task, List<Task>> findTaskAndListById(String id) {
+        List<Task> list = this.buyList;
+        Task task = this.findTaskInListById(list, id);
+        list = task != null ? list : this.sellList;
+        task = task != null ? task : this.findTaskInListById(list, id);
+        return task != null ? new Pair<>(task, list) : null;
+    }
+
+    /**
+     * Finds task from the list by task's id.
+     *
+     * @param list list of tasks.
+     * @param id   needed task's id.
+     * @return task with needed id or <tt>null</tt> if not found.
+     */
+    private Task findTaskInListById(List<Task> list, String id) {
         Task result = null;
         for (Task temp : list) {
             if (id.equals(temp.id())) {
@@ -110,44 +200,25 @@ public class OrderBook {
     @Override
     public String toString() {
         String format = "%12s%8s%12s";
-        StringBuilder buffer = new StringBuilder();
-        buffer.append(this.toStringHeading(format)).append(System.lineSeparator());
+        StringJoiner buffer = new StringJoiner(System.lineSeparator());
+        buffer.add(this.toStringHeading(format));
         String sellTasks = this.toStringTasksFromList(format, this.sellList, false);
-        buffer.append(sellTasks);
-        if (!"" .equals(sellTasks)) {
-            buffer.append(System.lineSeparator());
+        if (!"".equals(sellTasks)) {
+            buffer.add(sellTasks);
         }
         String buyTasks = this.toStringTasksFromList(format, this.buyList, true);
-        buffer.append(buyTasks);
-
-//        Iterator<Task> buyIt = this.buyList.iterator();
-//        Iterator<Task> sellIt = this.sellList.iterator();
-//        Task buy = buyIt.hasNext() ? buyIt.next() : null;
-//        Task sell = sellIt.hasNext() ? sellIt.next() : null;
-//        while (sell != null) {
-//            int amount = sell.volume();
-//            Task sellNext = sellIt.hasNext() ? sellIt.next() : null;
-//            while (sellNext != null && sell.price() == sellNext.price()) {
-//                amount += sellNext.volume();
-//                sellNext = sellIt.hasNext() ? sellIt.next() : null;
-//            }
-//            buffer.add(String.format(format, amount, sell.price(), ""));
-//            sell = sellNext;
-//        }
-//        while (buy != null) {
-//            int amount = buy.volume();
-//            Task buyNext = buyIt.hasNext() ? buyIt.next() : null;
-//            while (buyNext != null && buy.price() == buyNext.price()) {
-//                amount += buyNext.volume();
-//                buyNext = buyIt.hasNext() ? buyIt.next() : null;
-//            }
-//            buffer.add(String.format(format, "", buy.price(), amount));
-//            buy = buyNext;
-//        }
-
+        if (!"".equals(buyTasks)) {
+            buffer.add(buyTasks);
+        }
         return buffer.toString();
     }
 
+    /**
+     * Returns heading for this order book.
+     *
+     * @param format format style (for String.format).
+     * @return heading.
+     */
     private String toStringHeading(String format) {
         return new StringJoiner(System.lineSeparator())
                 .add(String.format("%s", this.issuer))
@@ -155,6 +226,14 @@ public class OrderBook {
                 .toString();
     }
 
+    /**
+     * Returns string lines of tasks from given list.
+     *
+     * @param format  format style (for String.format).
+     * @param list    list of tasks.
+     * @param buyList is it a list of buying task? <tt>true</tt> - buying, <tt>false</tt> selling.
+     * @return lines of tasks or "" if no tasks found.
+     */
     private String toStringTasksFromList(String format, List<Task> list, boolean buyList) {
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
         Iterator<Task> iterator = list.iterator();
@@ -166,11 +245,11 @@ public class OrderBook {
                 amount += next.volume();
                 next = iterator.hasNext() ? iterator.next() : null;
             }
-            buffer.add(String.format(format,
-                    buyList ? "" : amount,
-                    task.price(),
-                    buyList ? amount : "")
-            );
+            buffer
+                    .add(String.format(format,
+                            buyList ? "" : amount,
+                            task.price(),
+                            buyList ? amount : ""));
             task = next;
         }
         return buffer.toString();

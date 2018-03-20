@@ -1,27 +1,59 @@
 package ru.job4j.exchange;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringJoiner;
 
-public class Exchange {
-    private Set<OrderBook> books = new HashSet<>();
+/**
+ * Exchange for shares. Can process addition and deletion tasks.
+ * Processes opposite corresponding buy/sell tasks and deletes if they are processed fully.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 12.03.2018
+ */
+class Exchange {
+    /**
+     * List of order books. Each book for one shares issuer.
+     */
+    private List<OrderBook> books = new ArrayList<>();
 
-    public static void main(String[] args) {
-        List<String> list = new LinkedList<>();
-        list.add("1");
-        list.add("2");
-        list.add("3");
-        ListIterator<String> it = list.listIterator(list.size());
-        System.out.println(it.previous());
-        System.out.println(it.previous());
-        System.out.println(it.previous());
-
-    }
-
-    boolean processTask(Task task) {
+    /**
+     * Process new task which came to the system -
+     * add new task or delete existing (with corresponding issuer and id).
+     *
+     * @param task new task.
+     * @return <tt>true</tt> if processed successfully, <tt>false</tt> if it was not possible.
+     */
+    boolean processNewTask(Task task) {
         OrderBook book = getOrderBook(task.issuer());
-        return book.processTask(task);
+        return book.processNewTask(task);
     }
 
+    /**
+     * Finds task by its id.
+     *
+     * @param id task's id.
+     * @return task if found, <tt>null</tt> if not found.
+     */
+    Task findById(String id) {
+        Task result = null;
+        for (OrderBook book : this.books) {
+            result = book.findTaskById(id);
+            if (result != null) {
+                break;
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns existing order book for the given issuer
+     * or creates new if not found existing.
+     *
+     * @param issuer shares issuer.
+     * @return order book for the given issuer.
+     */
     private OrderBook getOrderBook(String issuer) {
         OrderBook result = null;
         for (OrderBook temp : this.books) {
@@ -37,7 +69,13 @@ public class Exchange {
         return result;
     }
 
-    public String toStringForTests() {
+    /**
+     * Returns string showing current state of all order books in the exchange.
+     *
+     * @return string showing current state of the exchange's order books.
+     */
+    @Override
+    public String toString() {
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
         for (OrderBook temp : this.books) {
             buffer.add(temp.toString());

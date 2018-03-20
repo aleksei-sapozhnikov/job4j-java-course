@@ -1,6 +1,13 @@
 package ru.job4j.exchange;
 
-public class Task {
+/**
+ * Task for exchange: add/delete, buy/sell, how many, what price, etc.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 12.03.2018
+ */
+class Task {
     /**
      * Unique id of the item.
      */
@@ -86,33 +93,5 @@ public class Task {
 
     void subtractVolume(int volume) {
         this.volume -= volume;
-    }
-
-    /**
-     * Checks equality of this object to another object.
-     *
-     * @param other another object.
-     * @return <tt>true</tt> if this and another objects are equal, <tt>false otherwise</tt>
-     */
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) {
-            return true;
-        }
-        if (other == null || getClass() != other.getClass()) {
-            return false;
-        }
-        Task task = (Task) other;
-        return this.id.equals(task.id);
-    }
-
-    /**
-     * Returns integer hashcode of the object fields.
-     *
-     * @return integer hashcode.
-     */
-    @Override
-    public int hashCode() {
-        return id.hashCode();
     }
 }
