@@ -8,7 +8,7 @@ import static ru.job4j.exchange.ActionEnum.ADD;
 import static ru.job4j.exchange.OperationEnum.ASK;
 
 /**
- * Order book for shares. Can process addition and deletion tasks.
+ * Order book for holding shares of one issuer. Can process addition and deletion tasks.
  * Processes opposite corresponding buy/sell tasks and deletes if they are processed fully.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
