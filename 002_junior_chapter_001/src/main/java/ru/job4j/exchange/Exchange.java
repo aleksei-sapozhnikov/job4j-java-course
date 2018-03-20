@@ -40,7 +40,7 @@ public class Exchange {
     public String toStringForTests() {
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
         for (OrderBook temp : this.books) {
-            buffer.add(temp.toStringForTests());
+            buffer.add(temp.toString());
             buffer.add("");
         }
         return buffer.toString();
