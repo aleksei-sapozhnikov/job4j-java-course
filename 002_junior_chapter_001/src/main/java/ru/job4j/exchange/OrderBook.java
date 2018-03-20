@@ -21,11 +21,11 @@ class OrderBook {
      */
     private String issuer;
     /**
-     * List of tasks buying shares.
+     * List of tasks to buy.
      */
     private List<Task> buyList = new ArrayList<>();
     /**
-     * List of tasks selling shares.
+     * List of tasks to sell.
      */
     private List<Task> sellList = new ArrayList<>();
 
@@ -90,7 +90,7 @@ class OrderBook {
         boolean result = false;
         Pair<Task, List<Task>> found = this.findTaskAndListById(task.id());
         if (found != null) {
-            result = found.getValue().remove(found.getKey()); //second check
+            result = found.getValue().remove(found.getKey()); //double-check
         }
         return result;
     }
