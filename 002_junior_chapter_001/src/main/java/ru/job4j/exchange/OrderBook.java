@@ -263,11 +263,10 @@ class OrderBook {
                 amount += next.volume();
                 next = iterator.hasNext() ? iterator.next() : null;
             }
-            buffer
-                    .add(String.format(format,
-                            buyList ? "" : amount,
-                            task.price(),
-                            buyList ? amount : ""));
+            buffer.add(String.format(format,
+                    buyList ? "" : amount,
+                    task.price(),
+                    buyList ? amount : ""));
             task = next;
         }
         return buffer.toString();
