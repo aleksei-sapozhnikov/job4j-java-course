@@ -12,7 +12,7 @@ import java.util.Queue;
  * @version $Id$
  * @since 11.03.2018
  */
-public class BinaryTree<E extends Comparable> implements Iterable<E> {
+class BinaryTree<E extends Comparable> implements Iterable<E> {
     /**
      * Root of the tree.
      */
