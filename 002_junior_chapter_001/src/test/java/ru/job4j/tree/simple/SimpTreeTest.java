@@ -21,7 +21,7 @@ public class SimpTreeTest {
      * Test add() and findBy()
      */
     @Test
-    public void whenAddThenRejectsDuplicatesAndFindsValue() {
+    public void whenAddThenRejectsDuplicateChildrenAndFindsValue() {
         SimpTree<Integer> tree = new SimpTree<>(1);
         assertThat(tree.add(1, 2), is(true));
         assertThat(tree.add(1, 2), is(false)); // duplicate
@@ -37,6 +37,19 @@ public class SimpTreeTest {
         assertThat(tree.findBy(7).isPresent(), is(false)); //not existing
         assertThat(tree.findBy(23).isPresent(), is(false));
         assertThat(tree.findBy(5).isPresent(), is(true));
+    }
+
+    @Test
+    public void whenAddThenRejectsAnyDuplicates() {
+        SimpTree<Integer> tree = new SimpTree<>(1);
+        assertThat(tree.add(1, 2), is(true));
+        assertThat(tree.add(1, 3), is(true));
+        assertThat(tree.add(2, 1), is(false));
+        assertThat(tree.add(2, 2), is(false));
+        assertThat(tree.add(2, 3), is(false));
+        assertThat(tree.add(3, 1), is(false));
+        assertThat(tree.add(3, 2), is(false));
+        assertThat(tree.add(3, 3), is(false));
     }
 
     /**

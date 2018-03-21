@@ -4,12 +4,13 @@ import java.util.*;
 
 /**
  * Simple tree with multiple possible leaves. Can add and store elements.
+ * Stores unique elements - rejects adding duplicates.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
  * @since 10.03.2018
  */
-public class SimpTree<E extends Comparable<E>> implements SimpleTree<E> {
+class SimpTree<E extends Comparable<E>> implements SimpleTree<E> {
 
     /**
      * Root - the first element of the tree.
@@ -28,22 +29,25 @@ public class SimpTree<E extends Comparable<E>> implements SimpleTree<E> {
     /**
      * Add sub-element (child) to parent element.
      * One parent can have many children elements.
-     * All children must be unique. If adding duplicate, it is rejected.
+     * All elements in the tree must be unique. If adding duplicate, it is rejected.
      *
-     * @param parent parent element.
-     * @param child  child element to add.
+     * @param parentValue parent element.
+     * @param childValue  child element to add.
      * @return <tt>true</tt> if added, <tt>false</tt> if duplicate child element found or root not found.
      */
     @Override
-    public boolean add(E parent, E child) {
-        Node<E> par;
-        Optional<Node<E>> found = this.findBy(parent);
-        boolean result = found.isPresent();
-        if (result) {
-            par = found.get();
-            result = par.add(new Node<>(child));
+    public boolean add(E parentValue, E childValue) {
+        boolean success = !this.findBy(childValue).isPresent();
+        if (success) {
+            Node<E> parent;
+            Optional<Node<E>> found = this.findBy(parentValue);
+            success = found.isPresent();
+            if (success) {
+                parent = found.get();
+                success = parent.add(new Node<>(childValue));
+            }
         }
-        return result;
+        return success;
     }
 
     /**
@@ -70,7 +74,7 @@ public class SimpTree<E extends Comparable<E>> implements SimpleTree<E> {
         return result;
     }
 
-    public boolean isBinary() {
+    boolean isBinary() {
         boolean result = true;
         Queue<Node<E>> data = new LinkedList<>();
         data.offer(this.root);
