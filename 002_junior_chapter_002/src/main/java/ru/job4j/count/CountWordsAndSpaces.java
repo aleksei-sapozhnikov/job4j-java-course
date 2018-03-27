@@ -9,16 +9,10 @@ public class CountWordsAndSpaces {
     }
 
     void start() {
-        try {
-            Thread space = new Thread(() -> System.out.println(String.format("=== Words : %s", this.countWords())));
-            Thread word = new Thread(() -> System.out.println(String.format("=== Spaces : %s", this.countSpaces())));
-            space.start();
+        Thread space = new Thread(() -> System.out.printf("=== Words : %s%n", this.countWords()));
+        Thread word = new Thread(() -> System.out.printf("=== Spaces : %s%n", this.countSpaces()));
             word.start();
-            space.join();
-            word.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        space.start();
     }
 
     int countSpaces() {
