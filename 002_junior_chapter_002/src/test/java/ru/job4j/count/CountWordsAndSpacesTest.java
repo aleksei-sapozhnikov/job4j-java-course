@@ -5,13 +5,20 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests for CountWordsAndSpaces class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 27.03.2018
+ */
 public class CountWordsAndSpacesTest {
 
     /**
      * Test multi-thread count.
      */
     @Test
-    public void start() {
+    public void whenTwoThreadsThenBothPrintToConsole() {
         // 21 spaces, 22 words
         String input = "Hello GoodBye Мама мыла раму Ha-ha Kill me baby one more time I wanna fly like a bird Ga Ma Kill Survive";
         new CountWordsAndSpaces(input).start();
