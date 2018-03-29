@@ -38,10 +38,10 @@ class CountChars extends Thread {
             }
             count++;
             System.out.printf("Counted char %s, count : %s%n", c, count);
-            // Просто чтобы тред занимал хоть какое-то время.
             try {
-                sleep(1000);
+                sleep(1000);        // Просто чтобы тред занимал хоть какое-то время.
             } catch (InterruptedException ie) {
+                System.out.println("Thread interrupted while sleeping");
                 ie.printStackTrace();
             }
         }

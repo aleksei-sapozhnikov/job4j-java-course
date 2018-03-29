@@ -19,7 +19,7 @@ public class CountCharsTest {
 
     @Test
     public void notATest() throws InterruptedException {
-        String input = "Иван";
+        String input = "Работа";
         Thread a = new Thread(new CountChars(input));
         a.start();
         a.join();
