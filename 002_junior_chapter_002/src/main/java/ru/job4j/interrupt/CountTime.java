@@ -18,7 +18,7 @@ class CountTime implements Runnable {
     public void run() {
         Thread charThread = new Thread(new CountChars(this.input));
         charThread.start();
-        while (charThread.isAlive()) {
+        while (charThread.isAlive() && !charThread.isInterrupted()) {
             long time = this.time();
             if (time > this.maxTime) {
                 charThread.interrupt();
