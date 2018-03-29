@@ -15,10 +15,10 @@ import static org.junit.Assert.assertThat;
 public class CountWordsAndSpacesTest {
 
     /**
-     * Test multi-thread count.
+     * Not a test, demonstrating multithreading.
      */
     @Test
-    public void whenTwoThreadsThenBothPrintToConsole() {
+    public void notATest() {
         // 21 spaces, 22 words
         String input = "Hello GoodBye Мама мыла раму Ha-ha Kill me baby one more time I wanna fly like a bird Ga Ma Kill Survive";
         new CountWordsAndSpaces(input).start();
