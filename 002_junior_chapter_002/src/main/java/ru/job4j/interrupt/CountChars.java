@@ -1,5 +1,12 @@
 package ru.job4j.interrupt;
 
+/**
+ * Counts chars in given input, can be used in thread.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 28.03.2018
+ */
 class CountChars extends Thread {
     /**
      * Input string.
@@ -38,13 +45,21 @@ class CountChars extends Thread {
             }
             count++;
             System.out.printf("Counted char %s, count : %s%n", c, count);
-            try {
-                sleep(1000);        // Просто чтобы тред занимал хоть какое-то время.
-            } catch (InterruptedException ie) {
-                System.out.println("Thread interrupted while sleeping");
-                ie.printStackTrace();
-            }
+            this.wasteTime();                       // Просто чтобы тред занимал хоть какое-то время.
         }
         return count;
     }
+
+    /**
+     * Just wastes time sleeping.
+     */
+    private void wasteTime() {
+        try {
+            sleep(1000);
+        } catch (InterruptedException ie) {
+            System.out.println("Thread interrupted while sleeping");
+            ie.printStackTrace();
+        }
+    }
+
 }
