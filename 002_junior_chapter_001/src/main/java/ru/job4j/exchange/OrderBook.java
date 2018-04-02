@@ -6,6 +6,7 @@ import java.util.*;
 
 import static ru.job4j.exchange.ActionEnum.ADD;
 import static ru.job4j.exchange.OperationEnum.ASK;
+import static ru.job4j.exchange.OperationEnum.BID;
 
 /**
  * Order book for holding shares of one issuer. Can process addition and deletion tasks.
@@ -21,13 +22,13 @@ class OrderBook {
      */
     private String issuer;
     /**
-     * List of tasks to buy.
+     * Buying tasks organized by key - price.
      */
-    private List<Task> buyList = new ArrayList<>();
+    private Map<Integer, Set<Task>> buys = new TreeMap<>(Comparator.reverseOrder());
     /**
-     * List of tasks to sell.
+     * Selling tasks organized by key - price.
      */
-    private List<Task> sellList = new ArrayList<>();
+    private Map<Integer, Set<Task>> sells = new TreeMap<>(Comparator.reverseOrder());
 
     /**
      * Constructs new order book for given issuer.
@@ -70,11 +71,13 @@ class OrderBook {
         boolean result = task.issuer().equals(this.issuer);
         if (result) {
             if (task.operation() == ASK) {
-                this.addToListByPrice(this.buyList, task);
-                this.uniteWithTasksInOppositeList(task);
+                this.addToMap(this.buys, task);
+                this.uniteWithTasksInOppositeMap(task, this.sells);
+            } else if (task.operation() == BID) {
+                this.addToMap(this.sells, task);
+                this.uniteWithTasksInOppositeMap(task, this.buys);
             } else {
-                this.addToListByPrice(this.sellList, task);
-                this.uniteWithTasksInOppositeList(task);
+                result = false;
             }
         }
         return result;
@@ -88,33 +91,40 @@ class OrderBook {
      */
     private boolean findAndRemoveTask(Task task) {
         boolean result = false;
-        Pair<Task, List<Task>> found = this.findTaskAndListById(task.id());
-        if (found != null) {
-            result = found.getValue().remove(found.getKey()); //double-check
+        Pair<Task, Map<Integer, Set<Task>>> found = this.findTaskAndItsMapById(task.id());
+        Task fTask = found.getKey();
+        if (fTask != null) {
+            Integer fPrice = fTask.price();
+            Map<Integer, Set<Task>> fMap = found.getValue();
+            Set<Task> fSet = fMap.get(fPrice);
+            result = fSet.remove(fTask);
+            if (fSet.isEmpty()) {
+                fMap.remove(fPrice);
+            }
         }
         return result;
     }
 
     /**
-     * Adds new task to list, placing it to the needed place to save ordering.
-     * Ordering: from the biggest price to the lowest.
+     * Adds new task to map, placing it by key - price.
+     * If there is no such price in the map, the new key and list of tasks is created.
      *
-     * @param list list where we are adding the task.
+     * @param map  list where we are adding the task.
      * @param task task to add.
      */
-    private void addToListByPrice(List<Task> list, Task task) {
-        boolean added = false;
-        ListIterator<Task> it = list.listIterator();
-        while (it.hasNext()) {
-            if (task.price() > it.next().price()) {
-                it.previous();
-                it.add(task);
-                added = true;
-                break;
-            }
+    private void addToMap(Map<Integer, Set<Task>> map, Task task) {
+        if (map.containsKey(task.price())) {
+            map.get(task.price()).add(task);
+        } else {
+            map.put(task.price(), new LinkedHashSet<>(Collections.singletonList(task)));
         }
-        if (!added) {
-            it.add(task);
+    }
+
+    private void uniteAddedTaskWithBuysTasksMap(Task added, Map<Integer, Set<Task>> buys) {
+        Map<Integer, Set<Task>> revBuys = new TreeMap<>(Comparator.naturalOrder());
+        revBuys.putAll(buys);
+        for (Map.Entry<Integer, Set<Task>> entry : revBuys.entrySet()) {
+            while (added.price() <)
         }
     }
 
@@ -123,12 +133,23 @@ class OrderBook {
      * If possible, unites the tasks.
      *
      * @param added task newly added to the order book.
+     * @param opMap map containing opposite-operation tasks.
      */
-    private void uniteWithTasksInOppositeList(Task added) {
+    private void uniteWithTasksInOppositeMap(Task added, Map<Integer, Set<Task>> opMap) {
+        int treshold = added.price();
+        for (Map.Entry<Integer, Set<Task>> entry : opMap.entrySet()) {
+            if (entry.getValue())
+        }
+        Set<Task> opTasks = opMap.get(added.price());
+        Iterator<Task> opIt = opTasks.iterator();
+        while (opIt.hasNext() && added.volume() > 0) {
+            Task opposite = opIt.next();
+
+        }
         boolean buy = added.operation() == ASK;
-        int i = buy ? this.sellList.size() - 1 : 0;
-        while (buy ? i >= 0 : i < this.buyList.size()) {
-            Task temp = buy ? this.sellList.get(i) : this.buyList.get(i);
+        int i = buy ? this.sells.size() - 1 : 0;
+        while (buy ? i >= 0 : i < this.buys.size()) {
+            Task temp = buy ? this.sells.get(i) : this.buys.get(i);
             if ((buy ? added.price() < temp.price() : added.price() > temp.price())
                     || this.uniteTasksAndStop(added, temp)) {
                 break;
@@ -148,8 +169,8 @@ class OrderBook {
      */
     private boolean uniteTasksAndStop(Task added, Task existing) {
         boolean stop = false;
-        List<Task> addedList = added.operation() == ASK ? this.buyList : this.sellList;
-        List<Task> oppositeList = added.operation() == ASK ? this.sellList : this.buyList;
+        List<Task> addedList = added.operation() == ASK ? this.buys : this.sells;
+        List<Task> oppositeList = added.operation() == ASK ? this.sells : this.buys;
         if (added.volume() < existing.volume()) {
             existing.subtractVolume(added.volume());
             addedList.remove(added);
@@ -172,40 +193,48 @@ class OrderBook {
      * @return task with given id or <tt>null</tt> if task not found.
      */
     Task findTaskById(String id) {
-        Pair<Task, List<Task>> found = this.findTaskAndListById(id);
-        return found != null ? found.getKey() : null;
+        Pair<Task, Map<Integer, Set<Task>>> found = this.findTaskAndItsMapById(id);
+        return found.getKey();
     }
 
     /**
      * Returns pair with task and list where it is contained.
      *
      * @param id task's id.
-     * @return pair of found task and list containing or <tt>null</tt> if task was not found.
+     * @return pair of found task and map containing it, or Pair with <tt>null</tt> values if task was not found.
      */
-    private Pair<Task, List<Task>> findTaskAndListById(String id) {
-        List<Task> list = this.buyList;
-        Task task = this.findTaskInListById(list, id);
-        list = task != null ? list : this.sellList;
-        task = task != null ? task : this.findTaskInListById(list, id);
-        return task != null ? new Pair<>(task, list) : null;
+    private Pair<Task, Map<Integer, Set<Task>>> findTaskAndItsMapById(String id) {
+        Map<Integer, Set<Task>> map = this.buys;
+        Pair<Task, Set<Task>> found = this.findTaskAndItsSetByIdInOneMap(map, id);
+        if (found.getKey() == null) {
+            map = this.sells;
+            found = this.findTaskAndItsSetByIdInOneMap(map, id);
+        }
+        return new Pair<>(found.getKey(), map);
     }
 
     /**
      * Finds task from the list by task's id.
      *
-     * @param list list of tasks.
-     * @param id   needed task's id.
-     * @return task with needed id or <tt>null</tt> if not found.
+     * @param map collection of tasks.
+     * @param id  needed task's id.
+     * @return Pair: 1) task with needed id or <tt>null</tt> if not found;
+     * 2) set in which this task is or <tt>null</tt> if task not found.
      */
-    private Task findTaskInListById(List<Task> list, String id) {
-        Task result = null;
-        for (Task temp : list) {
-            if (id.equals(temp.id())) {
-                result = temp;
-                break;
+    private Pair<Task, Set<Task>> findTaskAndItsSetByIdInOneMap(Map<Integer, Set<Task>> map, String id) {
+        Task task = null;
+        Set<Task> set = null;
+        out:
+        for (Set<Task> tasks : map.values()) {
+            for (Task temp : tasks) {
+                if (id.equals(temp.id())) {
+                    task = temp;
+                    set = tasks;
+                    break out;
+                }
             }
         }
-        return result;
+        return new Pair<>(task, set);
     }
 
     /**
@@ -220,11 +249,11 @@ class OrderBook {
         String format = "%12s%8s%12s";
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
         buffer.add(this.toStringHeading(format));
-        String sellTasks = this.toStringTasksFromList(format, this.sellList, false);
+        String sellTasks = this.toStringTasksFromMap(format, this.sells, true);
         if (!"".equals(sellTasks)) {
             buffer.add(sellTasks);
         }
-        String buyTasks = this.toStringTasksFromList(format, this.buyList, true);
+        String buyTasks = this.toStringTasksFromMap(format, this.buys, false);
         if (!"".equals(buyTasks)) {
             buffer.add(buyTasks);
         }
@@ -245,30 +274,26 @@ class OrderBook {
     }
 
     /**
-     * Returns string lines of tasks from given list.
+     * Returns string lines of tasks from given buying map.
      *
-     * @param format  format style (for String.format).
-     * @param list    list of tasks.
-     * @param buyList is it a list of buying task? <tt>true</tt> - buying, <tt>false</tt> selling.
+     * @param format format style (for String.format).
+     * @param map    map of tasks.
      * @return lines of tasks or "" if no tasks found.
      */
-    private String toStringTasksFromList(String format, List<Task> list, boolean buyList) {
+    private String toStringTasksFromMap(String format, Map<Integer, Set<Task>> map, boolean priceLeftSide) {
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
-        Iterator<Task> iterator = list.iterator();
-        Task task = iterator.hasNext() ? iterator.next() : null;
-        while (task != null) {
-            int amount = task.volume();
-            Task next = iterator.hasNext() ? iterator.next() : null;
-            while (next != null && task.price() == next.price()) {
-                amount += next.volume();
-                next = iterator.hasNext() ? iterator.next() : null;
+        for (Map.Entry<Integer, Set<Task>> entry : map.entrySet()) {
+            int price = entry.getKey();
+            int volume = 0;
+            for (Task temp : entry.getValue()) {
+                volume += temp.volume();
             }
-            buffer.add(String.format(format,
-                    buyList ? "" : amount,
-                    task.price(),
-                    buyList ? amount : ""));
-            task = next;
+            buffer.add(priceLeftSide
+                    ? String.format(format, price, volume, "")
+                    : String.format(format, "", volume, price)
+            );
         }
         return buffer.toString();
     }
+
 }
