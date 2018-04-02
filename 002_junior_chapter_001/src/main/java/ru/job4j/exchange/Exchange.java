@@ -1,11 +1,11 @@
 package ru.job4j.exchange;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.util.StringJoiner;
 
 /**
- * Exchange for shares. Can process addition and deletion tasks.
+ * Exchange for shares. Can process addition and deletion of tasks.
  * Processes opposite corresponding buy/sell tasks and deletes if they are processed fully.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
@@ -14,13 +14,13 @@ import java.util.StringJoiner;
  */
 class Exchange {
     /**
-     * List of order books. Each book for one shares issuer.
+     * Order books, one book for every shares issuer.
      */
-    private List<OrderBook> books = new ArrayList<>();
+    private Set<OrderBook> books = new LinkedHashSet<>();
 
     /**
-     * Process new task which came to the system -
-     * add new task or delete existing (with corresponding issuer and id).
+     * Process new task which came to the system - add  new task
+     * or delete existing (with corresponding issuer and id).
      *
      * @param task new task.
      * @return <tt>true</tt> if processed successfully, <tt>false</tt> if it was not possible.
