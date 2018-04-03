@@ -24,11 +24,11 @@ class OrderBook {
     /**
      * Buying tasks organized by key - price.
      */
-    private Map<Integer, Set<Task>> buys = new TreeMap<>(Comparator.reverseOrder());
+    private NavigableMap<Integer, Set<Task>> buys = new TreeMap<>(Comparator.reverseOrder());
     /**
      * Selling tasks organized by key - price.
      */
-    private Map<Integer, Set<Task>> sells = new TreeMap<>(Comparator.reverseOrder());
+    private NavigableMap<Integer, Set<Task>> sells = new TreeMap<>(Comparator.reverseOrder());
 
     /**
      * Constructs new order book for given issuer.
@@ -71,11 +71,9 @@ class OrderBook {
         boolean result = task.issuer().equals(this.issuer);
         if (result) {
             if (task.operation() == ASK) {
-                this.addToMap(this.buys, task);
-                this.uniteWithTasksInOppositeMap(task, this.sells);
+                this.uniteWithOppositeAndAddToMap(task, this.buys, this.sells);
             } else if (task.operation() == BID) {
-                this.addToMap(this.sells, task);
-                this.uniteWithTasksInOppositeMap(task, this.buys);
+                this.uniteWithOppositeAndAddToMap(task, this.sells, this.buys);
             } else {
                 result = false;
             }
@@ -109,81 +107,78 @@ class OrderBook {
      * Adds new task to map, placing it by key - price.
      * If there is no such price in the map, the new key and list of tasks is created.
      *
-     * @param map  list where we are adding the task.
-     * @param task task to add.
+     * @param taskMap list where we are adding the task.
+     * @param task    task to add.
      */
-    private void addToMap(Map<Integer, Set<Task>> map, Task task) {
-        if (map.containsKey(task.price())) {
-            map.get(task.price()).add(task);
-        } else {
-            map.put(task.price(), new LinkedHashSet<>(Collections.singletonList(task)));
-        }
-    }
-
-    private void uniteAddedTaskWithBuysTasksMap(Task added, Map<Integer, Set<Task>> buys) {
-        Map<Integer, Set<Task>> revBuys = new TreeMap<>(Comparator.naturalOrder());
-        revBuys.putAll(buys);
-        for (Map.Entry<Integer, Set<Task>> entry : revBuys.entrySet()) {
-            while (added.price() <)
+    private void uniteWithOppositeAndAddToMap(Task task, Map<Integer, Set<Task>> taskMap, NavigableMap<Integer, Set<Task>> oppositeMap) {
+        boolean taskIsBuy = task.operation() == ASK;
+        this.uniteTaskWithOppositeMap(task, oppositeMap, taskIsBuy);
+        if (task.volume() > 0) {
+            if (taskMap.containsKey(task.price())) {
+                taskMap.get(task.price()).add(task);
+            } else {
+                taskMap.put(task.price(), new LinkedHashSet<>(Collections.singletonList(task)));
+            }
         }
     }
 
     /**
-     * Checks if the newly added task can be combined with opposite existing tasks.
-     * If possible, unites the tasks.
-     *
-     * @param added task newly added to the order book.
-     * @param opMap map containing opposite-operation tasks.
+     * @param addedPrice
+     * @param existingPrice
+     * @param addedIsBuy
+     * @return
      */
-    private void uniteWithTasksInOppositeMap(Task added, Map<Integer, Set<Task>> opMap) {
-        int treshold = added.price();
-        for (Map.Entry<Integer, Set<Task>> entry : opMap.entrySet()) {
-            if (entry.getValue())
-        }
-        Set<Task> opTasks = opMap.get(added.price());
-        Iterator<Task> opIt = opTasks.iterator();
-        while (opIt.hasNext() && added.volume() > 0) {
-            Task opposite = opIt.next();
+    private boolean uniteTasksPossible(int addedPrice, int existingPrice, boolean addedIsBuy) {
+        return addedIsBuy
+                ? addedPrice >= existingPrice
+                : addedPrice <= existingPrice;
+    }
 
-        }
-        boolean buy = added.operation() == ASK;
-        int i = buy ? this.sells.size() - 1 : 0;
-        while (buy ? i >= 0 : i < this.buys.size()) {
-            Task temp = buy ? this.sells.get(i) : this.buys.get(i);
-            if ((buy ? added.price() < temp.price() : added.price() > temp.price())
-                    || this.uniteTasksAndStop(added, temp)) {
-                break;
+    /**
+     * @param task
+     * @param oppositeMap
+     * @param reverseOrder
+     */
+    private void uniteTaskWithOppositeMap(Task task, NavigableMap<Integer, Set<Task>> oppositeMap, boolean reverseOrder) {
+        int price = task.price();
+        Iterator<Integer> opIterator = reverseOrder ? oppositeMap.descendingKeySet().iterator() : oppositeMap.keySet().iterator();
+        while (opIterator.hasNext() && task.volume() > 0) {
+            int opPrice = opIterator.next();
+            if (this.uniteTasksPossible(price, opPrice, reverseOrder)) {
+                Set<Task> opTasks = oppositeMap.get(opPrice);
+                this.uniteTaskWithOppositeSet(task, opTasks);
+                if (opTasks.isEmpty()) {
+                    opIterator.remove();
+                }
             }
-            i = buy ? i - 1 : i;
+        }
+    }
+
+    /**
+     * @param task
+     * @param oppositeSet
+     */
+    private void uniteTaskWithOppositeSet(Task task, Set<Task> oppositeSet) {
+        Iterator<Task> opposIt = oppositeSet.iterator();
+        while (opposIt.hasNext() && task.volume() > 0) {
+            Task opposite = opposIt.next();
+            this.uniteTasks(task, opposite);
+            if (opposite.volume() == 0) {
+                opposIt.remove();
+            }
         }
     }
 
     /**
      * Unites two opposite-operation tasks.
-     * If one of the tasks becomes empty (volume == 0) it is removed from the order list.
      *
-     * @param added    task newly added to the order book.
+     * @param added    task newly added.
      * @param existing already existing task.
-     * @return <tt>false</tt> if needed to continue searching tasks to unite,
-     * <tt>true</tt> if we must stop because added task was removed from its list.
      */
-    private boolean uniteTasksAndStop(Task added, Task existing) {
-        boolean stop = false;
-        List<Task> addedList = added.operation() == ASK ? this.buys : this.sells;
-        List<Task> oppositeList = added.operation() == ASK ? this.sells : this.buys;
-        if (added.volume() < existing.volume()) {
-            existing.subtractVolume(added.volume());
-            addedList.remove(added);
-            stop = true;
-        } else if (added.volume() == existing.volume()) {
-            addedList.remove(added);
-            oppositeList.remove(existing);
-            stop = true;
-        } else {
-            added.subtractVolume(existing.volume());
-            oppositeList.remove(existing);
-        }
-        return stop;
+    private void uniteTasks(Task added, Task existing) {
+        int minus = added.volume() <= existing.volume() ? added.volume() : existing.volume();
+        added.subtractVolume(minus);
+        existing.subtractVolume(minus);
     }
 
     /**
