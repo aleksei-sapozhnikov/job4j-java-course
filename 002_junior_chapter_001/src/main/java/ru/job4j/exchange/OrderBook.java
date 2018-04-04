@@ -48,7 +48,7 @@ class OrderBook {
      *
      * @return issuer field value.
      */
-    public String issuer() {
+    String issuer() {
         return issuer;
     }
 
@@ -164,12 +164,13 @@ class OrderBook {
         Iterator<Integer> opIterator = taskIsBuy ? oppositeMap.descendingKeySet().iterator() : oppositeMap.keySet().iterator();
         while (opIterator.hasNext() && task.volume() > 0) {
             int opPrice = opIterator.next();
-            if (this.uniteTasksPossible(price, opPrice, taskIsBuy)) {
-                Set<Task> opTasks = oppositeMap.get(opPrice);
-                this.uniteTaskWithOppositeSet(task, opTasks);
-                if (opTasks.isEmpty()) {
-                    opIterator.remove();
-                }
+            if (!this.uniteTasksPossible(price, opPrice, taskIsBuy)) {
+                break;
+            }
+            Set<Task> opTasks = oppositeMap.get(opPrice);
+            this.uniteTaskWithOppositeSet(task, opTasks);
+            if (opTasks.isEmpty()) {
+                opIterator.remove();
             }
         }
     }
