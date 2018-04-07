@@ -8,7 +8,6 @@ package ru.job4j.problems;
  * @version $Id$
  * @since 30.03.2018
  */
-
 class MutableInteger {
     /**
      * Value stored inside the object.
