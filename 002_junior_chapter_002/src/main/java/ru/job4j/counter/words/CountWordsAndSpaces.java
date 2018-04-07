@@ -1,4 +1,4 @@
-package ru.job4j.count;
+package ru.job4j.counter.words;
 
 /**
  * Counts words and spaces in given input.

@@ -1,4 +1,4 @@
-package ru.job4j.count;
+package ru.job4j.counter.words;
 
 import org.junit.Test;
 

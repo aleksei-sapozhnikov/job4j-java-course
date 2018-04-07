@@ -5,4 +5,4 @@
  * @version $Id$
  * @since 27.03.2018
  */
-package ru.job4j.count;
+package ru.job4j.counter.words;

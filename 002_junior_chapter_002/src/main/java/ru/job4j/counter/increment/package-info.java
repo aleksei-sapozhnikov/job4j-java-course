@@ -5,4 +5,4 @@
  * @version $Id$
  * @since 07.04.2018
  */
-package ru.job4j.counter;
+package ru.job4j.counter.increment;

@@ -1,4 +1,4 @@
-package ru.job4j.counter;
+package ru.job4j.counter.increment;
 
 import org.junit.Test;
 
