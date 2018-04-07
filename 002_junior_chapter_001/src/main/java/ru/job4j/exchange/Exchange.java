@@ -1,7 +1,7 @@
 package ru.job4j.exchange;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.StringJoiner;
 
 /**
@@ -16,7 +16,7 @@ class Exchange {
     /**
      * Order books, one book for every shares issuer.
      */
-    private Set<OrderBook> books = new LinkedHashSet<>();
+    private Map<String, OrderBook> books = new LinkedHashMap<>();
 
     /**
      * Process new task which came to the system - add  new task
@@ -38,7 +38,7 @@ class Exchange {
      */
     Task findById(String id) {
         Task result = null;
-        for (OrderBook book : this.books) {
+        for (OrderBook book : this.books.values()) {
             result = book.findTaskById(id);
             if (result != null) {
                 break;
@@ -55,16 +55,10 @@ class Exchange {
      * @return order book for the given issuer.
      */
     private OrderBook getOrderBook(String issuer) {
-        OrderBook result = null;
-        for (OrderBook temp : this.books) {
-            if (issuer.equals(temp.issuer())) {
-                result = temp;
-                break;
-            }
-        }
+        OrderBook result = books.get(issuer);
         if (result == null) {
             result = new OrderBook(issuer);
-            this.books.add(result);
+            this.books.put(issuer, result);
         }
         return result;
     }
@@ -77,7 +71,7 @@ class Exchange {
     @Override
     public String toString() {
         StringJoiner buffer = new StringJoiner(System.lineSeparator());
-        for (OrderBook temp : this.books) {
+        for (OrderBook temp : this.books.values()) {
             buffer.add(temp.toString());
             buffer.add("");
         }
