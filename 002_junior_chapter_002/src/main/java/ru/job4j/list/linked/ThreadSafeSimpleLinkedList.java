@@ -1,5 +1,7 @@
 package ru.job4j.list.linked;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 import ru.job4j.list.SimpleContainer;
 
 import java.util.ConcurrentModificationException;
@@ -13,22 +15,24 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since 02.03.2018
  */
+@SuppressWarnings("Duplicates") // the code is purposefully copied from 002_junior_chapter_001
+@ThreadSafe
 public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
-
     /**
      * Modifications count (to prevent concurrent modification in iterator).
      */
-    private int modCount = 0;
-
+    @GuardedBy("this")
+    private volatile int modCount = 0;
     /**
      * First element in the list.
      */
-    private Node<E> first = null;
-
+    @GuardedBy("this")
+    private volatile Node<E> first = null;
     /**
      * Last element in the list.
      */
-    private Node<E> last = null;
+    @GuardedBy("this")
+    private volatile Node<E> last = null;
 
     /**
      * Adds new element to the container.
@@ -36,7 +40,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      * @param value element to add.
      */
     @Override
-    public void add(E value) {
+    public synchronized void add(final E value) {
         this.linkLast(value);
     }
 
@@ -45,7 +49,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      *
      * @param value value contained in the new node.
      */
-    private void linkLast(E value) {
+    private synchronized void linkLast(final E value) {
         final Node<E> oldLast = this.last;
         final Node<E> newNode = new Node<>(oldLast, value, null);
         this.last = newNode;
@@ -64,7 +68,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      * @return element if found or {@code null} if not.
      */
     @Override
-    public E get(int index) {
+    public synchronized E get(final int index) {
         Node<E> node = this.node(index);
         return node != null ? node.item : null;
     }
@@ -75,7 +79,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      * @return the first element from this list.
      * @throws NoSuchElementException if this list is empty (first element == null).
      */
-    public E removeFirst() {
+    public synchronized E removeFirst() {
         if (this.first == null) {
             throw new NoSuchElementException();
         }
@@ -87,7 +91,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      *
      * @return element contained in the first node
      */
-    private E unlinkFirst() {
+    private synchronized E unlinkFirst() {
         final E element = this.first.item;
         this.first = this.first.next;
         if (this.first == null) {
@@ -105,7 +109,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      * @return the first element from this list.
      * @throws NoSuchElementException if this list is empty (first element == null).
      */
-    public E removeLast() {
+    public synchronized E removeLast() {
         if (this.last == null) {
             throw new NoSuchElementException();
         }
@@ -117,7 +121,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      *
      * @return element contained in the first node
      */
-    private E unlinkLast() {
+    private synchronized E unlinkLast() {
         final E element = this.last.item;
         this.last = this.last.prev;
         if (this.last == null) {
@@ -140,7 +144,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      *
      * @return {@code true} if found cycle, {@code false} if not.
      */
-    public boolean hasCycleFloydAlgorithm() {
+    public synchronized boolean hasCycleFloydAlgorithm() {
         Node<E> fast = this.first;
         Node<E> slow = this.first;
         boolean cycle = false;
@@ -166,7 +170,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      *
      * @return {@code true} if found cycle, {@code false} if not.
      */
-    public boolean hasCycleBrentAlgorithm() {
+    public synchronized boolean hasCycleBrentAlgorithm() {
         Node<E> fast = this.first;
         Node<E> slow = this.first;
         int taken = 0;
@@ -192,7 +196,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      *
      * @param nodes array of nodes, linked to each other.
      */
-    void fillWithLinkedNodesArray(Node<E>[] nodes) {
+    synchronized void fillWithLinkedNodesArray(Node<E>[] nodes) {
         this.first = nodes[0];
         this.last = nodes[nodes.length - 1];
     }
@@ -203,7 +207,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      * @param index index in the list of the node to return.
      * @return Node if found or {@code null} if not.
      */
-    private Node<E> node(int index) {
+    private synchronized Node<E> node(int index) {
         Node<E> result = this.first;
         if (result != null && index != 0) {
             for (int i = 0; i < index; i++) {
@@ -224,17 +228,16 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
     @Override
     public Iterator<E> iterator() {
         return new Iterator<E>() {
-
             /**
              * Modification count value at the time when the iterator was created.
              * If collection will change during the work of iterator, there will be {@code }ConcurrentModificationException}.
              */
             private final int expectedModCount = modCount;
-
             /**
              * Next element to iterate.
              */
-            private Node<E> cursor = first;
+            @GuardedBy("this")
+            private volatile Node<E> cursor = first;
 
             /**
              * Returns {@code true} if the iteration has more elements.
@@ -245,7 +248,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
              * @throws ConcurrentModificationException if the list was changed during the work of iterator.
              */
             @Override
-            public boolean hasNext() {
+            public synchronized boolean hasNext() {
                 if (this.expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
@@ -260,7 +263,7 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
              * @throws ConcurrentModificationException if the list was changed during the work of iterator.
              */
             @Override
-            public E next() {
+            public synchronized E next() {
                 if (this.expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
@@ -281,7 +284,6 @@ public class ThreadSafeSimpleLinkedList<E> implements SimpleContainer<E> {
      * @param <E> generic parameter this node stores.
      */
     static class Node<E> {
-
         /**
          * Link to next Node.
          */

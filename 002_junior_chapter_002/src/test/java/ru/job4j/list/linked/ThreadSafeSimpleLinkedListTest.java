@@ -3,14 +3,96 @@ package ru.job4j.list.linked;
 import org.junit.Test;
 import ru.job4j.list.linked.ThreadSafeSimpleLinkedList.Node;
 
-import java.util.ConcurrentModificationException;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
 public class ThreadSafeSimpleLinkedListTest {
+
+    /**
+     * Test multi-threading behaviour: add().
+     */
+    @Test
+    public void whenMultipleThreadsAddValuesAllValuesAreAdded() {
+        try {
+            ThreadSafeSimpleLinkedList<Integer> list = new ThreadSafeSimpleLinkedList<>();
+            // fill list
+            final int length = 50;
+            Thread[] threads = new Thread[length];
+            for (int i = 0; i < length; i++) {
+                final int finalI = i;
+                threads[i] = new Thread(() -> list.add(finalI));
+            }
+            for (Thread thread : threads) {
+                thread.start();
+            }
+            for (Thread thread : threads) {
+                thread.join();
+            }
+            // sort what we got
+            ArrayList<Integer> sorted = new ArrayList<>();
+            for (Integer a : list) {
+                sorted.add(a);
+            }
+            sorted.sort(Comparator.naturalOrder());
+            // what we expect
+            Integer[] expected = new Integer[50];
+            for (int i = 0; i < length; i++) {
+                expected[i] = i;
+            }
+            // check result
+            Integer[] result = sorted.toArray(new Integer[0]);
+            assertThat(result, is(expected));
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
+
+    /**
+     * Test multi-threading behaviour: iterator().
+     */
+    @Test
+    public void whenMultipleThreadsReadIteratorThenAllValuesAreRead() {
+        try {
+            ThreadSafeSimpleLinkedList<Integer> from = new ThreadSafeSimpleLinkedList<>(); // list to read
+            ThreadSafeSimpleLinkedList<Integer> to = new ThreadSafeSimpleLinkedList<>();// list to write what threads read
+            // fill "from" and get iterator
+            final int length = 50;
+            for (int i = 0; i < length; i++) {
+                from.add(i);
+            }
+            Iterator<Integer> iterator = from.iterator();
+            // threads reading "from" and writing "to"
+            Thread[] threads = new Thread[length];
+            for (int i = 0; i < length; i++) {
+                threads[i] = new Thread(() -> to.add(iterator.next()));
+            }
+            for (Thread thread : threads) {
+                thread.start();
+            }
+            for (Thread thread : threads) {
+                thread.join();
+            }
+            // sort what we got in list "to"
+            ArrayList<Integer> sorted = new ArrayList<>();
+            for (Integer temp : to) {
+                sorted.add(temp);
+            }
+            sorted.sort(Comparator.naturalOrder());
+            // what we expect
+            Integer[] expected = new Integer[50];
+            for (int i = 0; i < length; i++) {
+                expected[i] = i;
+            }
+            // check result
+            Integer[] result = sorted.toArray(new Integer[0]);
+            assertThat(result, is(expected));
+            assertThat(iterator.hasNext(), is(false));
+        } catch (InterruptedException ie) {
+            ie.printStackTrace();
+        }
+    }
 
     /**
      * Test add() and get()
@@ -133,6 +215,7 @@ public class ThreadSafeSimpleLinkedListTest {
      * Test hasCycleFloydAlgorithm() and hasCycleBrentAlgorithm()
      */
     @Test
+    @SuppressWarnings("unchecked")
     public void whenOddNumberOfElementsWithCycleInTheEndThenFindsCycleTrue() {
         ThreadSafeSimpleLinkedList<String> list = new ThreadSafeSimpleLinkedList<>();
         Node[] nodes = new Node[11]; // imported ru.job4j.list.linked.ThreadSafeSimpleLinkedList.Node
@@ -148,6 +231,7 @@ public class ThreadSafeSimpleLinkedListTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void whenOddNumberOfElementsWithCycleInTheCenterThenFindsCycleTrue() {
         ThreadSafeSimpleLinkedList<String> list = new ThreadSafeSimpleLinkedList<>();
         Node[] nodes = new Node[11]; // imported ru.job4j.list.linked.ThreadSafeSimpleLinkedList.Node
@@ -163,6 +247,7 @@ public class ThreadSafeSimpleLinkedListTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void whenEvenNumberOfElementsWithCycleInTheEndThenFindsCycleTrue() {
         ThreadSafeSimpleLinkedList<String> list = new ThreadSafeSimpleLinkedList<>();
         Node[] nodes = new Node[10]; // imported ru.job4j.list.linked.ThreadSafeSimpleLinkedList.Node
@@ -178,6 +263,7 @@ public class ThreadSafeSimpleLinkedListTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void whenEvenNumberOfElementsWithCycleInTheCenterThenFindsCycleTrue() {
         ThreadSafeSimpleLinkedList<String> list = new ThreadSafeSimpleLinkedList<>();
         Node[] nodes = new Node[10]; // imported ru.job4j.list.linked.ThreadSafeSimpleLinkedList.Node
@@ -193,6 +279,7 @@ public class ThreadSafeSimpleLinkedListTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void whenOddNumberOfElementsWithoutCycleThenFindsCycleFalse() {
         ThreadSafeSimpleLinkedList<String> list = new ThreadSafeSimpleLinkedList<>();
         Node[] nodes = new Node[11]; // imported ru.job4j.list.linked.ThreadSafeSimpleLinkedList.Node
@@ -207,6 +294,7 @@ public class ThreadSafeSimpleLinkedListTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void whenEvenNumberOfElementsWithoutCycleThenFindsCycleFalse() {
         ThreadSafeSimpleLinkedList<String> list = new ThreadSafeSimpleLinkedList<>();
         Node[] nodes = new Node[10]; // imported ru.job4j.list.linked.ThreadSafeSimpleLinkedList.Node

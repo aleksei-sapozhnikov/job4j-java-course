@@ -1,5 +1,7 @@
 package ru.job4j.list.array;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
 import ru.job4j.list.SimpleContainer;
 
 import java.util.Arrays;
@@ -15,6 +17,8 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since 02.03.2018
  */
+@SuppressWarnings("Duplicates") // the code is purposefully copied from 002_junior_chapter_001
+@ThreadSafe
 public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
 
     /**
@@ -25,23 +29,25 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
     /**
      * Array to store values.
      */
-    private E[] container;
+    @GuardedBy("this")
+    private volatile E[] container;
 
     /**
      * Position where to put next element into array.
      */
-    private int position = 0;
+    @GuardedBy("this")
+    private volatile int position = 0;
 
     /**
      * Modifications count (to prevent concurrent modification in iterator).
      */
-    private int modCount = 0;
+    @GuardedBy("this")
+    private volatile int modCount = 0;
 
     /**
      * Default constructor.
      */
-
-    public ThreadSafeSimpleArrayList() {
+    ThreadSafeSimpleArrayList() {
         this(DEFAULT_CAPACITY);
     }
 
@@ -49,7 +55,7 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
      * @param size initial list capacity.
      */
     @SuppressWarnings("unchecked")
-    public ThreadSafeSimpleArrayList(int size) {
+    ThreadSafeSimpleArrayList(final int size) {
         this.container = (E[]) new Object[size];
     }
 
@@ -59,7 +65,7 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
      * @param value element to add.
      */
     @Override
-    public void add(E value) {
+    public synchronized void add(final E value) {
         modCount++;
         growIfNeeded();
         this.container[this.position++] = value;
@@ -72,7 +78,7 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
      * @return elemen in given position or {@code null} if element was not found.
      */
     @Override
-    public E get(int index) {
+    public synchronized E get(final int index) {
         return container[index];
     }
 
@@ -83,19 +89,18 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
      * @return iterator to traverse through the elements of list.
      */
     @Override
-    public Iterator<E> iterator() {
+    public synchronized Iterator<E> iterator() {
         return new Iterator<E>() {
-
             /**
              * Modification count value at the time when the iterator was created.
              * If collection will change during the work of iterator, there will be {@code }ConcurrentModificationException}.
              */
             private final int expectedModCount = modCount;
-
             /**
              * Next element to take.
              */
-            private int cursor = 0;
+            @GuardedBy("this")
+            private volatile int cursor = 0;
 
             /**
              * Returns {@code true} if the iteration has more elements.
@@ -106,7 +111,7 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
              * @throws ConcurrentModificationException if the list was changed during the work of iterator.
              */
             @Override
-            public boolean hasNext() {
+            public synchronized boolean hasNext() {
                 if (this.expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
@@ -121,7 +126,7 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
              * @throws ConcurrentModificationException if the list was changed during the work of iterator.
              */
             @Override
-            public E next() {
+            public synchronized E next() {
                 if (this.expectedModCount != modCount) {
                     throw new ConcurrentModificationException();
                 }
@@ -136,7 +141,7 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
     /**
      * Ensures capacity is enough or makes list larger if needed.
      */
-    private void growIfNeeded() {
+    private synchronized void growIfNeeded() {
         if (!this.ensureCapacity()) {
             this.grow();
         }
@@ -147,14 +152,14 @@ public class ThreadSafeSimpleArrayList<E> implements SimpleContainer<E> {
      *
      * @return {@code true} if capacity is enough, {@code false} if not
      */
-    private boolean ensureCapacity() {
+    private synchronized boolean ensureCapacity() {
         return this.position < this.container.length;
     }
 
     /**
      * Enlarges inner array to allow addition of new element(s).
      */
-    private void grow() {
+    private synchronized void grow() {
         int newLength = this.container.length * 3 / 2 + 1;
         this.container = Arrays.copyOf(this.container, newLength);
     }
