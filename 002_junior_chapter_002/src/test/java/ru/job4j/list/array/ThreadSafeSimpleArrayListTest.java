@@ -55,7 +55,7 @@ public class ThreadSafeSimpleArrayListTest {
     public void whenMultipleThreadsReadIteratorThenAllValuesAreRead() {
         try {
             ThreadSafeSimpleArrayList<Integer> from = new ThreadSafeSimpleArrayList<>(); // list to read
-            ThreadSafeSimpleArrayList<Integer> to = new ThreadSafeSimpleArrayList<>();// list to write what threads read
+            ThreadSafeSimpleArrayList<Integer> to = new ThreadSafeSimpleArrayList<>(); // list to write what threads read
             // fill "from" and get iterator
             final int length = 50;
             for (int i = 0; i < length; i++) {

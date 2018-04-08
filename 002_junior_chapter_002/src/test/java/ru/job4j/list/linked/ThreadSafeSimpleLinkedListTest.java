@@ -56,7 +56,7 @@ public class ThreadSafeSimpleLinkedListTest {
     public void whenMultipleThreadsReadIteratorThenAllValuesAreRead() {
         try {
             ThreadSafeSimpleLinkedList<Integer> from = new ThreadSafeSimpleLinkedList<>(); // list to read
-            ThreadSafeSimpleLinkedList<Integer> to = new ThreadSafeSimpleLinkedList<>();// list to write what threads read
+            ThreadSafeSimpleLinkedList<Integer> to = new ThreadSafeSimpleLinkedList<>(); // list to write what threads read
             // fill "from" and get iterator
             final int length = 50;
             for (int i = 0; i < length; i++) {
