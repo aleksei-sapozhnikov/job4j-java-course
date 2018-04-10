@@ -1,5 +1,6 @@
 package ru.job4j.storage.user;
 
+import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
 import java.util.HashSet;
@@ -17,6 +18,7 @@ class UserStorage {
     /**
      * Users stored.
      */
+    @GuardedBy("this")
     private Set<User> users = new HashSet<>();
 
     /**
@@ -25,7 +27,7 @@ class UserStorage {
      * @param user user to add.
      * @return <tt>true</tt> if completed successfully, <tt>false</tt> if couldn't add user (already exists).
      */
-    boolean add(User user) {
+    synchronized boolean add(User user) {
         return this.users.add(user);
     }
 
@@ -35,7 +37,7 @@ class UserStorage {
      * @param user new user object.
      * @return <tt>true</tt> if user replaced, <tt>false if not</tt>.
      */
-    boolean update(User user) {
+    synchronized boolean update(User user) {
         boolean result = this.users.remove(user);
         if (result) {
             this.users.add(user);
@@ -49,7 +51,7 @@ class UserStorage {
      * @param user user to delete.
      * @return <tt>true</tt> if deleted successfully, <tt>false</tt> if not.
      */
-    boolean delete(User user) {
+    synchronized boolean delete(User user) {
         return this.users.remove(user);
     }
 
@@ -59,7 +61,7 @@ class UserStorage {
      * @param id user id.
      * @return found User of <tt>null</tt> if not found.
      */
-    User findById(final int id) {
+    synchronized User findById(final int id) {
         User result = null;
         for (User temp : this.users) {
             if (id == temp.id()) {
@@ -78,7 +80,7 @@ class UserStorage {
      * @return <tt>true</tt> if transferred, <tt>false</tt> if one of users
      * not found or if "from" user's amount becomes less then 0.
      */
-    boolean transfer(final int fromId, final int toId, final int amount) {
+    synchronized boolean transfer(final int fromId, final int toId, final int amount) {
         User from = this.findById(fromId);
         User to = this.findById(toId);
         boolean result = from != null

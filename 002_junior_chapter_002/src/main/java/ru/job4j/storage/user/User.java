@@ -38,7 +38,7 @@ class User {
      *
      * @return user's id field value.
      */
-    public int id() {
+    int id() {
         return this.id;
     }
 
@@ -47,7 +47,7 @@ class User {
      *
      * @return user's amount field value.
      */
-    public synchronized int amount() {
+    synchronized int amount() {
         return this.amount;
     }
 
