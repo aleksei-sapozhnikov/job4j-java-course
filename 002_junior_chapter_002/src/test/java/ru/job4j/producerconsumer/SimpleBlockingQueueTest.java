@@ -17,11 +17,13 @@ public class SimpleBlockingQueueTest {
         Producer producer = new Producer(queue);
         Consumer consumer = new Consumer(queue, result);
         //expected
-        List<Integer> expected = new ArrayList<Integer>() {{
-            for (int i = 0; i < 50; i++) {
-                add(i * 2);
+        List<Integer> expected = new ArrayList<Integer>() {
+            {
+                for (int i = 0; i < 50; i++) {
+                    add(i * 2);
+                }
             }
-        }};
+        };
         //run
         producer.start();
         consumer.start();
