@@ -59,7 +59,7 @@ class SimpleThreadPool {
      */
     void stop() {
         try {
-            System.out.format("==== STOPPING all threads : time out.%n");
+            System.out.format("%n==== Pool: STOPPING all threads : time out.%n");
             this.isRunning = false;
             synchronized (this.works) {
                 this.works.notifyAll();
@@ -80,22 +80,24 @@ class SimpleThreadPool {
         public void run() {
             try {
                 while (isRunning) {
-                    System.out.format("---- %s: new isRunning cycle.%n", Thread.currentThread().getName());
+                    System.out.format("---- %s: isRunning == TRUE, new cycle.%n", Thread.currentThread().getName());
                     synchronized (works) {
-                        while (works.isEmpty()) {
+                        while (isRunning && works.isEmpty()) {
                             System.out.format("------ %s: queue size is %s, waiting for work.%n", Thread.currentThread().getName(), works.size());
                             works.wait();
                         }
                     }
-                    System.out.format("-------- %s: queue size is %s, taking new work.%n", Thread.currentThread().getName(), works.size());
+                    System.out.format("-------- %s: queue size is %s, trying to take a new work.%n", Thread.currentThread().getName(), works.size());
                     Work next = works.poll();
                     if (next != null) {
                         System.out.format("---------- %s: took and started %s.%n", Thread.currentThread().getName(), next.getName());
                         next.doWork();
                         System.out.format("---------- %s: finished %s.%n", Thread.currentThread().getName(), next.getName());
+                    } else {
+                        System.out.format("---------- %s: next work == NULL.%n", Thread.currentThread().getName());
                     }
                 }
-                System.out.format("-- %s: STOPPED.%n", Thread.currentThread().getName());
+                System.out.format("-- %s: isRunning == false, STOPPED.%n", Thread.currentThread().getName());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

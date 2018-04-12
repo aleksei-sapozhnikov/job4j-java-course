@@ -24,7 +24,7 @@ public class SimpleThreadPoolTest {
 
                 @Override
                 public void setEnqueueTime(long timeInMillis) {
-                    //
+                    // stub
                 }
 
                 @Override
