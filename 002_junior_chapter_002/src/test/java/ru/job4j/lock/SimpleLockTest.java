@@ -39,6 +39,9 @@ public class SimpleLockTest {
      * Class of threads using the same SimpleLock object to synchronize.
      */
     private class LockingWorker extends Thread {
+        /**
+         * Lock object: can be use by only one thread at once.
+         */
         private final SimpleLock lock;
 
         /**
