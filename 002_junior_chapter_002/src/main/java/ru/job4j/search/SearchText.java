@@ -126,7 +126,7 @@ class SearchText {
                             System.out.format("  CONTENT >>: File contains \"%s\", adding to result%n", this.text);
                             this.found.add(file);
                         } else {
-                            System.out.format("  >> CONTENT: Not found \"%s\" in file, skipping%n", this.text);
+                            System.out.format("  CONTENT >>: Not found \"%s\" in file, skipping%n", this.text);
                         }
                     }
                 }

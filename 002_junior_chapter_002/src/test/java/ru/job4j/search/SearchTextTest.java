@@ -55,7 +55,7 @@ public class SearchTextTest {
 
 
     @Test
-    public void searchingFiles() throws IOException {
+    public void searchingFilesDirectoryHierarchy() throws IOException {
         this.createFoldersAndFiles();
         String text = "32";
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
