@@ -84,6 +84,7 @@ class SearchText {
      * @return thread searching for files with needed extensions.
      */
     private Thread getSearchFilesThread() {
+        System.out.format("=== EXTS: Started ===%n");
         return new Thread(() -> {
             try {
                 Files.walkFileTree(this.root, this.extensionSearcher);
@@ -95,7 +96,9 @@ class SearchText {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            System.out.format("=== EXTS: Finished ===%n");
         });
+
     }
 
     /**
@@ -106,7 +109,7 @@ class SearchText {
     private Thread getSearchContentsThread() {
         return new Thread(() -> {
             try {
-                System.out.println("=== CONTENT: Started ===");
+                System.out.println("  === CONTENT: Started ===");
                 while (extensionSearcherWorking || !this.files.isEmpty()) {
                     while (extensionSearcherWorking && this.files.isEmpty()) {
                         synchronized (this.files) {
@@ -114,7 +117,7 @@ class SearchText {
                             this.files.wait();
                         }
                     }
-                    System.out.format("  CONTENT: WORKING. Queue size: %s%n", this.files.size());
+                    System.out.format("  CONTENT: Looking for a file in queue. Queue size: %s%n", this.files.size());
                     Path file = this.files.poll();
                     if (file != null) {
                         String content = new String(Files.readAllBytes(file));
@@ -127,7 +130,7 @@ class SearchText {
                         }
                     }
                 }
-                System.out.println("=== CONTENT: Finished ===");
+                System.out.println("  === CONTENT: Finished ===");
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }

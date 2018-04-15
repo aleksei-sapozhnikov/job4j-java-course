@@ -63,8 +63,8 @@ public class SearchTextTest {
         SearchText search = new SearchText(root, text, extensions);
         search.performSearch();
         List<String> absolute = search.getSearchResult();
-        String[] result = new String[absolute.size()];
         // result and assert
+        String[] result = new String[absolute.size()];
         for (int i = 0; i < result.length; i++) {
             result[i] = Paths.get(absolute.get(i)).getFileName().toString();
         }
@@ -81,6 +81,8 @@ public class SearchTextTest {
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
         SearchText search = new SearchText(root, text, extensions);
         search.performSearch();
-        List<String> result = search.getSearchResult();
+        String[] result = search.getSearchResult().toArray(new String[0]);
+        String[] expected = {};
+        assertThat(result, is(expected));
     }
 }
