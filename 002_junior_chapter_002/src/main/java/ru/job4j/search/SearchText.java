@@ -106,20 +106,21 @@ class SearchText {
     private Thread getSearchContentsThread() {
         return new Thread(() -> {
             try {
+                System.out.println("=== CONTENT: Started ===");
                 while (extensionSearcherWorking || !this.files.isEmpty()) {
                     while (extensionSearcherWorking && this.files.isEmpty()) {
                         synchronized (this.files) {
-                            System.out.println("CONTENT: WAIT");
+                            System.out.println("  CONTENT: WAIT");
                             this.files.wait();
                         }
                     }
-                    System.out.format("CONTENT: WORKING. Queue size: %s%n", this.files.size());
+                    System.out.format("  CONTENT: WORKING. Queue size: %s%n", this.files.size());
                     Path file = this.files.poll();
                     if (file != null) {
                         String content = new String(Files.readAllBytes(file));
-                        System.out.format("CONTENT: File content: \"%s\"%n", content);
+                        System.out.format("  CONTENT >>: File content: \"%s\"%n", content);
                         if (content.contains(this.text)) {
-                            System.out.format("  >> CONTENT: File contains \"%s\", adding%n", this.text);
+                            System.out.format("  CONTENT >>: File contains \"%s\", adding to result%n", this.text);
                             this.found.add(file);
                         } else {
                             System.out.format("  >> CONTENT: Not found \"%s\" in file, skipping%n", this.text);
@@ -168,7 +169,7 @@ class SearchText {
             boolean extensionOk = false;
             for (String ext : extensions) {
                 if (file.getFileName().toString().endsWith(String.format(".%s", ext))) {
-                    System.out.format("  EXTS: >> Found extension \"%s\", adding%n", ext);
+                    System.out.format("EXTS: >> Found extension \"%s\", adding to queue%n", ext);
                     extensionOk = true;
                     break;
                 }
@@ -179,7 +180,7 @@ class SearchText {
                     files.notify();
                 }
             } else {
-                System.out.format("  EXTS: >> Not found needed extension, skipping%n");
+                System.out.format("EXTS: >> Not found needed extension, skipping%n");
             }
             return FileVisitResult.CONTINUE;
         }

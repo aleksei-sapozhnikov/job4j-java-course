@@ -39,7 +39,7 @@ public class SearchTextTest {
             Path aa = file.getParent();
             Files.createDirectories(aa);
         }
-        // what to write into files
+        // contents to write into files
         String[] contents = new String[]{
                 "Extension is right, text 32 contains what needed",
                 "Extension is right, but no needed text",
@@ -75,16 +75,12 @@ public class SearchTextTest {
     }
 
     @Test
-    public void searchingFilesEmptyFolder() {
+    public void searchingFilesInEmptyFolderIsNotInfinite() {
         this.root = this.temp.getRoot().toPath();
         String text = "32";
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
         SearchText search = new SearchText(root, text, extensions);
         search.performSearch();
         List<String> result = search.getSearchResult();
-        System.out.format("%n=== RESULT: ===%n");
-        for (String a : result) {
-            System.out.println(a);
-        }
     }
 }
