@@ -72,7 +72,6 @@ class SearchText {
             searchFiles.start();
             searchContent.start();
             searchFiles.join();
-            this.extensionSearcherWorking = false;
             searchContent.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -88,12 +87,11 @@ class SearchText {
         return new Thread(() -> {
             try {
                 Files.walkFileTree(this.root, this.extensionSearcher);
-                this.extensionSearcherWorking = false;
                 synchronized (this.files) {
+                    this.extensionSearcherWorking = false;
                     System.out.format("Searching files FINISHED%n");
                     this.files.notifyAll();
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -109,26 +107,26 @@ class SearchText {
         return new Thread(() -> {
             try {
                 while (extensionSearcherWorking || !this.files.isEmpty()) {
-                    while (this.files.isEmpty()) {
+                    while (extensionSearcherWorking && this.files.isEmpty()) {
                         synchronized (this.files) {
-                            System.out.println("Contents: WAIT");
+                            System.out.println("CONTENT: WAIT");
                             this.files.wait();
                         }
                     }
-                    System.out.format("%nContents: WORKING. Queue size: %s%n", this.files.size());
+                    System.out.format("CONTENT: WORKING. Queue size: %s%n", this.files.size());
                     Path file = this.files.poll();
                     if (file != null) {
                         String content = new String(Files.readAllBytes(file));
-                        System.out.format("File content: %s", content);
+                        System.out.format("CONTENT: File content: \"%s\"%n", content);
                         if (content.contains(this.text)) {
-                            System.out.format("  CONTAINS %s, add%n", this.text);
+                            System.out.format("  >> CONTENT: File contains \"%s\", adding%n", this.text);
                             this.found.add(file);
                         } else {
-                            System.out.format("  HAS NO %s, skip%n", this.text);
+                            System.out.format("  >> CONTENT: Not found \"%s\" in file, skipping%n", this.text);
                         }
                     }
                 }
-                System.out.println("Contents: FINISH");
+                System.out.println("=== CONTENT: Finished ===");
             } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
@@ -161,6 +159,7 @@ class SearchText {
          */
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
+            System.out.format("EXTS: Visiting file: %s%n", file.toAbsolutePath().toString());
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
@@ -169,6 +168,7 @@ class SearchText {
             boolean extensionOk = false;
             for (String ext : extensions) {
                 if (file.getFileName().toString().endsWith(String.format(".%s", ext))) {
+                    System.out.format("  EXTS: >> Found extension \"%s\", adding%n", ext);
                     extensionOk = true;
                     break;
                 }
@@ -178,6 +178,8 @@ class SearchText {
                     files.offer(file);
                     files.notify();
                 }
+            } else {
+                System.out.format("  EXTS: >> Not found needed extension, skipping%n");
             }
             return FileVisitResult.CONTINUE;
         }

@@ -1,69 +1,90 @@
 package ru.job4j.search;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 public class SearchTextTest {
 
     @Rule
-    private TemporaryFolder root = new TemporaryFolder();
+    public TemporaryFolder temp = new TemporaryFolder();
 
+    private Path root;
 
-    @Before
-    public void createFoldersAndFiles() throws IOException {
-
-
+    private void createFoldersAndFiles() throws IOException {
+        // root path
+        this.root = this.temp.getRoot().toPath();
+        // file paths
+        String s = File.separator;
+        Path[] files = new Path[]{
+                Paths.get(String.format("%s%s_K1_%s_SK1_%s_SSK1_%s_File1.txt", root.toAbsolutePath(), s, s, s, s)),
+                Paths.get(String.format("%s%s_K1_%s_SK1_%s_SSK2_%s_File2.ttt", root.toAbsolutePath(), s, s, s, s)),
+                Paths.get(String.format("%s%s_K1_%s_SK1_%s_SSK2_%s_File3.xyz", root.toAbsolutePath(), s, s, s, s))
+        };
+        // create needed folders
+        for (Path file : files) {
+            Path aa = file.getParent();
+            Files.createDirectories(aa);
+        }
+        // what to write into files
+        String[] contents = new String[]{
+                "Extension is right, text 32 contains what needed",
+                "Extension is right, but no needed text",
+                "Contains wh32at needed but extension not as needed"
+        };
+        // write contents to files
+        for (int i = 0; i < Math.min(files.length, contents.length); i++) {
+            try (FileWriter a = new FileWriter(files[i].toFile())) {
+                a.write(contents[i]);
+            }
+        }
     }
 
-    private void createFoldersPaths() throws IOException {
 
-    }
-
-    private void createFiles() throws IOException {
-        // root folders
-        Path k1 = root.newFolder("K1").toPath();
-
-
-        List<Path> paths = new ArrayList<>(Arrays.asList(
-                // root files
-                root.newFile("File1.aaa").toPath(),
-                root.newFile("File2.bbb").toPath(),
-                root.newFile("File3.xxx").toPath(),
-                // root folders
-                root.newFolder("K1%sSK1").toPath()
-        ));
+    @Test
+    public void searchingFiles() throws IOException {
+        this.createFoldersAndFiles();
+        String text = "32";
+        List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
+        // work
+        SearchText search = new SearchText(root, text, extensions);
+        search.performSearch();
+        List<String> absolute = search.getSearchResult();
+        String[] result = new String[absolute.size()];
+        // result and assert
+        for (int i = 0; i < result.length; i++) {
+            result[i] = Paths.get(absolute.get(i)).getFileName().toString();
+        }
+        String[] expected = {
+                "_File1.txt"
+        };
+        assertThat(result, is(expected));
     }
 
     @Test
-    public void testUsingTempFolder() throws IOException {
-        // ...
-    }
-
-
-    @Test
-    public void performSearch() {
-        Path root = Paths.get("C:\\Users\\User-01\\Desktop\\111");
+    public void searchingFilesEmptyFolder() {
+        this.root = this.temp.getRoot().toPath();
         String text = "32";
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
         SearchText search = new SearchText(root, text, extensions);
         search.performSearch();
         List<String> result = search.getSearchResult();
+        System.out.format("%n=== RESULT: ===%n");
         for (String a : result) {
             System.out.println(a);
         }
-    }
-
-    @Test
-    public void getSearchResult() {
     }
 }
