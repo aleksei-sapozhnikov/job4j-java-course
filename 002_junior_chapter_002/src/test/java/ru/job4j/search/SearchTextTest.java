@@ -17,15 +17,29 @@ import java.util.List;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
+/**
+ * Tests for SearchTest class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 13.04.2018
+ */
 public class SearchTextTest {
-
+    /**
+     * Creates temporary folder for tests.
+     */
     @Rule
     public TemporaryFolder temp = new TemporaryFolder();
-
+    /**
+     * Root path where all files and folders are stored.
+     */
     private Path root;
 
+    /**
+     * Creates directory and file structure to use in some tests.
+     */
     private void createFoldersAndFiles() throws IOException {
-        // root path
+        // setting root path holding everything
         this.root = this.temp.getRoot().toPath();
         // file paths
         String s = File.separator;
@@ -53,34 +67,43 @@ public class SearchTextTest {
         }
     }
 
-
+    /**
+     * Checks if everything works when there is structure of files and folders.
+     */
     @Test
     public void searchingFilesDirectoryHierarchy() throws IOException {
+        // setup
         this.createFoldersAndFiles();
         String text = "32";
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
         // work
         SearchText search = new SearchText(root, text, extensions);
         search.performSearch();
+        // result
         List<String> absolute = search.getSearchResult();
-        // result and assert
-        String[] result = new String[absolute.size()];
-        for (int i = 0; i < result.length; i++) {
-            result[i] = Paths.get(absolute.get(i)).getFileName().toString();
+        String[] names = new String[absolute.size()];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = Paths.get(absolute.get(i)).getFileName().toString();
         }
         String[] expected = {
                 "_File1.txt"
         };
-        assertThat(result, is(expected));
+        assertThat(names, is(expected));
     }
 
+    /**
+     * Tests successful ending when directory structure is empty.
+     */
     @Test
     public void searchingFilesInEmptyFolderIsNotInfinite() {
+        // setup
         this.root = this.temp.getRoot().toPath();
         String text = "32";
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
+        // work
         SearchText search = new SearchText(root, text, extensions);
         search.performSearch();
+        // result
         String[] result = search.getSearchResult().toArray(new String[0]);
         String[] expected = {};
         assertThat(result, is(expected));
