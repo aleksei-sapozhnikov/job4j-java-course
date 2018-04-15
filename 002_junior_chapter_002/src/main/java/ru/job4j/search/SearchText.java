@@ -47,7 +47,7 @@ class SearchText {
     /**
      * Declares that thread searching for files with needed extensions finished doing work
      */
-    private boolean extensionSearcherWorking;
+    private volatile boolean extensionSearcherWorking;
 
     /**
      * Constructs a new object searching for text in files.
