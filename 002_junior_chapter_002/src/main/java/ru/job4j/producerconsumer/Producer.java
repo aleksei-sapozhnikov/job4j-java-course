@@ -10,7 +10,7 @@ import net.jcip.annotations.ThreadSafe;
  * @since 11.04.2018
  */
 @ThreadSafe
-public class Producer extends Thread {
+class Producer extends Thread {
     /**
      * Queue to add elements to.
      */

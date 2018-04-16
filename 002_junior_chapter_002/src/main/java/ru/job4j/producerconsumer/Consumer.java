@@ -13,7 +13,7 @@ import java.util.List;
  * @since 11.04.2018
  */
 @ThreadSafe
-public class Consumer extends Thread {
+class Consumer extends Thread {
     /**
      * Queue to add elements to.
      */
