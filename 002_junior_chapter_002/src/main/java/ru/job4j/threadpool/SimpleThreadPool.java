@@ -8,7 +8,7 @@ class SimpleThreadPool {
     /**
      * Flag showing if this SimpleThreadPool is running or not.
      */
-    private boolean isRunning;
+    private volatile boolean isRunning;
     /**
      * Array of working threads. Array size is determined
      * by number of available processors.
@@ -36,9 +36,9 @@ class SimpleThreadPool {
      * @param work work to add.
      */
     void add(Work work) {
+        this.works.add(work);
+        System.out.format("-- Pool: added new %s. Queue size: %s.%n", work.getName(), this.works.size());
         synchronized (this.works) {
-            this.works.add(work);
-            System.out.format("-- Pool: added new %s. Queue size: %s.%n", work.getName(), this.works.size());
             this.works.notify();
         }
     }
@@ -55,7 +55,7 @@ class SimpleThreadPool {
     }
 
     /**
-     * Stops ThreadPool and notifies all threads.
+     * Stops ThreadPool and notifies all threads to make them stop.
      */
     void stop() {
         try {
@@ -80,26 +80,42 @@ class SimpleThreadPool {
         public void run() {
             try {
                 while (isRunning) {
-                    System.out.format("---- %s: isRunning == TRUE, new cycle.%n", Thread.currentThread().getName());
-                    synchronized (works) {
-                        while (isRunning && works.isEmpty()) {
-                            System.out.format("------ %s: queue size is %s, waiting for work.%n", Thread.currentThread().getName(), works.size());
-                            works.wait();
-                        }
-                    }
-                    System.out.format("-------- %s: queue size is %s, trying to take a new work.%n", Thread.currentThread().getName(), works.size());
-                    Work next = works.poll();
-                    if (next != null) {
-                        System.out.format("---------- %s: took and started %s.%n", Thread.currentThread().getName(), next.getName());
-                        next.doWork();
-                        System.out.format("---------- %s: finished %s.%n", Thread.currentThread().getName(), next.getName());
-                    } else {
-                        System.out.format("---------- %s: next work == NULL.%n", Thread.currentThread().getName());
-                    }
+                    this.waitIfNeeded();
+                    this.tryDoNextWork();
                 }
                 System.out.format("-- %s: isRunning == false, STOPPED.%n", Thread.currentThread().getName());
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+        }
+
+        /**
+         * Waits if there is no work in queue but ThreadPool is still running.
+         *
+         * @throws InterruptedException if thread interrupted while waiting.
+         */
+        private void waitIfNeeded() throws InterruptedException {
+            System.out.format("---- %s: isRunning == TRUE, new cycle.%n", Thread.currentThread().getName());
+            synchronized (works) {
+                while (isRunning && works.isEmpty()) {
+                    System.out.format("------ %s: queue size is %s, waiting for work.%n", Thread.currentThread().getName(), works.size());
+                    works.wait();
+                }
+            }
+        }
+
+        /**
+         * Tries to take next work in queue.
+         */
+        private void tryDoNextWork() {
+            System.out.format("-------- %s: queue size is %s, trying to take a new work.%n", Thread.currentThread().getName(), works.size());
+            Work next = works.poll();
+            if (next != null) {
+                System.out.format("---------- %s: took and started %s.%n", Thread.currentThread().getName(), next.getName());
+                next.doWork();
+                System.out.format("---------- %s: finished %s.%n", Thread.currentThread().getName(), next.getName());
+            } else {
+                System.out.format("---------- %s: next work == NULL.%n", Thread.currentThread().getName());
             }
         }
     }
