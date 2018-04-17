@@ -119,7 +119,7 @@ class SearchText {
                 }
                 System.out.println("  === CONTENT: Finished ===");
             } catch (IOException | InterruptedException e) {
-                System.out.format("  CONTENT: Waiting interrupted, stopping");
+                e.printStackTrace();
             }
         });
     }
