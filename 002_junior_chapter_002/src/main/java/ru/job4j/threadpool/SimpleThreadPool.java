@@ -32,8 +32,8 @@ class SimpleThreadPool {
      *
      * @param work work to add.
      */
-    void add(Work work) {
-        this.works.add(work);
+    void add(Work work) throws InterruptedException {
+        this.works.put(work);
         System.out.format("-- Pool: added new %s, queue size now: %s.%n", work.getName(), this.works.size());
     }
 
