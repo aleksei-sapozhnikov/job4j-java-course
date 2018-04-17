@@ -38,7 +38,7 @@ public class SearchTextTest {
     /**
      * Creates directory and file structure to use in some tests.
      */
-    private void createFoldersAndFiles() throws IOException {
+    private void createFoldersAndFiles(String neededText) throws IOException {
         // setting root path holding everything
         this.root = this.temp.getRoot().toPath();
         // file paths
@@ -56,10 +56,10 @@ public class SearchTextTest {
         }
         // contents to write into files
         String[] contents = new String[]{
-                "Extension is right, text 32 contains what needed.",
-                "Extension is right, but no needed text.",
-                "Contains wh32at needed but extension not as needed.",
-                "Last file: needed extension, 32contains what needed."
+                String.format("Extension is right, text %s contains what needed.", neededText),
+                String.format("Extension is right, b%sut no needed text.", ""),
+                String.format("Contains wh%sat needed but extension not as needed.", neededText),
+                String.format("Last file: needed extension, %scontains what needed.", neededText)
         };
         // write contents to files
         for (int i = 0; i < Math.min(files.length, contents.length); i++) {
@@ -75,11 +75,11 @@ public class SearchTextTest {
     @Test
     public void searchingFilesDirectoryHierarchy() throws IOException {
         // setup
-        this.createFoldersAndFiles();
-        String text = "32";
+        String neededText = "32";
+        this.createFoldersAndFiles(neededText);
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
         // work
-        SearchText search = new SearchText(root, text, extensions);
+        SearchText search = new SearchText(root, neededText, extensions);
         search.performSearch();
         // result
         List<String> absolute = search.getSearchResult();

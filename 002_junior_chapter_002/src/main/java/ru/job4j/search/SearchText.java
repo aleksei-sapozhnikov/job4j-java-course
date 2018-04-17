@@ -74,13 +74,13 @@ class SearchText {
      */
     void performSearch() {
         try {
-            Thread searchExtensions = this.getSearchExtensionsThread();
-            Thread searchContents = this.getSearchContentsThread();
+            Thread extensions = this.getSearchExtensionsThread();
+            Thread contents = this.getSearchContentsThread();
             this.extensionSearcherWorking = true;
-            searchExtensions.start();
-            searchContents.start();
-            searchExtensions.join();
-            searchContents.join();
+            extensions.start();
+            contents.start();
+            extensions.join();
+            contents.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -132,7 +132,7 @@ class SearchText {
      */
     private void analyzeNextFile() throws IOException, InterruptedException {
         System.out.format("  CONTENT: Looking for a file in queue. Queue size: %s%n", this.files.size());
-        Path file = this.files.poll(1, TimeUnit.SECONDS);
+        Path file = this.files.poll(1000, TimeUnit.MILLISECONDS);
         if (file != null) {
             System.out.format("  CONTENT: Analyzing file %s%n", file.getFileName());
             String content = new String(Files.readAllBytes(file));
