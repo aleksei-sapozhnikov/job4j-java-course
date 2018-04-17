@@ -2,13 +2,14 @@ package ru.job4j.threadpool;
 
 import com.sun.corba.se.spi.orbutil.threadpool.Work;
 
-import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 class SimpleThreadPool {
-    /**
-     * Flag showing if this SimpleThreadPool is running or not.
-     */
-    private volatile boolean isRunning;
+//    /**
+//     * Flag showing if this SimpleThreadPool is running or not.
+//     */
+//    private volatile boolean isRunning;
     /**
      * Array of working threads. Array size is determined
      * by number of available processors.
@@ -17,7 +18,7 @@ class SimpleThreadPool {
     /**
      * Blocking queue of Runnable jobs.
      */
-    private final ConcurrentLinkedQueue<Work> works = new ConcurrentLinkedQueue<>();
+    private final BlockingQueue<Work> works = new LinkedBlockingQueue<>();
 
     /**
      * Constructs and initializes new SimpleThreadPool.
@@ -37,21 +38,16 @@ class SimpleThreadPool {
      */
     void add(Work work) {
         this.works.add(work);
-        System.out.format("-- Pool: added new %s. Queue size: %s.%n", work.getName(), this.works.size());
-        synchronized (this.works) {
-            this.works.notify();
-        }
+        System.out.format("-- Pool: added new %s, queue size now: %s.%n", work.getName(), this.works.size());
     }
 
     /**
      * Starts all threads to do works in queue.
      */
     void start() {
-        this.isRunning = true;
         for (Thread thread : this.threads) {
             thread.start();
         }
-        System.out.format("==== Started all threads.%n");
     }
 
     /**
@@ -59,10 +55,9 @@ class SimpleThreadPool {
      */
     void stop() {
         try {
-            System.out.format("%n==== Pool: STOPPING all threads : time out.%n");
-            this.isRunning = false;
-            synchronized (this.works) {
-                this.works.notifyAll();
+            System.out.format("%n==== Pool: stopping all threads : time out.%n");
+            for (Thread thread : this.threads) {
+                thread.interrupt();
             }
             for (Thread thread : this.threads) {
                 thread.join();
@@ -79,43 +74,27 @@ class SimpleThreadPool {
         @Override
         public void run() {
             try {
-                while (isRunning) {
-                    this.waitIfNeeded();
-                    this.tryDoNextWork();
+                while (!isInterrupted()) {
+                    this.tryDoNextWork(works);
                 }
-                System.out.format("-- %s: isRunning == false, STOPPED.%n", Thread.currentThread().getName());
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.format("-- %s: caught \"interrupted\" exception, stopping.%n", Thread.currentThread().getName());
             }
-        }
-
-        /**
-         * Waits if there is no work in queue but ThreadPool is still running.
-         *
-         * @throws InterruptedException if thread interrupted while waiting.
-         */
-        private void waitIfNeeded() throws InterruptedException {
-            System.out.format("---- %s: isRunning == TRUE, new cycle.%n", Thread.currentThread().getName());
-            synchronized (works) {
-                while (isRunning && works.isEmpty()) {
-                    System.out.format("------ %s: queue size is %s, waiting for work.%n", Thread.currentThread().getName(), works.size());
-                    works.wait();
-                }
-            }
+            System.out.format("-- %s: STOPPED%n", Thread.currentThread().getName());
         }
 
         /**
          * Tries to take next work in queue.
          */
-        private void tryDoNextWork() {
-            System.out.format("-------- %s: queue size is %s, trying to take a new work.%n", Thread.currentThread().getName(), works.size());
-            Work next = works.poll();
+        private void tryDoNextWork(BlockingQueue<Work> works) throws InterruptedException {
+            System.out.format("-------- %s: trying to take a new work, queue size now: %s.%n", Thread.currentThread().getName(), works.size());
+            Work next = works.take();
             if (next != null) {
-                System.out.format("---------- %s: took and started %s.%n", Thread.currentThread().getName(), next.getName());
+                System.out.format("---------- %s: took and started %s, queue size now: %s.%n", Thread.currentThread().getName(), next.getName(), works.size());
                 next.doWork();
                 System.out.format("---------- %s: finished %s.%n", Thread.currentThread().getName(), next.getName());
             } else {
-                System.out.format("---------- %s: next work == NULL.%n", Thread.currentThread().getName());
+                System.out.format("---------- %s: next work == NULL, skipping.%n", Thread.currentThread().getName());
             }
         }
     }
