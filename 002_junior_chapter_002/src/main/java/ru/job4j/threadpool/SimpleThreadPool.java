@@ -7,6 +7,10 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 class SimpleThreadPool {
     /**
+     * Flag showing that Thread Pool is active.
+     */
+    private volatile boolean isWorking = false;
+    /**
      * Array of working threads. Array size is determined
      * by number of available processors.
      */
@@ -41,6 +45,7 @@ class SimpleThreadPool {
      * Starts all threads to do works in queue.
      */
     void start() {
+        this.isWorking = true;
         for (Thread thread : this.threads) {
             thread.start();
         }
@@ -52,6 +57,7 @@ class SimpleThreadPool {
     void stop() {
         try {
             System.out.format("%n==== Pool: stopping all threads : time out.%n");
+            this.isWorking = false;
             for (Thread thread : this.threads) {
                 thread.interrupt();
             }
@@ -70,7 +76,7 @@ class SimpleThreadPool {
         @Override
         public void run() {
             try {
-                while (!isInterrupted()) {
+                while (isWorking) {
                     this.tryDoNextWork(works);
                 }
             } catch (InterruptedException e) {
@@ -83,14 +89,14 @@ class SimpleThreadPool {
          * Tries to take next work in queue.
          */
         private void tryDoNextWork(BlockingQueue<Work> works) throws InterruptedException {
-            System.out.format("-------- %s: trying to take a new work, queue size now: %s.%n", Thread.currentThread().getName(), works.size());
+            System.out.format("-------- %s (interrupted: %s): trying to take a new work, queue size now: %s.%n", Thread.currentThread().getName(), Thread.currentThread().isInterrupted(), works.size());
             Work next = works.take();
             if (next != null) {
-                System.out.format("---------- %s: took and started %s, queue size now: %s.%n", Thread.currentThread().getName(), next.getName(), works.size());
+                System.out.format("---------- %s (interrupted: %s): took and started %s, queue size now: %s.%n", Thread.currentThread().getName(), Thread.currentThread().isInterrupted(), next.getName(), works.size());
                 next.doWork();
-                System.out.format("---------- %s: finished %s.%n", Thread.currentThread().getName(), next.getName());
+                System.out.format("---------- %s (interrupted: %s): finished %s.%n", Thread.currentThread().getName(), Thread.currentThread().isInterrupted(), next.getName());
             } else {
-                System.out.format("---------- %s: next work == NULL, skipping.%n", Thread.currentThread().getName());
+                System.out.format("---------- %s (interrupted: %s): next work == NULL, skipping.%n", Thread.currentThread().getName(), Thread.currentThread().isInterrupted());
             }
         }
     }

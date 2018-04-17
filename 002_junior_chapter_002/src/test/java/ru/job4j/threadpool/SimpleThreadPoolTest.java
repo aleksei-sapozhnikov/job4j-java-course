@@ -9,14 +9,14 @@ public class SimpleThreadPoolTest {
     public void whenGivenWorksThenWorksAreDone() {
         SimpleThreadPool pool = new SimpleThreadPool();
         // setting works
-        Work[] works = new Work[25];
+        Work[] works = new Work[100];
         for (int i = 0; i < works.length; i++) {
             int finalI = i;
             works[i] = new Work() {
                 @Override
                 public void doWork() {
                     try {
-                        Thread.sleep(2000);
+                        Thread.sleep(6000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -46,7 +46,7 @@ public class SimpleThreadPoolTest {
                 pool.add(work);
             }
             // wait
-            Thread.sleep(5000);
+            Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
