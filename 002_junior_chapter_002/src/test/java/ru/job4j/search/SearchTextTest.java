@@ -38,7 +38,7 @@ public class SearchTextTest {
     /**
      * Creates directory and file structure to use in some tests.
      */
-    private void createFoldersAndFiles() throws IOException {
+    private void createFoldersAndFiles(String neededText) throws IOException {
         // setting root path holding everything
         this.root = this.temp.getRoot().toPath();
         // file paths
@@ -46,7 +46,8 @@ public class SearchTextTest {
         Path[] files = new Path[]{
                 Paths.get(String.format("%s%s_K1_%s_SK1_%s_SSK1_%s_File1.txt", root.toAbsolutePath(), s, s, s, s)),
                 Paths.get(String.format("%s%s_K1_%s_SK1_%s_SSK2_%s_File2.ttt", root.toAbsolutePath(), s, s, s, s)),
-                Paths.get(String.format("%s%s_K1_%s_SK1_%s_SSK2_%s_File3.xyz", root.toAbsolutePath(), s, s, s, s))
+                Paths.get(String.format("%s%s_K1_%s_SK1_%s_SSK2_%s_File3.xyz", root.toAbsolutePath(), s, s, s, s)),
+                Paths.get(String.format("%s%s_K2_%s_SK1_%s_SSK1_%s_File4.ttt", root.toAbsolutePath(), s, s, s, s)),
         };
         // create needed folders
         for (Path file : files) {
@@ -55,9 +56,10 @@ public class SearchTextTest {
         }
         // contents to write into files
         String[] contents = new String[]{
-                "Extension is right, text 32 contains what needed",
-                "Extension is right, but no needed text",
-                "Contains wh32at needed but extension not as needed"
+                String.format("Extension is right, text %s contains what needed.", neededText),
+                String.format("Extension is right, b%sut no needed text.", ""),
+                String.format("Contains wh%sat needed but extension not as needed.", neededText),
+                String.format("Last file: needed extension, %scontains what needed.", neededText)
         };
         // write contents to files
         for (int i = 0; i < Math.min(files.length, contents.length); i++) {
@@ -73,11 +75,11 @@ public class SearchTextTest {
     @Test
     public void searchingFilesDirectoryHierarchy() throws IOException {
         // setup
-        this.createFoldersAndFiles();
-        String text = "32";
+        String neededText = "32";
+        this.createFoldersAndFiles(neededText);
         List<String> extensions = new LinkedList<>(Arrays.asList("txt", "ttt"));
         // work
-        SearchText search = new SearchText(root, text, extensions);
+        SearchText search = new SearchText(root, neededText, extensions);
         search.performSearch();
         // result
         List<String> absolute = search.getSearchResult();
@@ -86,7 +88,8 @@ public class SearchTextTest {
             names[i] = Paths.get(absolute.get(i)).getFileName().toString();
         }
         String[] expected = {
-                "_File1.txt"
+                "_File1.txt",
+                "_File4.ttt"
         };
         assertThat(names, is(expected));
     }

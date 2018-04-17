@@ -7,8 +7,9 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Searches for given text in all sub-files and sub-directories of given path with given extensions.
@@ -39,11 +40,11 @@ class SearchText {
     /**
      * Queue of files with needed extension found, waiting for search.
      */
-    private final Queue<Path> files = new ConcurrentLinkedDeque<>();
+    private final BlockingQueue<Path> files = new LinkedBlockingQueue<>();
     /**
      * List of files (from queue) where needed text was found.
      */
-    private final Queue<Path> found = new ConcurrentLinkedDeque<>();
+    private final BlockingQueue<Path> found = new LinkedBlockingQueue<>();
     /**
      * Declares that thread searching for files with needed extensions finished doing work
      */
@@ -73,13 +74,13 @@ class SearchText {
      */
     void performSearch() {
         try {
-            Thread searchExtensions = this.getSearchExtensionsThread();
-            Thread searchContents = this.getSearchContentsThread();
+            Thread extensions = this.getSearchExtensionsThread();
+            Thread contents = this.getSearchContentsThread();
             this.extensionSearcherWorking = true;
-            searchExtensions.start();
-            searchContents.start();
-            searchExtensions.join();
-            searchContents.join();
+            extensions.start();
+            contents.start();
+            extensions.join();
+            contents.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -95,17 +96,13 @@ class SearchText {
             try {
                 System.out.format("=== EXTS: Started ===%n");
                 Files.walkFileTree(this.root, this.extensionSearcher);
-                synchronized (this.files) {
-                    System.out.format("Searching files FINISHED%n");
-                    this.extensionSearcherWorking = false;
-                    this.files.notifyAll();
-                }
+                this.extensionSearcherWorking = false;
+                System.out.format("Searching files FINISHED%n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
             System.out.format("=== EXTS: Finished ===%n");
         });
-
     }
 
     /**
@@ -118,29 +115,13 @@ class SearchText {
             try {
                 System.out.println("  === CONTENT: Started ===");
                 while (extensionSearcherWorking || !this.files.isEmpty()) {
-                    this.searchContentsWaitIfNeeded();
-                    this.searchContentsAnalyzeNextFile();
+                    this.analyzeNextFile();
                 }
                 System.out.println("  === CONTENT: Finished ===");
             } catch (IOException | InterruptedException e) {
-                e.printStackTrace();
+                System.out.format("  CONTENT: Waiting interrupted, stopping");
             }
         });
-    }
-
-    /**
-     * Makes content serching thread to wait if there are no files in
-     * queue to analyze, but the searching is still working.
-     *
-     * @throws InterruptedException if thread was interrupted while waiting.
-     */
-    private void searchContentsWaitIfNeeded() throws InterruptedException {
-        while (extensionSearcherWorking && this.files.isEmpty()) {
-            synchronized (this.files) {
-                System.out.println("  CONTENT: WAIT");
-                this.files.wait();
-            }
-        }
     }
 
     /**
@@ -149,10 +130,11 @@ class SearchText {
      *
      * @throws IOException if thread was interrupted while waiting.
      */
-    private void searchContentsAnalyzeNextFile() throws IOException {
+    private void analyzeNextFile() throws IOException, InterruptedException {
         System.out.format("  CONTENT: Looking for a file in queue. Queue size: %s%n", this.files.size());
-        Path file = this.files.poll();
+        Path file = this.files.poll(1000, TimeUnit.MILLISECONDS);
         if (file != null) {
+            System.out.format("  CONTENT: Analyzing file %s%n", file.getFileName());
             String content = new String(Files.readAllBytes(file));
             System.out.format("  CONTENT >>: File content: \"%s\"%n", content);
             if (content.contains(this.text)) {
@@ -161,19 +143,6 @@ class SearchText {
             } else {
                 System.out.format("  CONTENT >>: Not found \"%s\" in file, skipping%n", this.text);
             }
-        }
-    }
-
-    /**
-     * Wastes some time to make sure other threads will also work.
-     *
-     * @param timeInMillis time to waste.
-     */
-    private void wasteTime(long timeInMillis) {
-        try {
-            Thread.sleep(timeInMillis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         }
     }
 
@@ -204,12 +173,8 @@ class SearchText {
         @Override
         public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) {
             System.out.format("EXTS: Visiting file: %s%n", file.toAbsolutePath().toString());
-            wasteTime(1000);
-            if (this.hasNeededExtension(file)) {
-                synchronized (files) {
-                    files.offer(file);
-                    files.notify();
-                }
+            if (this.hasNeededExtension(file, extensions)) {
+                files.offer(file);
             }
             return FileVisitResult.CONTINUE;
         }
@@ -220,7 +185,7 @@ class SearchText {
          * @param file file to check.
          * @return <tt>true</tt> if extension is one of needed, <tt>false</tt> if not.
          */
-        private boolean hasNeededExtension(Path file) {
+        private boolean hasNeededExtension(Path file, List<String> extensions) {
             boolean result = false;
             for (String ext : extensions) {
                 if (file.getFileName().toString().endsWith(String.format(".%s", ext))) {
