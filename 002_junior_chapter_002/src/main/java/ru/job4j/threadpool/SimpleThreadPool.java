@@ -6,10 +6,6 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 class SimpleThreadPool {
-//    /**
-//     * Flag showing if this SimpleThreadPool is running or not.
-//     */
-//    private volatile boolean isRunning;
     /**
      * Array of working threads. Array size is determined
      * by number of available processors.
