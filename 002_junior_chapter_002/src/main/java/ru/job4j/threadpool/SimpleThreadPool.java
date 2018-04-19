@@ -5,6 +5,7 @@ import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+@SuppressWarnings("Duplicates")
 class SimpleThreadPool {
     /**
      * Flag showing that Thread Pool is active.
@@ -38,7 +39,7 @@ class SimpleThreadPool {
      */
     void add(Work work) throws InterruptedException {
         this.works.put(work);
-        System.out.format("-- Pool: added new %s, queue size now: %s.%n", work.getName(), this.works.size());
+//        System.out.format("-- Pool: added new %s, queue size now: %s.%n", work.getName(), this.works.size());
     }
 
     /**
@@ -76,7 +77,7 @@ class SimpleThreadPool {
         @Override
         public void run() {
             try {
-                while (isWorking) {
+                while (!Thread.currentThread().isInterrupted()) {
                     this.tryDoNextWork(works);
                 }
             } catch (InterruptedException e) {

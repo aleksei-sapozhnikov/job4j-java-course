@@ -9,16 +9,16 @@ public class SimpleThreadPoolTest {
     public void whenGivenWorksThenWorksAreDone() {
         SimpleThreadPool pool = new SimpleThreadPool();
         // setting works
-        Work[] works = new Work[100];
+        Work[] works = new Work[1000];
         for (int i = 0; i < works.length; i++) {
             int finalI = i;
             works[i] = new Work() {
                 @Override
                 public void doWork() {
-                    try {
-                        Thread.sleep(6000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
+                    long start = System.currentTimeMillis();
+                    int count = 0;
+                    while (System.currentTimeMillis() - start < 1000) {
+                        count++;
                     }
                 }
 
@@ -38,19 +38,17 @@ public class SimpleThreadPoolTest {
                 }
             };
         }
-        // starting pool, adding works
-        pool.start();
+        // processing
         try {
+            pool.start();               // start
             for (Work work : works) {
-                Thread.sleep(150);
                 pool.add(work);
             }
-            // wait
-            Thread.sleep(1000);
+            Thread.sleep(2000);         //wait
+            pool.stop();                // stop
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // stop
-        pool.stop();
+
     }
 }
