@@ -7,6 +7,11 @@ import static org.junit.Assert.assertThat;
 
 public class Logic3TTest {
 
+    @Test(expected = RuntimeException.class)
+    public void whenCoordinatesOfDiagonalWrongThenThrowsException() {
+        new Logic3T(new Figure3T[0][0]).isDiagonalFilled(0, 0, 4, 5, true);
+    }
+
     @Test
     public void whenXWinnerThenFindsIt() {
         // horizontal

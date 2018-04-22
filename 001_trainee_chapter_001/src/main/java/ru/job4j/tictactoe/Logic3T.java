@@ -44,7 +44,10 @@ public class Logic3T {
         return result;
     }
 
-    private boolean isDiagonalFilled(int xStart, int yStart, int xEnd, int yEnd, boolean hasMarkX) {
+    boolean isDiagonalFilled(int xStart, int yStart, int xEnd, int yEnd, boolean hasMarkX) {
+        if (Math.abs(xStart - xEnd) != Math.abs(yStart - yEnd)) {
+            throw new RuntimeException("No diagonal by given coordinates");
+        }
         boolean result = true;
         boolean downRight = xEnd > xStart;
         int x = xStart;
