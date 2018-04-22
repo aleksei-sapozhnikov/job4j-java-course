@@ -18,8 +18,8 @@ import javafx.stage.Stage;
 
 public class TicTacToe extends Application {
     private static final String JOB4J = "Крестики-нолики www.job4j.ru";
-    private final int FIELD_SIZE = 3;
-    private final Figure3T[][] cells = new Figure3T[FIELD_SIZE][FIELD_SIZE];
+    private final int size = 3;
+    private final Figure3T[][] cells = new Figure3T[size][size];
     private final Logic3T logic = new Logic3T(cells);
 
     private Figure3T buildRectangle(int x, int y, int size) {
@@ -104,8 +104,8 @@ public class TicTacToe extends Application {
 
     private Group buildGrid() {
         Group panel = new Group();
-        for (int y = 0; y != this.FIELD_SIZE; y++) {
-            for (int x = 0; x != this.FIELD_SIZE; x++) {
+        for (int y = 0; y != this.size; y++) {
+            for (int x = 0; x != this.size; x++) {
                 Figure3T rect = this.buildRectangle(x, y, 50);
                 this.cells[y][x] = rect;
                 panel.getChildren().add(rect);
