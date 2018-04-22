@@ -36,8 +36,10 @@ public class SimpleModelTest {
         SimpleModel equal = new SimpleModel(11, "left");
         SimpleModel sameId = new SimpleModel(11, "right");
         SimpleModel otherId = new SimpleModel(22, "left");
-        // cover trivial
+        String otherClass = "Simple model";
+        // trivial things
         assertThat(model.equals(model), is(true));
+        assertThat(model.equals(otherClass), is(false));
         assertThat(model.equals(null), is(false));
         // only id matters
         assertThat(model.equals(equal), is(true));
