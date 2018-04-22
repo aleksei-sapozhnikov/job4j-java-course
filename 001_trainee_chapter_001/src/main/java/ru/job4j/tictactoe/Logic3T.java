@@ -15,16 +15,16 @@ public class Logic3T {
         return this.checkWinner(false);
     }
 
-    private boolean checkWinner(boolean markX) {
+    private boolean checkWinner(boolean hasMarkX) {
         boolean result = false;
         for (int i = 0; !result && i < table.length; i++) {
-            result = this.isLineFilled(i, 0, table.length - 1, true, markX);
+            result = this.isLineFilled(i, 0, table.length - 1, true, hasMarkX);
         }
         for (int i = 0; !result && i < table[0].length; i++) {
-            result = this.isLineFilled(0, i, table.length - 1, false, markX);
+            result = this.isLineFilled(0, i, table.length - 1, false, hasMarkX);
         }
-        result = result || this.isDiagonalFilled(0, 0, table.length - 1, table.length - 1, markX);
-        result = result || this.isDiagonalFilled(table.length - 1, 0, 0, table.length - 1, markX);
+        result = result || this.isDiagonalFilled(0, 0, table.length - 1, table.length - 1, hasMarkX);
+        result = result || this.isDiagonalFilled(table.length - 1, 0, 0, table.length - 1, hasMarkX);
         return result;
     }
 
