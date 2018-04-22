@@ -18,21 +18,21 @@ public class Logic3T {
     private boolean checkWinner(boolean markX) {
         boolean result = false;
         for (int i = 0; !result && i < table.length; i++) {
-            result = this.isLineFilled(i, 0, table.length - 1, table.length - 1, true, markX);
+            result = this.isLineFilled(i, 0, table.length - 1, true, markX);
         }
         for (int i = 0; !result && i < table[0].length; i++) {
-            result = this.isLineFilled(0, i, table.length - 1, table.length - 1, false, markX);
+            result = this.isLineFilled(0, i, table.length - 1, false, markX);
         }
         result = result || this.isDiagonalFilled(0, 0, table.length - 1, table.length - 1, markX);
         result = result || this.isDiagonalFilled(table.length - 1, 0, 0, table.length - 1, markX);
         return result;
     }
 
-    private boolean isLineFilled(int xStart, int yStart, int xEnd, int yEnd, boolean horizontal, boolean hasMarkX) {
+    private boolean isLineFilled(int xStart, int yStart, int end, boolean horizontal, boolean hasMarkX) {
         boolean result = true;
         int x = xStart;
         int y = yStart;
-        while (horizontal ? y <= yEnd : x <= xEnd) {
+        while (horizontal ? y <= end : x <= end) {
             boolean condition = hasMarkX ? table[x][y].hasMarkX() : table[x][y].hasMarkO();
             if (!condition) {
                 result = false;
