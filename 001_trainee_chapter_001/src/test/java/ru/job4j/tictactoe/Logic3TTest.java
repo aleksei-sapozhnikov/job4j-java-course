@@ -9,7 +9,7 @@ public class Logic3TTest {
 
     @Test(expected = RuntimeException.class)
     public void whenCoordinatesOfDiagonalWrongThenThrowsException() {
-        new Logic3T(new Figure3T[0][0]).isDiagonalFilled(0, 0, 4, 5, true);
+        new Logic3T(new Figure3T[0][0]).isDiagonal(0, 0, 4, 5, true);
     }
 
     @Test
