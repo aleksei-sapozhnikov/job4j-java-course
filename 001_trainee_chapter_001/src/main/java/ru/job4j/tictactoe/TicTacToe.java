@@ -16,12 +16,39 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.stage.Stage;
 
+/**
+ * Initialization and play part of tic-tac-toe game.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 22.04.2018
+ */
 public class TicTacToe extends Application {
-    private static final String JOB4J = "Крестики-нолики www.job4j.ru";
+    /**
+     * Window header.
+     */
+    private static final String HEADER = "Крестики-нолики www.job4j.ru";
+    /**
+     * Field length and width (in cells).
+     */
     private final int size = 3;
+    /**
+     * Playing table of cells.
+     */
     private final Figure3T[][] cells = new Figure3T[size][size];
+    /**
+     * Logical operations performer.
+     */
     private final Logic3T logic = new Logic3T(cells);
 
+    /**
+     * Returns empty cell (without mark).
+     *
+     * @param x    x coordinate of the upper-left corner of the cell.
+     * @param y    y coordinate of the upper-left corner of the cell.
+     * @param size size of cell.
+     * @return new cell of defined place and size.
+     */
     private Figure3T buildRectangle(int x, int y, int size) {
         Figure3T rect = new Figure3T();
         rect.setX(x * size);
@@ -33,6 +60,14 @@ public class TicTacToe extends Application {
         return rect;
     }
 
+    /**
+     * Returns cell with "O" mark.
+     *
+     * @param x    x coordinate of the upper-left corner of the cell.
+     * @param y    y coordinate of the upper-left corner of the cell.
+     * @param size size of cell.
+     * @return new cell of defined place and size and marked with "O".
+     */
     private Group buildMarkO(double x, double y, int size) {
         Group group = new Group();
         int radius = size / 2;
@@ -43,30 +78,14 @@ public class TicTacToe extends Application {
         return group;
     }
 
-    private void showAlert(String message) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
-        alert.setTitle(JOB4J);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
-
-    private boolean checkState() {
-        boolean gap = this.logic.hasGap();
-        if (!gap) {
-            this.showAlert("Все поля заполнены! Начните новую Игру!");
-        }
-        return gap;
-    }
-
-    private void checkWinner() {
-        if (this.logic.isWinnerX()) {
-            this.showAlert("Победили Крестики! Начните новую Игру!");
-        } else if (this.logic.isWinnerO()) {
-            this.showAlert("Победили Нолики! Начните новую Игру!");
-        }
-    }
-
+    /**
+     * Returns cell with "X" mark.
+     *
+     * @param x    x coordinate of the upper-left corner of the cell.
+     * @param y    y coordinate of the upper-left corner of the cell.
+     * @param size size of cell.
+     * @return new cell of defined place and size and marked with "X".
+     */
     private Group buildMarkX(double x, double y, int size) {
         Group group = new Group();
         group.getChildren().addAll(
@@ -82,17 +101,64 @@ public class TicTacToe extends Application {
         return group;
     }
 
+    /**
+     * Shows alert modal window with some message.
+     *
+     * @param message message to show.
+     */
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.WARNING);
+        alert.setTitle(HEADER);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    /**
+     * Checks if there still are empty cells and
+     * the game can continue. If not, shows message.
+     *
+     * @return <tt>true</tt> if game can be continued, <tt>false</tt> if not.
+     */
+    private boolean canContinue() {
+        boolean gap = this.logic.hasGap();
+        if (!gap) {
+            this.showAlert("Все поля заполнены! Начните новую Игру!");
+        }
+        return gap;
+    }
+
+    /**
+     * Check if someone ("X" or "O") won the game. If found
+     * winner, shows message.
+     */
+    private void checkWinner() {
+        if (this.logic.isWinnerX()) {
+            this.showAlert("Победили Крестики! Начните новую Игру!");
+        } else if (this.logic.isWinnerO()) {
+            this.showAlert("Победили Нолики! Начните новую Игру!");
+        }
+    }
+
+    /**
+     * Returns new handler on mouse button click: sets "X"
+     * on left click, sets "O" on right click.
+     *
+     * @param panel grid of cells where mouse clicks are used.
+     * @return new mouse clicks handler: sets "X"
+     * on left click, sets "O" on right click.
+     */
     private EventHandler<MouseEvent> buildMouseEvent(Group panel) {
         return event -> {
             Figure3T rect = (Figure3T) event.getTarget();
-            if (this.checkState()) {
+            if (this.canContinue()) {
                 if (event.getButton() == MouseButton.PRIMARY) {
-                    rect.take(true);
+                    rect.setMark(true);
                     panel.getChildren().add(
                             this.buildMarkX(rect.getX(), rect.getY(), 50)
                     );
                 } else {
-                    rect.take(false);
+                    rect.setMark(false);
                     panel.getChildren().add(
                             this.buildMarkO(rect.getX(), rect.getY(), 50)
                     );
@@ -102,6 +168,12 @@ public class TicTacToe extends Application {
         };
     }
 
+    /**
+     * Returns grid of cells working with
+     * mouse buttons clicks.
+     *
+     * @return grid of active cells.
+     */
     private Group buildGrid() {
         Group panel = new Group();
         for (int y = 0; y != this.size; y++) {
@@ -115,7 +187,11 @@ public class TicTacToe extends Application {
         return panel;
     }
 
-
+    /**
+     * Initializes and runs the program.
+     *
+     * @param stage program window.
+     */
     @Override
     public void start(Stage stage) {
         BorderPane border = new BorderPane();
@@ -131,7 +207,7 @@ public class TicTacToe extends Application {
         border.setBottom(control);
         border.setCenter(this.buildGrid());
         stage.setScene(new Scene(border, 300, 300));
-        stage.setTitle(JOB4J);
+        stage.setTitle(HEADER);
         stage.setResizable(false);
         stage.show();
     }
