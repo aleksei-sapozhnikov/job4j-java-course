@@ -19,6 +19,7 @@
         <module>001_trainee_chapter_003</module>
         <module>002_junior_chapter_001</module>
         <module>002_junior_chapter_002</module>
+        <module>examples</module>
     </modules>
 
     <dependencies>

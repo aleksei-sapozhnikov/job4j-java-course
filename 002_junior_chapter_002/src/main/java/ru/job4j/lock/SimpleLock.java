@@ -40,7 +40,9 @@ public class SimpleLock {
      * Unlocks this lock.
      */
     public void unlock() {
-        this.exclusiveOwnerThread = null;
+        if (Thread.currentThread() != this.exclusiveOwnerThread) {
+            throw new IllegalMonitorStateException("Not a lock owner thread tried to unlock lock.");
+        }
         synchronized (this.lock) {
             this.exclusiveOwnerThread = null;
             System.out.format("%s: LOCK RELEASED!%n", Thread.currentThread().getName());

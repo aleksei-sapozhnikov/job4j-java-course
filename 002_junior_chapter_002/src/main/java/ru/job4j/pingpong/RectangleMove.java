@@ -69,7 +69,7 @@ public class RectangleMove implements Runnable {
     }
 
     /**
-     * Calculates how to move rectabgle and gives it new coordinates.
+     * Calculates how to move rectangle and gives it new coordinates.
      * Then makes a small pause.
      *
      * @throws InterruptedException if thread was interrupted while waiting.
