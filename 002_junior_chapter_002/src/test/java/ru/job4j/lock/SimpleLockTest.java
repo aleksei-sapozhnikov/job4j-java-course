@@ -2,6 +2,9 @@ package ru.job4j.lock;
 
 import org.junit.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
 /**
  * Tests for SimpleLock class.
  *
@@ -33,6 +36,37 @@ public class SimpleLockTest {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    public void whenOtherThreadTriesUnlockThenException() throws InterruptedException {
+        boolean[] wasException = {false};
+        SimpleLock lock = new SimpleLock();
+        Thread locker = new Thread(() -> {
+            try {
+                lock.lock();
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        Thread unlocker = new Thread(() -> {
+            try {
+                Thread.sleep(2500);
+                System.out.format("%s: TRYING UNLOCK%n", Thread.currentThread().getName());
+                lock.unlock();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (IllegalMonitorStateException e) {
+                System.out.format("%s: caught %s%n", Thread.currentThread().getName(), e.getClass().getName());
+                wasException[0] = true;
+            }
+        });
+        locker.start();
+        unlocker.start();
+        locker.join();
+        unlocker.join();
+        assertThat(wasException[0], is(true));
     }
 
     /**
@@ -70,5 +104,4 @@ public class SimpleLockTest {
             }
         }
     }
-
 }
