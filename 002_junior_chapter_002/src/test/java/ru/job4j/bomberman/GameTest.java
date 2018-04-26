@@ -6,7 +6,7 @@ public class GameTest {
 
     @Test
     public void runSomethingPlease() throws InterruptedException {
-        Board board = new Board(3, 3);
+        Board board = new Board(5, 5);
         Game game = new Game();
         game.add(new Personage(board, 1, "Player", 0, 0));
         game.add(new Personage(board, 2, "Monster_1", 2, 0));

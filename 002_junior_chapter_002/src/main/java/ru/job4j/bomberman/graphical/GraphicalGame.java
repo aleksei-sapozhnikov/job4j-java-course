@@ -12,11 +12,11 @@ import ru.job4j.bomberman.Personage;
 
 import java.util.Random;
 
-public class Graphics extends Application {
+public class GraphicalGame extends Application {
     private static final String HEADER = "Бомбермен www.job4j.ru";
     private final int width = 5;
-    private final int height = 1;
-    private final int nMonsters = 1;
+    private final int height = 5;
+    private final int nMonsters = 3;
     private final int cellSize = 100;
     private final GraphicalCell[][] cells = new GraphicalCell[width][height];
 
@@ -52,9 +52,15 @@ public class Graphics extends Application {
         Rectangle player = new Rectangle(50, 100, 40, 40);
         player.setFill(Color.BLACK);
         group.getChildren().add(player);
-        Thread runPlayer = new Thread(new RunGraphicalPersonage(new GraphicalPersonage(
-                new Personage(board, 0, "Player", random.nextInt(this.width), random.nextInt(this.height)), player, this.cells, this.cellSize
-        )));
+        int playerX = random.nextInt(this.width);
+        int playerY = random.nextInt(this.height);
+        GraphicalPersonage gPlayer = new GraphicalPersonage(
+                board,
+                new Personage(board, 0, "Player", playerX, playerY),
+                player, this.cells, this.cellSize
+        );
+        gPlayer.graphicTo(playerX, playerY);
+        Thread runPlayer = new Thread(new RunGraphicalPersonage(gPlayer));
 //         rectangles for monsters
         Rectangle[] monsters = new Rectangle[nMonsters];
         for (int i = 0; i < monsters.length; i++) {
@@ -62,13 +68,22 @@ public class Graphics extends Application {
             monsters[i].setFill(new Color(random.nextDouble(), random.nextDouble(), random.nextDouble(), 1));
             group.getChildren().add(monsters[i]);
         }
+        // make monster GraphicalPersonages and move rectangles to their places
+        GraphicalPersonage[] gMonsters = new GraphicalPersonage[nMonsters];
+        for (int i = 0; i < gMonsters.length; i++) {
+            int randX = random.nextInt(this.width);
+            int randY = random.nextInt(this.height);
+            gMonsters[i] = new GraphicalPersonage(
+                    board,
+                    new Personage(board, i + 1, String.format("Monster_%s", (i + 1)), randX, randY),
+                    monsters[i], this.cells, this.cellSize
+            );
+            gMonsters[i].graphicTo(randX, randY);
+        }
         // add monsters threads
         Thread[] runsMonsters = new Thread[nMonsters];
         for (int i = 0; i < runsMonsters.length; i++) {
-            runsMonsters[i] = new Thread(new RunGraphicalPersonage(new GraphicalPersonage(
-                    new Personage(board, i + 1, String.format("Monster_%s", (i + 1)), random.nextInt(this.width), random.nextInt(this.height)),
-                    monsters[i], this.cells, this.cellSize
-            )));
+            runsMonsters[i] = new Thread(new RunGraphicalPersonage(gMonsters[i]));
         }
         // set scene
         stage.setScene(new Scene(group, 600, 600));

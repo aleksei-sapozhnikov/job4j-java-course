@@ -21,25 +21,26 @@ public class Board {
         this.height = height;
     }
 
+    public boolean inBoard(int x, int y) {
+        return x >= 0 && x < this.width
+                && y >= 0 && y < this.height;
+    }
+
     public boolean tryLock(int x, int y) throws InterruptedException {
-        return this.isInBoard(x, y)
+        return this.inBoard(x, y)
                 && this.cells[x][y].tryLock(500, MILLISECONDS);
     }
 
     public void lock(int x, int y) throws WrongCoordinatesException {
-        if (!this.isInBoard(x, y)) {
+        if (!this.inBoard(x, y)) {
             throw new WrongCoordinatesException("Cannot lock cell - wrong coordinates.");
         }
         this.cells[x][y].lock();
     }
 
-    public boolean isInBoard(int x, int y) {
-        return x >= 0 && x < this.width
-                && y >= 0 && y < this.height;
-    }
 
     public void unlock(int x, int y) {
-        if (this.isInBoard(x, y)) {
+        if (this.inBoard(x, y)) {
             this.cells[x][y].unlock();
         }
     }

@@ -8,37 +8,26 @@ import java.util.Random;
 public class RunGraphicalPersonage implements Runnable {
     private final Direction[] directions = Direction.values();
     private final Random random;
-    private GraphicalPersonage personage;
+    private GraphicalPersonage gPersonage;
     private boolean working = true;
 
-    public RunGraphicalPersonage(GraphicalPersonage personage) {
-        this.personage = personage;
+    public RunGraphicalPersonage(GraphicalPersonage gPersonage) {
+        this.gPersonage = gPersonage;
         this.random = new Random();
     }
 
     @Override
     public void run() {
         try {
-            this.personage.init();
+            this.gPersonage.place();
             while (working && !Thread.currentThread().isInterrupted()) {
-                this.nextMove();
+                Thread.sleep(1000);
+                this.gPersonage = this.gPersonage.nextMove();
             }
         } catch (InterruptedException | WrongCoordinatesException e) {
             this.working = false;
         } finally {
             this.working = false;
         }
-    }
-
-    private void nextMove() throws InterruptedException, WrongCoordinatesException {
-        Thread.sleep(500);
-        GraphicalPersonage after;
-        Direction direction;
-        do {
-            int i = random.nextInt(this.directions.length);
-            direction = this.directions[i];
-            after = this.personage.move(direction);
-        } while (after == this.personage);
-        this.personage = after;
     }
 }

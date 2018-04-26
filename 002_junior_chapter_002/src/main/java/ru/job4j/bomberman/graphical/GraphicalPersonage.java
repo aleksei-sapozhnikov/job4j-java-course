@@ -1,49 +1,51 @@
 package ru.job4j.bomberman.graphical;
 
 import javafx.scene.shape.Rectangle;
+import ru.job4j.bomberman.Board;
 import ru.job4j.bomberman.Direction;
 import ru.job4j.bomberman.Personage;
 import ru.job4j.bomberman.WrongCoordinatesException;
 
 public class GraphicalPersonage {
+    private final Board board;
     private final Personage personage;
     private final Rectangle rectangle;
     private final GraphicalCell[][] cells;
     private final int cellSize;
 
-    public GraphicalPersonage(Personage personage, Rectangle rectangle, GraphicalCell[][] cells, int cellSize) {
+    public GraphicalPersonage(Board board, Personage personage, Rectangle rectangle, GraphicalCell[][] cells, int cellSize) {
+        this.board = board;
         this.personage = personage;
         this.rectangle = rectangle;
         this.cells = cells;
         this.cellSize = cellSize;
     }
 
-    public void init() throws WrongCoordinatesException {
-        this.personage.init();
-        this.moveTo(this.personage.x(), this.personage.y());
+    public void place() throws WrongCoordinatesException {
+        this.personage.place();
+        this.graphicTo(this.personage.x(), this.personage.y());
     }
 
-    public GraphicalPersonage move(Direction direction) throws InterruptedException, WrongCoordinatesException {
+    public GraphicalPersonage nextMove() throws InterruptedException, WrongCoordinatesException {
+        boolean moved = false;
         try {
-            this.personage.getBoard().lock(this.personage.x(), this.personage.y());
-            GraphicalPersonage result = this;
-            Personage moved = this.personage.move(direction);
-            if (moved != this.personage) {
-                result = new GraphicalPersonage(moved, this.rectangle, this.cells, this.cellSize);
-                this.moveTo(moved.x(), moved.y());
-            }
+            this.board.lock(this.personage.x(), this.personage.y());
+            Personage after = this.personage.nextMove(Direction.values());
+            GraphicalPersonage result = new GraphicalPersonage(this.board, after, this.rectangle, this.cells, this.cellSize);
+            this.graphicTo(after.x(), after.y());
+            moved = true;
             return result;
         } finally {
-            this.personage.getBoard().unlock(this.personage.x(), this.personage.y());
+            if (moved) {
+                this.board.unlock(this.personage.x(), this.personage.y());
+            }
         }
-
     }
 
-    public void moveTo(int x, int y) {
+    public void graphicTo(int x, int y) {
         double toX = this.cells[x][y].x() + (this.cellSize - this.rectangle.getWidth()) / 2;
         double toY = this.cells[x][y].y() + (this.cellSize - this.rectangle.getHeight()) / 2;
         this.rectangle.setX(toX);
         this.rectangle.setY(toY);
     }
-
 }

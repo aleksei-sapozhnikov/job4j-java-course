@@ -1,5 +1,7 @@
 package ru.job4j.bomberman;
 
+import java.util.Random;
+
 import static ru.job4j.bomberman.Direction.*;
 
 public class Personage {
@@ -33,31 +35,44 @@ public class Personage {
         return this.y;
     }
 
-    public Board getBoard() {
-        return board;
-    }
-
-    public void init() throws WrongCoordinatesException {
+    public void place() throws WrongCoordinatesException {
         this.board.lock(this.x, this.y);
-        System.out.format("    %s appeared on board (%s, %s).%n", this.name, this.x, this.y);
+        System.out.format("+ %s on board (%s, %s)%n", this.name, this.x, this.y);
     }
 
-    public Personage move(Direction direction) throws InterruptedException {
+    public Personage nextMove(Direction[] possible) throws InterruptedException {
+        boolean moved = false;
+        Personage after = this;
+        Direction direction = null;
+        try {
+            Random random = new Random();
+            while (after == this) {
+                direction = possible[random.nextInt(possible.length)];
+                after = this.tryMove(direction);
+            }
+            moved = true;
+            return after;
+        } finally {
+            if (moved) {
+                System.out.format("%s moved %s: (%s, %s) --> (%s, %s)%n", this.name, direction, this.x, this.y, after.x, after.y);
+                System.out.flush();
+                this.board.unlock(this.x, this.y);
+            }
+        }
+    }
+
+    public Personage tryMove(Direction direction) throws InterruptedException {
         Personage result = this;
         int nextX = this.nextX(direction);
         int nextY = this.nextY(direction);
         boolean acquired = this.board.tryLock(nextX, nextY);
         if (acquired) {
             result = new Personage(this.board, this.id, this.name, nextX, nextY);
-            System.out.format("%s moved %s: now on (%s, %s)%n", this.name(), direction.toString(), this.x(), this.y());
-            this.board.unlock(this.x, this.y);
-        } else {
-            System.out.format("        %s: direction %s (%s, %s) locked%n", this.name(), direction.toString(), nextX, nextY);
         }
         return result;
     }
 
-    int nextX(Direction direction) {
+    private int nextX(Direction direction) {
         int result;
         if (direction == UP || direction == DOWN) {
             result = this.x;
@@ -67,7 +82,7 @@ public class Personage {
         return result;
     }
 
-    int nextY(Direction direction) {
+    private int nextY(Direction direction) {
         int result;
         if (direction == LEFT || direction == RIGHT) {
             result = this.y;
