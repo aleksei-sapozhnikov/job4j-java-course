@@ -24,7 +24,10 @@ public class RunCharacter implements Runnable {
         } catch (InterruptedException e) {
             this.working = false;
         } catch (WrongCoordinatesException e) {
-            e.printStackTrace();
+            System.out.format("            %s: %s caught WrongCoordinatesException (%s, %s), stopping.%n",
+                    Thread.currentThread().getName(), this.character.name(), this.character.x(), this.character.y());
+        } finally {
+            this.working = false;
         }
     }
 

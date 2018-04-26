@@ -35,6 +35,7 @@ public class Character {
 
     public void init() throws WrongCoordinatesException {
         this.board.lock(this.x, this.y);
+        System.out.format("    %s appeared on board (%s, %s).%n", this.name, this.x, this.y);
     }
 
     public Character move(Direction direction) throws InterruptedException {
@@ -46,7 +47,7 @@ public class Character {
             result = new Character(this.board, this.id, this.name, nextX, nextY);
             this.board.unlock(this.x, this.y);
         } else {
-            System.out.format("      %s: direction %s (%s, %s) locked%n", this.name(), direction.toString(), nextX, nextY);
+            System.out.format("        %s: direction %s (%s, %s) locked%n", this.name(), direction.toString(), nextX, nextY);
         }
         return result;
     }
