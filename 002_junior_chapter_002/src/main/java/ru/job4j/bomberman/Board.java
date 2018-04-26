@@ -6,41 +6,41 @@ import java.util.concurrent.locks.ReentrantLock;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 
 public class Board {
-    private final Lock[][] board;
-    private final int xMax;
-    private final int yMax;
+    private final Lock[][] cells;
+    private final int width;
+    private final int height;
 
-    public Board(int xMax, int yMax) {
-        this.board = new ReentrantLock[xMax + 1][yMax + 1];
-        for (int x = 0; x < board.length; x++) {
-            for (int y = 0; y < board[0].length; y++) {
-                board[x][y] = new ReentrantLock();
+    public Board(int width, int height) {
+        this.cells = new ReentrantLock[width][height];
+        for (int x = 0; x < cells.length; x++) {
+            for (int y = 0; y < cells[0].length; y++) {
+                cells[x][y] = new ReentrantLock();
             }
         }
-        this.xMax = xMax;
-        this.yMax = yMax;
+        this.width = width;
+        this.height = height;
     }
 
     public boolean tryLock(int x, int y) throws InterruptedException {
         return this.isInBoard(x, y)
-                && this.board[x][y].tryLock(500, MILLISECONDS);
+                && this.cells[x][y].tryLock(500, MILLISECONDS);
     }
 
     public void lock(int x, int y) throws WrongCoordinatesException {
         if (!this.isInBoard(x, y)) {
             throw new WrongCoordinatesException("Cannot lock cell - wrong coordinates.");
         }
-        this.board[x][y].lock();
+        this.cells[x][y].lock();
     }
 
     public boolean isInBoard(int x, int y) {
-        return x >= 0 && x <= this.xMax
-                && y >= 0 && y <= this.yMax;
+        return x >= 0 && x < this.width
+                && y >= 0 && y < this.height;
     }
 
     public void unlock(int x, int y) {
         if (this.isInBoard(x, y)) {
-            this.board[x][y].unlock();
+            this.cells[x][y].unlock();
         }
     }
 }
