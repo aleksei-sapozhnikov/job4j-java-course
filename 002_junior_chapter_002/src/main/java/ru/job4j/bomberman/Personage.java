@@ -33,6 +33,10 @@ public class Personage {
         return this.y;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
     public void init() throws WrongCoordinatesException {
         this.board.lock(this.x, this.y);
         System.out.format("    %s appeared on board (%s, %s).%n", this.name, this.x, this.y);

@@ -30,8 +30,8 @@ public class RunGraphicalPersonage implements Runnable {
         }
     }
 
-    private void nextMove() throws InterruptedException {
-        Thread.sleep(750);
+    private void nextMove() throws InterruptedException, WrongCoordinatesException {
+        Thread.sleep(500);
         GraphicalPersonage after;
         Direction direction;
         do {

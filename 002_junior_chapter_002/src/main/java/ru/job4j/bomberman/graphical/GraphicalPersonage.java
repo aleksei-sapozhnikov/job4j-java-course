@@ -23,14 +23,20 @@ public class GraphicalPersonage {
         this.moveTo(this.personage.x(), this.personage.y());
     }
 
-    public GraphicalPersonage move(Direction direction) throws InterruptedException {
-        GraphicalPersonage result = this;
-        Personage moved = this.personage.move(direction);
-        if (moved != this.personage) {
-            result = new GraphicalPersonage(moved, this.rectangle, this.cells, this.cellSize);
-            this.moveTo(moved.x(), moved.y());
+    public GraphicalPersonage move(Direction direction) throws InterruptedException, WrongCoordinatesException {
+        try {
+            this.personage.getBoard().lock(this.personage.x(), this.personage.y());
+            GraphicalPersonage result = this;
+            Personage moved = this.personage.move(direction);
+            if (moved != this.personage) {
+                result = new GraphicalPersonage(moved, this.rectangle, this.cells, this.cellSize);
+                this.moveTo(moved.x(), moved.y());
+            }
+            return result;
+        } finally {
+            this.personage.getBoard().unlock(this.personage.x(), this.personage.y());
         }
-        return result;
+
     }
 
     public void moveTo(int x, int y) {

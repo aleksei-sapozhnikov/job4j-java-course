@@ -14,8 +14,9 @@ import java.util.Random;
 
 public class Graphics extends Application {
     private static final String HEADER = "Бомбермен www.job4j.ru";
-    private final int width = 6;
-    private final int height = 5;
+    private final int width = 5;
+    private final int height = 1;
+    private final int nMonsters = 1;
     private final int cellSize = 100;
     private final GraphicalCell[][] cells = new GraphicalCell[width][height];
 
@@ -41,7 +42,6 @@ public class Graphics extends Application {
     @Override
     public void start(Stage stage) {
         Board board = new Board(this.width, this.height);
-        int nMonsters = 10;
         Random random = new Random();
         // set grid
         Group group = new Group();
@@ -74,6 +74,8 @@ public class Graphics extends Application {
         stage.setScene(new Scene(group, 600, 600));
         stage.setTitle(HEADER);
         stage.setResizable(false);
+        // show everything
+        stage.show();
         // start everyone
         try {
             runPlayer.start();
@@ -85,8 +87,6 @@ public class Graphics extends Application {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        // show everything
-        stage.show();
         // on close
         stage.setOnCloseRequest(
                 event -> {
