@@ -6,11 +6,11 @@ import java.util.Map;
 public class Game {
     private final Map<Integer, Thread> characters = new HashMap<>();
 
-    public boolean add(Character character) {
-        boolean result = !this.characters.containsKey(character.id());
+    public boolean add(Personage personage) {
+        boolean result = !this.characters.containsKey(personage.id());
         if (result) {
-            Thread runner = new Thread(new RunCharacter(character));
-            this.characters.put(character.id(), runner);
+            Thread runner = new Thread(new RunPersonage(personage));
+            this.characters.put(personage.id(), runner);
         }
         return result;
     }

@@ -1,25 +1,27 @@
 package ru.job4j.bomberman.graphical;
 
 import javafx.scene.shape.Rectangle;
-import ru.job4j.bomberman.Character;
+import ru.job4j.bomberman.Personage;
 
 public class Mover implements Runnable {
-    private final Character character;
-    private final Rectangle rect;
-    private final GraphicCell[][] cells;
+    private final Personage personage;
+    private final Rectangle rectangle;
+    private final GraphicalCell[][] cells;
     private final int cellSize;
+    boolean working;
 
-    public Mover(Character character, Rectangle rect, GraphicCell[][] cells, int cellSize) {
-        this.character = character;
-        this.rect = rect;
+    public Mover(Personage personage, Rectangle rectangle, GraphicalCell[][] cells, int cellSize) {
+        this.personage = personage;
+        this.rectangle = rectangle;
         this.cells = cells;
         this.cellSize = cellSize;
+        this.working = true;
     }
 
     @Override
     public void run() {
         try {
-            while (!Thread.currentThread().isInterrupted()) {
+            while (working && !Thread.currentThread().isInterrupted()) {
                 for (int y = 0; y < this.cells[0].length; y++) {
                     for (int x = 0; x < this.cells.length; x++) {
                         this.moveTo(x, y);
@@ -28,14 +30,16 @@ public class Mover implements Runnable {
                 }
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            this.working = false;
+        } finally {
+            this.working = false;
         }
     }
 
     private void moveTo(int x, int y) {
-        double toX = this.cells[x][y].x() + (this.cellSize - this.rect.getWidth()) / 2;
-        double toY = this.cells[x][y].y() + (this.cellSize - this.rect.getHeight()) / 2;
-        this.rect.setX(toX);
-        this.rect.setY(toY);
+        double toX = this.cells[x][y].x() + (this.cellSize - this.rectangle.getWidth()) / 2;
+        double toY = this.cells[x][y].y() + (this.cellSize - this.rectangle.getHeight()) / 2;
+        this.rectangle.setX(toX);
+        this.rectangle.setY(toY);
     }
 }
