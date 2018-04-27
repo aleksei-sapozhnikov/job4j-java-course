@@ -42,6 +42,25 @@ public class GraphicalPersonage {
         }
     }
 
+    public GraphicalPersonage tryMove(Direction direction) throws InterruptedException, WrongCoordinatesException {
+        boolean moved = false;
+        GraphicalPersonage result = this;
+        try {
+            this.board.lock(this.personage.x(), this.personage.y());
+            Personage after = this.personage.tryMove(direction);
+            if (after != this.personage) {
+                result = new GraphicalPersonage(this.board, after, this.rectangle, this.cells, this.cellSize);
+            }
+            moved = true;
+            return result;
+        } finally {
+            if (moved) {
+                result.graphicTo(result.personage.x(), result.personage.y());
+                this.board.unlock(this.personage.x(), this.personage.y());
+            }
+        }
+    }
+
     public void graphicTo(int x, int y) {
         double toX = this.cells[x][y].x() + (this.cellSize - this.rectangle.getWidth()) / 2;
         double toY = this.cells[x][y].y() + (this.cellSize - this.rectangle.getHeight()) / 2;

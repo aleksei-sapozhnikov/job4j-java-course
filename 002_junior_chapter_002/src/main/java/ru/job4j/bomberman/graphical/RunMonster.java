@@ -1,19 +1,13 @@
 package ru.job4j.bomberman.graphical;
 
-import ru.job4j.bomberman.Direction;
 import ru.job4j.bomberman.WrongCoordinatesException;
 
-import java.util.Random;
-
-public class RunGraphicalPersonage implements Runnable {
-    private final Direction[] directions = Direction.values();
-    private final Random random;
+public class RunMonster implements Runnable {
     private GraphicalPersonage gPersonage;
     private boolean working = true;
 
-    public RunGraphicalPersonage(GraphicalPersonage gPersonage) {
+    public RunMonster(GraphicalPersonage gPersonage) {
         this.gPersonage = gPersonage;
-        this.random = new Random();
     }
 
     @Override
