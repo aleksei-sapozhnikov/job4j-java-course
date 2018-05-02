@@ -35,8 +35,6 @@ public class Game {
         boolean result = !this.blocks.containsKey(block.id());
         if (result) {
             this.blocks.put(block.id(), block);
-            System.out.format("> Block \"%s\" added (%s, %s)%n", block.name(), block.x(), block.y());
-            System.out.flush();
         }
         return result;
     }
@@ -49,8 +47,6 @@ public class Game {
     private void placeBlocks() throws WrongCoordinatesException {
         for (Personage block : this.blocks.values()) {
             block.place();
-            System.out.format("> Block \"%s\" placed (%s, %s)%n", block.name(), block.x(), block.y());
-            System.out.flush();
         }
     }
 
@@ -65,8 +61,6 @@ public class Game {
         if (result) {
             Thread runner = new Thread(new RunPersonageRandomMove(automatic));
             this.automatics.put(automatic.id(), runner);
-            System.out.format("+ Automatic \"%s\" added (%s, %s)%n", automatic.name(), automatic.x(), automatic.y());
-            System.out.flush();
         }
         return result;
     }
@@ -78,8 +72,6 @@ public class Game {
         for (Thread automatic : this.automatics.values()) {
             automatic.start();
         }
-        System.out.println("> Started all automatics");
-        System.out.flush();
     }
 
     /**

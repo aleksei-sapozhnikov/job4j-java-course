@@ -33,13 +33,14 @@ public class RunPersonageRandomMove implements Runnable {
     public void run() {
         try {
             this.personage.place();
-            System.out.format("> Automatic \"%s\" placed (%s, %s)%n", this.personage.name(), this.personage.x(), this.personage.y());
-            System.out.flush();
             while (working && !Thread.currentThread().isInterrupted()) {
-                Thread.sleep(500);
+                Thread.sleep(1000);
                 this.personage = this.personage.randomMove();
             }
-        } catch (InterruptedException | WrongCoordinatesException e) {
+        } catch (WrongCoordinatesException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            System.out.format("Thread %s: random-moving personage interrupted, stopping.%n", Thread.currentThread().getId());
             this.working = false;
         }
     }

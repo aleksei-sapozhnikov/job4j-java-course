@@ -108,23 +108,12 @@ public class Personage {
      * @throws WrongCoordinatesException if during unlock attempt personage coordinates do not point to a cell in board.
      */
     public Personage randomMove() throws InterruptedException, WrongCoordinatesException {
-        boolean moved = false;
-        Personage after = this;
-        Direction direction = null;
-        try {
-            do {
-                direction = this.directions[new Random().nextInt(this.directions.length)];
-                System.out.format("    %s TRIES to move %s (%s, %s)%n", this.name, direction, this.nextX(direction), this.nextY(direction));
-                after = this.tryMove(direction);
-            } while (after == this);
-            moved = true;
-            return after;
-        } finally {
-            if (moved) {
-                System.out.format("%s MOVED %s: (%s, %s) --> (%s, %s)%n", this.name, direction, this.x, this.y, after.x, after.y);
-                System.out.flush();
-            }
-        }
+        Personage after;
+        do {
+            Direction direction = this.directions[new Random().nextInt(this.directions.length)];
+            after = this.tryMove(direction);
+        } while (after == this);
+        return after;
     }
 
     /**
