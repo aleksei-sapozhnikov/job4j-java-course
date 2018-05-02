@@ -24,10 +24,53 @@ public class PersonageTest {
     }
 
     /**
+     * Test place()
+     */
+    @Test
+    public void whenPlacePersonageThenThisCellIsBlockedOthersFree() throws InterruptedException {
+        Board board = new Board(3, 3);
+        Personage personage = new Personage(board, 1, "aaa", 1, 1); // lock (1, 1)
+        int[] counter = {0};
+        // personage thread: places personage
+        new Thread(() -> {
+            try {
+                personage.place();
+                counter[0] = 1;
+                // give control to main thread
+                synchronized (this.sync) {
+                    this.sync.notify();
+                    while (counter[0] != 2) {
+                        this.sync.wait();
+                    }
+                }
+            } catch (WrongCoordinatesException | InterruptedException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        // main thread: wait for personage thread to place()
+        while (counter[0] != 1) {
+            synchronized (this.sync) {
+                sync.wait();
+            }
+        }
+        // main thread: now trying to block cells
+        assertThat(board.tryLock(1, 1), is(false));
+        // others free
+        assertThat(board.tryLock(0, 0), is(true));
+        assertThat(board.tryLock(1, 0), is(true));
+        assertThat(board.tryLock(2, 0), is(true));
+        assertThat(board.tryLock(0, 1), is(true));
+        assertThat(board.tryLock(2, 1), is(true));
+        assertThat(board.tryLock(2, 0), is(true));
+        assertThat(board.tryLock(2, 1), is(true));
+        assertThat(board.tryLock(2, 2), is(true));
+    }
+
+    /**
      * Test tryMove()
      */
     @Test
-    public void whenTryMoveToFreeCellThenPersonageWithNewCoordinatesAndUnlocksOldCell() throws InterruptedException {
+    public void whenTryMoveToFreeCellThenPersonageWithNewCoordinatesAndUnlocksOldCell() throws InterruptedException, WrongCoordinatesException {
         Board board = new Board(3, 3);
         // move RIGHT: (1,1) -> (2, 1)
         Personage personage = new Personage(board, 1, "John", 1, 1);
@@ -52,7 +95,7 @@ public class PersonageTest {
     }
 
     @Test
-    public void whenTryMoveToLockedCellThenThisPersonageObjectBack() throws InterruptedException {
+    public void whenTryMoveToLockedCellThenThisPersonageObjectBack() throws InterruptedException, WrongCoordinatesException {
         Board board = new Board(3, 3);
         int[] counter = {0};
         // blocker: thread to block cells
@@ -93,12 +136,53 @@ public class PersonageTest {
     }
 
     /**
-     * Test place()
+     * Test tryMove() and place() together
      */
     @Test
-    public void place() {
+    public void whenTryMoveToCellWithOtherPersonageThenFalseElseTrue() throws InterruptedException, WrongCoordinatesException {
+        Board board = new Board(4, 1);
+        Personage left = new Personage(board, 1, "our", 0, 0);
+        Personage right = new Personage(board, 1, "right", 1, 0);
+        int[] counter = {0};
+        // right mover - blocks cells
+        new Thread(() -> {
+            try {
+                synchronized (this.sync) {
+                    right.place();          // stays and blocks (1, 0)
+                    counter[0] = 1;
+                    this.sync.notify();
+                    while (counter[0] != 2) {       // now left will try to move to blocked (1, 0)
+                        this.sync.wait();
+                    }
+                    Personage aaa = right.tryMove(RIGHT); // right goes away, now (1, 0) is free
+                    counter[0] = 3;
+                    this.sync.notify();
+                    while (counter[0] != 4) {
+                        this.sync.wait();
+                    }
+                }
+            } catch (InterruptedException | WrongCoordinatesException e) {
+                e.printStackTrace();
+            }
+        }).start();
+        // left mover - tries to move
+        left.place();
+        synchronized (this.sync) {
+            while (counter[0] != 1) {       // wait for right to place()
+                this.sync.wait();
+            }
+            assertThat(left.tryMove(RIGHT) == left, is(true)); // tries to move, but (1, 0) is blocked by right
+            counter[0] = 2;
+            this.sync.notify();
+            while (counter[0] != 3) {       // wait for right to go away
+                this.sync.wait();
+            }
+            assertThat(left.tryMove(RIGHT).x(), is(1)); // now (1, 0) is free!
+        }
+
 
     }
+
 
     @Test
     public void randomMove() {

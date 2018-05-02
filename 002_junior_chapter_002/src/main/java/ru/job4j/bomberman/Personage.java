@@ -133,15 +133,18 @@ public class Personage {
      * or this (old) personage if move was not possible and coordinates didn't change.
      * @throws InterruptedException if was interrupted while tryLock operation in board.
      */
-    public Personage tryMove(Direction direction) throws InterruptedException {
-        Personage result = this;
-        int nextX = this.nextX(direction);
-        int nextY = this.nextY(direction);
-        boolean acquired = this.board.tryLock(nextX, nextY);
-        if (acquired) {
-            result = new Personage(this.board, this.id, this.name, nextX, nextY);
+    public Personage tryMove(Direction direction) throws InterruptedException, WrongCoordinatesException {
+        boolean acquired = false;
+        try {
+            int nextX = this.nextX(direction);
+            int nextY = this.nextY(direction);
+            acquired = this.board.tryLock(nextX, nextY);
+            return acquired ? new Personage(this.board, this.id, this.name, nextX, nextY) : this;
+        } finally {
+            if (acquired) {
+                this.board.unlock(this.x, this.y);
+            }
         }
-        return result;
     }
 
     /**
