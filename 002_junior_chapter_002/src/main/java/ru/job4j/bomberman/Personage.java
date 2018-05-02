@@ -33,6 +33,10 @@ public class Personage {
      * Personage "y" (vertical) coordinate (in board cells).
      */
     private final int y;
+    /**
+     * Possible directions to move using random move.
+     */
+    private final Direction[] directions = Direction.values();
 
     /**
      * Constructs new Personage.
@@ -99,18 +103,17 @@ public class Personage {
     /**
      * Makes random move attempts until move is variants. Makes this variants move.
      *
-     * @param variants all possible directions to make a move attempt in.
      * @return new Personage staying on new coordinates (after the move made).
      * @throws InterruptedException      if interrupted while trying to lock a destination cell.
      * @throws WrongCoordinatesException if during unlock attempt personage coordinates do not point to a cell in board.
      */
-    public Personage randomMove(Direction[] variants) throws InterruptedException, WrongCoordinatesException {
+    public Personage randomMove() throws InterruptedException, WrongCoordinatesException {
         boolean moved = false;
         Personage after = this;
         Direction direction = null;
         try {
             do {
-                direction = variants[new Random().nextInt(variants.length)];
+                direction = this.directions[new Random().nextInt(this.directions.length)];
                 System.out.format("    %s TRIES to move %s (%s, %s)%n", this.name, direction, this.nextX(direction), this.nextY(direction));
                 after = this.tryMove(direction);
             } while (after == this);
@@ -120,7 +123,6 @@ public class Personage {
             if (moved) {
                 System.out.format("%s MOVED %s: (%s, %s) --> (%s, %s)%n", this.name, direction, this.x, this.y, after.x, after.y);
                 System.out.flush();
-                this.board.unlock(this.x, this.y);
             }
         }
     }

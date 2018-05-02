@@ -15,7 +15,7 @@ public class GameTest {
         game.addAutomatic(new Personage(board, 2, "Monster_2", 1, 0));
         game.addAutomatic(new Personage(board, 3, "Monster_3", 2, 0));
         game.startGame();
-        Thread.sleep(120000);
+        Thread.sleep(6000);
         game.stopAutomatics();
     }
 }

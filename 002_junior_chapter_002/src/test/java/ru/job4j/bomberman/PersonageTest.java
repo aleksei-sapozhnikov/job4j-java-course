@@ -72,8 +72,9 @@ public class PersonageTest {
     @Test
     public void whenTryMoveToFreeCellThenPersonageWithNewCoordinatesAndUnlocksOldCell() throws InterruptedException, WrongCoordinatesException {
         Board board = new Board(3, 3);
-        // move RIGHT: (1,1) -> (2, 1)
         Personage personage = new Personage(board, 1, "John", 1, 1);
+        personage.place();
+        // move RIGHT: (1,1) -> (2, 1)
         Personage moved = personage.tryMove(RIGHT);
         assertThat(moved.x(), is(2));
         assertThat(moved.y(), is(1));
@@ -154,7 +155,7 @@ public class PersonageTest {
                     while (counter[0] != 2) {       // now left will try to move to blocked (1, 0)
                         this.sync.wait();
                     }
-                    Personage aaa = right.tryMove(RIGHT); // right goes away, now (1, 0) is free
+                    right.tryMove(RIGHT); // right goes away, now (1, 0) is free
                     counter[0] = 3;
                     this.sync.notify();
                     while (counter[0] != 4) {
@@ -179,13 +180,41 @@ public class PersonageTest {
             }
             assertThat(left.tryMove(RIGHT).x(), is(1)); // now (1, 0) is free!
         }
-
-
     }
 
+    /**
+     * Test randomMove()
+     */
+    @Test
+    public void whenRandomMoveOnlyRightLeftPossibleThenRightLeft() throws InterruptedException, WrongCoordinatesException {
+        Board board = new Board(2, 1);
+        Personage prisoner = new Personage(board, 1, "prisoner", 0, 0);
+        prisoner.place();
+        // only way - right
+        Personage moved = prisoner.randomMove();
+        assertThat(moved.x(), is(1));
+        assertThat(moved.y(), is(0));
+        //only way - left
+        prisoner = moved;
+        moved = prisoner.randomMove();
+        assertThat(moved.x(), is(0));
+        assertThat(moved.y(), is(0));
+    }
 
     @Test
-    public void randomMove() {
+    public void whenRandomMoveOnlyDownAndUpPossibleThenDownUp() throws InterruptedException, WrongCoordinatesException {
+        Board board = new Board(1, 2);
+        Personage prisoner = new Personage(board, 1, "prisoner", 0, 0);
+        prisoner.place();
+        // only way - down
+        Personage moved = prisoner.randomMove();
+        assertThat(moved.x(), is(0));
+        assertThat(moved.y(), is(1));
+        //only way - up
+        prisoner = moved;
+        moved = prisoner.randomMove();
+        assertThat(moved.x(), is(0));
+        assertThat(moved.y(), is(0));
     }
 
 

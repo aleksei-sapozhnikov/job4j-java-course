@@ -37,7 +37,7 @@ public class RunPersonageRandomMove implements Runnable {
             System.out.flush();
             while (working && !Thread.currentThread().isInterrupted()) {
                 Thread.sleep(500);
-                this.personage = this.personage.randomMove(Direction.values());
+                this.personage = this.personage.randomMove();
             }
         } catch (InterruptedException | WrongCoordinatesException e) {
             this.working = false;
