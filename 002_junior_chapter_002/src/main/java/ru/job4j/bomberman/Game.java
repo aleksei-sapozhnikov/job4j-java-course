@@ -20,7 +20,13 @@ public class Game {
      */
     private final Map<Integer, Thread> automatics = new HashMap<>();
 
-    public void startGame() throws WrongCoordinatesException {
+    /**
+     * Starts game.
+     *
+     * @throws WrongCoordinatesException if block or personage coordinates do not point to any cell inside the board.
+     * @throws InterruptedException      if interrupted while waiting for a cell to free.
+     */
+    public void startGame() throws WrongCoordinatesException, InterruptedException {
         this.placeBlocks();
         this.startAutomatics();
     }
@@ -43,10 +49,12 @@ public class Game {
      * Places all blocks (locks their cells on board).
      *
      * @throws WrongCoordinatesException if block coordinates do not point to any cell inside the board.
+     * @throws InterruptedException      if interrupted while waiting for a cell to free.
      */
-    private void placeBlocks() throws WrongCoordinatesException {
+    private void placeBlocks() throws WrongCoordinatesException, InterruptedException {
         for (Personage block : this.blocks.values()) {
             block.place();
+            System.out.format("+ %s placed to (%s, %s)%n", block.name(), block.x(), block.y());
         }
     }
 
@@ -59,7 +67,7 @@ public class Game {
     public boolean addAutomatic(Personage automatic) {
         boolean result = !this.automatics.containsKey(automatic.id());
         if (result) {
-            Thread runner = new Thread(new RunPersonageRandomMove(automatic));
+            Thread runner = new Thread(new RunAutomatic(automatic));
             this.automatics.put(automatic.id(), runner);
         }
         return result;

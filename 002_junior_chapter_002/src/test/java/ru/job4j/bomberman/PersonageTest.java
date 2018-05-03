@@ -7,8 +7,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static ru.job4j.bomberman.Direction.*;
 
+/**
+ * Tests for Personage class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 27.04.2018
+ */
 public class PersonageTest {
-
+    /**
+     * Object to synchronize threads in tests.
+     */
     private final Object sync = new Object();
 
     /**
@@ -102,10 +111,10 @@ public class PersonageTest {
         // blocker: thread to block cells
         new Thread(() -> {
             try {
-                board.lock(2, 1);   // RIGHT
-                board.lock(1, 2);   // DOWN
-                board.lock(0, 1);   // LEFT
-                board.lock(1, 0);   // UP
+                board.lockInterruptibly(2, 1);   // RIGHT
+                board.lockInterruptibly(1, 2);   // DOWN
+                board.lockInterruptibly(0, 1);   // LEFT
+                board.lockInterruptibly(1, 0);   // UP
                 counter[0] = 1;
                 // blocker: give control to main thread
                 synchronized (this.sync) {

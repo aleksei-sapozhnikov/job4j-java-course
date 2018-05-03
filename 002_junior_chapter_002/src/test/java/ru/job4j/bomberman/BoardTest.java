@@ -5,6 +5,13 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests for Board class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 27.04.2018
+ */
 public class BoardTest {
 
     /**
@@ -54,11 +61,11 @@ public class BoardTest {
      * Test lock()
      */
     @Test(expected = WrongCoordinatesException.class)
-    public void whenLockCellInBoardThenTrueElseException() throws WrongCoordinatesException {
+    public void whenLockCellInBoardThenTrueElseException() throws WrongCoordinatesException, InterruptedException {
         Board board = new Board(2, 2);
-        board.lock(0, 0);
-        board.lock(1, 1);
-        board.lock(2, 1); // out of board
+        board.lockInterruptibly(0, 0);
+        board.lockInterruptibly(1, 1);
+        board.lockInterruptibly(2, 1); // out of board
     }
 
     /**
@@ -70,7 +77,7 @@ public class BoardTest {
         new Thread(() -> {
             try {
                 board.tryLock(0, 0);
-                board.lock(0, 1);
+                board.lockInterruptibly(0, 1);
                 Thread.sleep(2000);
                 board.unlock(0, 0);
                 board.unlock(0, 1);

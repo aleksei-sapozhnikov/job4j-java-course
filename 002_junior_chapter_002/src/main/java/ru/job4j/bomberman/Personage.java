@@ -95,9 +95,11 @@ public class Personage {
      * Places this personage on board (locks his cell).
      *
      * @throws WrongCoordinatesException if personage coordinates do not point to a cell in board.
+     * @throws InterruptedException if interrupted while waiting for a cell to free.
      */
-    public void place() throws WrongCoordinatesException {
-        this.board.lock(this.x, this.y);
+    public void place() throws WrongCoordinatesException, InterruptedException {
+        this.board.lockInterruptibly(this.x, this.y);
+
     }
 
     /**

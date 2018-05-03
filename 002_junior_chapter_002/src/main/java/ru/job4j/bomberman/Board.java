@@ -77,11 +77,11 @@ public class Board {
      * @param y vertical coordinate ("height").
      * @throws WrongCoordinatesException if given coordinates do not point to any cell in the board.
      */
-    public void lock(int x, int y) throws WrongCoordinatesException {
+    public void lockInterruptibly(int x, int y) throws WrongCoordinatesException, InterruptedException {
         if (!this.inBoard(x, y)) {
             throw new WrongCoordinatesException("Cannot lock cell - wrong coordinates.");
         }
-        this.cells[x][y].lock();
+        this.cells[x][y].lockInterruptibly();
     }
 
     /**

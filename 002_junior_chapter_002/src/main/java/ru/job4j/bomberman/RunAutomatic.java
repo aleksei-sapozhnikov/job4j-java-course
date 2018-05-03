@@ -7,7 +7,7 @@ package ru.job4j.bomberman;
  * @version $Id$
  * @since 26.04.2018
  */
-public class RunPersonageRandomMove implements Runnable {
+public class RunAutomatic implements Runnable {
     /**
      * Moving personage.
      */
@@ -22,7 +22,7 @@ public class RunPersonageRandomMove implements Runnable {
      *
      * @param personage personage to take control of.
      */
-    public RunPersonageRandomMove(Personage personage) {
+    public RunAutomatic(Personage personage) {
         this.personage = personage;
     }
 
@@ -33,14 +33,17 @@ public class RunPersonageRandomMove implements Runnable {
     public void run() {
         try {
             this.personage.place();
+            System.out.format("+ %s placed to (%s, %s)%n", this.personage.name(), this.personage.x(), this.personage.y());
             while (working && !Thread.currentThread().isInterrupted()) {
                 Thread.sleep(1000);
                 this.personage = this.personage.randomMove();
+                System.out.format(">>> %s moved to (%s, %s)%n", this.personage.name(), this.personage.x(), this.personage.y());
+                System.out.flush();
             }
         } catch (WrongCoordinatesException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
-            System.out.format("Thread %s: random-moving personage interrupted, stopping.%n", Thread.currentThread().getId());
+            System.out.format("%s: thread interrupted, stopping.%n", this.personage.name());
             this.working = false;
         }
     }
