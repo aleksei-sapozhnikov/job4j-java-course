@@ -1,48 +1,45 @@
 package threadlocal;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 /**
- * Просто пробуем синтаксис такой штуки как ThreadLocal переменная.
+ * Мы создаем поле String counter - которое ThreadLocal.
+ * <p>
+ * Далее в методе main мы запускаем потоки, где обращаемся к этому counter и присваиваем ему значение.
+ * Однако, значение counter для каждого потока будет свое - поскольку ThreadLocal делает
+ * локальную копию переменной (и ее объекта) для каждого потока.
  */
 public class TryThreadLocal {
-    private ThreadLocal<SimpleDateFormat> dateFormat = ThreadLocal.withInitial(SimpleDateFormat::new);
-    private ThreadLocal<ConcurrentLinkedDeque<String>> queue = ThreadLocal.withInitial(ConcurrentLinkedDeque::new);
+    private CyclicBarrier barrier = new CyclicBarrier(3);
+    private ThreadLocal<String> counter = new ThreadLocal<>();
 
-    private Runnable forDate = () -> {
-        for (int i = 0; i < 10; i++) {
-            String s = this.dateFormat.get().format(new Date());
-            System.out.format("%s: %s%n", Thread.currentThread().getName(), s);
+    Runnable runner = () -> {
+        try {
+            counter.set(Thread.currentThread().getName());
+            System.out.println(Thread.currentThread().getName() + " waiting main");
+            System.out.flush();
+            barrier.await();
+            System.out.println(Thread.currentThread().getName() + " counter: " + counter.get());
+        } catch (InterruptedException | BrokenBarrierException e) {
+            e.printStackTrace();
         }
     };
 
-    private Runnable forQueue = () -> {
-        ConcurrentLinkedDeque<String> q = this.queue.get();
-        for (int i = 0; i < 10; i++) {
-            q.offer(Thread.currentThread().getName());
-        }
-        System.out.println(q);
-    };
-
-    public static void main(String[] args) throws InterruptedException {
-        TryThreadLocal ex = new TryThreadLocal();
-
-        System.out.println("=== Trying with SimpleDate (from Horstmann) ===");
-        new Thread(ex.forDate).start();
-        new Thread(ex.forDate).start();
-
-//        System.out.println();
-//        System.out.println("=== LOCAL QUEUE - the same object?");
-//        Thread a1 = new Thread(ex.forQueue);
-//        Thread a2 = new Thread(ex.forQueue);
-//        a1.start();
-//        a2.start();
-//        a1.join();
-//        a2.join();
-//        ConcurrentLinkedDeque h = ex.queue.get();
-//        System.out.print("Main: ");
-//        System.out.println(h);
+    public static void main(String[] args) throws InterruptedException, BrokenBarrierException {
+        TryThreadLocal tt = new TryThreadLocal();
+        Thread a1 = new Thread(tt.runner);
+        Thread a2 = new Thread(tt.runner);
+        a1.start();
+        a2.start();
+        System.out.println("Main: waiting threads");
+        System.out.flush();
+        tt.barrier.await();
+        System.out.println("Main: barrier passed");
+        System.out.flush();
+        a1.join();
+        a2.join();
     }
+
+
 }
