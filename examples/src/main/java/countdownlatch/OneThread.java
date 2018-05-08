@@ -7,10 +7,10 @@ import java.util.concurrent.CountDownLatch;
  */
 public class OneThread {
     public static void main(String[] args) throws InterruptedException {
-        int N = 5;
-        CountDownLatch latch = new CountDownLatch(N);
+        int nWorkers = 5;
+        CountDownLatch latch = new CountDownLatch(nWorkers);
         new Thread(() -> {
-            for (int i = 0; i < N; i++) {
+            for (int i = 0; i < nWorkers; i++) {
                 System.out.println("Worker: doing countdown, latch count left: " + latch.getCount());
                 latch.countDown();
             }

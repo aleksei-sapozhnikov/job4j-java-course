@@ -9,8 +9,8 @@ import java.util.concurrent.CyclicBarrier;
  */
 public class IfInterrupted {
     public static void main(String[] args) throws InterruptedException {
-        int N = 3;
-        CyclicBarrier barrier = new CyclicBarrier(N);
+        int nWorkers = 3;
+        CyclicBarrier barrier = new CyclicBarrier(nWorkers);
 
         class Worker extends Thread {
             private final String name;

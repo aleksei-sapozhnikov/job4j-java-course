@@ -5,8 +5,8 @@ import java.util.concurrent.CyclicBarrier;
 
 public class Cyclic {
     public static void main(String[] args) throws InterruptedException, BrokenBarrierException {
-        int N = 5; // number of workers
-        CyclicBarrier barrier = new CyclicBarrier(N + 1); // one more for main thread
+        int nWorkers = 5; // number of workers
+        CyclicBarrier barrier = new CyclicBarrier(nWorkers + 1); // one more for main thread
         // making workers
         Runnable worker = () -> {
             try {
@@ -25,7 +25,7 @@ public class Cyclic {
         // Run workers
         System.out.println(">>>>> Main thread: starting and waiting workers");
         System.out.flush();
-        for (int i = 0; i < N; i++) {
+        for (int i = 0; i < nWorkers; i++) {
             new Thread(worker).start();
         }
         // waiting workers

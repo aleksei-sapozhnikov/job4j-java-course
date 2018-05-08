@@ -21,18 +21,19 @@ public class Dispatcher {
 }
 
 class Driver {
-    private final int N;
+    private final int nWorkers;
 
-    public Driver(int N) {
-        this.N = N;
+    public Driver(int nWorkers) {
+        this.nWorkers = nWorkers;
     }
 
     void main() throws InterruptedException {
         CountDownLatch startSignal = new CountDownLatch(1);
-        CountDownLatch doneSignal = new CountDownLatch(N);
+        CountDownLatch doneSignal = new CountDownLatch(nWorkers);
         // create and start threads
-        for (int i = 0; i < N; ++i)
+        for (int i = 0; i < nWorkers; ++i) {
             new Thread(new Worker(startSignal, doneSignal)).start();
+        }
 
         System.out.println("Before countdown");         // don't let run yet
         startSignal.countDown();            // let all threads proceed

@@ -9,8 +9,8 @@ import java.util.concurrent.CountDownLatch;
  */
 public class IfInterrupted {
     public static void main(String[] args) throws InterruptedException {
-        int N = 1;
-        CountDownLatch latch = new CountDownLatch(N);
+        int nWorkers = 1;
+        CountDownLatch latch = new CountDownLatch(nWorkers);
 
         class Worker extends Thread {
             private final String name;
