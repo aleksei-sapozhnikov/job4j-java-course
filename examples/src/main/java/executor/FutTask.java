@@ -11,14 +11,29 @@ public class FutTask {
 
         Callable<String> task = () -> {
             try {
-                System.out.println("executing");
+                System.out.println("Task thread: " + Thread.currentThread().getName());
                 return "TASK RESULT";
             } finally {
                 futTask.flag.countDown();
             }
         };
         FutureTask<String> taskToUse = new FutureTask<>(task);
-        futTask.executor.execute(taskToUse);
+
+        System.out.println("Main thread: " + Thread.currentThread().getName());
+
+// Далее три варианта, как запустить taskToUse. Выбираем один, остальные комментируем.
+
+        // напрямую в том же потоке
+        taskToUse.run();
+
+        // через отдельный поток
+//        new Thread(taskToUse).start();
+
+        // через executor
+//        System.out.println();
+//        futTask.executor.execute(taskToUse);
+
+
         futTask.flag.await();
 
         System.out.println("Task is done? : " + taskToUse.isDone());
