@@ -13,11 +13,11 @@ public class Initialize {
     }
 
     static class A {
-        static final B b = new B();
+        static final B B = new B();
     }
 
     static class B {
-        static final A a = new A();
+        static final A A = new A();
     }
 
 }
