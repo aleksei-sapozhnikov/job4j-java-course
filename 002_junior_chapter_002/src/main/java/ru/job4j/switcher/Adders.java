@@ -1,5 +1,6 @@
 package ru.job4j.switcher;
 
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -51,7 +52,7 @@ public class Adders {
      * Flag which means tha now the first thread must work and append values to holder.
      * If <tt>false</tt> - means now the second thread should work.
      */
-    private volatile boolean addFirst = true;
+    private volatile AtomicBoolean addFirst = new AtomicBoolean(true);
 
     /**
      * Constructs new object with two threads which will append values.
@@ -104,7 +105,7 @@ public class Adders {
      * @throws InterruptedException if thread was interrupted while waiting.
      */
     private void waitIfNeeded(boolean toProceed) throws InterruptedException {
-        while (this.addFirst != toProceed) {
+        while (this.addFirst.get() != toProceed) {
             this.firstSecondSwitch.await();
         }
     }
@@ -135,7 +136,7 @@ public class Adders {
         if (!isFirstAdder) {
             this.cyclesLeft.decrementAndGet();
         }
-        this.addFirst = !this.addFirst;
+        this.addFirst.set(!this.addFirst.get());
         this.firstSecondSwitch.signal();
     }
 
