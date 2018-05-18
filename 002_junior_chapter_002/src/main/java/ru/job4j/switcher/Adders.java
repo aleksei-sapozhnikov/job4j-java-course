@@ -46,12 +46,12 @@ public class Adders {
     /**
      * Flag showing threads to continue or stop their work.
      */
-    private boolean working = true;
+    private volatile boolean working = true;
     /**
      * Flag which means tha now the first thread must work and append values to holder.
      * If <tt>false</tt> - means now the second thread should work.
      */
-    private boolean addFirst = true;
+    private volatile boolean addFirst = true;
 
     /**
      * Constructs new object with two threads which will append values.
