@@ -52,7 +52,7 @@ public class Adders {
      * Flag which means tha now the first thread must work and append values to holder.
      * If <tt>false</tt> - means now the second thread should work.
      */
-    private volatile AtomicBoolean addFirst = new AtomicBoolean(true);
+    private final AtomicBoolean addFirst = new AtomicBoolean(true);
 
     /**
      * Constructs new object with two threads which will append values.

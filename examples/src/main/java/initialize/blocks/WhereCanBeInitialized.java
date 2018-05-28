@@ -3,13 +3,13 @@ package initialize.blocks;
 public class WhereCanBeInitialized {
 
     // static
-    private final static int staticInDeclaration = 4;
-    private final static int staticInStaticBlock;
+    private final static int STATIC_IN_DECLARATION = 4;
+    private final static int STATIC_IN_STATIC_BLOCK;
     private static int staticNonFinalInDynamicBlock;
 
     // static block
     static {
-        staticInStaticBlock = 6;
+        STATIC_IN_STATIC_BLOCK = 6;
     }
 
     //non-static
