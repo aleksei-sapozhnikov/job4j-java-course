@@ -11,6 +11,7 @@ public class WhatBlocksCanBe {
         a = 0;
         // b = 2; // cannot be done
         if (a == 0) {
+            System.out.println("statement");
             // throw new RuntimeException(); // can be thrown and cause ExceptionInInitializerError
         }
     }
@@ -29,7 +30,7 @@ public class WhatBlocksCanBe {
 
     //constructor
     WhatBlocksCanBe() throws IOException {
-
+        System.out.println("statement");
     }
 
     public static void main(String[] args) throws IOException {
