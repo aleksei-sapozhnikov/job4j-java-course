@@ -1,9 +1,9 @@
 package ru.job4j.tracker;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.util.*;
 
 /**
  * Storage of items : tasks, messages, etc.
@@ -12,7 +12,29 @@ import java.util.Random;
  * @version $Id$
  * @since 19.01.2018
  */
-public class Tracker {
+public class Tracker implements AutoCloseable {
+    private static final String PROPERTIES_FILE = Paths.get("src", "main", "resources", "ru", "job4j", "tracker", "tracker.properties").toString();
+
+    // Tracker должен работать с базой данных:
+    // 0) подключаться к ней
+    // 1) создавать начальную структуру, если надо
+    // 2) добавлять в нее данные методом add, изменять методом replace и удалять методом delete
+    // 3) а также возвращать их по id
+    Connection connection = DriverManager.getConnection();
+
+    private void InitDatabase() throws ClassNotFoundException {
+        Class.forName("org.postgresql.Driver");
+
+
+        src / main / resources / ru / tracker.properties
+
+        Properties properties = new Properties();
+        properties.load
+  ...
+    }
+
+}
+
 
     /**
      * Array containing items : tasks, messages etc.
