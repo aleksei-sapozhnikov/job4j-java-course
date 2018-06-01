@@ -1,5 +1,7 @@
 package ru.job4j.tracker;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -73,7 +75,7 @@ public class MenuTracker {
      *
      * @param key Action key.
      */
-    public void launchAction(int key) {
+    public void launchAction(int key) throws SQLException, IOException {
         this.userActions.get(key).execute(this.input, this.tracker);
     }
 
@@ -132,7 +134,7 @@ public class MenuTracker {
          * @param input   Where to take user input from.
          * @param tracker Where to store items.
          */
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, Tracker tracker) throws SQLException {
             try {
                 System.out.println();
                 System.out.println("------------ Find item by id ------------");
@@ -174,8 +176,8 @@ public class MenuTracker {
             System.out.println("------------ Add new item ------------");
             String name = input.ask("Enter item name : ");
             String desc = input.ask("Enter item description : ");
-            Item item = tracker.add(new Item(name, desc, System.currentTimeMillis()));
-            System.out.println(String.format("=== New item added. Item id : %s", item.getId()));
+            //Item item = tracker.add(new Item(name, desc, System.currentTimeMillis()));
+            //System.out.println(String.format("=== New item added. Item id : %s", item.getId()));
         }
     }
 
@@ -199,7 +201,7 @@ public class MenuTracker {
          * @param input   Where to take user input from.
          * @param tracker Where to store items.
          */
-        public void execute(Input input, Tracker tracker) {
+        public void execute(Input input, Tracker tracker) throws SQLException, IOException {
             try {
                 System.out.println();
                 System.out.println("------------ Delete item ------------");
@@ -239,7 +241,7 @@ class EditItem extends BaseAction {
      * @param input   Where to take user input from.
      * @param tracker Where to store items.
      */
-    public void execute(Input input, Tracker tracker) {
+    public void execute(Input input, Tracker tracker) throws SQLException, IOException {
         try {
             System.out.println();
             System.out.println("------------ Edit item ------------");

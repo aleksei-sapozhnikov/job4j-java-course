@@ -1,5 +1,8 @@
 package ru.job4j.tracker;
 
+import java.io.IOException;
+import java.sql.SQLException;
+
 /**
  * Object to store in tracker.
  *
@@ -41,14 +44,14 @@ public class StartUI {
      *
      * @param args Command-line arguments.
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException, IOException {
         new StartUI(new ValidateInput(new ConsoleInput()), new Tracker()).init();
     }
 
     /**
      * Initialization part.
      */
-    public void init() {
+    public void init() throws SQLException, IOException {
         boolean exit = false;
         MenuTracker menu = new MenuTracker(this.input, this.tracker);
         menu.fillUserActions();

@@ -6,7 +6,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Storage of items : tasks, messages, etc.
@@ -21,7 +24,7 @@ public class Tracker implements AutoCloseable {
     private static final Path RESOURCE_DIR = Paths.get(
             WORK_DIR.toString(), "src", "main", "resources", PACKAGE_DIR.toString()
     );
-    private final Properties PROPERTIES;
+    private final Properties trackerProperties;
     private final Connection connection;
 
     // Tracker должен работать с базой данных:
@@ -32,23 +35,26 @@ public class Tracker implements AutoCloseable {
 
     // ========================== Пустой конструктор просто для того, чтобы не мешались старые тесты =============
     public Tracker() {
-        this.PROPERTIES = null;
+        this.trackerProperties = null;
         this.connection = null;
     }
     // ============================ Пссле завершения работы над трекером - его быть не должно=====================
 
     public Tracker(String propertiesFileName) throws SQLException, IOException {
-        this.PROPERTIES = new Properties();
-        this.PROPERTIES.load(new FileInputStream(Paths.get(RESOURCE_DIR.toString(), propertiesFileName).toString()));
-        this.connection = this.getConnection();
-        this.dbPerformUpdate(
-                Paths.get(RESOURCE_DIR.toString(), this.PROPERTIES.getProperty("sql_create_structure"))
-        );
+        this(propertiesFileName, false);
     }
 
-    public static void main(String[] args) throws IOException, SQLException {
-        try (Tracker tracker = new Tracker("tracker.properties")) {
-            tracker.add(new Item("test3", "test_desc", System.currentTimeMillis()));
+    public Tracker(String propertiesFileName, boolean fillInitialValues) throws SQLException, IOException {
+        this.trackerProperties = new Properties();
+        this.trackerProperties.load(new FileInputStream(Paths.get(RESOURCE_DIR.toString(), propertiesFileName).toString()));
+        this.connection = this.getConnectionToDatabase();
+        this.dbPerformUpdate(
+                Paths.get(RESOURCE_DIR.toString(), this.trackerProperties.getProperty("sql_create_tables"))
+        );
+        if (fillInitialValues) {
+            this.dbPerformUpdate(
+                    Paths.get(RESOURCE_DIR.toString(), this.trackerProperties.getProperty("sql_initial_values"))
+            );
         }
     }
 
@@ -65,11 +71,29 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    private Connection getConnection() throws IOException, SQLException {
-        String url = this.PROPERTIES.getProperty("db_url");
-        String user = this.PROPERTIES.getProperty("db_user");
-        String password = this.PROPERTIES.getProperty("db_password");
-        return DriverManager.getConnection(url, user, password);
+    public static void main(String[] args) throws IOException, SQLException {
+        try (Tracker tracker = new Tracker("tracker.properties")) {
+
+            Item added = tracker.add(new Item("added_name", "added_desc", System.currentTimeMillis(),
+                    new String[]{"comment_1", "comment_2", "comment_3"})
+            );
+            String addedId = added.getId();
+            Item replacer = new Item("rep_name", "rep_desc", System.currentTimeMillis(), new String[]{"rep_comm_1", "rep_comm_8"});
+
+            System.out.println("Adding item: " + added);
+            System.out.println("Replacing by item: " + replacer);
+
+            System.out.println();
+            System.out.println("Item found after ADD: " + tracker.findById(addedId));
+
+            System.out.println();
+            tracker.replace(addedId, replacer);
+            System.out.println("Item found after REPLACE: " + tracker.findById(addedId));
+
+            System.out.println();
+            tracker.delete(addedId);
+            System.out.println("Item found after DELETE: " + tracker.findById(addedId));
+        }
     }
 
 
@@ -84,21 +108,35 @@ public class Tracker implements AutoCloseable {
         }
     }
 
+    private Connection getConnectionToDatabase() throws SQLException {
+        String url = this.trackerProperties.getProperty("db_url");
+        String user = this.trackerProperties.getProperty("db_user");
+        String password = this.trackerProperties.getProperty("db_password");
+        return DriverManager.getConnection(url, user, password);
+    }
+
     /**
      * Add new item to database.
      * Adds unique id given by database to the item's id field.
      *
      * @param item Item to add.
      */
-    public Item add(Item item) throws SQLException {
+    public Item add(Item item) throws SQLException, IOException {
         int id;
-        String query = String.format(
+        String queryItems = String.format(
                 "INSERT INTO items (name, description, create_time) VALUES (\'%s\', \'%s\', \'%s\') RETURNING id",
                 item.getName(), item.getDescription(), new java.sql.Timestamp(item.getCreateTime()).toString()
         );
-        try (ResultSet result = this.connection.createStatement().executeQuery(query)) {
+        try (ResultSet result = this.connection.createStatement().executeQuery(queryItems)) {
             result.next();
-            id = result.getInt(1);
+            id = result.getInt("id");
+        }
+        for (String text : item.getComments()) {
+            String queryCommentsAdd = String.format(
+                    "INSERT INTO comments (item_id, text) VALUES (%s, \'%s\')",
+                    id, text
+            );
+            this.dbPerformUpdate(queryCommentsAdd);
         }
         item.setId(Integer.toString(id));
         return item;
@@ -110,10 +148,25 @@ public class Tracker implements AutoCloseable {
      * @param id   Id of the item to replace.
      * @param item Item to store with the given id.
      */
-    public void replace(String id, Item item) throws SQLException {
-        this.items.set(
-                this.items.indexOf(this.findById(id)), item
+    public void replace(String id, Item item) throws SQLException, IOException {
+        String queryItemsAdd = String.format(
+                "UPDATE items SET name = \'%s\', description = \'%s\', create_time = \'%s\' WHERE id = %s",
+                item.getName(), item.getDescription(), new java.sql.Timestamp(item.getCreateTime()).toString(),
+                id
         );
+        String queryCommentsClear = String.format(
+                "DELETE FROM comments WHERE item_id = %s",
+                id
+        );
+        this.dbPerformUpdate(queryCommentsClear);
+        for (String text : item.getComments()) {
+            String queryCommentsAdd = String.format(
+                    "INSERT INTO comments (item_id, text) VALUES (%s, \'%s\')",
+                    id, text
+            );
+            this.dbPerformUpdate(queryCommentsAdd);
+        }
+        this.dbPerformUpdate(queryItemsAdd);
     }
 
     /**
@@ -121,10 +174,17 @@ public class Tracker implements AutoCloseable {
      *
      * @param id Id of the item to delete.
      */
-    public void delete(String id) throws SQLException {
-        this.items.remove(
-                this.findById(id)
+    public void delete(String id) throws SQLException, IOException {
+        String queryItems = String.format(
+                "DELETE FROM items WHERE id = %s",
+                id
         );
+        String queryComments = String.format(
+                "DELETE FROM comments WHERE item_id = %s",
+                id
+        );
+        this.dbPerformUpdate(queryComments);
+        this.dbPerformUpdate(queryItems);
     }
 
     /**
@@ -134,39 +194,42 @@ public class Tracker implements AutoCloseable {
      * @return Item with this id.
      */
     public Item findById(String id) throws SQLException {
+        Item item = null;
+        boolean found = false;
         String queryItem = String.format(
-                "SELECT id, name, description, create_date) FROM items WHERE id = %s",
+                "SELECT id, name, description, create_time FROM items WHERE id = %s",
                 id
         );
         String queryComments = String.format(
                 "SELECT text FROM comments WHERE item_id = %s",
                 id
         );
-        boolean found = false;
-        Item item = null;
-        try (ResultSet r = this.connection.createStatement().executeQuery(queryItem)) {
-            if (r.next()) {
+        String idI;
+        String nameI;
+        String descriptionI;
+        long createTimeI;
+        String[] commentsI;
+        try (ResultSet rOut = this.connection.createStatement().executeQuery(queryItem)) {
+            if (rOut.next()) {
                 found = true;
-                item = new Item(
-                        Integer.toString(r.getInt("id")), r.getString("name"),
-                        r.getString("description"), r.getTimestamp("create_time").getTime()
-                );
-            }
-        }
-        if (found) {
-            try (ResultSet r = this.connection.createStatement().executeQuery(queryComments)) {
-                List<String> comm = new ArrayList<>();
-                while (r.next()) {
-                    comm.add(r.getString("text"));
+                idI = Integer.toString(rOut.getInt("id"));
+                nameI = rOut.getString("name");
+                descriptionI = rOut.getString("description");
+                createTimeI = rOut.getTimestamp("create_time").getTime();
+                try (ResultSet rIn = this.connection.createStatement().executeQuery(queryComments)) {
+                    List<String> c = new ArrayList<>();
+                    while (rIn.next()) {
+                        c.add(rIn.getString("text"));
+                    }
+                    commentsI = c.toArray(new String[0]);
                 }
-                item.addComments(comm);
+                item = new Item(idI, nameI, descriptionI, createTimeI, commentsI);
             }
         }
-        if (found) {
-            return item;
-        } else {
+/*        if (!found) {
             throw new NoSuchIdException("Item with such id not found");
-        }
+        }*/
+        return item;
     }
 
     /**
@@ -193,15 +256,4 @@ public class Tracker implements AutoCloseable {
     public List<Item> findAll() {
         return Collections.unmodifiableList(this.items);
     }
-
-    /**
-     * Generate unique id for a new Item.Метод генерирует уникальный ключ для заявки.
-     *
-     * @return Unique id.
-     */
-    private String generateId() {
-        return String.valueOf(System.currentTimeMillis() + (new Random()).nextInt());
-    }
-
-
 }
