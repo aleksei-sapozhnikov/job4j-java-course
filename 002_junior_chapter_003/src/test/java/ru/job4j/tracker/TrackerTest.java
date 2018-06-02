@@ -13,14 +13,14 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class TrackerTest {
-    private Path config = Paths.get("src", "main", "resources", "ru", "job4j", "tracker", "tracker.properties").toAbsolutePath();
+    private Path config = Paths.get("src", "main", "resources", "ru", "job4j", "tracker", "tracker_test.properties").toAbsolutePath();
 
     /**
      * Test add() and findAll()
      */
     @Test
     public void whenAddNewItemThenTrackerHasSameItem() throws IOException, SQLException {
-        Tracker tracker = new Tracker(this.config);
+        Tracker tracker = new Tracker(this.config, true);
         Item item = tracker.add(new Item("test1", "testDescription", 123L));
         assertThat(tracker.findAll().get(0), is(item));
     }
@@ -30,7 +30,7 @@ public class TrackerTest {
      */
     @Test
     public void whenAddItemThenCanFindById() throws SQLException, IOException {
-        try (Tracker tracker = new Tracker(this.config)) {
+        try (Tracker tracker = new Tracker(this.config, true)) {
             Item itemAdded = tracker.add(new Item("name2", "desc2", 4323L, new String[]{"comm1", "comm2"}));
             Item itemFound = tracker.findById(itemAdded.getId());
             assertThat(itemFound, is(itemAdded));
@@ -39,7 +39,7 @@ public class TrackerTest {
 
     @Test(expected = NoSuchIdException.class)
     public void whenNoItemWithSuchIdStoredThenNoSuchIdException() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.config)) {
+        try (Tracker tracker = new Tracker(this.config, true)) {
             Item item = tracker.add(new Item("name2", "desc2", 4323L));
             String notId = item.getId() + "123";
             tracker.findById(notId);
@@ -51,7 +51,7 @@ public class TrackerTest {
      */
     @Test
     public void whenReplaceNameThenReturnNewItem() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.config)) {
+        try (Tracker tracker = new Tracker(this.config, true)) {
             Item oldItem = tracker.add(new Item("name1", "desc1", 123L));
             String id = oldItem.getId();
             Item newItem = new Item("name3", "desc3", 323L, new String[]{"comm1", "comm5"});
@@ -65,7 +65,7 @@ public class TrackerTest {
      */
     @Test
     public void whenHasItemsReturnAllNotNullItems() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.config)) {
+        try (Tracker tracker = new Tracker(this.config, true)) {
             Item item1 = tracker.add(new Item("name1", "desc1", 324L));
             Item item2 = tracker.add(new Item("name2", "desc2", 756L));
             Item item3 = tracker.add(new Item("name1", "desc3", 743L));
@@ -82,7 +82,7 @@ public class TrackerTest {
      */
     @Test
     public void whenDeleteItemThenArrayWithoutThisItem() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.config)) {
+        try (Tracker tracker = new Tracker(this.config, true)) {
             Item item1 = tracker.add(new Item("name1", "desc1", 324L, new String[]{"n1c1", "n1c2"}));
             Item item2 = tracker.add(new Item("name2", "desc2", 756L, new String[]{"n2c1", "n2c2"}));
             Item item3 = tracker.add(new Item("name3", "desc3", 743L, new String[]{"n3c1", "n3c2"}));
@@ -100,7 +100,7 @@ public class TrackerTest {
      */
     @Test
     public void whenGivenNameThenItemsWithThatName() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.config)) {
+        try (Tracker tracker = new Tracker(this.config, true)) {
             Item item1 = tracker.add(new Item("name1", "desc1", 324L));
             Item item2 = tracker.add(new Item("name2", "desc2", 756L));
             Item item3 = tracker.add(new Item("name1", "desc3", 743L));

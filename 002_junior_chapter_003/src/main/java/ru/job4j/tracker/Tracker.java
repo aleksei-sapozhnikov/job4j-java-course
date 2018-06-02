@@ -21,7 +21,7 @@ public class Tracker implements AutoCloseable {
     private final Connection connection;
 
     public Tracker(Path propertiesFile) throws SQLException, IOException {
-        this(propertiesFile, true);
+        this(propertiesFile, false);
     }
 
     public Tracker(Path propertiesFile, boolean clearTables) throws SQLException, IOException {
