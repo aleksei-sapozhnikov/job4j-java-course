@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Object to store in tracker.
@@ -114,4 +115,25 @@ public class Item {
                 this.id, this.name, this.description, time, Arrays.toString(this.comments));
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Item item = (Item) o;
+        return createTime == item.createTime
+                && Objects.equals(name, item.name)
+                && Objects.equals(description, item.description)
+                && Arrays.equals(comments, item.comments);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(name, description, createTime);
+        result = 31 * result + Arrays.hashCode(comments);
+        return result;
+    }
 }

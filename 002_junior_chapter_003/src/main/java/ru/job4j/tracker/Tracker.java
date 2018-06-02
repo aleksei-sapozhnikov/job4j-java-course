@@ -7,7 +7,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
@@ -19,42 +18,25 @@ import java.util.Properties;
  * @since 19.01.2018
  */
 public class Tracker implements AutoCloseable {
-    private static final Path WORK_DIR = Paths.get("002_junior_chapter_003").toAbsolutePath();
-    private static final Path PACKAGE_DIR = Paths.get("ru", "job4j", "tracker");
-    private static final Path RESOURCE_DIR = Paths.get(
-            WORK_DIR.toString(), "src", "main", "resources", PACKAGE_DIR.toString()
-    );
-    private final Properties trackerProperties;
     private final Connection connection;
 
-    // Tracker должен работать с базой данных:
-    // 0) подключаться к ней
-    // 1) создавать начальную структуру, если надо
-    // 2) добавлять в нее данные методом add, изменять методом replace и удалять методом delete
-    // 3) а также возвращать их по id
-
-    // ========================== Пустой конструктор просто для того, чтобы не мешались старые тесты =============
-    public Tracker() {
-        this.trackerProperties = null;
-        this.connection = null;
-    }
-    // ============================ Пссле завершения работы над трекером - его быть не должно=====================
-
-    public Tracker(String propertiesFileName) throws SQLException, IOException {
-        this(propertiesFileName, false);
+    public Tracker(Path propertiesFile) throws SQLException, IOException {
+        this(propertiesFile, true);
     }
 
-    public Tracker(String propertiesFileName, boolean fillInitialValues) throws SQLException, IOException {
-        this.trackerProperties = new Properties();
-        this.trackerProperties.load(new FileInputStream(Paths.get(RESOURCE_DIR.toString(), propertiesFileName).toString()));
-        this.connection = this.getConnectionToDatabase();
-        this.dbPerformUpdate(
-                Paths.get(RESOURCE_DIR.toString(), this.trackerProperties.getProperty("sql_create_tables"))
+    public Tracker(Path propertiesFile, boolean clearTables) throws SQLException, IOException {
+        Properties properties = new Properties();
+        properties.load(new FileInputStream(propertiesFile.toString()));
+        this.connection = this.getConnectionToDatabase(
+                properties.getProperty("db_url"), properties.getProperty("db_user"), properties.getProperty("db_password")
         );
-        if (fillInitialValues) {
-            this.dbPerformUpdate(
-                    Paths.get(RESOURCE_DIR.toString(), this.trackerProperties.getProperty("sql_initial_values"))
-            );
+        this.dbPerformUpdate(Paths.get(
+                propertiesFile.getParent().toString(), properties.getProperty("sql_create_tables")
+        ));
+        if (clearTables) {
+            this.dbPerformUpdate(Paths.get(
+                    propertiesFile.getParent().toString(), properties.getProperty("sql_erase_values")
+            ));
         }
     }
 
@@ -71,32 +53,6 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    public static void main(String[] args) throws IOException, SQLException {
-        try (Tracker tracker = new Tracker("tracker.properties")) {
-
-            Item added = tracker.add(new Item("added_name", "added_desc", System.currentTimeMillis(),
-                    new String[]{"comment_1", "comment_2", "comment_3"})
-            );
-            String addedId = added.getId();
-            Item replacer = new Item("rep_name", "rep_desc", System.currentTimeMillis(), new String[]{"rep_comm_1", "rep_comm_8"});
-
-            System.out.println("Adding item: " + added);
-            System.out.println("Replacing by item: " + replacer);
-
-            System.out.println();
-            System.out.println("Item found after ADD: " + tracker.findById(addedId));
-
-            System.out.println();
-            tracker.replace(addedId, replacer);
-            System.out.println("Item found after REPLACE: " + tracker.findById(addedId));
-
-            System.out.println();
-            tracker.delete(addedId);
-            System.out.println("Item found after DELETE: " + tracker.findById(addedId));
-        }
-    }
-
-
     /**
      * Array containing items : tasks, messages etc.
      */
@@ -108,10 +64,7 @@ public class Tracker implements AutoCloseable {
         }
     }
 
-    private Connection getConnectionToDatabase() throws SQLException {
-        String url = this.trackerProperties.getProperty("db_url");
-        String user = this.trackerProperties.getProperty("db_user");
-        String password = this.trackerProperties.getProperty("db_password");
+    private Connection getConnectionToDatabase(String url, String user, String password) throws SQLException {
         return DriverManager.getConnection(url, user, password);
     }
 
@@ -226,9 +179,9 @@ public class Tracker implements AutoCloseable {
                 item = new Item(idI, nameI, descriptionI, createTimeI, commentsI);
             }
         }
-/*        if (!found) {
+        if (!found) {
             throw new NoSuchIdException("Item with such id not found");
-        }*/
+        }
         return item;
     }
 
@@ -238,14 +191,21 @@ public class Tracker implements AutoCloseable {
      * @param name Items with this name will be returned.
      * @return Array of Items satisfying the condition.
      */
-    public List<Item> findByName(String name) {
-        List<Item> result = new ArrayList<>();
-        for (Item temp : this.items) {
-            if (name.equals(temp.getName())) {
-                result.add(temp);
+    public List<Item> findByName(String name) throws SQLException {
+        String query = String.format(
+                "SELECT id FROM items WHERE name = \'%s\' ORDER BY id", name
+        );
+        List<Integer> ids = new ArrayList<>();
+        try (ResultSet r = this.connection.createStatement().executeQuery(query)) {
+            while (r.next()) {
+                ids.add(r.getInt("id"));
             }
         }
-        return result;
+        List<Item> items = new ArrayList<>();
+        for (Integer i : ids) {
+            items.add(this.findById(i.toString()));
+        }
+        return items;
     }
 
     /**
@@ -253,7 +213,18 @@ public class Tracker implements AutoCloseable {
      *
      * @return Array of Items stored in tracker (without null elements).
      */
-    public List<Item> findAll() {
-        return Collections.unmodifiableList(this.items);
+    public List<Item> findAll() throws SQLException {
+        String query = "SELECT id FROM items ORDER BY id";
+        List<Integer> ids = new ArrayList<>();
+        try (ResultSet r = this.connection.createStatement().executeQuery(query)) {
+            while (r.next()) {
+                ids.add(r.getInt("id"));
+            }
+        }
+        List<Item> items = new ArrayList<>();
+        for (Integer i : ids) {
+            items.add(this.findById(i.toString()));
+        }
+        return items;
     }
 }
