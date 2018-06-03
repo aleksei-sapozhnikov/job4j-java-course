@@ -1,8 +1,6 @@
 package ru.job4j.tracker;
 
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -104,7 +102,7 @@ public class MenuTracker {
             try {
                 System.out.println();
                 System.out.println("------------ Show all items contained ------------");
-                List<Item> items = tracker.findAll();
+                Item[] items = tracker.findAll();
                 for (Item item : items) {
                     System.out.println();
                     System.out.println(String.format("=== Item id : %s", item.getId()));
@@ -185,7 +183,7 @@ public class MenuTracker {
                 String desc = input.ask("Enter item description : ");
                 Item item = tracker.add(new Item(name, desc, System.currentTimeMillis()));
                 System.out.println(String.format("=== New item added. Item id : %s", item.getId()));
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -225,7 +223,7 @@ public class MenuTracker {
                 }
             } catch (NoSuchIdException nside) {
                 System.out.println("=== Exception : Item with such id not found. Try again.");
-            } catch (SQLException | IOException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
@@ -279,7 +277,7 @@ class EditItem extends BaseAction {
             }
         } catch (NoSuchIdException nside) {
             System.out.println("=== Exception : Item with such id not found. Try again.");
-        } catch (SQLException | IOException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -311,7 +309,7 @@ class FindItemsByName extends BaseAction {
             System.out.println();
             System.out.println("------------ Find items with given name ------------");
             String name = input.ask("Enter name : ");
-            List<Item> items = tracker.findByName(name);
+            Item[] items = tracker.findByName(name);
             for (Item item : items) {
                 System.out.println();
                 System.out.println(String.format("== Item id : %s", item.getId()));

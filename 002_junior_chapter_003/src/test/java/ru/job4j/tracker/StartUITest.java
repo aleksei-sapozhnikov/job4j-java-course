@@ -10,8 +10,6 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.StringJoiner;
 
 import static org.hamcrest.core.Is.is;
@@ -21,7 +19,7 @@ import static org.junit.Assert.assertThat;
  * Tests for StartUI class.
  */
 public class StartUITest {
-    private Path config = Paths.get("src", "main", "resources", "ru", "job4j", "tracker", "tracker_test.properties").toAbsolutePath();
+    private Path trackerTestConfig = Paths.get("src", "main", "resources", "ru", "job4j", "tracker", "tracker_test.properties").toAbsolutePath();
 
     /**
      * Stores "standard" console output.
@@ -56,20 +54,20 @@ public class StartUITest {
      */
     @Test
     public void whenUserAddItemThenTrackerHasItemWithThatName() throws SQLException, IOException {
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         Input input = new StubInput(new String[]{"0", "name1", "description1", "6"});
         new StartUI(input, tracker).init();
-        String result = tracker.findAll().get(0).getDescription();
+        String result = tracker.findAll()[0].getDescription();
         String expected = "description1";
         assertThat(result, is(expected));
     }
 
     @Test
     public void whenUserAddItemThenTrackerHasItemWithThatDescription() throws SQLException, IOException {
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         Input input = new StubInput(new String[]{"0", "name1", "description1", "6"});
         new StartUI(input, tracker).init();
-        String result = tracker.findAll().get(0).getName();
+        String result = tracker.findAll()[0].getName();
         String expected = "name1";
         assertThat(result, is(expected));
     }
@@ -79,7 +77,7 @@ public class StartUITest {
      */
     @Test
     public void whenUserUpdateItemThenTrackerHasUpdatedName() throws IOException, SQLException {
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         Item item = tracker.add(new Item("name1", "desc1", System.currentTimeMillis()));
         Input input = new StubInput(new String[]{"2", item.getId(), "new name", "new desc", "y", "6"});
         new StartUI(input, tracker).init();
@@ -90,7 +88,7 @@ public class StartUITest {
 
     @Test
     public void whenUserUpdateItemThenTrackerHasUpdatedDescription() throws IOException, SQLException {
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         Item item = tracker.add(new Item("name1", "desc1", System.currentTimeMillis()));
         Input input = new StubInput(new String[]{"2", item.getId(), "new name", "new desc", "y", "6"});
         new StartUI(input, tracker).init();
@@ -104,18 +102,18 @@ public class StartUITest {
      */
     @Test
     public void whenUserDeleteLastItemThenTrackerIsEmpty() throws IOException, SQLException {
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         Item item = tracker.add(new Item("name1", "desc1", System.currentTimeMillis()));
         Input input = new StubInput(new String[]{"3", item.getId(), "y", "6"});
         new StartUI(input, tracker).init();
-        List<Item> result = tracker.findAll();
-        List<Item> expected = new ArrayList<>();
+        Item[] result = tracker.findAll();
+        Item[] expected = new Item[0];
         assertThat(result, is(expected));
     }
 
     @Test(expected = NoSuchIdException.class)
     public void whenUserDeleteItemThenFindByIdThisItemNoSuchIdException() throws IOException, SQLException {
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         Item item1 = tracker.add(new Item("name1", "desc1", System.currentTimeMillis()));
         Item itemDel = tracker.add(new Item("name2", "desc3", System.currentTimeMillis()));
         Input input = new StubInput(new String[]{"3", itemDel.getId(), "y", "6"});
@@ -129,7 +127,7 @@ public class StartUITest {
     @Test
     public void whenUserShowAllThenListOfItems() throws IOException, SQLException {
         //add items
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         String id1 = tracker.add(new Item("name1", "desc1", 0L)).getId();
         String id2 = tracker.add(new Item("name2", "desc2", 0L)).getId();
         //run program
@@ -177,7 +175,7 @@ public class StartUITest {
     @Test
     public void whenUserShowItemByIdThenShowItem() throws IOException, SQLException {
         //add items
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         String id1 = tracker.add(new Item("name1", "desc1", 0L)).getId();
         String id2 = tracker.add(new Item("name2", "desc2", 0L)).getId();
         //run program
@@ -221,7 +219,7 @@ public class StartUITest {
     @Test
     public void whenUserShowItemByNameThenShowItemsWithThatName() throws IOException, SQLException {
         //add items
-        Tracker tracker = new Tracker(this.config, true);
+        Tracker tracker = new Tracker(this.trackerTestConfig, true);
         String id1 = tracker.add(new Item("name1", "desc1", 0L)).getId();
         String id2 = tracker.add(new Item("name2", "desc2", 0L)).getId();
         String id3 = tracker.add(new Item("name1", "desc3", 0L)).getId();
