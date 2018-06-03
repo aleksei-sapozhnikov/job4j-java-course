@@ -48,7 +48,9 @@ public class StartUI {
      */
     public static void main(String[] args) throws IOException, SQLException {
         Path config = Paths.get("002_junior_chapter_003", "src", "main", "resources", "ru", "job4j", "tracker", "tracker.properties").toAbsolutePath();
-        new StartUI(new ValidateInput(new ConsoleInput()), new Tracker(config)).init();
+        try (Tracker tracker = new Tracker(config)) {
+            new StartUI(new ValidateInput(new ConsoleInput()), tracker).init();
+        }
     }
 
 
