@@ -6,41 +6,39 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class StoreXSLT {
-    public static void main(String args[]) throws TransformerException {
-        String xsl = "<?xml version=\"1.0\"?>\n" +
-                "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n" +
-                "<xsl:template match=\"/\">\n" +
-                "<entries>\n" +
-                "   <xsl:for-each select=\"user/values\">\n" +
-                "       <entry>\n" +
-                "           <xsl:attribute name=\"href\">" +
-                "               <xsl:value-of select=\"value\"/>" +
-                "           </xsl:attribute>" +
-                "       </entry>\n" +
-                "   </xsl:for-each>\n" +
-                " </entries>\n" +
-                "</xsl:template>\n" +
-                "</xsl:stylesheet>\n";
+    private final Path source;
+    private final Path dest;
+    private final Path scheme;
 
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                "<user>\n" +
-                " <values>\n" +
-                " <value>1</value>\n" +
-                " </values>\n" +
-                " <values>\n" +
-                " <value>2</value>\n" +
-                " </values>\n" +
-                "</user>";
+
+    public StoreXSLT(Path source, Path dest, Path scheme) {
+        this.source = source;
+        this.dest = dest;
+        this.scheme = scheme;
+    }
+
+    public static void main(String args[]) {
+
+
+    }
+
+    public void convert() throws IOException, TransformerException {
+        String schemeText = new String(Files.readAllBytes(this.scheme));
+        String sourceText = new String(Files.readAllBytes(this.source));
+
         TransformerFactory factory = TransformerFactory.newInstance();
         Transformer transformer = factory.newTransformer(
                 new StreamSource(
-                        new ByteArrayInputStream(xsl.getBytes()))
+                        new ByteArrayInputStream(schemeText.getBytes()))
         );
         transformer.transform(
-                new StreamSource(new ByteArrayInputStream(xml.getBytes())),
-                new StreamResult(System.out)
+                new StreamSource(new ByteArrayInputStream(sourceText.getBytes())),
+                new StreamResult(this.dest.toFile())
         );
     }
 }

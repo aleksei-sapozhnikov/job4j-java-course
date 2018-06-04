@@ -20,9 +20,7 @@ public class StoreXML implements AutoCloseable {
     private final Path target;
     private final Connection connection;
 
-    public StoreXML(Path propertiesFile, Path dbAddress, Path target) throws IOException, SQLException
-
-    {
+    public StoreXML(Path propertiesFile, Path dbAddress, Path target) throws IOException, SQLException {
         Properties properties = new Properties();
         properties.load(new FileReader(propertiesFile.toString()));
         this.connection = this.dbGetConnection(properties, dbAddress);
