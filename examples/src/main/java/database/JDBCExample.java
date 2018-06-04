@@ -13,7 +13,7 @@ public class JDBCExample {
     private static final String DB_URL = DB_PORT_URL.concat(DB_NAME);
     private static final String DB_USER = "postgres";
     private static final String DB_PASSWORD = "password";
-    private static final Path WORK_PATH = Paths.get(".", "examples", "src", "main", "java", "database");
+    private static final Path WORK_PATH = Paths.get(".", "examples", "src", "main", "java", "db_file");
     private static final Path SQL_FILE_CREATE_TABLES = Paths.get(WORK_PATH.toString(), "create_tables.sql");
     private static final Path SQL_FILE_QUERY = Paths.get(WORK_PATH.toString(), "query.sql");
     private static final Path SQL_FILE_UPDATE = Paths.get(WORK_PATH.toString(), "update.sql");
