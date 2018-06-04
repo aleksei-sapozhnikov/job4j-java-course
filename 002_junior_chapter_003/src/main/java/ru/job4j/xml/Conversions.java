@@ -17,7 +17,6 @@ public class Conversions {
         Path entriesFi = Paths.get(root.toString(), "entriesFirst.xml");
         Path xmlSecond = Paths.get(root.toString(), "entriesSecond.xml");
         Path xslScheme = Paths.get(root.toString(), "scheme.xsl");
-
         // create values in db
         try (StoreSQL store = new StoreSQL(propFile, dbFile)) {
             store.generate(10);
@@ -27,9 +26,6 @@ public class Conversions {
             store.convert();
         }
         // convert xml with xslt
-        {
-            StoreXSLT convert = new StoreXSLT(entriesFi, xmlSecond, xslScheme);
-            convert.convert();
-        }
+        new StoreXSLT(entriesFi, xmlSecond, xslScheme).convert();
     }
 }

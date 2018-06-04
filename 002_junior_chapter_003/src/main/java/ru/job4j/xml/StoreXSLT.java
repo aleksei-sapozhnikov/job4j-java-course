@@ -22,11 +22,6 @@ public class StoreXSLT {
         this.scheme = scheme;
     }
 
-    public static void main(String args[]) {
-
-
-    }
-
     public void convert() throws IOException, TransformerException {
         String schemeText = new String(Files.readAllBytes(this.scheme));
         String sourceText = new String(Files.readAllBytes(this.source));
