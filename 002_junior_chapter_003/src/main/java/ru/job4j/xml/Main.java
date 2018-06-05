@@ -61,8 +61,8 @@ public class Main {
         prop.load(Files.newInputStream(config));
         String dir = config.getParent().toAbsolutePath().toString();
         this.config = config;
-        this.database = Paths.get(dir, prop.getProperty("database"));
-        this.scheme = Paths.get(dir, prop.getProperty("scheme"));
+        this.database = Paths.get(dir, prop.getProperty("db_file"));
+        this.scheme = Paths.get(dir, prop.getProperty("scheme_file"));
         this.xmlBefore = Paths.get(dir, prop.getProperty("xml_before"));
         this.xmlAfter = Paths.get(dir, prop.getProperty("xml_after"));
         this.nValues = Integer.valueOf(prop.getProperty("values"));

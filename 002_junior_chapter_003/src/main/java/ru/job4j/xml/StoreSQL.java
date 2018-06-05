@@ -32,9 +32,9 @@ public class StoreSQL implements AutoCloseable {
      *                      error or other errors.
      */
     public StoreSQL(Path properties, Path dbAddress) throws IOException, SQLException {
-        Properties p = new Properties();
-        p.load(new FileReader(properties.toString()));
-        this.connection = this.dbGetConnection(p, dbAddress);
+        Properties prop = new Properties();
+        prop.load(new FileReader(properties.toString()));
+        this.connection = this.dbGetConnection(prop, dbAddress);
     }
 
     /**
@@ -47,12 +47,8 @@ public class StoreSQL implements AutoCloseable {
      *                      error or other errors.
      */
     private Connection dbGetConnection(Properties properties, Path dbAddress) throws SQLException {
-        String url = String.format(
-                "jdbc:%s:%s",
-                properties.getProperty("db_type"), dbAddress.toString()
-        );
         return DriverManager.getConnection(
-                url,
+                String.format("jdbc:sqlite:%s", dbAddress.toString()),
                 properties.getProperty("db_user"),
                 properties.getProperty("db_password")
         );

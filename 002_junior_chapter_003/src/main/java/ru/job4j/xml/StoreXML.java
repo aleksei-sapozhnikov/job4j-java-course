@@ -58,12 +58,8 @@ public class StoreXML implements AutoCloseable {
      *                      error or other errors.
      */
     private Connection dbGetConnection(Properties properties, Path dbAddress) throws SQLException {
-        String url = String.format(
-                "jdbc:%s:%s",
-                properties.getProperty("db_type"), dbAddress.toString()
-        );
         return DriverManager.getConnection(
-                url,
+                String.format("jdbc:sqlite:%s", dbAddress.toString()),
                 properties.getProperty("db_user"),
                 properties.getProperty("db_password")
         );
