@@ -6,9 +6,11 @@ import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Main class to run. Calls all actions:
@@ -23,35 +25,48 @@ import java.sql.SQLException;
  */
 public class Main {
     /**
-     * Number of values to generate in database.
+     * Path to the default config file.
      */
-    public static final int N_VALUES = 10;
+    public static final Path DEFAULT_CONFIG = Paths.get(
+            "002_junior_chapter_003/src/main/resources/ru/job4j/xml/main.properties"
+    ).toAbsolutePath();
     /**
-     * Directory where all needed files are stored and generated.
+     * Path to the config file.
      */
-    public static final String RESOURCE_DIR = Paths.get(
-            "002_junior_chapter_003", "src", "main", "resources", "ru", "job4j", "xml"
-    ).toAbsolutePath().toString();
-    /**
-     * Path to the database connection config file.
-     */
-    public static final Path CONFIG = Paths.get(RESOURCE_DIR, "xml_test.properties");
+    private final Path config;
     /**
      * Path to the XSL scheme file for xml transformation.
      */
-    public static final Path SCHEME = Paths.get(RESOURCE_DIR, "scheme.xsl");
+    private final Path scheme;
     /**
      * Path to the generated database file where generated values are stored.
      */
-    public static final Path DATABASE = Paths.get(RESOURCE_DIR, "entries.db");
+    private final Path database;
     /**
      * Path to the xml file generated from database.
      */
-    public static final Path XML_BEFORE = Paths.get(RESOURCE_DIR, "xml_before.xml");
+    private final Path xmlBefore;
     /**
      * Path to the transformed xml file.
      */
-    public static final Path XML_AFTER = Paths.get(RESOURCE_DIR, "xml_after.xml");
+    private final Path xmlAfter;
+    /**
+     * Number of values to generate in database.
+     */
+    private final int nValues;
+
+
+    public Main(Path config) throws IOException {
+        Properties prop = new Properties();
+        prop.load(Files.newInputStream(config));
+        String dir = config.getParent().toAbsolutePath().toString();
+        this.config = config;
+        this.database = Paths.get(dir, prop.getProperty("database"));
+        this.scheme = Paths.get(dir, prop.getProperty("scheme"));
+        this.xmlBefore = Paths.get(dir, prop.getProperty("xml_before"));
+        this.xmlAfter = Paths.get(dir, prop.getProperty("xml_after"));
+        this.nValues = Integer.valueOf(prop.getProperty("values"));
+    }
 
     /**
      * Starts all actions.
@@ -68,16 +83,19 @@ public class Main {
     public static void main(String[] args)
             throws IOException, SQLException, JAXBException,
             TransformerException, ParserConfigurationException, SAXException {
-        Main main = new Main();
+        Main main = new Main(
+                args.length <= 0
+                        ? DEFAULT_CONFIG
+                        : Paths.get(args[0]).toAbsolutePath()
+        );
         long start = System.currentTimeMillis();
         main.generateDatabase();
         main.databaseToXml();
         main.convertXml();
-        String result = main.parseConvertedXml();
+        String result = main.parseConverted();
         long consumed = System.currentTimeMillis() - start;
         System.out.println();
-        System.out.format("= Result: %s%n", result);
-        System.out.format("= Time consumed: %d min %d.%03d sec.%n", consumed / 60000, (consumed %= 60000) / 1000, consumed % 1000);
+        System.out.println(main.printResult(result, consumed));
     }
 
     /**
@@ -88,9 +106,9 @@ public class Main {
      *                      error or other errors.
      */
     private void generateDatabase() throws IOException, SQLException {
-        System.out.format("Making DB with %,d values... ", N_VALUES);
-        try (StoreSQL store = new StoreSQL(CONFIG, DATABASE)) {
-            store.generate(N_VALUES);
+        System.out.format("Making DB with %,d values... ", this.nValues);
+        try (StoreSQL store = new StoreSQL(this.config, this.database)) {
+            store.generate(nValues);
         }
         System.out.println("DONE!");
     }
@@ -105,7 +123,7 @@ public class Main {
      */
     private void databaseToXml() throws IOException, SQLException, JAXBException {
         System.out.print("Saving to xml... ");
-        try (StoreXML store = new StoreXML(CONFIG, DATABASE, XML_BEFORE)) {
+        try (StoreXML store = new StoreXML(this.config, this.database, this.xmlBefore)) {
             store.storeXML();
         }
         System.out.println("DONE!");
@@ -119,7 +137,7 @@ public class Main {
      */
     private void convertXml() throws IOException, TransformerException {
         System.out.print("Converting xml... ");
-        new TransformXSLT().convert(XML_BEFORE, XML_AFTER, SCHEME);
+        new TransformXSLT().convert(this.xmlBefore, this.xmlAfter, this.scheme);
         System.out.println("DONE!");
     }
 
@@ -130,10 +148,29 @@ public class Main {
      * @throws ParserConfigurationException Indicates a serious parser configuration error in parsing xml file.
      * @throws SAXException                 Shows other problems in parsing xml file with SAX.
      */
-    private String parseConvertedXml() throws ParserConfigurationException, SAXException, IOException {
+    private String parseConverted() throws ParserConfigurationException, SAXException, IOException {
         System.out.print("Parsing new xml... ");
-        String result = new ParseSAX().parse(XML_AFTER);
+        String result = new ParseSAX().parse(this.xmlAfter);
         System.out.println("DONE!");
         return result;
+    }
+
+    /**
+     * Returns string with formatted program work result.
+     *
+     * @param result result of the work.
+     * @param time   time consumed in milliseconds
+     * @return Formatted result string.
+     */
+    private String printResult(String result, long time) {
+        long min = time / 60_000;
+        time %= 60_000;
+        long sec = time / 1000;
+        long mils = time % 1000;
+        return String.format(
+                "= Result: %s%n", result
+        ).concat(String.format(
+                "= Time consumed: %d min %d.%03d sec.%n", min, sec, mils
+        ));
     }
 }

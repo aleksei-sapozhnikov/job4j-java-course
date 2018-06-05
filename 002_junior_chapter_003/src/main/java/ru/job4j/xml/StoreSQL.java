@@ -86,7 +86,7 @@ public class StoreSQL implements AutoCloseable {
                 this.dbPerformUpdate(String.format("INSERT INTO entry (field) VALUES (%s)", i));
             }
             this.connection.commit();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             this.connection.rollback();
         } finally {
             this.connection.setAutoCommit(true);
