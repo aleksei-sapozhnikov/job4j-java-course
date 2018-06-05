@@ -14,15 +14,21 @@ import java.util.StringJoiner;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+/**
+ * Tests for StoreXML class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 05.06.2018
+ */
 public class StoreXMLTest {
     private final Path config = Paths.get("src/main/resources/ru/job4j/xml/testing.properties").toAbsolutePath();
     private final Path dbAddress;
     private final Path target;
-    private final Properties prop = new Properties();
-
 
     public StoreXMLTest() throws IOException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
+        Properties prop = new Properties();
         prop.load(Files.newInputStream(this.config));
         this.dbAddress = Paths.get(config.getParent().toString(), prop.getProperty("db_file"));
         this.target = Paths.get(config.getParent().toString(), prop.getProperty("xml_before"));
@@ -32,7 +38,7 @@ public class StoreXMLTest {
      * Test store()
      */
     @Test
-    public void generate() throws IOException, SQLException, JAXBException {
+    public void whenStoreGeneratedValuesFromDatabaseThenXmlFileAsNeeded() throws IOException, SQLException, JAXBException {
         try (StoreSQL store = new StoreSQL(this.config, this.dbAddress)) {
             store.generate(5);
         }
@@ -62,10 +68,5 @@ public class StoreXMLTest {
                 .add("")
                 .toString();
         assertThat(result, is(expected));
-    }
-
-
-    @Test
-    public void close() {
     }
 }
