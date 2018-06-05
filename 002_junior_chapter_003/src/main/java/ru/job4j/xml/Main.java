@@ -25,7 +25,7 @@ public class Main {
     /**
      * Number of values to generate in database.
      */
-    public static final int N_VALUES = 1000000;
+    public static final int N_VALUES = 10;
     /**
      * Directory where all needed files are stored and generated.
      */
@@ -66,35 +66,74 @@ public class Main {
      * @throws SAXException                 Shows other problems in parsing xml file with SAX.
      */
     public static void main(String[] args)
-            throws IOException, SQLException, JAXBException, TransformerException,
-            ParserConfigurationException, SAXException {
-        // beginning time
+            throws IOException, SQLException, JAXBException,
+            TransformerException, ParserConfigurationException, SAXException {
+        Main main = new Main();
         long start = System.currentTimeMillis();
-        // generate values in db
-        System.out.format("Making DB with %s values... ", N_VALUES);
+        main.generateDatabase();
+        main.databaseToXml();
+        main.convertXml();
+        String result = main.parseConvertedXml();
+        long consumed = System.currentTimeMillis() - start;
+        System.out.println();
+        System.out.format("= Result: %s%n", result);
+        System.out.format("= Time consumed: %d min %d.%03d sec.%n", consumed / 60000, (consumed %= 60000) / 1000, consumed % 1000);
+    }
+
+    /**
+     * Generates database with values.
+     *
+     * @throws IOException  Signals that an I/O exception of some sort has occurred.
+     * @throws SQLException Provides information on a database access
+     *                      error or other errors.
+     */
+    private void generateDatabase() throws IOException, SQLException {
+        System.out.format("Making DB with %,d values... ", N_VALUES);
         try (StoreSQL store = new StoreSQL(CONFIG, DATABASE)) {
             store.generate(N_VALUES);
         }
         System.out.println("DONE!");
-        // store from db to xml
+    }
+
+    /**
+     * Stores database values to xml.
+     *
+     * @throws IOException   Signals that an I/O exception of some sort has occurred.
+     * @throws SQLException  Provides information on a database access
+     *                       error or other errors.
+     * @throws JAXBException Shows problems in dumping database to an xml file with JAXB.
+     */
+    private void databaseToXml() throws IOException, SQLException, JAXBException {
         System.out.print("Saving to xml... ");
         try (StoreXML store = new StoreXML(CONFIG, DATABASE, XML_BEFORE)) {
             store.storeXML();
         }
         System.out.println("DONE!");
-        // convert xml with xslt
-        System.out.print("Transforming xml... ");
+    }
+
+    /**
+     * Converts xml file to another format.
+     *
+     * @throws IOException          Signals that an I/O exception of some sort has occurred.
+     * @throws TransformerException Shows problems in transforming xml format using XSL.
+     */
+    private void convertXml() throws IOException, TransformerException {
+        System.out.print("Converting xml... ");
         new TransformXSLT().convert(XML_BEFORE, XML_AFTER, SCHEME);
         System.out.println("DONE!");
-        // parse converted xml
+    }
+
+    /**
+     * Parses converted xml and gets result string.
+     *
+     * @throws IOException                  Signals that an I/O exception of some sort has occurred.
+     * @throws ParserConfigurationException Indicates a serious parser configuration error in parsing xml file.
+     * @throws SAXException                 Shows other problems in parsing xml file with SAX.
+     */
+    private String parseConvertedXml() throws ParserConfigurationException, SAXException, IOException {
         System.out.print("Parsing new xml... ");
         String result = new ParseSAX().parse(XML_AFTER);
         System.out.println("DONE!");
-        // print result
-        System.out.println();
-        long time = System.currentTimeMillis() - start;
-        System.out.format("= Result: %s%n", result);
-        System.out.format("= Time consumed: %s seconds%n", time / 1000);
-
+        return result;
     }
 }

@@ -40,7 +40,7 @@ public class ParseSAX extends DefaultHandler {
         reader.setContentHandler(this);
         this.sum = 0;
         reader.parse(new InputSource(Files.newInputStream(source)));
-        return String.format("Sum of the \"field\" values = %s", this.sum);
+        return String.format("sum of the \'field\' values = \'%s\'.", this.sum);
     }
 
     /**

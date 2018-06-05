@@ -10,7 +10,7 @@
         <xsl:text>&#10;</xsl:text>
         <entries>
             <xsl:for-each select="/entries/entry">
-                <xsl:text>&#10;    </xsl:text>
+                <xsl:text>&#10;&#160;&#160;&#160;&#160;</xsl:text>
                 <entry>
                     <xls:attribute name="field">
                         <xsl:value-of select="field"/>
