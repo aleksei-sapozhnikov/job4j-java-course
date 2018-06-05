@@ -10,33 +10,91 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 
+/**
+ * Main class to run. Calls all actions:
+ * 1) Generate values in database.
+ * 2) Take database as xml
+ * 3) Transform xml format using xsl scheme file.
+ * 4) Parse result xml and count sum of 'field' values.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 04.06.2018
+ */
 public class Main {
+    /**
+     * Number of values to generate in database.
+     */
+    public static final int N_VALUES = 1000000;
+    /**
+     * Directory where all needed files are stored and generated.
+     */
+    public static final String RESOURCE_DIR = Paths.get(
+            "002_junior_chapter_003", "src", "main", "resources", "ru", "job4j", "xml"
+    ).toAbsolutePath().toString();
+    /**
+     * Path to the database connection config file.
+     */
+    public static final Path CONFIG = Paths.get(RESOURCE_DIR, "xml_test.properties");
+    /**
+     * Path to the XSL scheme file for xml transformation.
+     */
+    public static final Path SCHEME = Paths.get(RESOURCE_DIR, "scheme.xsl");
+    /**
+     * Path to the generated database file where generated values are stored.
+     */
+    public static final Path DATABASE = Paths.get(RESOURCE_DIR, "entries.db");
+    /**
+     * Path to the xml file generated from database.
+     */
+    public static final Path XML_BEFORE = Paths.get(RESOURCE_DIR, "xml_before.xml");
+    /**
+     * Path to the transformed xml file.
+     */
+    public static final Path XML_AFTER = Paths.get(RESOURCE_DIR, "xml_after.xml");
 
+    /**
+     * Starts all actions.
+     *
+     * @param args command-line parameters.
+     * @throws IOException                  Signals that an I/O exception of some sort has occurred.
+     * @throws SQLException                 Provides information on a database access
+     *                                      error or other errors.
+     * @throws JAXBException                Shows problems in dumping database to an xml file with JAXB.
+     * @throws TransformerException         Shows problems in transforming xml format using XSL.
+     * @throws ParserConfigurationException Indicates a serious parser configuration error in parsing xml file.
+     * @throws SAXException                 Shows other problems in parsing xml file with SAX.
+     */
     public static void main(String[] args)
             throws IOException, SQLException, JAXBException, TransformerException,
             ParserConfigurationException, SAXException {
-        // resources dir
-        String root = Paths.get(
-                "002_junior_chapter_003", "src", "main", "resources", "ru", "job4j", "xml"
-        ).toAbsolutePath().toString();
-        // make paths
-        Path propFile = Paths.get(root, "xml_test.properties");
-        Path dbFile = Paths.get(root, "entries.db");
-        Path xmlFirst = Paths.get(root, "entriesFirst.xml");
-        Path xmlSecond = Paths.get(root, "entriesSecond.xml");
-        Path xslScheme = Paths.get(root, "scheme.xsl");
+        // beginning time
+        long start = System.currentTimeMillis();
         // generate values in db
-        try (StoreSQL store = new StoreSQL(propFile, dbFile)) {
-            store.generate(5);
+        System.out.format("Making DB with %s values... ", N_VALUES);
+        try (StoreSQL store = new StoreSQL(CONFIG, DATABASE)) {
+            store.generate(N_VALUES);
         }
+        System.out.println("DONE!");
         // store from db to xml
-        try (StoreXML store = new StoreXML(propFile, dbFile, xmlFirst)) {
-            store.convert();
+        System.out.print("Saving to xml... ");
+        try (StoreXML store = new StoreXML(CONFIG, DATABASE, XML_BEFORE)) {
+            store.storeXML();
         }
+        System.out.println("DONE!");
         // convert xml with xslt
-        new TransformXSLT().convert(xmlFirst, xmlSecond, xslScheme);
+        System.out.print("Transforming xml... ");
+        new TransformXSLT().convert(XML_BEFORE, XML_AFTER, SCHEME);
+        System.out.println("DONE!");
         // parse converted xml
-        int fieldSum = new ParseSAX().parseFieldSum(xmlSecond);
-        System.out.format("\"field\" values sum = %s", fieldSum);
+        System.out.print("Parsing new xml... ");
+        String result = new ParseSAX().parse(XML_AFTER);
+        System.out.println("DONE!");
+        // print result
+        System.out.println();
+        long time = System.currentTimeMillis() - start;
+        System.out.format("= Result: %s%n", result);
+        System.out.format("= Time consumed: %s seconds%n", time / 1000);
+
     }
 }
