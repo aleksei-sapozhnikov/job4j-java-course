@@ -137,7 +137,7 @@ public class Main {
      */
     private void convertXml() throws IOException, TransformerException {
         System.out.print("Converting xml... ");
-        new TransformXSLT().convert(this.xmlBefore, this.xmlAfter, this.scheme);
+        new TransformXSL().convert(this.xmlBefore, this.xmlAfter, this.scheme);
         System.out.println("DONE!");
     }
 

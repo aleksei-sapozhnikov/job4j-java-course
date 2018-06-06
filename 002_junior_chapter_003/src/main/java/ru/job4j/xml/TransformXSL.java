@@ -18,7 +18,7 @@ import java.nio.file.Path;
  * @version $Id$
  * @since 04.06.2018
  */
-public class TransformXSLT {
+public class TransformXSL {
 
     /**
      * @param source XML file to transform.

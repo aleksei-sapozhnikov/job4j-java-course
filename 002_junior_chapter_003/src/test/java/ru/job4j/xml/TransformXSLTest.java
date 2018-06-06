@@ -2,12 +2,11 @@ package ru.job4j.xml;
 
 import org.junit.Test;
 
-import javax.xml.bind.JAXBException;
+import javax.xml.transform.TransformerException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.SQLException;
 import java.util.Properties;
 import java.util.StringJoiner;
 
@@ -15,38 +14,34 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
 /**
- * Tests for StoreXML class.
+ * Tests for TransformXSL class.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
- * @since 05.06.2018
+ * @since 06.06.2018
  */
-public class StoreXMLTest {
+public class TransformXSLTest {
     private final Path config = Paths.get("src/main/resources/ru/job4j/xml/testing.properties").toAbsolutePath();
-    private final Path dbAddress;
+    private final Path xslScheme;
 
-    public StoreXMLTest() throws IOException, ClassNotFoundException {
+
+    public TransformXSLTest() throws IOException, ClassNotFoundException {
         Class.forName("org.sqlite.JDBC");
         Properties prop = new Properties();
         prop.load(Files.newInputStream(this.config));
-        this.dbAddress = Paths.get(config.getParent().toString(), prop.getProperty("db_file"));
+        this.xslScheme = Paths.get(this.config.getParent().toString(), prop.getProperty("scheme_file"));
     }
 
     /**
-     * Test store()
+     * Test generate()
      */
     @Test
-    public void whenStoreGeneratedValuesFromDatabaseThenXmlFileAsNeeded() throws IOException, SQLException, JAXBException {
+    public void whenTransformXmlFormatReturnRightResult() throws IOException, TransformerException {
+        // set data
         Path tempDir = Files.createTempDirectory("temp");
-        Path target = Files.createTempFile(tempDir, "target.xml", "");
-        try (StoreSQL store = new StoreSQL(this.config, this.dbAddress)) {
-            store.generate(5);
-        }
-        try (StoreXML store = new StoreXML(this.config, this.dbAddress, target)) {
-            store.storeXML();
-        }
-        String result = new String(Files.readAllBytes(target));
-        String expected = new StringJoiner("\n")
+        Path source = Files.createTempFile(tempDir, "source.xml", "");
+        Path target = Files.createTempFile(tempDir, "converted.xml", "");
+        String text = new StringJoiner("\n")
                 .add("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>")
                 .add("<entries>")
                 .add("    <entry>")
@@ -67,7 +62,21 @@ public class StoreXMLTest {
                 .add("</entries>")
                 .add("")
                 .toString();
+        Files.write(source, text.getBytes());
+        //transform
+        new TransformXSL().convert(source, target, this.xslScheme);
+        String result = new String(Files.readAllBytes(target));
+        String expected = new StringJoiner(System.lineSeparator())
+                .add("<?xml version=\"1.0\" encoding=\"UTF-8\"?>")
+                .add("<entries>")
+                .add("    <entry field=\"1\"/>")
+                .add("    <entry field=\"2\"/>")
+                .add("    <entry field=\"3\"/>")
+                .add("    <entry field=\"4\"/>")
+                .add("    <entry field=\"5\"/>")
+                .add("</entries>")
+                .add("")
+                .toString();
         assertThat(result, is(expected));
     }
-
 }
