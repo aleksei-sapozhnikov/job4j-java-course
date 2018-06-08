@@ -1,10 +1,14 @@
 package ru.job4j.vacancies;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -13,7 +17,8 @@ import java.util.regex.Pattern;
 public class ListLinks {
     public static void main(String[] args) throws IOException, ParseException {
 
-        /*
+        DateFormat dateOther = new SimpleDateFormat("dd MMM yy, hh:mm");
+        Pattern isDateOther = Pattern.compile("[0-9]+");
 
         for (int i = 1; i <= 1; i++) {
             String url = String.format("http://www.sql.ru/forum/job-offers/%s", i);
@@ -36,6 +41,9 @@ public class ListLinks {
                 Element date = row.selectFirst("td.altCol[style='text-align:center']");
                 if (date != null) {
                     sTime = date.text();
+                    if (isDateOther.matcher(sTime).lookingAt()) {
+                        sTime = dateOther.parse(sTime).toString();
+                    }
                 }
                 if (sTime != null && sTheme != null) {
                     String output = String.format("%s%n%s%n%s%n", sTime, sTheme, sUrl);
@@ -43,34 +51,6 @@ public class ListLinks {
                 }
             }
         }
-
-
-        */
-
-        String s1 = "16 июн 17, 14:21";
-        String s2 = "5 июн 18, 23:51";
-        String s3 = "вчера, 12:43";
-        String s4 = "сегодня, 13:23";
-
-        Pattern pattern = Pattern.compile("[0-9]+");
-        Matcher m1 = pattern.matcher(s1);
-        Matcher m2 = pattern.matcher(s2);
-        Matcher m3 = pattern.matcher(s3);
-        Matcher m4 = pattern.matcher(s4);
-
-        /*
-        System.out.println(m1.lookingAt());
-        System.out.println(m2.lookingAt());
-        System.out.println(m3.lookingAt());
-        System.out.println(m4.lookingAt());
-*/
-
-        DateFormat format = new SimpleDateFormat("dd MMM yy, hh:mm");
-
-        System.out.println(format.parse(s1));
-        System.out.println(format.parse(s2));
-
-
     }
 
 }
