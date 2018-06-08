@@ -47,7 +47,7 @@ public class ListLinks {
 
         */
 
-        String s1 = "6 июн 18, 14:21";
+        String s1 = "16 июн 17, 14:21";
         String s2 = "5 июн 18, 23:51";
         String s3 = "вчера, 12:43";
         String s4 = "сегодня, 13:23";
@@ -65,7 +65,7 @@ public class ListLinks {
         System.out.println(m4.lookingAt());
 */
 
-        DateFormat format = new SimpleDateFormat("d MMM yy, hh:mm");
+        DateFormat format = new SimpleDateFormat("dd MMM yy, hh:mm");
 
         System.out.println(format.parse(s1));
         System.out.println(format.parse(s2));
