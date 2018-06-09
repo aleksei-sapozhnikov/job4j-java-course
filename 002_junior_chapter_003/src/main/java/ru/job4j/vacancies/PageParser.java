@@ -6,6 +6,8 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -26,17 +28,35 @@ public class PageParser {
 
     public static void main(String[] args) throws ParseException, IOException {
         PageParser parser = new PageParser();
-        List<Vacancy> found = parser.parsePage("http://www.sql.ru/forum/job-offers");
-        for (Vacancy f : found) {
-            System.out.println(f);
-        }
 
+        List<Vacancy> found = parser.parseFile(Paths.get(
+                "002_junior_chapter_003/src/main/resources/ru/job4j/vacancies/test_sources/test_parser_sample_1.htm"
+        ));
+
+        List<Vacancy> found1 = parser.parseUrl("http://www.sql.ru/forum/job-offers");
+        for (int i = 0; i < found.size(); i++) {
+            System.out.println("F I L E: ");
+            System.out.println(found.get(i));
+            System.out.println("U R L: ");
+            System.out.println(found1.get(i));
+            System.out.println("===============================");
+        }
     }
 
-    public List<Vacancy> parsePage(String address) throws IOException, ParseException {
+
+    public List<Vacancy> parseUrl(String address) throws IOException, ParseException {
+        Document document = Jsoup.connect(address).get();
+        return this.parseDocument(document);
+    }
+
+    public List<Vacancy> parseFile(Path file) throws IOException, ParseException {
+        Document doc = Jsoup.parse(file.toFile(), null);
+        return this.parseDocument(doc);
+    }
+
+    private List<Vacancy> parseDocument(Document document) throws ParseException {
         List<Vacancy> result = new LinkedList<>();
-        Document page = Jsoup.connect(address).get();
-        Elements rows = page.select("tr");
+        Elements rows = document.select("tr");
         for (Element row : rows) {
             Element themeEl = row.selectFirst("td.postslisttopic a[href]");
             Element dateEl = row.selectFirst("td.altCol[style='text-align:center']");
@@ -89,10 +109,13 @@ public class PageParser {
 
     private LocalDateTime getTimeAsObjectTodayYesterday(boolean todayYesterday, int hour, int minute) {
         long fromMidnight = hour * 60 + minute;
-        LocalDateTime startDay = ZonedDateTime.ofInstant(
-                todayYesterday ? Instant.now() : Instant.now().minus(1, ChronoUnit.DAYS),
+        ZonedDateTime getDay = ZonedDateTime.ofInstant(
+                todayYesterday
+                        ? Instant.now()
+                        : Instant.now().minus(1, ChronoUnit.DAYS),
                 ZoneId.of("Europe/Moscow")
-        ).toLocalDate().atStartOfDay();
+        );
+        LocalDateTime startDay = getDay.toLocalDate().atStartOfDay();
         return startDay.plus(fromMidnight, ChronoUnit.MINUTES);
     }
 
