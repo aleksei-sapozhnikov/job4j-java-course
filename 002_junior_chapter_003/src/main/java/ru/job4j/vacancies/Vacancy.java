@@ -7,7 +7,7 @@ import java.util.Objects;
 import java.util.StringJoiner;
 
 public class Vacancy {
-    public final ZoneId ZONE_ID = ZoneId.of("Europe/Moscow");
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Moscow");
 
     private final int id;
     private final String theme;

@@ -79,10 +79,10 @@ public class VacancyParser {
     }
 
     private String tyToDateString(String string, boolean todayYesterday) {
-        Instant day = todayYesterday
-                ? Instant.now()
-                : Instant.now().minus(1, ChronoUnit.DAYS);
-        LocalDate date = ZonedDateTime.ofInstant(day, ZONE_ID).toLocalDate();
+        ZonedDateTime day = todayYesterday
+                ? Instant.now().atZone(ZONE_ID)
+                : Instant.now().minus(1, ChronoUnit.DAYS).atZone(ZONE_ID);
+        LocalDate date = day.toLocalDate();
         String time = string.substring(todayYesterday
                 ? TODAY.length()
                 : YESTERDAY.length());

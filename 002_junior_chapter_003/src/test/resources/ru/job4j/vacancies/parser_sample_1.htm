@@ -1,26 +1,28 @@
-<?xml version="1.0"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html lang="ru" xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru">
+<!--?xml version="1.0"?-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" lang="ru">
+<link type="text/css" id="dark-mode" rel="stylesheet" href="">
+<style type="text/css" id="dark-mode-custom-style"></style>
 <head>
     <title>Вакансии / Форум / Sql.ru</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
     <link title="Sql.ru Forum search" type="application/opensearchdescription+xml" rel="search"
-          href="http://www.sql.ru/forum/provider.xml"/>
-    <link rel="stylesheet" type="text/css" href="/css/actualforum2.min.css?v=3" media="screen"/>
+          href="http://www.sql.ru/forum/provider.xml">
+    <link rel="stylesheet" type="text/css" href="parser_sample_1_files/actualforum2.css" media="screen">
     <!--[if lte IE 6]>
     <link rel="stylesheet" type="text/css" href="/css/ie.css" media="screen"/>
     <![endif]-->
-    <meta name="Description" content="Список сообщений из форума Вакансии"/>
+    <meta name="Description" content="Список сообщений из форума Вакансии">
     <link rel="Alternate" type="application/rss+xml" title="SQL.ru: Вакансии"
-          href="http://www.sql.ru/forum/actualrss.aspx?id=66"/>
-    <link rel="canonical" href="http://www.sql.ru/forum/job-offers"/>
+          href="http://www.sql.ru/forum/actualrss.aspx?id=66">
+    <link rel="canonical" href="http://www.sql.ru/forum/job-offers">
+    <script type="text/javascript" async="" src="parser_sample_1_files/watch.js"></script>
+    <script async="" src="parser_sample_1_files/analytics.js"></script>
     <script type="text/javascript">jQuery = false;</script>
     <!--afhead-->
     <!--  <script type="text/javascript" src="/js/utils.js"></script> -->
 
-    <meta property="og:image" content="http://www.sql.ru/images/logofb.jpg"/>
+    <meta property="og:image" content="http://www.sql.ru/images/logofb.jpg">
     <script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;
@@ -44,7 +46,7 @@
     <div id="header">
         <div class="header-wrap">
             <div id="title">
-                <a href="/" title="На главную страницу">SQL.ru</a>
+                <a href="http://www.sql.ru/" title="На главную страницу">SQL.ru</a>
             </div>
             <!--begin case_isguest-->
             <!--        <div id="login">
@@ -91,23 +93,23 @@
                     </form>
             -->
             <ul id="top-menu">
-                <li><a href="/">Главная</a></li>
+                <li><a href="http://www.sql.ru/">Главная</a></li>
 
-                <li><a href="/articles">Статьи</a></li>
+                <li><a href="http://www.sql.ru/articles">Статьи</a></li>
 
-                <li class="selected"><a href="/forum">Форум</a></li>
+                <li class="selected"><a href="http://www.sql.ru/forum">Форум</a></li>
 
-                <li><a href="/blogs">Блоги</a></li>
+                <li><a href="http://www.sql.ru/blogs">Блоги</a></li>
 
-                <li><a href="/books">Книги</a></li>
+                <li><a href="http://www.sql.ru/books">Книги</a></li>
 
-                <li><a href="/subscribe">Рассылка</a></li>
+                <li><a href="http://www.sql.ru/subscribe">Рассылка</a></li>
 
-                <li><a href="/forum/job">Работа</a></li>
+                <li><a href="http://www.sql.ru/forum/job">Работа</a></li>
 
-                <li><a href="/search">Поиск</a></li>
+                <li><a href="http://www.sql.ru/search">Поиск</a></li>
 
-                <li><a href="/faq">FAQ</a></li>
+                <li><a href="http://www.sql.ru/faq">FAQ</a></li>
             </ul>
             <div id="top-advert"></div>
         </div>
@@ -115,9 +117,10 @@
 
     <div id="content-wrapper-forum">
         <form id="af_form" action="actualtopics.aspx" method="get" name="af_form">
-            <input type="hidden" name="bid" value="66"/> <input type="hidden" name="p" value=
-                "1"/> <input type="hidden"
-                             name="s" value="1"/> <input type="hidden" name="search" value=""/>
+            <input name="bid" value="66" type="hidden"> <input name="p" value="1" type="hidden"> <input name="s"
+                                                                                                        value="1"
+                                                                                                        type="hidden">
+            <input name="search" value="" type="hidden">
         </form>
         <script language="javascript" type="text/javascript">
             <!--
@@ -132,52 +135,55 @@
         </script>
 
         <table class="forummenu">
+            <tbody>
             <tr>
-                <td>Добро пожаловать в форум, <b>Guest</b>  &gt;&gt;  
+                <td>Добро пожаловать в форум, <b>Guest</b>&nbsp;&nbsp;&gt;&gt;&nbsp;&nbsp;
                     <!--begin case_isguest-->
-                    <a href="http://www.sql.ru/forum/login.aspx?action=login">Войти</a> | <a
-                            href="http://www.sql.ru/forum/register.aspx">Регистрация</a> | 
-                    <!--end case_isguest--><a href="http://www.sql.ru/forum/actualsearch.aspx?bid=66">Поиск</a> | <a
-                            href=
-                                    "http://www.sql.ru/forum/rules.aspx">Правила</a> | <a class="rss"
-                                                                                          href="http://www.sql.ru/forum/actualrss.aspx?id=66">RSS</a> | 
+                    <a href="http://www.sql.ru/forum/login.aspx?action=login">Войти</a>&nbsp;|&nbsp;<a
+                            href="http://www.sql.ru/forum/register.aspx">Регистрация</a>&nbsp;|&nbsp;
+                    <!--end case_isguest--><a href="http://www.sql.ru/forum/actualsearch.aspx?bid=66">Поиск</a>&nbsp;|&nbsp;<a
+                            href="http://www.sql.ru/forum/rules.aspx">Правила</a>&nbsp;|&nbsp;<a class="rss"
+                                                                                                 href="http://www.sql.ru/forum/actualrss.aspx?id=66">RSS</a>&nbsp;|&nbsp;
                 </td>
 
                 <td style="text-align:right;" align="right"><a
                         href="http://www.sql.ru/forum/actualpost.aspx?bid=66"><img class="button_new"
-                                                                                   src="/images/post.gif" alt=
-                                                                                           "Новый топик"/></a></td>
+                                                                                   src="parser_sample_1_files/post.gif"
+                                                                                   alt="Новый топик"></a></td>
             </tr>
 
             <tr style="font:bold 13px; background-color:#fff;">
-                <td><a class="forumLink" href="http://www.sql.ru/forum">Все форумы</a> / <a class=
-                                                                                                    "forumLink"
-                                                                                            href="http://www.sql.ru/forum/job-offers">Вакансии</a>     
-                    <span style=
-                                  "font-size:90%">&nbsp;[Форум <a href="/forum/job">Работа</a> ]</span></td>
+                <td><a class="forumLink" href="http://www.sql.ru/forum">Все форумы</a> / <a class="forumLink"
+                                                                                            href="http://www.sql.ru/forum/job-offers">Вакансии</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span style="font-size:90%">&nbsp;[Форум <a href="http://www.sql.ru/forum/job">Работа</a> ]</span>
+                </td>
 
                 <td align="right">
                     <form action="/forum/afsearch.aspx" method="get">
-                        <label for="search_in">Поиск:</label>&nbsp;<input id="search_in" name="s" size="30" type=
-                            "text" value=""/>&nbsp;<input type="submit" name="submit" value="Найти"/>
-                        <input type="hidden" name="bid" value="66"/>
+                        <label for="search_in">Поиск:</label>&nbsp;<input id="search_in" name="s" size="30" type="text">&nbsp;<input
+                            name="submit" value="Найти" type="submit">
+                        <input name="bid" value="66" type="hidden">
                     </form>
                 </td>
             </tr>
+            </tbody>
         </table><!--&nbsp;[Форум <a href="/forum/job">Работа</a> ]-->
 
         <table class="sort_options">
+            <tbody>
             <tr>
                 <td></td>
 
                 <td align="right">
                 </td>
             </tr>
+            </tbody>
         </table>
 
         <!--begin topicstable-->
 
         <table class="forumTable">
+            <tbody>
             <tr>
                 <th class="icon_cell"></th>
 
@@ -193,7 +199,7 @@
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic">Важно: <a
                         href="http://www.sql.ru/forum/485068/soobshheniya-ot-moderatorov-zdes-vy-mozhete-uznat-prichiny-udaleniya-topikov">Сообщения
@@ -212,6 +218,8 @@
                     <!--end case_ismultipage-->
                     <!--begin case_istopicclosed-->
                     <span class="closedTopic"> [закрыт]</span> <!--end case_istopicclosed-->
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=485068">[new]</a>
 
                 </td>
 
@@ -221,18 +229,20 @@
 
                 <td style="text-align:center">326</td>
 
-                <td style="text-align:center">189618</td>
+                <td style="text-align:center">189786</td>
 
                 <td style="text-align:center" class="altCol">9 окт 17, 14:47</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic">Важно: <a href="http://www.sql.ru/forum/1196621/shpargalki">Шпаргалки</a>
 
                     <!--begin case_istopicclosed-->
                     <span class="closedTopic"> [закрыт]</span> <!--end case_istopicclosed-->
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1196621">[new]</a>
 
                 </td>
 
@@ -242,19 +252,21 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">15406</td>
+                <td style="text-align:center">15417</td>
 
                 <td style="text-align:center" class="altCol">22 янв 16, 10:56</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/exclamation.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/exclamation.gif" alt=""></td>
 
                 <td class="postslisttopic">Важно: <a href="http://www.sql.ru/forum/484798/pravila-foruma">Правила
                     форума</a>
 
                     <!--begin case_istopicclosed-->
                     <span class="closedTopic"> [закрыт]</span> <!--end case_istopicclosed-->
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=484798">[new]</a>
 
                 </td>
 
@@ -264,45 +276,30 @@
 
                 <td style="text-align:center">4</td>
 
-                <td style="text-align:center">39279</td>
+                <td style="text-align:center">39293</td>
 
                 <td style="text-align:center" class="altCol">11 фев 09, 00:03</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
-
-                <td class="postslisttopic"><a
-                        href="http://www.sql.ru/forum/1295625/programmist-c-oracle-v-odezhnuu-roznicu-70-000">Программист
-                    C# + Oracle в одежную розницу. 70 000+</a>
-
-
-                      <a class="newTopic"
-                         href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295625">[new]</a>
-
-                </td>
-
-                <td class="altCol">
-                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=17735">
-                        AngySacin </a></td>
-
-                <td style="text-align:center">4</td>
-
-                <td style="text-align:center">29</td>
-
-                <td style="text-align:center" class="altCol">сегодня, 15:53</td>
-            </tr>
-
-            <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295474/junior-programmist-oracle-sql-72000-r-na-ruki">Junior
                     программист Oracle SQL, 72000 р.(на руки)</a>
+                    <!--begin case_ismultipage-->
+                    <span style="margin-left: 10px">(<a class="pages"
+                                                        href="http://www.sql.ru/forum/1295474-1/junior-programmist-oracle-sql-72000-r-na-ruki">1</a>,<a
+                            class="pages"
+                            href="http://www.sql.ru/forum/1295474-2/junior-programmist-oracle-sql-72000-r-na-ruki">2</a>,<a
+                            class="pages"
+                            href="http://www.sql.ru/forum/1295474-3/junior-programmist-oracle-sql-72000-r-na-ruki">3</a>,<a
+                            class="pages"
+                            href="http://www.sql.ru/forum/1295474-a/junior-programmist-oracle-sql-72000-r-na-ruki">все</a>)</span>
+                    <!--end case_ismultipage-->
 
-
-                      <a class="newTopic"
-                         href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295474">[new]</a>
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295474">[new]</a>
 
                 </td>
 
@@ -310,22 +307,93 @@
                     <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=236001">
                         ArchiSQL </a></td>
 
-                <td style="text-align:center">17</td>
+                <td style="text-align:center">52</td>
 
-                <td style="text-align:center">558</td>
+                <td style="text-align:center">1047</td>
 
-                <td style="text-align:center" class="altCol">сегодня, 15:52</td>
+                <td style="text-align:center" class="altCol">сегодня, 12:31</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
+
+                <td class="postslisttopic"><a
+                        href="http://www.sql.ru/forum/1294701/java-developer-j2ee-razrabotchik-moskva-150-200-udalenno">Java
+                    Developer/J2EE-Разработчик, Москва, 150-200, УДАЛЕННО</a>
+
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294701">[new]</a>
+
+                </td>
+
+                <td class="altCol">
+                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=167532">
+                        rus_sun </a></td>
+
+                <td style="text-align:center">13</td>
+
+                <td style="text-align:center">1012</td>
+
+                <td style="text-align:center" class="altCol">сегодня, 12:09</td>
+            </tr>
+
+            <tr>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
+
+                <td class="postslisttopic"><a href="http://www.sql.ru/forum/1294451/ka-java-razrabotchik-g-voronezh">(КА)
+                    Java разработчик (г. Воронеж)</a>
+
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294451">[new]</a>
+
+                </td>
+
+                <td class="altCol">
+                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=240782">
+                        CVReruitment </a></td>
+
+                <td style="text-align:center">7</td>
+
+                <td style="text-align:center">548</td>
+
+                <td style="text-align:center" class="altCol">вчера, 12:07</td>
+            </tr>
+
+            <tr>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
+
+                <td class="postslisttopic"><a
+                        href="http://www.sql.ru/forum/1295393/vakansiya-razrabotchik-java-back-end-full-time-moskva-250k">вакансия
+                    разработчик java back-end full time Москва 250k</a>
+
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295393">[new]</a>
+
+                </td>
+
+                <td class="altCol">
+                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=241589">
+                        tivodar </a></td>
+
+                <td style="text-align:center">7</td>
+
+                <td style="text-align:center">470</td>
+
+                <td style="text-align:center" class="altCol">сегодня, 12:05</td>
+            </tr>
+
+            <tr>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1295627/starshiy-razrabotchik-etl">Старший
                     разработчик ETL</a>
 
 
-                      <a class="newTopic"
-                         href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295627">[new]</a>
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295627">[new]</a>
 
                 </td>
 
@@ -333,23 +401,102 @@
                     <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=250640">
                         AlexanderAuchan </a></td>
 
-                <td style="text-align:center">0</td>
+                <td style="text-align:center">10</td>
 
-                <td style="text-align:center">31</td>
+                <td style="text-align:center">360</td>
 
-                <td style="text-align:center" class="altCol">сегодня, 15:31</td>
+                <td style="text-align:center" class="altCol">сегодня, 11:42</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
+
+                <td class="postslisttopic"><a
+                        href="http://www.sql.ru/forum/1292854/specialist-tehnicheskoy-podderzhki-1s">Специалист
+                    технической поддержки 1с</a>
+                    <!--begin case_ismultipage-->
+                    <span style="margin-left: 10px">(<a class="pages"
+                                                        href="http://www.sql.ru/forum/1292854-1/specialist-tehnicheskoy-podderzhki-1s">1</a>,<a
+                            class="pages"
+                            href="http://www.sql.ru/forum/1292854-2/specialist-tehnicheskoy-podderzhki-1s">2</a>,<a
+                            class="pages"
+                            href="http://www.sql.ru/forum/1292854-a/specialist-tehnicheskoy-podderzhki-1s">все</a>)</span>
+                    <!--end case_ismultipage-->
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1292854">[new]</a>
+
+                </td>
+
+                <td class="altCol">
+                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=249256">
+                        ocelot </a></td>
+
+                <td style="text-align:center">33</td>
+
+                <td style="text-align:center">1703</td>
+
+                <td style="text-align:center" class="altCol">вчера, 22:01</td>
+            </tr>
+
+            <tr>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
+
+                <td class="postslisttopic"><a
+                        href="http://www.sql.ru/forum/1295625/programmist-c-oracle-v-odezhnuu-roznicu-70-000">Программист
+                    C# + Oracle в одежную розницу. 70 000+</a>
+
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295625">[new]</a>
+
+                </td>
+
+                <td class="altCol">
+                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=17735">
+                        AngySacin </a></td>
+
+                <td style="text-align:center">7</td>
+
+                <td style="text-align:center">273</td>
+
+                <td style="text-align:center" class="altCol">вчера, 21:58</td>
+            </tr>
+
+            <tr>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
+
+                <td class="postslisttopic"><a
+                        href="http://www.sql.ru/forum/1295630/s-developer-asp-net-core-do-220-k-na-ruki-moskva">С#
+                    Developer (ASP.NET Core) до 220 К на руки, Москва</a>
+
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295630">[new]</a>
+
+                </td>
+
+                <td class="altCol">
+                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=250641">
+                        hr_free </a></td>
+
+                <td style="text-align:center">0</td>
+
+                <td style="text-align:center">155</td>
+
+                <td style="text-align:center" class="altCol">9 июн 18, 16:04</td>
+            </tr>
+
+            <tr>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295621/razovaya-rabota-na-web-proekt-pod-oracle-apex">Разовая
                     работа на web-проект под Oracle Apex.</a>
 
 
-                      <a class="newTopic"
-                         href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295621">[new]</a>
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295621">[new]</a>
 
                 </td>
 
@@ -359,21 +506,21 @@
 
                 <td style="text-align:center">1</td>
 
-                <td style="text-align:center">36</td>
+                <td style="text-align:center">100</td>
 
-                <td style="text-align:center" class="altCol">сегодня, 14:40</td>
+                <td style="text-align:center" class="altCol">9 июн 18, 14:40</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295617/oracle-apex-developer-v-voronezhe-sankt-peterburge">Oracle
                     Apex Developer в Воронеже\Санкт-Петербурге</a>
 
 
-                      <a class="newTopic"
-                         href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295617">[new]</a>
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295617">[new]</a>
 
                 </td>
 
@@ -383,21 +530,21 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">42</td>
+                <td style="text-align:center">90</td>
 
-                <td style="text-align:center" class="altCol">сегодня, 13:56</td>
+                <td style="text-align:center" class="altCol">9 июн 18, 13:56</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1291055/razrabotchik-frontofsnoy-sistemy-strahovanie-zhizni-moskva">Разработчик
                     фронтофсной системы (Страхование жизни, Москва)</a>
 
 
-                      <a class="newTopic"
-                         href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1291055">[new]</a>
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1291055">[new]</a>
 
                 </td>
 
@@ -407,13 +554,13 @@
 
                 <td style="text-align:center">23</td>
 
-                <td style="text-align:center">1801</td>
+                <td style="text-align:center">1828</td>
 
-                <td style="text-align:center" class="altCol">сегодня, 13:25</td>
+                <td style="text-align:center" class="altCol">9 июн 18, 13:25</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1291067/razrabotchik-dwh-bi-strahovanie-zhizni-moskva">Разработчик
@@ -427,6 +574,8 @@
                             href="http://www.sql.ru/forum/1291067-a/razrabotchik-dwh-bi-strahovanie-zhizni-moskva">все</a>)</span>
                     <!--end case_ismultipage-->
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1291067">[new]</a>
 
                 </td>
 
@@ -436,39 +585,21 @@
 
                 <td style="text-align:center">33</td>
 
-                <td style="text-align:center">2569</td>
+                <td style="text-align:center">2665</td>
 
-                <td style="text-align:center" class="altCol">сегодня, 11:27</td>
+                <td style="text-align:center" class="altCol">9 июн 18, 11:27</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
-
-                <td class="postslisttopic"><a
-                        href="http://www.sql.ru/forum/1295393/vakansiya-razrabotchik-java-back-end-full-time-moskva-250k">вакансия
-                    разработчик java back-end full time Москва 250k</a>
-
-
-                </td>
-
-                <td class="altCol">
-                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=241589">
-                        tivodar </a></td>
-
-                <td style="text-align:center">6</td>
-
-                <td style="text-align:center">381</td>
-
-                <td style="text-align:center" class="altCol">сегодня, 11:12</td>
-            </tr>
-
-            <tr>
-                <td class="icon_cell"><img src="/forum/images/exclamation.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/exclamation.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1291185/trebuetsya-razrabotchik-python-nodejs-na-udalenku">Требуется
                     разработчик Python/nodejs на удаленку</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1291185">[new]</a>
 
                 </td>
 
@@ -478,18 +609,21 @@
 
                 <td style="text-align:center">12</td>
 
-                <td style="text-align:center">1470</td>
+                <td style="text-align:center">1522</td>
 
-                <td style="text-align:center" class="altCol">сегодня, 09:42</td>
+                <td style="text-align:center" class="altCol">9 июн 18, 09:42</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/exclamation.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/exclamation.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295522/razrabotchik-pl-sql-150-000-180-000-gross-moskva">Разработчик
                     PL/SQL, 150 000 - 180 000 gross, Москва</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295522">[new]</a>
 
                 </td>
 
@@ -499,17 +633,20 @@
 
                 <td style="text-align:center">2</td>
 
-                <td style="text-align:center">269</td>
+                <td style="text-align:center">355</td>
 
-                <td style="text-align:center" class="altCol">вчера, 22:02</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 22:02</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1295332/ka-php-razrabotchik-moskva">(КА)
                     PHP-разработчик, Москва</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295332">[new]</a>
 
                 </td>
 
@@ -519,18 +656,21 @@
 
                 <td style="text-align:center">4</td>
 
-                <td style="text-align:center">113</td>
+                <td style="text-align:center">130</td>
 
-                <td style="text-align:center" class="altCol">вчера, 16:57</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 16:57</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/exclamation.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/exclamation.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295329/vedushhiy-razrabotchik-bi-180-000-210-000-gross-moskva">Ведущий
                     разработчик BI, 180 000 - 210 000 gross, Москва</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295329">[new]</a>
 
                 </td>
 
@@ -540,18 +680,21 @@
 
                 <td style="text-align:center">4</td>
 
-                <td style="text-align:center">434</td>
+                <td style="text-align:center">478</td>
 
-                <td style="text-align:center" class="altCol">вчера, 16:06</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 16:06</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295518/frontend-team-lead-moskva-ofis-ot-190-000-rub">Frontend
                     Team lead/Москва/офис/от 190 000 руб.</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295518">[new]</a>
 
                 </td>
 
@@ -561,18 +704,21 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">93</td>
+                <td style="text-align:center">113</td>
 
-                <td style="text-align:center" class="altCol">вчера, 15:39</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 15:39</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/smoke.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/smoke.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1294882/vedushhiy-programmist-1s-klimovsk-do-150000-t-r">Ведущий
                     программист 1С, Климовск, до 150000 т.р</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294882">[new]</a>
 
                 </td>
 
@@ -582,18 +728,21 @@
 
                 <td style="text-align:center">6</td>
 
-                <td style="text-align:center">419</td>
+                <td style="text-align:center">435</td>
 
-                <td style="text-align:center" class="altCol">вчера, 15:17</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 15:17</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295333/programmist-postgresql-otchetnost-moskva-m-savyolovskaya-130-160-net">Программист
                     PostgreSql (отчетность); Москва, м. Савёловская; 130-160 net</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295333">[new]</a>
 
                 </td>
 
@@ -603,18 +752,21 @@
 
                 <td style="text-align:center">7</td>
 
-                <td style="text-align:center">304</td>
+                <td style="text-align:center">329</td>
 
-                <td style="text-align:center" class="altCol">вчера, 14:09</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 14:09</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295395/dba-mssql-postgresql-moskva-nagatinskaya-do-100-rubley-net">DBA
                     (MSSQL, PostgreSQL) Москва, Нагатинская, до 100 рублей net</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295395">[new]</a>
 
                 </td>
 
@@ -624,13 +776,13 @@
 
                 <td style="text-align:center">19</td>
 
-                <td style="text-align:center">529</td>
+                <td style="text-align:center">558</td>
 
-                <td style="text-align:center" class="altCol">вчера, 13:13</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 13:13</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1275946/razrabotchik-bankovskih-sistem-v-spb">Разработчик
@@ -645,6 +797,8 @@
                             class="pages" href="http://www.sql.ru/forum/1275946-a/razrabotchik-bankovskih-sistem-v-spb">все</a>)</span>
                     <!--end case_ismultipage-->
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1275946">[new]</a>
 
                 </td>
 
@@ -654,18 +808,21 @@
 
                 <td style="text-align:center">176</td>
 
-                <td style="text-align:center">13970</td>
+                <td style="text-align:center">14032</td>
 
-                <td style="text-align:center" class="altCol">вчера, 09:49</td>
+                <td style="text-align:center" class="altCol">8 июн 18, 09:49</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295440/priglashaem-frontend-engineer-angular-react-3k-sevastopol">Приглашаем
                     FRONTEND - Engineer [Angular / React ] 3k СЕВАСТОПОЛЬ</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295440">[new]</a>
 
                 </td>
 
@@ -675,18 +832,21 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">150</td>
+                <td style="text-align:center">171</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 19:16</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295398/razrabotchik-oracle-moskva-130-180-tys-rub">Разработчик
                     Oracle, Москва, 130-180 тыс. руб.</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295398">[new]</a>
 
                 </td>
 
@@ -696,18 +856,21 @@
 
                 <td style="text-align:center">1</td>
 
-                <td style="text-align:center">310</td>
+                <td style="text-align:center">344</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 17:57</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295420/senior-dba-postgesql-moskva-180-220k">Senior DBA
                     (PostgeSQL) Москва, 180-220К</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295420">[new]</a>
 
                 </td>
 
@@ -717,17 +880,20 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">282</td>
+                <td style="text-align:center">308</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 15:39</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1295231/mid-senior-c-c-developer">Mid/senior
                     C/C++ developer</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295231">[new]</a>
 
                 </td>
 
@@ -737,17 +903,20 @@
 
                 <td style="text-align:center">2</td>
 
-                <td style="text-align:center">290</td>
+                <td style="text-align:center">314</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 15:05</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/biggrin.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/biggrin.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1295409/front-dev-moskva-r-d-new-hr">Front
                     dev. Москва, R&amp;D New.HR</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295409">[new]</a>
 
                 </td>
 
@@ -757,18 +926,21 @@
 
                 <td style="text-align:center">1</td>
 
-                <td style="text-align:center">104</td>
+                <td style="text-align:center">149</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 14:43</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1294490/junior-specialist-divizion-finansov">Junior специалист
                     (Дивизион финансов)</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294490">[new]</a>
 
                 </td>
 
@@ -778,18 +950,21 @@
 
                 <td style="text-align:center">4</td>
 
-                <td style="text-align:center">444</td>
+                <td style="text-align:center">460</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 14:16</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295407/ishhem-java-back-end-full-time-moskva-250k">ищем java
                     back-end full time Москва 250k</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295407">[new]</a>
 
                 </td>
 
@@ -799,19 +974,22 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">161</td>
+                <td style="text-align:center">185</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 13:56</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/smoke.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/smoke.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295404/front-dev-moskva-150-185net-react-new-hr-ka">Front dev.
                     Москва, 150-185net, React, New.HR (КА)</a>
 
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295404">[new]</a>
+
                 </td>
 
                 <td class="altCol">
@@ -820,17 +998,20 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">50</td>
+                <td style="text-align:center">60</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 13:52</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/bigeyes.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/bigeyes.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1295403/python-s-moskva-new-hr-ka-150-350">Python,
                     С++ Москва, New.HR (KA), 150-350</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295403">[new]</a>
 
                 </td>
 
@@ -840,13 +1021,13 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">120</td>
+                <td style="text-align:center">150</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 13:49</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/happy.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/happy.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295147/ty-luchshiy-razrabotchik-1s-prihodi-k-nam">Ты лучший
@@ -860,6 +1041,8 @@
                             href="http://www.sql.ru/forum/1295147-a/ty-luchshiy-razrabotchik-1s-prihodi-k-nam">все</a>)</span>
                     <!--end case_ismultipage-->
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295147">[new]</a>
 
                 </td>
 
@@ -869,18 +1052,21 @@
 
                 <td style="text-align:center">33</td>
 
-                <td style="text-align:center">976</td>
+                <td style="text-align:center">1008</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 12:53</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295394/frontend-razrabotchik-dlya-sozdaniya-lichnogo-kabineta">Frontend-разработчик
                     для создания личного кабинета</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295394">[new]</a>
 
                 </td>
 
@@ -890,38 +1076,21 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">70</td>
+                <td style="text-align:center">83</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 12:52</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
-
-                <td class="postslisttopic"><a href="http://www.sql.ru/forum/1294451/ka-java-razrabotchik-g-voronezh">(КА)
-                    Java разработчик (г. Воронеж)</a>
-
-
-                </td>
-
-                <td class="altCol">
-                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=240782">
-                        CVReruitment </a></td>
-
-                <td style="text-align:center">6</td>
-
-                <td style="text-align:center">516</td>
-
-                <td style="text-align:center" class="altCol">7 июн 18, 12:43</td>
-            </tr>
-
-            <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1294703/junior-razrabotchik-t-sql-net-moskva-40-80-tys-rub">Junior
                     разработчик (t-sql, .net), Москва, 40-80 тыс. руб.</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294703">[new]</a>
 
                 </td>
 
@@ -931,18 +1100,21 @@
 
                 <td style="text-align:center">4</td>
 
-                <td style="text-align:center">476</td>
+                <td style="text-align:center">491</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 12:33</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1294514/vakansiya-funkcionalnyy-arhitektor-nabiraem-komandu-na-oracle-tms">Вакансия
                     Функциональный архитектор. Набираем команду на Oracle TMS.</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294514">[new]</a>
 
                 </td>
 
@@ -952,19 +1124,22 @@
 
                 <td style="text-align:center">5</td>
 
-                <td style="text-align:center">472</td>
+                <td style="text-align:center">485</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 10:26</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1294518/vakansiya-vedushhiy-konsultant-nabiraem-komandu-na-oracle-tms">Вакансия
                     Ведущий консультант. Набираем команду на Oracle TMS.</a>
 
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294518">[new]</a>
+
                 </td>
 
                 <td class="altCol">
@@ -973,19 +1148,22 @@
 
                 <td style="text-align:center">4</td>
 
-                <td style="text-align:center">300</td>
+                <td style="text-align:center">310</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 10:25</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1294524/vakansiya-inzhener-oracle-database-nabiraem-komandu-na-oracle-tms">Вакансия
                     Инженер Oracle Database. Набираем команду на Oracle TMS.</a>
 
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294524">[new]</a>
+
                 </td>
 
                 <td class="altCol">
@@ -994,18 +1172,21 @@
 
                 <td style="text-align:center">4</td>
 
-                <td style="text-align:center">748</td>
+                <td style="text-align:center">759</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 10:25</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1294519/vakansiya-vedushhiy-razrabotchik-nabiraem-komandu-na-oracle-tms">Вакансия
                     Ведущий разработчик. Набираем команду на Oracle TMS.</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294519">[new]</a>
 
                 </td>
 
@@ -1015,18 +1196,21 @@
 
                 <td style="text-align:center">10</td>
 
-                <td style="text-align:center">835</td>
+                <td style="text-align:center">845</td>
 
                 <td style="text-align:center" class="altCol">7 июн 18, 10:25</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/exclamation.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/exclamation.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295198/specialist-hyperion-financial-management-110-000-net-na-ruki">Специалист
                     Hyperion Financial Management, 110 000 net (на руки)</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295198">[new]</a>
 
                 </td>
 
@@ -1036,18 +1220,21 @@
 
                 <td style="text-align:center">9</td>
 
-                <td style="text-align:center">277</td>
+                <td style="text-align:center">294</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 21:31</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295242/razrabotchik-hranilishha-dannyh-ms-sql-ssis-as-c">Разработчик
                     хранилища данных MS SQL +[SSIS, AS] +C#</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295242">[new]</a>
 
                 </td>
 
@@ -1057,13 +1244,13 @@
 
                 <td style="text-align:center">12</td>
 
-                <td style="text-align:center">592</td>
+                <td style="text-align:center">612</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 20:07</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1293155/razrabotchik-arhitektor-big-data">Разработчик
                     / Архитектор Big Data</a>
@@ -1076,6 +1263,8 @@
                             href="http://www.sql.ru/forum/1293155-a/razrabotchik-arhitektor-big-data">все</a>)</span>
                     <!--end case_ismultipage-->
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1293155">[new]</a>
 
                 </td>
 
@@ -1085,17 +1274,20 @@
 
                 <td style="text-align:center">28</td>
 
-                <td style="text-align:center">3101</td>
+                <td style="text-align:center">3139</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 19:41</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1295337/razrabotchik-ms-dynamics-crm">Разработчик
                     MS Dynamics CRM</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295337">[new]</a>
 
                 </td>
 
@@ -1105,18 +1297,21 @@
 
                 <td style="text-align:center">1</td>
 
-                <td style="text-align:center">114</td>
+                <td style="text-align:center">127</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 18:18</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295263/rukovoditel-napravleniya-senior-otdel-povysheniya-effektivnosti-biznesa">Руководитель
                     направления / Senior (Отдел повышения эффективности бизнеса)</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295263">[new]</a>
 
                 </td>
 
@@ -1126,17 +1321,20 @@
 
                 <td style="text-align:center">16</td>
 
-                <td style="text-align:center">323</td>
+                <td style="text-align:center">333</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 17:00</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a href="http://www.sql.ru/forum/1294263/postgresql-dba-yandeks-dengi">Postgresql
                     DBA - Яндекс Деньги</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1294263">[new]</a>
 
                 </td>
 
@@ -1146,18 +1344,21 @@
 
                 <td style="text-align:center">23</td>
 
-                <td style="text-align:center">1308</td>
+                <td style="text-align:center">1324</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 16:12</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295321/setevoy-arhitektor-veb-sistemy-sistemnyy-prikladnoy-informacionnyy-arhitektor">Сетевой
                     архитектор (веб-системы, системный, прикладной, информационный архитектор).</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295321">[new]</a>
 
                 </td>
 
@@ -1167,39 +1368,21 @@
 
                 <td style="text-align:center">1</td>
 
-                <td style="text-align:center">93</td>
+                <td style="text-align:center">106</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 16:10</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
-
-                <td class="postslisttopic"><a
-                        href="http://www.sql.ru/forum/1294701/java-developer-j2ee-razrabotchik-moskva-150-200-udalenno">Java
-                    Developer/J2EE-Разработчик, Москва, 150-200, УДАЛЕННО</a>
-
-
-                </td>
-
-                <td class="altCol">
-                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=167532">
-                        rus_sun </a></td>
-
-                <td style="text-align:center">12</td>
-
-                <td style="text-align:center">970</td>
-
-                <td style="text-align:center" class="altCol">6 июн 18, 14:21</td>
-            </tr>
-
-            <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295183/vakansiya-vedushhiy-razrabotchik-ms-sql-g-moskva-130-150-tys-rub">Вакансия
                     Ведущий Разработчик MS SQL г.Москва ( 130-150 тыс. руб)</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295183">[new]</a>
 
                 </td>
 
@@ -1209,13 +1392,13 @@
 
                 <td style="text-align:center">9</td>
 
-                <td style="text-align:center">565</td>
+                <td style="text-align:center">582</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 13:52</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1283306/programmist-analitik-moskva-krasnodar-saratov-tver-vozmozhna-udalyonka">Программист-аналитик
@@ -1229,6 +1412,8 @@
                             href="http://www.sql.ru/forum/1283306-a/programmist-analitik-moskva-krasnodar-saratov-tver-vozmozhna-udalyonka">все</a>)</span>
                     <!--end case_ismultipage-->
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1283306">[new]</a>
 
                 </td>
 
@@ -1238,18 +1423,21 @@
 
                 <td style="text-align:center">29</td>
 
-                <td style="text-align:center">3768</td>
+                <td style="text-align:center">3801</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 13:28</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295282/konsultant-1s-erp-2-4-ot-100-000-rubley-do-170-000-rubley-udalenno">Консультант
                     1С ERP 2.4 от 100 000 рублей до 170 000 рублей (удаленно)</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295282">[new]</a>
 
                 </td>
 
@@ -1259,48 +1447,22 @@
 
                 <td style="text-align:center">0</td>
 
-                <td style="text-align:center">122</td>
+                <td style="text-align:center">132</td>
 
                 <td style="text-align:center" class="altCol">6 июн 18, 11:40</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
-
-                <td class="postslisttopic"><a
-                        href="http://www.sql.ru/forum/1292854/specialist-tehnicheskoy-podderzhki-1s">Специалист
-                    технической поддержки 1с</a>
-                    <!--begin case_ismultipage-->
-                    <span style="margin-left: 10px">(<a class="pages"
-                                                        href="http://www.sql.ru/forum/1292854-1/specialist-tehnicheskoy-podderzhki-1s">1</a>,<a
-                            class="pages"
-                            href="http://www.sql.ru/forum/1292854-2/specialist-tehnicheskoy-podderzhki-1s">2</a>,<a
-                            class="pages"
-                            href="http://www.sql.ru/forum/1292854-a/specialist-tehnicheskoy-podderzhki-1s">все</a>)</span>
-                    <!--end case_ismultipage-->
-
-
-                </td>
-
-                <td class="altCol">
-                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=249256">
-                        ocelot </a></td>
-
-                <td style="text-align:center">30</td>
-
-                <td style="text-align:center">1552</td>
-
-                <td style="text-align:center" class="altCol">6 июн 18, 10:46</td>
-            </tr>
-
-            <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295227/java-razrabotchiki-urovney-junior-i-middle-z-p-do-150000-gross-msk-dinamo-ili-zelenograd">Java
                     разработчики уровней Junior и Middle, з/п до 150000 Gross Мск Динамо или Зеленоград</a>
 
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295227">[new]</a>
+
                 </td>
 
                 <td class="altCol">
@@ -1309,19 +1471,22 @@
 
                 <td style="text-align:center">2</td>
 
-                <td style="text-align:center">236</td>
+                <td style="text-align:center">261</td>
 
                 <td style="text-align:center" class="altCol">5 июн 18, 23:51</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295206/setevoy-inzhener-180000-gross-msk-komandirovki-za-rubezh">Сетевой
                     инженер 180000 Gross МСК+командировки за рубеж</a>
 
 
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295206">[new]</a>
+
                 </td>
 
                 <td class="altCol">
@@ -1330,18 +1495,21 @@
 
                 <td style="text-align:center">2</td>
 
-                <td style="text-align:center">219</td>
+                <td style="text-align:center">239</td>
 
                 <td style="text-align:center" class="altCol">5 июн 18, 23:12</td>
             </tr>
 
             <tr>
-                <td class="icon_cell"><img src="/forum/images/message.gif" alt=""/></td>
+                <td class="icon_cell"><img src="parser_sample_1_files/message.gif" alt=""></td>
 
                 <td class="postslisttopic"><a
                         href="http://www.sql.ru/forum/1295058/vedushhiy-razrabotchik-delphi-oracle-fulltime-moskva-130-000-r">Ведущий
                     разработчик Delphi\Oracle, fulltime, Москва, 130 000 р.</a>
 
+
+                    &nbsp; <a class="newTopic"
+                              href="http://www.sql.ru/forum/actualutils.aspx?action=gotonew&amp;tid=1295058">[new]</a>
 
                 </td>
 
@@ -1351,36 +1519,17 @@
 
                 <td style="text-align:center">5</td>
 
-                <td style="text-align:center">508</td>
+                <td style="text-align:center">523</td>
 
                 <td style="text-align:center" class="altCol">5 июн 18, 20:09</td>
             </tr>
 
-            <tr>
-                <td class="icon_cell"><img src="/forum/images/exclamation.gif" alt=""/></td>
-
-                <td class="postslisttopic"><a
-                        href="http://www.sql.ru/forum/1294818/it-biznes-analitik-product-owner-finansovye-rynki-blokcheyn-moskva">IT
-                    Бизнес-аналитик / Product owner (финансовые рынки, блокчейн) - Москва</a>
-
-
-                </td>
-
-                <td class="altCol">
-                    <a href="http://www.sql.ru/forum/memberinfo.aspx?mid=223462">
-                        Елена N </a></td>
-
-                <td style="text-align:center">1</td>
-
-                <td style="text-align:center">287</td>
-
-                <td style="text-align:center" class="altCol">5 июн 18, 19:28</td>
-            </tr>
-
+            </tbody>
         </table>
         <!--end topicstable-->
 
         <table class="sort_options" style="font-weight: bold">
+            <tbody>
             <tr>
                 <td style="text-align:left">Страницы: <b>1</b> <a href="http://www.sql.ru/forum/job-offers/2">2</a> <a
                         href="http://www.sql.ru/forum/job-offers/3">3</a> <a
@@ -1394,16 +1543,18 @@
                         href="http://www.sql.ru/forum/job-offers/656">656</a></td>
 
                 <td style="text-align:right">Показываются темы: 1 - 50 из
-                    32783
+                    32784
                 </td>
             </tr>
 
+            </tbody>
         </table>
 
         <table style="border:none; width:100%">
+            <tbody>
             <tr>
                 <td><select id="forumSelector" name="bid" class="flatbutton" onchange="forumSelectorChanged()">
-                    <option class="optiongroup" value="-7">Виртуальные форумы</option>
+                    <option class="optiongroup" value="-7" selected="selected">Виртуальные форумы</option>
                     <option value="sqlru-3-days"><!--sel40_-->&nbsp;&nbsp;Темы из всех форумов за 3 дня</option>
                     <option value="myforums"><!--sel-6_-->&nbsp;&nbsp;Мои избранные форумы</option>
                     <option class="optiongroup" value="-1">Использование СУБД</option>
@@ -1477,26 +1628,26 @@
                 </td>
 
                 <td id="mark_read"><a href="http://www.sql.ru/forum/actualutils.aspx?action=markread&amp;bid=66">Пометить
-                    форум прочитанным</a><br/>
+                    форум прочитанным</a><br>
                     <!--afadvbottom--></td>
             </tr>
             <tr style="font:bold 13px; background-color:#fff;">
-                <td colspan="2"><a class="forumLink" href="http://www.sql.ru/forum">Все форумы</a> / <a class=
-                                                                                                                "forumLink"
-                                                                                                        href="http://www.sql.ru/forum/job-offers">Вакансии</a>     
-                    <span style=
-                                  "font-size:90%">&nbsp;[Форум <a href="/forum/job">Работа</a> ]</span></td>
+                <td colspan="2"><a class="forumLink" href="http://www.sql.ru/forum">Все форумы</a> / <a
+                        class="forumLink" href="http://www.sql.ru/forum/job-offers">Вакансии</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <span style="font-size:90%">&nbsp;[Форум <a href="http://www.sql.ru/forum/job">Работа</a> ]</span>
+                </td>
 
                 <td></td>
             </tr>
+            </tbody>
         </table>
 
         <div id="footer">
-            <div class="copyright">2000-2018 © Alex Sibilev, SQL.ru<br/>
-                <a style="font: 11px Verdana;color:#88C" href="/feedback.aspx">Свяжитесь&nbsp;с&nbsp;нами</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a
-                        style="font: 11px Verdana;color:#88C" href="/forum/agreement.aspx">Пользовательское&nbsp;соглашение</a>
+            <div class="copyright">2000-2018 © Alex Sibilev, SQL.ru<br>
+                <a style="font: 11px Verdana;color:#88C" href="http://www.sql.ru/feedback.aspx">Свяжитесь&nbsp;с&nbsp;нами</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a
+                        style="font: 11px Verdana;color:#88C" href="http://www.sql.ru/forum/agreement.aspx">Пользовательское&nbsp;соглашение</a>
             </div>
-            <div class="copyright" style="font: 10px verdana">Generated in 22ms. [8ms]</div>
+            <div class="copyright" style="font: 10px verdana">Generated in 23ms. [8ms]</div>
             <div class="counters">
                 <!-- begin of Rambler's Top100 code
                 <img src="http://counter.rambler.ru/top100.cnt?236431" alt="" width="1" height="1" border="0" />
@@ -1539,5 +1690,6 @@
         <div><img src="//mc.yandex.ru/watch/9237463" style="position:absolute; left:-9999px;" alt=""/></div>
     </noscript><!-- /Yandex.Metrika counter -->
 </div> <!--page containter-->
+
 </body>
 </html>
