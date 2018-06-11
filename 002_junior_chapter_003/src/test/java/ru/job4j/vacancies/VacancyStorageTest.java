@@ -40,7 +40,6 @@ public class VacancyStorageTest {
         }
         assertThat(id, is(found.getId()));
         assertThat(added, is(found));
-        System.out.println(id);
     }
 }
 

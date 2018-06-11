@@ -4,4 +4,4 @@ SELECT
   url,
   updated
 FROM vacancy
-WHERE id = % s;
+WHERE id = '%s';
