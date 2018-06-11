@@ -28,7 +28,7 @@ public class VacancyStorage implements AutoCloseable {
 
     private Connection dbGetConnection(String type, String address, String name,
                                        String user, String password) throws SQLException {
-        String url = String.format("jdbc:%s:%s/%s", type, address, name);
+        String url = String.format("jdbc:%s:%s%s", type, address, "".equals(name) ? "" : "/".concat(name));
         return DriverManager.getConnection(url, user, password);
     }
 
