@@ -24,47 +24,72 @@ public class VacancyParserTest {
 
 
     @Test
-    public void whenParseSampleFileGetsResultAsNeeded() throws IOException, ParseException, URISyntaxException {
+    public void whenParseSampleFileGetVacanciesRight() throws IOException, ParseException, URISyntaxException {
+        VacancyParser parser = new VacancyParser();
         ClassLoader loader = VacancyParserTest.class.getClassLoader();
         String content;
         try (InputStream stream = loader.getResourceAsStream(TEST_1)) {
-            content = this.inputStreamToString(stream);
+            content = this.inputStreamToString(stream, "windows-1251");
         }
-        VacancyParser parser = new VacancyParser();
         List<Vacancy> vacancies = parser.parseString(content);
-        Vacancy today = vacancies.get(0);       // TEST_1: 12:09
-        Vacancy yesterday = vacancies.get(1);   // TEST_1: 12:07
-        Vacancy other = vacancies.get(4);       // TEST_1: 2018-06-05 23:51
-        // 'сегодня, 12:09' in milliseconds
-        Instant todayStart = LocalDate.now().atStartOfDay().atZone(ZONE_ID).toInstant();
-        Instant todayTime = todayStart
+        // get 3 samples
+        Vacancy today = vacancies.get(0);
+        Vacancy yesterday = vacancies.get(1);
+        Vacancy other = vacancies.get(4);
+        // today: 'сегодня, 12:09' in milliseconds
+        Instant tStart = LocalDate.now().atStartOfDay().atZone(ZONE_ID).toInstant();
+        Instant tTime = tStart
                 .plus(12, ChronoUnit.HOURS)
                 .plus(9, ChronoUnit.MINUTES);
-        long todayMillis = todayTime.toEpochMilli();
-        // 'вчера, 12:07' in milliseconds
-        Instant yesterdayStart = todayStart.minus(1, ChronoUnit.DAYS);
-        Instant yesterdayTime = yesterdayStart
+        long todayMillis = tTime.toEpochMilli();
+        // yesterday: 'вчера, 12:07' in milliseconds
+        Instant yStart = tStart.minus(1, ChronoUnit.DAYS);
+        Instant yTime = yStart
                 .plus(12, ChronoUnit.HOURS)
                 .plus(7, ChronoUnit.MINUTES);
-        long yesterdayMillis = yesterdayTime.toEpochMilli();
-        // '5 июн 18, 23:51' in milliseconds
+        long yesterdayMillis = yTime.toEpochMilli();
+        // other date: '5 июн 18, 23:51' in milliseconds
         long otherMillis = LocalDateTime.of(2018, 6, 5, 23, 51)
                 .atZone(ZONE_ID).toInstant().toEpochMilli();
-        // assert
+        // assert today
+        assertThat(today.getId(), is(-1));
+        assertThat(today.getTheme(), is(
+                "Java Developer/J2EE-Разработчик, Москва, 150-200, УДАЛЕННО"
+        ));
+        assertThat(today.getUrl(), is(
+                "http://www.sql.ru/forum/1294701/java-developer-j2ee-razrabotchik-moskva-150-200-udalenno"
+        ));
         assertThat(today.getPublished(), is(todayMillis));
+        // assert yesterday
+        assertThat(yesterday.getId(), is(-1));
+        assertThat(yesterday.getTheme(), is(
+                "(КА) Java разработчик (г. Воронеж)"
+        ));
+        assertThat(yesterday.getUrl(), is(
+                "http://www.sql.ru/forum/1294451/ka-java-razrabotchik-g-voronezh"
+        ));
         assertThat(yesterday.getPublished(), is(yesterdayMillis));
+        // assert other date
+        assertThat(other.getId(), is(-1));
+
+        assertThat(other.getTheme(), is(
+                "Java разработчики уровней Junior и Middle, з/п до 150000 Gross Мск Динамо или Зеленоград"
+        ));
+        assertThat(other.getUrl(), is(
+                "http://www.sql.ru/forum/1295227/java-razrabotchiki-urovney-junior-i-middle-z-p-do-150000-gross-msk-dinamo-ili-zelenograd"
+        ));
         assertThat(other.getPublished(), is(otherMillis));
     }
 
 
-    private String inputStreamToString(InputStream stream) throws IOException {
+    private String inputStreamToString(InputStream stream, String charset) throws IOException {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         byte[] buffer = new byte[1024];
         int length;
         while ((length = stream.read(buffer)) != -1) {
             bytes.write(buffer, 0, length);
         }
-        return bytes.toString("windows-1251");
+        return bytes.toString(charset);
     }
 
 
