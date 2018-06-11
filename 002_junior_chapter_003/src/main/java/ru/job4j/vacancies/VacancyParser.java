@@ -6,8 +6,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.text.ParseException;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -19,7 +17,9 @@ import java.util.Locale;
 /**
  * Page parser.
  */
-public class PageParser {
+public class VacancyParser {
+    public static final ZoneId ZONE_ID = ZoneId.of("Europe/Moscow");
+
     public static final String TODAY = "сегодня";
 
     public static final String YESTERDAY = "вчера";
@@ -32,28 +32,13 @@ public class PageParser {
             "d MMM uu"
     ).withLocale(Locale.forLanguageTag("ru"));
 
-    public static void main(String[] args) throws ParseException, IOException {
-        PageParser parser = new PageParser();
-
-        //List<Vacancy> found = parser.parseUrl("http://www.sql.ru/forum/job-offers");
-
-        List<Vacancy> found = parser.parseFile(
-                Paths.get("002_junior_chapter_003/src/main/resources/ru/job4j/vacancies/test_sources/test_parser_sample_1.htm")
-        );
-
-        for (Vacancy f : found) {
-            System.out.println(f);
-        }
-    }
-
-
     public List<Vacancy> parseUrl(String address) throws IOException, ParseException {
         Document document = Jsoup.connect(address).get();
         return this.parseDocument(document);
     }
 
-    public List<Vacancy> parseFile(Path file) throws IOException, ParseException {
-        Document doc = Jsoup.parse(file.toFile(), null);
+    public List<Vacancy> parseString(String string) throws IOException, ParseException {
+        Document doc = Jsoup.parse(string);
         return this.parseDocument(doc);
     }
 
@@ -73,29 +58,31 @@ public class PageParser {
         return result;
     }
 
-    private LocalDateTime stringToDate(String date) throws ParseException {
-        LocalDateTime result;
+    private long stringToDate(String date) throws ParseException {
+        long result;
         if (date.startsWith(TODAY)) {
-            result = this.parseDateString(
-                    this.todayYesterdayToDate(date, true));
+            result = this.dateStringToMillis(
+                    this.tyToDateString(date, true));
         } else if (date.startsWith(YESTERDAY)) {
-            result = this.parseDateString(
-                    this.todayYesterdayToDate(date, false));
+            result = this.dateStringToMillis(
+                    this.tyToDateString(date, false));
         } else {
-            result = this.parseDateString(date);
+            result = this.dateStringToMillis(date);
         }
         return result;
     }
 
-    private LocalDateTime parseDateString(String date) {
-        return LocalDateTime.parse(date, DATE_TIME_STRING_FORMAT);
+    private long dateStringToMillis(String date) {
+        return LocalDateTime.parse(date, DATE_TIME_STRING_FORMAT)
+                .atZone(ZONE_ID)
+                .toInstant().toEpochMilli();
     }
 
-    private String todayYesterdayToDate(String string, boolean todayYesterday) {
+    private String tyToDateString(String string, boolean todayYesterday) {
         Instant day = todayYesterday
                 ? Instant.now()
                 : Instant.now().minus(1, ChronoUnit.DAYS);
-        LocalDate date = ZonedDateTime.ofInstant(day, ZoneId.of("Europe/Moscow")).toLocalDate();
+        LocalDate date = ZonedDateTime.ofInstant(day, ZONE_ID).toLocalDate();
         String time = string.substring(todayYesterday
                 ? TODAY.length()
                 : YESTERDAY.length());
