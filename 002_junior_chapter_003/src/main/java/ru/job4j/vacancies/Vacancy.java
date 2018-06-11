@@ -44,7 +44,9 @@ public class Vacancy {
     @Override
     public String toString() {
         return new StringJoiner(System.lineSeparator())
-                .add(LocalDateTime.ofInstant(Instant.ofEpochMilli(this.published), ZONE_ID).toString())
+                .add(Integer.toString(this.id)
+                        .concat(" : ")
+                        .concat(LocalDateTime.ofInstant(Instant.ofEpochMilli(this.published), ZONE_ID).toString()))
                 .add(this.theme)
                 .add(this.url)
                 .add("")
