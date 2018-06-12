@@ -52,7 +52,7 @@ public class DateParser {
      * <p>
      * The main reason if "май" on site which could not be parsed.
      */
-    private final Map<String, String> MONTHS_CONVERT = new HashMap<String, String>() {
+    private final Map<String, String> monthsConvert = new HashMap<String, String>() {
         {
             put("янв", "янв");
             put("фев", "фев");
@@ -135,7 +135,7 @@ public class DateParser {
      */
     private String otherToNormal(String other) {
         String[] elements = other.split(" ");
-        elements[1] = MONTHS_CONVERT.get(elements[1]);
+        elements[1] = monthsConvert.get(elements[1]);
         return String.format("%s %s %s %s",
                 elements[0], elements[1], elements[2], elements[3]);
     }
