@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Properties;
 
-public class UsefulMethods {
+public class CommonMethods {
 
     public static String inputStreamToString(InputStream in, String charset) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -46,7 +46,7 @@ public class UsefulMethods {
         try (InputStream input = loader.getResourceAsStream(
                 String.format("%s/%s", pkg, fileName)
         )) {
-            return UsefulMethods.inputStreamToString(input, charset);
+            return CommonMethods.inputStreamToString(input, charset);
         }
     }
 

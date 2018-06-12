@@ -17,7 +17,7 @@ public class VacancyStorageTest {
     private final Properties props = new Properties();
 
     public VacancyStorageTest() throws IOException {
-        Properties props = UsefulMethods.loadProperties(this, CONFIG);
+        Properties props = CommonMethods.loadProperties(this, CONFIG);
     }
 
     private Properties loadProperties(String config) throws IOException {

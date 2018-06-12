@@ -19,8 +19,8 @@ public class VacancyStorage implements AutoCloseable {
     }
 
     VacancyStorage(String config, boolean eraseExisting) throws IOException, SQLException {
-        Properties prop = UsefulMethods.loadProperties(this, config);
-        this.connection = UsefulMethods.getConnectionToDatabase(
+        Properties prop = CommonMethods.loadProperties(this, config);
+        this.connection = CommonMethods.getConnectionToDatabase(
                 prop.getProperty("db.type"), prop.getProperty("db.address"), prop.getProperty("db.name"),
                 prop.getProperty("db.user"), prop.getProperty("db.password"));
         String pkg = prop.getProperty("sql.package");
@@ -30,17 +30,17 @@ public class VacancyStorage implements AutoCloseable {
 
     private void loadSqlQueries(String pkg, Properties prop) throws IOException {
         this.sqlQueries.put("dropTables",
-                UsefulMethods.loadSqlScript(this, pkg, prop.getProperty("sql.drop_all_tables"), "UTF-8"));
+                CommonMethods.loadSqlScript(this, pkg, prop.getProperty("sql.drop_all_tables"), "UTF-8"));
         this.sqlQueries.put("createTables",
-                UsefulMethods.loadSqlScript(this, pkg, prop.getProperty("sql.create_tables"), "UTF-8"));
+                CommonMethods.loadSqlScript(this, pkg, prop.getProperty("sql.create_tables"), "UTF-8"));
         this.sqlQueries.put("addVacancy",
-                UsefulMethods.loadSqlScript(this, pkg, prop.getProperty("sql.add_vacancy"), "UTF-8"));
+                CommonMethods.loadSqlScript(this, pkg, prop.getProperty("sql.add_vacancy"), "UTF-8"));
         this.sqlQueries.put("findVacancyById",
-                UsefulMethods.loadSqlScript(this, pkg, prop.getProperty("sql.find_vacancy_by_id"), "UTF-8"));
+                CommonMethods.loadSqlScript(this, pkg, prop.getProperty("sql.find_vacancy_by_id"), "UTF-8"));
         this.sqlQueries.put("findIdByTitleAndUrl",
-                UsefulMethods.loadSqlScript(this, pkg, prop.getProperty("sql.find_id_by_title_and_url"), "UTF-8"));
+                CommonMethods.loadSqlScript(this, pkg, prop.getProperty("sql.find_id_by_title_and_url"), "UTF-8"));
         this.sqlQueries.put("updateVacancy",
-                UsefulMethods.loadSqlScript(this, pkg, prop.getProperty("sql.update_vacancy"), "UTF-8"));
+                CommonMethods.loadSqlScript(this, pkg, prop.getProperty("sql.update_vacancy"), "UTF-8"));
     }
 
     private void initDatabase(boolean eraseExisting) throws SQLException {
@@ -51,11 +51,11 @@ public class VacancyStorage implements AutoCloseable {
     }
 
     private void dbDropAllTables() throws SQLException {
-        UsefulMethods.dbPerformUpdate(this.connection, this.sqlQueries.get("dropTables"));
+        CommonMethods.dbPerformUpdate(this.connection, this.sqlQueries.get("dropTables"));
     }
 
     private void dbCreateTables() throws SQLException {
-        UsefulMethods.dbPerformUpdate(this.connection, this.sqlQueries.get("createTables"));
+        CommonMethods.dbPerformUpdate(this.connection, this.sqlQueries.get("createTables"));
     }
 
     public void addOrUpdateAll(List<Vacancy> vacancies) throws SQLException {
@@ -90,7 +90,7 @@ public class VacancyStorage implements AutoCloseable {
         String query = String.format(this.sqlQueries.get("updateVacancy"),
                 update.getTitle(), update.getUrl(),
                 new java.sql.Timestamp(update.getUpdated()), id);
-        UsefulMethods.dbPerformUpdate(this.connection, query);
+        CommonMethods.dbPerformUpdate(this.connection, query);
     }
 
     public Vacancy findById(int id) throws SQLException {

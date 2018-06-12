@@ -34,7 +34,7 @@ public class VacancyParserTest {
         ClassLoader loader = VacancyParserTest.class.getClassLoader();
         String content;
         try (InputStream stream = loader.getResourceAsStream(TEST_1)) {
-            content = UsefulMethods.inputStreamToString(stream, "windows-1251");
+            content = CommonMethods.inputStreamToString(stream, "windows-1251");
         }
         // get vacancies
         List<Vacancy> vacancies = parser.parseString(content);
