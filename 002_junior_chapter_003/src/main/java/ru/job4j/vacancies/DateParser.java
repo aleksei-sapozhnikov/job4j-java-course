@@ -22,21 +22,21 @@ public class DateParser {
             "d MMM uu"
     ).withLocale(Locale.forLanguageTag("ru"));
 
-    public static final Map<String, String> months = new HashMap<>();
+    public static final Map<String, String> MONTHS = new HashMap<>();
 
     {
-        months.put("янв", "янв");
-        months.put("фев", "фев");
-        months.put("мар", "мар");
-        months.put("апр", "апр");
-        months.put("май", "мая");
-        months.put("июн", "июн");
-        months.put("июл", "июл");
-        months.put("авг", "авг");
-        months.put("сен", "сен");
-        months.put("окт", "окт");
-        months.put("ноя", "ноя");
-        months.put("дек", "дек");
+        MONTHS.put("янв", "янв");
+        MONTHS.put("фев", "фев");
+        MONTHS.put("мар", "мар");
+        MONTHS.put("апр", "апр");
+        MONTHS.put("май", "мая");
+        MONTHS.put("июн", "июн");
+        MONTHS.put("июл", "июл");
+        MONTHS.put("авг", "авг");
+        MONTHS.put("сен", "сен");
+        MONTHS.put("окт", "окт");
+        MONTHS.put("ноя", "ноя");
+        MONTHS.put("дек", "дек");
     }
 
     long stringToMillis(String date) {
@@ -73,7 +73,7 @@ public class DateParser {
 
     private String otherToNormal(String date) {
         String[] elements = date.split(" ");
-        elements[1] = months.get(elements[1]);
+        elements[1] = MONTHS.get(elements[1]);
         return String.format("%s %s %s %s",
                 elements[0], elements[1], elements[2], elements[3]);
     }
