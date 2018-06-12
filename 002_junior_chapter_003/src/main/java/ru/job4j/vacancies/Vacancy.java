@@ -10,35 +10,35 @@ public class Vacancy {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Moscow");
 
     private final int id;
-    private final String theme;
+    private final String title;
     private final String url;
-    private final long published;
+    private final long updated;
 
-    public Vacancy(int id, String theme, String url, long published) {
+    public Vacancy(int id, String title, String url, long updated) {
         this.id = id;
-        this.theme = theme;
+        this.title = title;
         this.url = url;
-        this.published = published;
+        this.updated = updated;
     }
 
-    public Vacancy(String theme, String url, long published) {
-        this(-1, theme, url, published);
+    public Vacancy(String title, String url, long updated) {
+        this(-1, title, url, updated);
     }
 
     public int getId() {
         return this.id;
     }
 
-    public String getTheme() {
-        return this.theme;
+    public String getTitle() {
+        return this.title;
     }
 
     public String getUrl() {
         return this.url;
     }
 
-    public long getPublished() {
-        return this.published;
+    public long getUpdated() {
+        return this.updated;
     }
 
     @Override
@@ -46,8 +46,8 @@ public class Vacancy {
         return new StringJoiner(System.lineSeparator())
                 .add(Integer.toString(this.id)
                         .concat(" : ")
-                        .concat(LocalDateTime.ofInstant(Instant.ofEpochMilli(this.published), ZONE_ID).toString()))
-                .add(this.theme)
+                        .concat(LocalDateTime.ofInstant(Instant.ofEpochMilli(this.updated), ZONE_ID).toString()))
+                .add(this.title)
                 .add(this.url)
                 .add("")
                 .toString();
@@ -62,13 +62,13 @@ public class Vacancy {
             return false;
         }
         Vacancy vacancy = (Vacancy) o;
-        return published == vacancy.published
-                && Objects.equals(theme, vacancy.theme)
+        return updated == vacancy.updated
+                && Objects.equals(title, vacancy.title)
                 && Objects.equals(url, vacancy.url);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(theme, url, published);
+        return Objects.hash(title, url, updated);
     }
 }

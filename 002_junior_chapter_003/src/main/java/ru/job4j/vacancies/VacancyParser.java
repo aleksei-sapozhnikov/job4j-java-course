@@ -7,30 +7,64 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.time.*;
-import java.time.format.DateTimeFormatter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Page parser.
  */
 public class VacancyParser {
     public static final ZoneId ZONE_ID = ZoneId.of("Europe/Moscow");
+    private final DateParser dateParser = new DateParser();
 
-    public static final String TODAY = "сегодня";
+    public List<Vacancy> parseVacanciesFromNowToStartOfTheYear(String baseAddress, int year) throws IOException, ParseException {
+        long yearStart = LocalDateTime.of(
+                year, 1, 1, 0, 0
+        ).atZone(ZONE_ID).toInstant().toEpochMilli();
+        return this.parseVacanciesUntilOldestNeeded(baseAddress, yearStart);
+    }
 
-    public static final String YESTERDAY = "вчера";
+    public List<Vacancy> parseVacanciesFromNowToYesterday(String baseAddress) throws IOException, ParseException {
+        long yesterdayStart = LocalDate.now().minus(1, ChronoUnit.DAYS)
+                .atTime(0, 0).atZone(ZONE_ID)
+                .toInstant().toEpochMilli();
+        return this.parseVacanciesUntilOldestNeeded(baseAddress, yesterdayStart);
+    }
 
-    public static final DateTimeFormatter DATE_TIME_STRING_FORMAT = DateTimeFormatter.ofPattern(
-            "d MMM uu, kk:mm"
-    ).withLocale(Locale.forLanguageTag("ru"));
+    public List<Vacancy> parseVacanciesUntilOldestNeeded(String baseAddress, long oldestTime) throws IOException, ParseException {
+        List<Vacancy> result = new LinkedList<>();
+        boolean[] work = {true};
+        int pageNum = 1;
+        while (work[0]) {
+            this.checkPageNum(pageNum, 600);
+            String url = String.format("%s/%s", baseAddress, pageNum++);
+            this.parseVacanciesAndCheckPublishedTime(url, result, oldestTime, work);
+        }
+        return result;
+    }
 
-    public static final DateTimeFormatter DATE_FORMAT_TODAY_YESTERDAY = DateTimeFormatter.ofPattern(
-            "d MMM uu"
-    ).withLocale(Locale.forLanguageTag("ru"));
+    private void checkPageNum(int pageNum, int max) {
+        if (pageNum > max) {
+            throw new RuntimeException(String.format("Parser went too far (page #%s)", pageNum));
+        }
+    }
+
+    private void parseVacanciesAndCheckPublishedTime(String url, List<Vacancy> result,
+                                                     long oldestTime, boolean[] flagWork)
+            throws IOException, ParseException {
+        List<Vacancy> found = this.parseUrl(url);
+        for (Vacancy vacancy : found) {
+            if (vacancy.getUpdated() >= oldestTime) {
+                result.add(vacancy);
+            } else {
+                flagWork[0] = false;
+            }
+        }
+    }
 
     public List<Vacancy> parseUrl(String address) throws IOException, ParseException {
         Document document = Jsoup.connect(address).get();
@@ -47,54 +81,22 @@ public class VacancyParser {
         Elements rows = document.select("tr");
         for (Element row : rows) {
             Element theme = row.selectFirst("td.postslisttopic a[href]");
-            Element published = row.selectFirst("td.altCol[style='text-align:center']");
-            if (isValid(theme, published)) {
+            Element updated = row.selectFirst("td.altCol[style='text-align:center']");
+            if (this.isElementValid(theme, updated)) {
                 result.add(new Vacancy(
                         theme.text(), theme.attr("abs:href"),
-                        this.stringToDate(published.text()))
+                        this.dateParser.stringToMillis(updated.text()))
                 );
             }
         }
         return result;
     }
 
-    private long stringToDate(String date) throws ParseException {
-        long result;
-        if (date.startsWith(TODAY)) {
-            result = this.dateStringToMillis(
-                    this.tyToDateString(date, true));
-        } else if (date.startsWith(YESTERDAY)) {
-            result = this.dateStringToMillis(
-                    this.tyToDateString(date, false));
-        } else {
-            result = this.dateStringToMillis(date);
-        }
-        return result;
-    }
-
-    private long dateStringToMillis(String date) {
-        return LocalDateTime.parse(date, DATE_TIME_STRING_FORMAT)
-                .atZone(ZONE_ID)
-                .toInstant().toEpochMilli();
-    }
-
-    private String tyToDateString(String string, boolean todayYesterday) {
-        ZonedDateTime day = todayYesterday
-                ? Instant.now().atZone(ZONE_ID)
-                : Instant.now().minus(1, ChronoUnit.DAYS).atZone(ZONE_ID);
-        LocalDate date = day.toLocalDate();
-        String time = string.substring(todayYesterday
-                ? TODAY.length()
-                : YESTERDAY.length());
-        return String.format("%s%s", date.format(DATE_FORMAT_TODAY_YESTERDAY), time);
-    }
-
-    private boolean isValid(Element theme, Element date) {
+    boolean isElementValid(Element theme, Element date) {
         boolean notNull = theme != null && date != null;
         String lower = notNull ? theme.text().toLowerCase() : "";
         return notNull
                 && lower.contains("java")
                 && !lower.contains("script");
     }
-
 }

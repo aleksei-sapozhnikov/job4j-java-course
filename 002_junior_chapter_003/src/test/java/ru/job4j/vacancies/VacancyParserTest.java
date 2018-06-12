@@ -59,26 +59,33 @@ public class VacancyParserTest {
                 .atZone(ZONE_ID).toInstant().toEpochMilli();
         //today
         assertThat(today.getId(), is(-1));
-        assertThat(today.getPublished(), is(todayMillis));
-        assertThat(today.getTheme(), is(
+        assertThat(today.getUpdated(), is(todayMillis));
+        assertThat(today.getTitle(), is(
                 "Java Developer/J2EE-Разработчик, Москва, 150-200, УДАЛЕННО"));
         assertThat(today.getUrl(), is(
                 "http://www.sql.ru/forum/1294701/java-developer-j2ee-razrabotchik-moskva-150-200-udalenno"));
         // yesterday
         assertThat(yesterday.getId(), is(-1));
-        assertThat(yesterday.getPublished(), is(yesterdayMillis));
-        assertThat(yesterday.getTheme(), is(
+        assertThat(yesterday.getUpdated(), is(yesterdayMillis));
+        assertThat(yesterday.getTitle(), is(
                 "(КА) Java разработчик (г. Воронеж)"));
         assertThat(yesterday.getUrl(), is(
                 "http://www.sql.ru/forum/1294451/ka-java-razrabotchik-g-voronezh"));
         // other
         assertThat(other.getId(), is(-1));
-        assertThat(other.getPublished(), is(otherMillis));
-        assertThat(other.getTheme(), is(
+        assertThat(other.getUpdated(), is(otherMillis));
+        assertThat(other.getTitle(), is(
                 "Java разработчики уровней Junior и Middle, з/п до 150000 Gross Мск Динамо или Зеленоград"));
         assertThat(other.getUrl(), is(
                 "http://www.sql.ru/forum/1295227/java-razrabotchiki-urovney-junior-i-middle-z-p-do-150000-gross-msk-dinamo-ili-zelenograd"));
     }
 
+    @Test
+    public void whenParsePagesUntilOldestNeeded() throws IOException, ParseException {
+        VacancyParser parser = new VacancyParser();
+        List<Vacancy> year = parser.parseVacanciesFromNowToStartOfTheYear("http://www.sql.ru/forum/job-offers", LocalDate.now().getYear());
+        List<Vacancy> yesterday = parser.parseVacanciesFromNowToYesterday("http://www.sql.ru/forum/job-offers");
+
+    }
 
 }

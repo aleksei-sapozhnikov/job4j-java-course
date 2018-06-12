@@ -1,6 +1,6 @@
 SELECT
   id,
-  theme,
+  title,
   url,
   updated
 FROM vacancy

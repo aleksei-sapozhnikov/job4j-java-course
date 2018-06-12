@@ -1,8 +1,9 @@
 CREATE TABLE IF NOT EXISTS vacancy (
   id      SERIAL PRIMARY KEY,
-  theme   TEXT,
+  title   TEXT,
   url     TEXT,
-  updated TIMESTAMP
+  updated TIMESTAMP,
+  UNIQUE (title, url)
 );
 
 
