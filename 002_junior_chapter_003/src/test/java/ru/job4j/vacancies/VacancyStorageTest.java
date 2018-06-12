@@ -1,6 +1,7 @@
 package ru.job4j.vacancies;
 
 import org.junit.Test;
+import ru.job4j.CommonMethods;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,12 +13,14 @@ import static org.junit.Assert.assertThat;
 
 public class VacancyStorageTest {
 
+    public static final CommonMethods METHODS = new CommonMethods();
+
     public static final String CONFIG = "ru/job4j/vacancies/test.properties";
 
     private final Properties props = new Properties();
 
     public VacancyStorageTest() throws IOException {
-        Properties props = CommonMethods.loadProperties(this, CONFIG);
+        Properties props = METHODS.loadProperties(this, CONFIG);
     }
 
     private Properties loadProperties(String config) throws IOException {
