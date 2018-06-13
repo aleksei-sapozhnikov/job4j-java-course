@@ -50,29 +50,33 @@ public class Main {
     /**
      * Starts the application and runs thread.
      *
-     * @param args command-line arguments.
+     * @param args command-line arguments. If given <3 arguments, default
+     *             values will be taken instead. Arguments are: 1) base url
+     *             (default: "http://www.sql.ru/forum/job-offers"),
+     *             2) database config file (default: "main.properties'),
+     *             3) sleep time between actions (default: 24 hours).
      */
     public static void main(String[] args) {
         Main main = args.length < 3
                 ? new Main(DEFAULT_BASE_URL, DEFAULT_DB_CONFIG, DEFAULT_SLEEP_TIME)
                 : new Main(args[0], args[1], Long.valueOf(args[3]));
-        Thread aaa = new Thread(main.actionsRunnable);
-        aaa.start();
-        main.waitForStop(main.actionsRunnable);
-        aaa.interrupt();
+        Thread actions = new Thread(main.actionsRunnable);
+        actions.start();
+        main.waitForStop();
+        main.actionsRunnable.markStop();
+        actions.interrupt();
     }
 
     /**
-     * Waits for a signal to stop working and stops the given task.
-     *
-     * @param runnable task to stop when needed.
+     * Waits for a signal to stop working.
      */
-    private void waitForStop(ActionsRunnable runnable) {
+    private void waitForStop() {
         Scanner scanner = new Scanner(System.in);
         String value;
         do {
-            System.out.print("Enter : ");
+            System.out.print("Enter \"stop\" to stop working: ");
             value = scanner.nextLine();
-        } while (!"exit".equals(value));
+        } while (!"stop".equals(value));
     }
+
 }

@@ -41,7 +41,7 @@ public class ActionsRunnable implements Runnable {
     /**
      * Flag showing if this is the first "everyday" cycle or not.
      */
-    private volatile boolean firstRun = false;
+    private volatile boolean firstRun = true;
     /**
      * Flag showing that the thread should continue working.
      */
@@ -131,8 +131,7 @@ public class ActionsRunnable implements Runnable {
         try {
             while (this.work) {
                 doEverydayActions();
-                System.out.println("going sleep");
-                Thread.sleep(this.sleepTime);    // 24 hours
+                Thread.sleep(this.sleepTime);
             }
         } catch (InterruptedException | IOException | SQLException | ParseException e) {
             e.printStackTrace();
@@ -143,7 +142,7 @@ public class ActionsRunnable implements Runnable {
     /**
      * Stops this thread from running. Interrupts waiting.
      */
-    public void stop() {
+    public void markStop() {
         this.work = false;
         Thread.currentThread().interrupt();
     }
