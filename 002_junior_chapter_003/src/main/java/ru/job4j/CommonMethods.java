@@ -103,7 +103,7 @@ public class CommonMethods {
      * @return String containing query.
      * @throws IOException If problems happened with reading from/to InputStream.
      */
-    public String loadSqlScript(Object obj, String pkg, String fileName, String charset) throws IOException {
+    public String loadFileAsString(Object obj, String pkg, String fileName, String charset) throws IOException {
         ClassLoader loader = obj.getClass().getClassLoader();
         try (InputStream input = loader.getResourceAsStream(
                 String.format("%s/%s", pkg, fileName)

@@ -62,7 +62,7 @@ public class VacancyStorage implements AutoCloseable {
         this.connection = METHODS.getConnectionToDatabase(
                 prop.getProperty("db.type"), prop.getProperty("db.address"), prop.getProperty("db.name"),
                 prop.getProperty("db.user"), prop.getProperty("db.password"));
-        String pkg = prop.getProperty("sql.package");
+        String pkg = prop.getProperty("app.package");
         this.loadSqlQueries(pkg, prop);
         this.initDatabase(eraseExisting);
     }
@@ -77,17 +77,17 @@ public class VacancyStorage implements AutoCloseable {
      */
     private void loadSqlQueries(String pkg, Properties prop) throws IOException {
         this.sqlQueries.put("dropTables",
-                METHODS.loadSqlScript(this, pkg, prop.getProperty("sql.drop_all_tables"), "UTF-8"));
+                METHODS.loadFileAsString(this, pkg, prop.getProperty("sql.drop_all_tables"), "UTF-8"));
         this.sqlQueries.put("createTables",
-                METHODS.loadSqlScript(this, pkg, prop.getProperty("sql.create_tables"), "UTF-8"));
+                METHODS.loadFileAsString(this, pkg, prop.getProperty("sql.create_tables"), "UTF-8"));
         this.sqlQueries.put("addVacancy",
-                METHODS.loadSqlScript(this, pkg, prop.getProperty("sql.add_vacancy"), "UTF-8"));
+                METHODS.loadFileAsString(this, pkg, prop.getProperty("sql.add_vacancy"), "UTF-8"));
         this.sqlQueries.put("findVacancyById",
-                METHODS.loadSqlScript(this, pkg, prop.getProperty("sql.find_vacancy_by_id"), "UTF-8"));
+                METHODS.loadFileAsString(this, pkg, prop.getProperty("sql.find_vacancy_by_id"), "UTF-8"));
         this.sqlQueries.put("findIdByTitleAndUrl",
-                METHODS.loadSqlScript(this, pkg, prop.getProperty("sql.find_id_by_title_and_url"), "UTF-8"));
+                METHODS.loadFileAsString(this, pkg, prop.getProperty("sql.find_id_by_title_and_url"), "UTF-8"));
         this.sqlQueries.put("updateVacancy",
-                METHODS.loadSqlScript(this, pkg, prop.getProperty("sql.update_vacancy"), "UTF-8"));
+                METHODS.loadFileAsString(this, pkg, prop.getProperty("sql.update_vacancy"), "UTF-8"));
     }
 
     /**

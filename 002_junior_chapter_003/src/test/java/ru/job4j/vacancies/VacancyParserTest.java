@@ -82,13 +82,4 @@ public class VacancyParserTest {
         assertThat(other.getUrl(), is(
                 "http://www.sql.ru/forum/1295227/java-razrabotchiki-urovney-junior-i-middle-z-p-do-150000-gross-msk-dinamo-ili-zelenograd"));
     }
-
-    @Test
-    public void whenParsePagesUntilOldestNeeded() throws IOException, ParseException {
-        VacancyParser parser = new VacancyParser();
-        List<Vacancy> year = parser.parseVacanciesFromNowToStartOfTheYear("http://www.sql.ru/forum/job-offers", LocalDate.now().getYear());
-        List<Vacancy> yesterday = parser.parseVacanciesFromNowToYesterday("http://www.sql.ru/forum/job-offers");
-
-    }
-
 }

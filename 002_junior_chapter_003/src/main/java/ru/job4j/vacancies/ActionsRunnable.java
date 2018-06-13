@@ -1,5 +1,8 @@
 package ru.job4j.vacancies;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -46,6 +49,11 @@ public class ActionsRunnable implements Runnable {
      * Flag showing that the thread should continue working.
      */
     private volatile boolean work = true;
+    /**
+     * Logger
+     */
+    private static final Logger LOG = LogManager.getLogger(ActionsRunnable.class);
+
 
     /**
      * Constructs new Runnable object with parameters.
@@ -76,13 +84,17 @@ public class ActionsRunnable implements Runnable {
      *                        error or other errors.
      */
     void doEverydayActions() throws IOException, SQLException, ParseException {
+        LOG.info("Everyday actions started.");
         List<Vacancy> found;
         if (firstRun) {
+            LOG.info("First run, parsing till the beginning of this year.");
             found = this.parse(baseUrl, false);
             this.firstRun = false;
         } else {
+            LOG.info("Not first run, parsing till the beginning of yesterday.");
             found = this.parse(baseUrl, true);
         }
+        LOG.info("Storing found vacancies.");
         this.store(found);
     }
 
@@ -130,11 +142,16 @@ public class ActionsRunnable implements Runnable {
     public void run() {
         try {
             while (this.work) {
+                LOG.info("Started");
                 doEverydayActions();
+                LOG.info("Going to sleep");
                 Thread.sleep(this.sleepTime);
             }
-        } catch (InterruptedException | IOException | SQLException | ParseException e) {
+        } catch (IOException | SQLException | ParseException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            LOG.info("Sleep interrupted, exiting.");
+        } finally {
             this.work = false;
         }
     }
@@ -144,7 +161,6 @@ public class ActionsRunnable implements Runnable {
      */
     public void markStop() {
         this.work = false;
-        Thread.currentThread().interrupt();
     }
 
 
