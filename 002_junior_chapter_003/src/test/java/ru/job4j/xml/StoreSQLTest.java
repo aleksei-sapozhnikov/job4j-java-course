@@ -1,9 +1,10 @@
 package ru.job4j.xml;
 
 import org.junit.Test;
+import ru.job4j.CommonMethods;
 
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.DriverManager;
@@ -21,15 +22,20 @@ import static org.junit.Assert.assertArrayEquals;
  * @since 05.06.2018
  */
 public class StoreSQLTest {
-    private final Path config = Paths.get("src/main/resources/ru/job4j/xml/testing.properties").toAbsolutePath();
+    /**
+     * Common useful methods.
+     */
+    private static final CommonMethods METHODS = new CommonMethods();
     private final Path dbAddress;
+    private final String config = "ru/job4j/xml/testing.properties";
 
-
-    public StoreSQLTest() throws IOException, ClassNotFoundException {
+    public StoreSQLTest() throws IOException, ClassNotFoundException, URISyntaxException {
         Class.forName("org.sqlite.JDBC");
-        Properties prop = new Properties();
-        prop.load(Files.newInputStream(this.config));
-        this.dbAddress = Paths.get(this.config.getParent().toString(), prop.getProperty("db_file"));
+        Properties prop = METHODS.loadProperties(this, this.config);
+        String resDir = Paths.get(
+                this.getClass().getResource(".").toURI()
+        ).toAbsolutePath().toString();
+        this.dbAddress = Paths.get(resDir, prop.getProperty("db_file"));
     }
 
     /**

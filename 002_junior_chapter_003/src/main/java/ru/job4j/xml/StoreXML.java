@@ -1,11 +1,12 @@
 package ru.job4j.xml;
 
+import ru.job4j.CommonMethods;
+
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -32,20 +33,23 @@ public class StoreXML implements AutoCloseable {
      * Database connection.
      */
     private final Connection connection;
+    /**
+     * Common useful methods.
+     */
+    private static final CommonMethods METHODS = new CommonMethods();
 
     /**
      * Constructs new object and connects to database.
      *
-     * @param properties Path to .properties file with database connection parameters.
-     * @param dbAddress  Database address (file).
-     * @param target     Target file where to store resulting xml code.
+     * @param propFile  Path to .properties file with database connection parameters.
+     * @param dbAddress Database address (file).
+     * @param target    Target file where to store resulting xml code.
      * @throws IOException  Signals that an I/O exception of some sort has occurred.
      * @throws SQLException Provides information on a database access
      *                      error or other errors.
      */
-    public StoreXML(Path properties, Path dbAddress, Path target) throws IOException, SQLException {
-        Properties p = new Properties();
-        p.load(new FileReader(properties.toString()));
+    public StoreXML(String propFile, Path dbAddress, Path target) throws IOException, SQLException {
+        Properties p = METHODS.loadProperties(this, propFile);
         this.connection = this.dbGetConnection(p, dbAddress);
         this.target = target;
     }

@@ -1,12 +1,15 @@
 package ru.job4j.xml;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
+import ru.job4j.CommonMethods;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -27,44 +30,57 @@ public class Main {
     /**
      * Path to the default config file.
      */
-    public static final Path DEFAULT_CONFIG = Paths.get(
-            "002_junior_chapter_003/src/main/resources/ru/job4j/xml/main.properties"
-    ).toAbsolutePath();
+    public static final String DEFAULT_CONFIG = "ru/job4j/xml/main.properties";
     /**
-     * Path to the config file.
+     * Common useful methods.
      */
-    private final Path config;
+    private static final CommonMethods METHODS = new CommonMethods();
     /**
-     * Path to the XSL scheme file for xml transformation.
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(Main.class);
+    /**
+     * Path to the config file. Loaded by Classloader.
+     */
+    private final String config;
+    /**
+     * Path to the XSL scheme file for xml transformation. Loaded by Classloader.
      */
     private final Path scheme;
     /**
-     * Path to the generated database file where generated values are stored.
+     * Path to the generated database file where generated values are stored. Loaded by Classloader.
      */
     private final Path database;
     /**
-     * Path to the xml file generated from database.
+     * Path to the xml file generated from database. Loaded by Classloader.
      */
     private final Path xmlBefore;
     /**
-     * Path to the transformed xml file.
+     * Path to the transformed xml file. Loaded by Classloader.
      */
     private final Path xmlAfter;
     /**
-     * Number of values to generate in database.
+     * Number of values to generate in database. Loaded by Classloader.
      */
     private final int nValues;
 
-
-    public Main(Path config) throws IOException {
-        Properties prop = new Properties();
-        prop.load(Files.newInputStream(config));
-        String dir = config.getParent().toAbsolutePath().toString();
+    /**
+     * Constructs new Main() object running all processes.
+     *
+     * @param config Config file. Loaded by Classloader.
+     *               Format like: "ru/job4j/xml/main.properties".
+     * @throws IOException If encountered problems in loading properties.
+     */
+    public Main(String config) throws IOException, URISyntaxException {
+        Properties prop = METHODS.loadProperties(this, config);
+        String resDir = Paths.get(
+                this.getClass().getResource(".").toURI()
+        ).toAbsolutePath().toString();
         this.config = config;
-        this.database = Paths.get(dir, prop.getProperty("db_file"));
-        this.scheme = Paths.get(dir, prop.getProperty("scheme_file"));
-        this.xmlBefore = Paths.get(dir, prop.getProperty("xml_before"));
-        this.xmlAfter = Paths.get(dir, prop.getProperty("xml_after"));
+        this.database = Paths.get(resDir, prop.getProperty("db_file"));
+        this.scheme = Paths.get(resDir, prop.getProperty("scheme_file"));
+        this.xmlBefore = Paths.get(resDir, prop.getProperty("xml_before"));
+        this.xmlAfter = Paths.get(resDir, prop.getProperty("xml_after"));
         this.nValues = Integer.valueOf(prop.getProperty("values"));
     }
 
@@ -82,11 +98,11 @@ public class Main {
      */
     public static void main(String[] args)
             throws IOException, SQLException, JAXBException,
-            TransformerException, ParserConfigurationException, SAXException {
+            TransformerException, ParserConfigurationException, SAXException, URISyntaxException {
         Main main = new Main(
                 args.length <= 0
                         ? DEFAULT_CONFIG
-                        : Paths.get(args[0]).toAbsolutePath()
+                        : args[0]
         );
         long start = System.currentTimeMillis();
         main.generateDatabase();
@@ -94,8 +110,7 @@ public class Main {
         main.convertXml();
         String result = main.parseConverted();
         long consumed = System.currentTimeMillis() - start;
-        System.out.println();
-        System.out.println(main.printResult(result, consumed));
+        LOG.info(main.printResult(result, consumed));
     }
 
     /**
@@ -106,11 +121,11 @@ public class Main {
      *                      error or other errors.
      */
     private void generateDatabase() throws IOException, SQLException {
-        System.out.format("Making DB with %,d values... ", this.nValues);
+        LOG.info(String.format("Making DB with %,d values... ", this.nValues));
         try (StoreSQL store = new StoreSQL(this.config, this.database)) {
             store.generate(nValues);
         }
-        System.out.println("DONE!");
+        LOG.info("DONE! Database generated!");
     }
 
     /**
@@ -122,11 +137,11 @@ public class Main {
      * @throws JAXBException Shows problems in dumping database to an xml file with JAXB.
      */
     private void databaseToXml() throws IOException, SQLException, JAXBException {
-        System.out.print("Saving to xml... ");
+        LOG.info("Saving to xml... ");
         try (StoreXML store = new StoreXML(this.config, this.database, this.xmlBefore)) {
             store.storeXML();
         }
-        System.out.println("DONE!");
+        LOG.info("DONE! Xml saved!");
     }
 
     /**
@@ -136,9 +151,9 @@ public class Main {
      * @throws TransformerException Shows problems in transforming xml format using XSL.
      */
     private void convertXml() throws IOException, TransformerException {
-        System.out.print("Converting xml... ");
+        LOG.info("Converting xml... ");
         new TransformXSL().convert(this.xmlBefore, this.xmlAfter, this.scheme);
-        System.out.println("DONE!");
+        LOG.info("DONE! Xml converted!");
     }
 
     /**
@@ -149,9 +164,9 @@ public class Main {
      * @throws SAXException                 Shows other problems in parsing xml file with SAX.
      */
     private String parseConverted() throws ParserConfigurationException, SAXException, IOException {
-        System.out.print("Parsing new xml... ");
+        LOG.info("Parsing new xml... ");
         String result = new ParseSAX().parse(this.xmlAfter);
-        System.out.println("DONE!");
+        LOG.info("DONE! Xml parsing complete!");
         return result;
     }
 
@@ -168,9 +183,7 @@ public class Main {
         long sec = time / 1000;
         long mils = time % 1000;
         return String.format(
-                "= Result: %s%n", result
-        ).concat(String.format(
-                "= Time consumed: %d min %d.%03d sec.%n", min, sec, mils
-        ));
+                "== RESULT: %s Time consumed: %d min %d.%03d sec.",
+                result, min, sec, mils);
     }
 }

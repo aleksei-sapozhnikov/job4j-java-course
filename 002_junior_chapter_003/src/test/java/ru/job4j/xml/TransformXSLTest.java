@@ -1,9 +1,11 @@
 package ru.job4j.xml;
 
 import org.junit.Test;
+import ru.job4j.CommonMethods;
 
 import javax.xml.transform.TransformerException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -21,15 +23,20 @@ import static org.junit.Assert.assertThat;
  * @since 06.06.2018
  */
 public class TransformXSLTest {
-    private final Path config = Paths.get("src/main/resources/ru/job4j/xml/testing.properties").toAbsolutePath();
+    /**
+     * Common useful methods.
+     */
+    private static final CommonMethods METHODS = new CommonMethods();
     private final Path xslScheme;
+    private final String config = "ru/job4j/xml/testing.properties";
 
-
-    public TransformXSLTest() throws IOException, ClassNotFoundException {
+    public TransformXSLTest() throws IOException, ClassNotFoundException, URISyntaxException {
         Class.forName("org.sqlite.JDBC");
-        Properties prop = new Properties();
-        prop.load(Files.newInputStream(this.config));
-        this.xslScheme = Paths.get(this.config.getParent().toString(), prop.getProperty("scheme_file"));
+        Properties prop = METHODS.loadProperties(this, this.config);
+        String resDir = Paths.get(
+                this.getClass().getResource(".").toURI()
+        ).toAbsolutePath().toString();
+        this.xslScheme = Paths.get(resDir, prop.getProperty("scheme_file"));
     }
 
     /**

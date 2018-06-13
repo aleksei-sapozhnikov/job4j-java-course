@@ -1,6 +1,7 @@
 package ru.job4j.xml;
 
-import java.io.FileReader;
+import ru.job4j.CommonMethods;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -21,19 +22,22 @@ public class StoreSQL implements AutoCloseable {
      * Connection to database.
      */
     private final Connection connection;
+    /**
+     * Common useful methods.
+     */
+    private static final CommonMethods METHODS = new CommonMethods();
 
     /**
      * Constructs new object and connects it to database.
      *
-     * @param properties Path to .properties file with database connection parameters.
-     * @param dbAddress  Database address (file).
+     * @param propFile  Path to .properties file with database connection parameters.
+     * @param dbAddress Database address (file).
      * @throws IOException  Signals that an I/O exception of some sort has occurred.
      * @throws SQLException Provides information on a database access
      *                      error or other errors.
      */
-    public StoreSQL(Path properties, Path dbAddress) throws IOException, SQLException {
-        Properties prop = new Properties();
-        prop.load(new FileReader(properties.toString()));
+    public StoreSQL(String propFile, Path dbAddress) throws IOException, SQLException {
+        Properties prop = METHODS.loadProperties(this, propFile);
         this.connection = this.dbGetConnection(prop, dbAddress);
     }
 
