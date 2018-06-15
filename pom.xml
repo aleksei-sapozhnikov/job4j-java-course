@@ -19,8 +19,9 @@
         <module>001_trainee_chapter_003</module>
         <module>002_junior_chapter_001</module>
         <module>002_junior_chapter_002</module>
-        <module>examples</module>
         <module>002_junior_chapter_003</module>
+        <module>002_junior_chapter_004</module>
+        <module>examples</module>
     </modules>
 
     <dependencies>
@@ -70,6 +71,13 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.11.0</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.5</version>
+            <scope>provided</scope>
         </dependency>
 
 
