@@ -7,9 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
@@ -45,7 +45,7 @@ public class VacancyParserTest {
         Vacancy yesterday = vacancies.get(1);
         Vacancy other = vacancies.get(4);
         // today: 'сегодня, 12:09'
-        Instant tStart = LocalDate.now().atStartOfDay().atZone(ZONE_ID).toInstant();
+        Instant tStart = ZonedDateTime.now(ZONE_ID).toLocalDate().atStartOfDay().atZone(ZONE_ID).toInstant();
         Instant tTime = tStart
                 .plus(12, ChronoUnit.HOURS)
                 .plus(9, ChronoUnit.MINUTES);
