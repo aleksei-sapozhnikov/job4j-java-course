@@ -11,9 +11,6 @@
 
     <artifactId>002_junior_chapter_003</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>../002_junior_chapter_004</module>
-    </modules>
 
 
 </project>
