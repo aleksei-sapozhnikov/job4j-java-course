@@ -12,7 +12,9 @@ public class EchoServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         res.setContentType("text/html");
         PrintWriter writer = new PrintWriter(res.getOutputStream());
-        writer.append("hello world");
+        writer.append("<center><h1>Hello world!</h1></center><br>");
+        writer.append("<div align='center'><h2>I'm trying to do some servlets...</h2></div>");
+        writer.append("<div align='right'><h4>It's so goddamn hard...</h4></div>");
         writer.flush();
     }
 }
