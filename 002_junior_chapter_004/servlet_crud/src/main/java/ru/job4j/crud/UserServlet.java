@@ -1,8 +1,5 @@
 package ru.job4j.crud;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -12,11 +9,10 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class UserServlet extends HttpServlet {
 
-    private final Logger log = LogManager.getLogger(UserServlet.class);
+    // private final Logger log = LogManager.getLogger(UserServlet.class);
     private final Store<User> storage = new UserStore();
     private final ActionDispatch dispatch = new ActionDispatch().init();
 
@@ -25,8 +21,20 @@ public class UserServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        super.doGet(req, resp);
+        User[] users = this.storage.findAll();
+        users = new User[]{
+                new User(12, "asdf", "asdfsadf", "ver@adsf", 21342341234L),
+                new User(43, "nbxcvb", "321432", "asdf@123", 2352345234522L),
+        };
+        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+            writer.append("<html><body>");
+            writer.append("<center>").append("All users:").append("</center>");
+            for (User user : users) {
+                writer.append(user.toString()).append("<br>");
+            }
+            writer.append("</body></html>");
+            writer.flush();
+        }
     }
 
     /**
@@ -36,15 +44,15 @@ public class UserServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        boolean result = this.dispatch.handle(req.getParameter("action"), resp);
+        boolean result = this.dispatch.handle(req.getParameter("action"), req, resp);
     }
 
 
     private class ActionDispatch {
-        Map<String, Function<HttpServletResponse, Boolean>> dispatch = new HashMap<>();
+        Map<String, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
 
-        private boolean handle(final String action, final HttpServletResponse resp) {
-            return this.dispatch.get(action).apply(resp);
+        private boolean handle(final String action, final HttpServletRequest req, final HttpServletResponse resp) {
+            return this.dispatch.get(action).apply(req, resp);
         }
 
         private ActionDispatch init() {
@@ -54,57 +62,59 @@ public class UserServlet extends HttpServlet {
             return this;
         }
 
-        private void load(String action, Function<HttpServletResponse, Boolean> handler) {
+        private void load(String action, BiFunction<HttpServletRequest, HttpServletResponse, Boolean> handler) {
             this.dispatch.put(action, handler);
         }
 
         private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toCreate() {
-            boolean[] result = {false};
             return (req, resp) -> {
+                User adding = this.getUser(req);
+                storage.add(adding);
+                return true;
+            };
+        }
+
+        private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toUpdate() {
+            return (req, resp) -> {
+                boolean result = false;
+                int id = this.getId(req);
+                if (id != -1) {
+                    User adding = this.getUser(req);
+                    result = storage.update(id, adding) != null;
+                }
+                return result;
+            };
+        }
+
+        private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toDelete() {
+            return (req, resp) -> {
+                int id = this.getId(req);
+                return id != -1
+                        && storage.delete(id) != null;
+            };
+        }
+
+        private User getUser(HttpServletRequest req) {
+            return new User(
+                    req.getParameter("name"),
+                    req.getParameter("login"),
+                    req.getParameter("email"),
+                    System.currentTimeMillis()
+            );
+        }
+
+        private int getId(HttpServletRequest req) {
+            int result = -1;
+            String idString = req.getParameter("id");
+            if (idString != null) {
                 try {
-                    User adding = new User(
-                            req.getParameter("name"),
-                            req.getParameter("login"),
-                            req.getParameter("email"),
-                            Integer.valueOf(req.getParameter("created"))
-                    );
-                    storage.add(adding);
-                    result[0] = true;
-                } catch (NumberFormatException e) {
-                    log.error(String.format("User create failed: %s", e.getClass().getName()));
+                    result = Integer.valueOf(idString);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
-                return result[0];
-            };
+            }
+            return result;
         }
-
-        private Function<HttpServletResponse, Boolean> toUpdate() {
-            boolean[] result = {false};
-            return resp -> {
-                try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-                    resp.setContentType("text/html");
-                    writer.append("<center>User updated</center><br>");
-                    result[0] = true;
-                } catch (IOException e) {
-                    log.error(String.format("User update failed: %s", e.getClass().getName()));
-                }
-                return result[0];
-            };
-        }
-
-        private Function<HttpServletResponse, Boolean> toDelete() {
-            boolean[] result = {false};
-            return resp -> {
-                try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-                    resp.setContentType("text/html");
-                    writer.append("<center>User deleted</center><br>");
-                    result[0] = true;
-                } catch (IOException e) {
-                    log.error(String.format("User delete failed: %s", e.getClass().getName()));
-                }
-                return result[0];
-            };
-        }
-
 
     }
 

@@ -1,5 +1,8 @@
 package ru.job4j.crud;
 
+import java.time.Instant;
+import java.time.ZoneId;
+
 public class User {
     private final int id;
     private final String name;
@@ -17,5 +20,14 @@ public class User {
 
     public User(String name, String login, String email, long created) {
         this(-1, name, login, email, created);
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "[user id = %s, name = %s, login = %s, email = %s, created = %s]",
+                this.id, this.name, this.login, this.email,
+                Instant.ofEpochMilli(this.created).atZone(ZoneId.systemDefault())
+        );
     }
 }
