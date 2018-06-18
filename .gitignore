@@ -1,5 +1,6 @@
 # Directory for java compiled files
 target
+out
 
 # IDEA files
 .idea
