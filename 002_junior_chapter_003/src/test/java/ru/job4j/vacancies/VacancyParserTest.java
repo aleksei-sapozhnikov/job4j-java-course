@@ -21,7 +21,7 @@ public class VacancyParserTest {
 
     public static final String TEST_1 = "ru/job4j/vacancies/parser_sample_1.htm";
 
-    public static final CommonMethods METHODS = new CommonMethods();
+    public static final CommonMethods METHODS = CommonMethods.getInstance();
 
     /**
      * Test parseString(). Checking if vacancies fields are filled properly

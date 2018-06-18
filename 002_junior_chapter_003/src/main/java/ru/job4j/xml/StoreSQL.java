@@ -25,7 +25,7 @@ public class StoreSQL implements AutoCloseable {
     /**
      * Common useful methods.
      */
-    private static final CommonMethods METHODS = new CommonMethods();
+    private static final CommonMethods METHODS = CommonMethods.getInstance();
 
     /**
      * Constructs new object and connects it to database.

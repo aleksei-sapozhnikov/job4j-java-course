@@ -13,7 +13,7 @@ import static org.junit.Assert.assertThat;
 
 public class VacancyStorageTest {
 
-    public static final CommonMethods METHODS = new CommonMethods();
+    public static final CommonMethods METHODS = CommonMethods.getInstance();
 
     public static final String CONFIG = "ru/job4j/vacancies/test.properties";
 

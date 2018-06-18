@@ -22,7 +22,7 @@ public class VacancyStorage implements AutoCloseable {
     /**
      * Common useful methods used in different classes.
      */
-    public static final CommonMethods METHODS = new CommonMethods();
+    public static final CommonMethods METHODS = CommonMethods.getInstance();
     /**
      * Database connection.
      */

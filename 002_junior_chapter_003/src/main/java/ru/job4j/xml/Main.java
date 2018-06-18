@@ -34,7 +34,7 @@ public class Main {
     /**
      * Common useful methods.
      */
-    private static final CommonMethods METHODS = new CommonMethods();
+    private static final CommonMethods METHODS = CommonMethods.getInstance();
     /**
      * Logger.
      */

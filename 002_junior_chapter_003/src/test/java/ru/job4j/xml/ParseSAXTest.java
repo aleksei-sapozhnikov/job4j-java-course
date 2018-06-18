@@ -28,7 +28,7 @@ public class ParseSAXTest {
     /**
      * Common useful methods.
      */
-    private static final CommonMethods METHODS = new CommonMethods();
+    private static final CommonMethods METHODS = CommonMethods.getInstance();
     private final Path xslScheme;
     private final String config = "ru/job4j/xml/testing.properties";
 
