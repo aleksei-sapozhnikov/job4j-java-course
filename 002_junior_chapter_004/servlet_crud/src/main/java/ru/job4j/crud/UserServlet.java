@@ -1,6 +1,5 @@
 package ru.job4j.crud;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,15 +19,11 @@ public class UserServlet extends HttpServlet {
      * Метод doGet - должен отдавать список всех пользователей в системе.
      */
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         User[] users = this.storage.findAll();
-        users = new User[]{
-                new User(12, "asdf", "asdfsadf", "ver@adsf", 21342341234L),
-                new User(43, "nbxcvb", "321432", "asdf@123", 2352345234522L),
-        };
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append("<html><body>");
-            writer.append("<center>").append("All users:").append("</center>");
+            writer.append("<center><h1>List of all users:</h1></center>");
             for (User user : users) {
                 writer.append(user.toString()).append("<br>");
             }
