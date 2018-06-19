@@ -1,4 +1,4 @@
-package ru.job4j.methods;
+package ru.job4j;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -18,6 +18,15 @@ import java.util.Properties;
  */
 
 public class CommonMethods {
+
+    private static CommonMethods INSTANCE = new CommonMethods();
+
+    private CommonMethods() {
+    }
+
+    public static CommonMethods getInstance() {
+        return INSTANCE;
+    }
 
     /**
      * Converts InputStream object to a String object.
@@ -67,10 +76,12 @@ public class CommonMethods {
      * @throws SQLException Provides information on a database access
      *                      error or other errors.
      */
-    public void dbPerformUpdate(Connection connection, String query) throws SQLException {
+    public int dbPerformUpdate(Connection connection, String query) throws SQLException {
+        int rowsUpdated;
         try (Statement statement = connection.createStatement()) {
-            statement.executeUpdate(query);
+            rowsUpdated = statement.executeUpdate(query);
         }
+        return rowsUpdated;
     }
 
     /**

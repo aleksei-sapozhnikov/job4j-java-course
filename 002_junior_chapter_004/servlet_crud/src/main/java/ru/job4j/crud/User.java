@@ -22,6 +22,26 @@ public class User {
         this(-1, name, login, email, created);
     }
 
+    public int getId() {
+        return this.id;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getLogin() {
+        return this.login;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public long getCreated() {
+        return this.created;
+    }
+
     @Override
     public String toString() {
         return String.format(

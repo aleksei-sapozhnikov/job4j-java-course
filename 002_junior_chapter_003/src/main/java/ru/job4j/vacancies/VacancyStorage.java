@@ -1,6 +1,6 @@
 package ru.job4j.vacancies;
 
-import ru.job4j.common.CommonMethods;
+import ru.job4j.CommonMethods;
 
 import java.io.IOException;
 import java.sql.Connection;

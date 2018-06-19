@@ -13,11 +13,11 @@ import java.util.function.BiFunction;
 public class UserServlet extends HttpServlet {
 
     // private final Logger log = LogManager.getLogger(UserServlet.class);
-    private final Store<User> storage;
+    private final Store<User> store;
     private final ActionDispatch dispatch = new ActionDispatch().init();
 
-    public UserServlet() throws IOException, SQLException {
-        this.storage = new UserStore();
+    public UserServlet() throws IOException, SQLException, ClassNotFoundException {
+        this.store = new UserStore();
     }
 
     /**
@@ -25,12 +25,12 @@ public class UserServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User[] users = this.storage.findAll();
+        User[] users = this.store.findAll();
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append("<html><body>");
             writer.append("<center><h1>List of all users:</h1></center>");
             for (User user : users) {
-                writer.append(user.toString()).append("<br>");
+                writer.append(user.toString()).append("<br><br>");
             }
             writer.append("</body></html>");
             writer.flush();
@@ -69,7 +69,7 @@ public class UserServlet extends HttpServlet {
         private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toCreate() {
             return (req, resp) -> {
                 User adding = this.getUser(req);
-                storage.add(adding);
+                store.add(adding);
                 return true;
             };
         }
@@ -80,7 +80,7 @@ public class UserServlet extends HttpServlet {
                 int id = this.getId(req);
                 if (id != -1) {
                     User adding = this.getUser(req);
-                    result = storage.update(id, adding) != null;
+                    result = store.update(id, adding) != null;
                 }
                 return result;
             };
@@ -90,7 +90,7 @@ public class UserServlet extends HttpServlet {
             return (req, resp) -> {
                 int id = this.getId(req);
                 return id != -1
-                        && storage.delete(id) != null;
+                        && store.delete(id) != null;
             };
         }
 

@@ -1,6 +1,6 @@
 package ru.job4j.xml;
 
-import ru.job4j.common.CommonMethods;
+import ru.job4j.CommonMethods;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

@@ -2,7 +2,7 @@ package ru.job4j.xml;
 
 import org.junit.Test;
 import org.xml.sax.SAXException;
-import ru.job4j.common.CommonMethods;
+import ru.job4j.CommonMethods;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.TransformerException;

@@ -1,7 +1,7 @@
 package ru.job4j.xml;
 
 import org.junit.Test;
-import ru.job4j.common.CommonMethods;
+import ru.job4j.CommonMethods;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
