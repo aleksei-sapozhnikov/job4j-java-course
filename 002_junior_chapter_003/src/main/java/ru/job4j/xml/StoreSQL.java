@@ -1,6 +1,6 @@
 package ru.job4j.xml;
 
-import ru.job4j.CommonMethods;
+import ru.job4j.common.CommonMethods;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -25,7 +25,7 @@ public class StoreSQL implements AutoCloseable {
     /**
      * Common useful methods.
      */
-    private static final CommonMethods METHODS = new CommonMethods();
+    private static final CommonMethods METHODS = CommonMethods.getInstance();
 
     /**
      * Constructs new object and connects it to database.

@@ -9,5 +9,15 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>002_junior_chapter_003</artifactId>
-    
+
+    <dependencies>
+
+        <dependency>
+            <groupId>ru.job4j</groupId>
+            <artifactId>java_az</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+    </dependencies>
+
 </project>

@@ -1,7 +1,7 @@
 package ru.job4j.vacancies;
 
 import org.junit.Test;
-import ru.job4j.CommonMethods;
+import ru.job4j.common.CommonMethods;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +21,7 @@ public class VacancyParserTest {
 
     public static final String TEST_1 = "ru/job4j/vacancies/parser_sample_1.htm";
 
-    public static final CommonMethods METHODS = new CommonMethods();
+    public static final CommonMethods METHODS = CommonMethods.getInstance();
 
     /**
      * Test parseString(). Checking if vacancies fields are filled properly

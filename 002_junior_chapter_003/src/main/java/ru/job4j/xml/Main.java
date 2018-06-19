@@ -3,7 +3,7 @@ package ru.job4j.xml;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.xml.sax.SAXException;
-import ru.job4j.CommonMethods;
+import ru.job4j.common.CommonMethods;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.parsers.ParserConfigurationException;
@@ -34,7 +34,7 @@ public class Main {
     /**
      * Common useful methods.
      */
-    private static final CommonMethods METHODS = new CommonMethods();
+    private static final CommonMethods METHODS = CommonMethods.getInstance();
     /**
      * Logger.
      */

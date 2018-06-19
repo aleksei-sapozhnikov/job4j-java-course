@@ -1,6 +1,6 @@
 package ru.job4j.vacancies;
 
-import ru.job4j.CommonMethods;
+import ru.job4j.common.CommonMethods;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -22,7 +22,7 @@ public class VacancyStorage implements AutoCloseable {
     /**
      * Common useful methods used in different classes.
      */
-    public static final CommonMethods METHODS = new CommonMethods();
+    public static final CommonMethods METHODS = CommonMethods.getInstance();
     /**
      * Database connection.
      */

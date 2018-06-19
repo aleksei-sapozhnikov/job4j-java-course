@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
@@ -12,8 +13,12 @@ import java.util.function.BiFunction;
 public class UserServlet extends HttpServlet {
 
     // private final Logger log = LogManager.getLogger(UserServlet.class);
-    private final Store<User> storage = new UserStore();
+    private final Store<User> storage;
     private final ActionDispatch dispatch = new ActionDispatch().init();
+
+    public UserServlet() throws IOException, SQLException {
+        this.storage = new UserStore();
+    }
 
     /**
      * Метод doGet - должен отдавать список всех пользователей в системе.
@@ -39,7 +44,7 @@ public class UserServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
-        boolean result = this.dispatch.handle(req.getParameter("action"), req, resp);
+        this.dispatch.handle(req.getParameter("action"), req, resp);
     }
 
 
