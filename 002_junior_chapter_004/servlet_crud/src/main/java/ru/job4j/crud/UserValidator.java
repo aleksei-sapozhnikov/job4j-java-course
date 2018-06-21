@@ -3,17 +3,17 @@ package ru.job4j.crud;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class UserValidator implements Store<User> {
-    private static final UserValidator INSTANCE = new UserValidator();
+public class UserValidator implements Validator<User> {
+    private static UserValidator instance;
     private static final Logger LOG = LogManager.getLogger(UserValidator.class);
     private final Store<User> store = UserStore.getInstance();
 
-
-    private UserValidator() {
+    static {
+        instance = new UserValidator();
     }
 
     public static UserValidator getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     @Override
@@ -24,13 +24,14 @@ public class UserValidator implements Store<User> {
     }
 
     @Override
-    public User update(int id, User upd) {
-        User result = null;
+    public boolean update(int id, User upd) {
+        boolean result = false;
         User old = this.findById(id);
-        User temp = old != null ? this.formUser(id, old, upd) : null;
+        User temp = old != null
+                ? this.formUser(id, old, upd)
+                : null;
         if (temp != null && this.validateUser(temp)) {
-            this.store.update(id, temp);
-            result = temp;
+            result = this.store.update(temp);
         }
         return result;
     }

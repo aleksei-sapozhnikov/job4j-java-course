@@ -1,10 +1,10 @@
 package ru.job4j.crud;
 
-public interface Store<T> {
+public interface Validator<T> {
 
     int add(T model);
 
-    boolean update(T newModel);
+    boolean update(int id, T newModel);
 
     T delete(int id);
 

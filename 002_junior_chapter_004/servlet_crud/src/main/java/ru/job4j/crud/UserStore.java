@@ -11,8 +11,9 @@ import java.sql.SQLException;
 import java.util.*;
 
 public class UserStore implements Store<User> {
-    
-    private static final String DEFAULT_PROPERTIES = "ru/job4j/crud/default.properties";
+
+    private static final String PROPERTIES = "ru/job4j/crud/default.properties";
+    private static UserStore instance = null;
 
     private static final CommonMethods METHODS = CommonMethods.getInstance();
 
@@ -32,30 +33,26 @@ public class UserStore implements Store<User> {
 
     private final Connection connection;
 
-
-    public UserStore() throws IOException, SQLException, ClassNotFoundException {
-        this(DEFAULT_PROPERTIES, false);
+    static {
+        try {
+            instance = new UserStore();
+        } catch (IOException | SQLException | ClassNotFoundException e) {
+            LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
+        }
     }
 
-    public UserStore(String propFile) throws IOException, SQLException, ClassNotFoundException {
-        this(propFile, false);
-    }
-
-    UserStore(String propFile, boolean eraseExisting) throws IOException, SQLException, ClassNotFoundException {
+    private UserStore() throws IOException, SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
-        Properties prop = METHODS.loadProperties(this, propFile);
+        Properties prop = METHODS.loadProperties(this, PROPERTIES);
         this.connection = METHODS.getConnectionToDatabase(
                 prop.getProperty("db.type"), prop.getProperty("db.address"), prop.getProperty("db.name"),
                 prop.getProperty("db.user"), prop.getProperty("db.password")
         );
-        this.init(eraseExisting);
+        this.createTables();
     }
 
-    private void init(boolean erase) {
-        if (erase) {
-            this.dropTables();
-        }
-        this.createTables();
+    public static UserStore getInstance() {
+        return instance;
     }
 
     private void createTables() {
@@ -66,7 +63,7 @@ public class UserStore implements Store<User> {
         }
     }
 
-    private void dropTables() {
+    public void dropTables() {
         try {
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("dropTables"));
         } catch (SQLException e) {
@@ -92,16 +89,14 @@ public class UserStore implements Store<User> {
     }
 
     @Override
-    public User update(int id, User upd) {
-        User result = null;
+    public boolean update(User update) {
+        boolean result = false;
+        String query = String.format(QUERIES.get("updateUserById"),
+                update.getName(), update.getLogin(), update.getEmail(),
+                update.getId());
         try {
-            User old = this.findById(id);
-            if (old != null) {
-                result = this.getUser(id, old, upd);
-                String query = String.format(QUERIES.get("updateUserById"),
-                        result.getName(), result.getLogin(), result.getEmail(), id);
-                METHODS.dbPerformUpdate(this.connection, query);
-            }
+            METHODS.dbPerformUpdate(this.connection, query);
+            result = true;
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -127,7 +122,7 @@ public class UserStore implements Store<User> {
         String queryOld = String.format(QUERIES.get("findUserById"), id);
         try (ResultSet res = this.connection.createStatement().executeQuery(queryOld)) {
             if (res.next()) {
-                result = this.getUser(res);
+                result = this.formUser(res);
             }
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
@@ -142,7 +137,7 @@ public class UserStore implements Store<User> {
         try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
             while (res.next()) {
                 result.add(
-                        this.getUser(res)
+                        this.formUser(res)
                 );
             }
         } catch (SQLException e) {
@@ -152,7 +147,7 @@ public class UserStore implements Store<User> {
         return result.toArray(new User[0]);
     }
 
-    private User getUser(ResultSet res) throws SQLException {
+    private User formUser(ResultSet res) throws SQLException {
         return new User(
                 res.getInt(1),                      // id
                 res.getString(2),                   // name
@@ -162,7 +157,7 @@ public class UserStore implements Store<User> {
         );
     }
 
-    private User getUser(int id, User old, User upd) {
+    private User formUser(int id, User old, User upd) {
         String name = upd.getName() != null ? upd.getName() : old.getName();
         String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
         String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
@@ -232,7 +227,7 @@ public class UserStore implements Store<User> {
         private static String updateUserById() {
             return new StringJoiner(" ")
                     .add("UPDATE users")
-                    .add("SET name = \'%s\', login = \'%s\', email = '\'%s\'")
+                    .add("SET name = \'%s\', login = \'%s\', email = \'%s\'")
                     .add("WHERE users.id = \'%s\'")
                     .toString();
         }
