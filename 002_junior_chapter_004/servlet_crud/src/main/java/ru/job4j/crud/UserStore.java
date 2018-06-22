@@ -51,10 +51,6 @@ public class UserStore implements Store<User> {
      * Class instance.
      */
     private static UserStore instance = null;
-    /**
-     * Database connection.
-     */
-    private final Connection connection;
 
     static {
         try {
@@ -63,6 +59,11 @@ public class UserStore implements Store<User> {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
     }
+
+    /**
+     * Database connection.
+     */
+    private final Connection connection;
 
     /**
      * Constructs new UserStore object.

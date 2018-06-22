@@ -20,15 +20,12 @@ public class UserValidator implements Validator<User> {
     /**
      * Instance field.
      */
-    private static UserValidator instance;
+    private static UserValidator instance = new UserValidator();
+
     /**
      * Storage where to add/update/delete users.
      */
     private final Store<User> store = UserStore.getInstance();
-
-    static {
-        instance = new UserValidator();
-    }
 
     /**
      * Returns this class instance.
@@ -69,10 +66,26 @@ public class UserValidator implements Validator<User> {
         User temp = old != null
                 ? this.updateFields(old, upd)
                 : null;
-        if (temp != null && this.validateUser(temp)) {
+        if (this.validateUser(temp)) {
             result = this.store.update(temp);
         }
         return result;
+    }
+
+    /**
+     * Forms user object combining existing user fields with "updating" user fields.
+     * If updating field is not null, then the updating field is taken. Otherwise,
+     * the existing field value is taken.
+     *
+     * @param old Existing user.
+     * @param upd User with u[dated fields.
+     * @return User object with updated fields.
+     */
+    private User updateFields(User old, User upd) {
+        String name = upd.getName() != null ? upd.getName() : old.getName();
+        String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
+        String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
+        return new User(old.getId(), name, login, email, old.getCreated());
     }
 
     /**
@@ -114,7 +127,8 @@ public class UserValidator implements Validator<User> {
      * @return <tt>true</tt> if object is valid, <tt>false</tt> if not.
      */
     private boolean validateUser(User user) {
-        return this.validateName(user.getName())
+        return user != null
+                && this.validateName(user.getName())
                 && this.validateLogin(user.getLogin())
                 && this.validateEmail(user.getEmail());
     }
@@ -148,22 +162,6 @@ public class UserValidator implements Validator<User> {
     private boolean validateEmail(String email) {
         return email != null
                 && email.contains("@");
-    }
-
-    /**
-     * Forms user object combining existing user fields with "updating" user fields.
-     * If updating field is not null, then the updating field is taken. Otherwise,
-     * the existing field value is taken.
-     *
-     * @param old Existing user.
-     * @param upd User with u[dated fields.
-     * @return User object with updated fields.
-     */
-    private User updateFields(User old, User upd) {
-        String name = upd.getName() != null ? upd.getName() : old.getName();
-        String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
-        String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
-        return new User(old.getId(), name, login, email, old.getCreated());
     }
 
 }

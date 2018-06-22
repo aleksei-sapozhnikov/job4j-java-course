@@ -2,26 +2,12 @@ package ru.job4j.crud;
 
 import org.junit.Test;
 
-import java.sql.SQLException;
-
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class UserStoreTest {
-
-    @Test
-    public void whenClearTables() throws SQLException {
-        UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
-        store.add(new User(1, "vasya", "vas", "vas@gmail.com", 123));
-        store.add(new User(2, "petya", "pet", "pet@mail.ru", 456));
-        User[] result = store.findAll();
-        for (User res : result) {
-            System.out.println(res);
-        }
-    }
 
     /**
      * Test Singleton and getInstance()
