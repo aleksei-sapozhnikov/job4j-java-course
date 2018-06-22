@@ -104,9 +104,10 @@ public class UserStore implements Store<User> {
     /**
      * Drops all existing tables in the database.
      */
-    void dropAllExistingTables() {
+    void dropExistingAndCreateNeededTables() {
         try {
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("dropTables"));
+            METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
