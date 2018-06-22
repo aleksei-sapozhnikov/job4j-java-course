@@ -19,7 +19,7 @@ import java.util.Properties;
 
 public class CommonMethods {
 
-    private static CommonMethods instance = CommonMethods.getInstance();
+    private static CommonMethods instance = new CommonMethods();
 
     private CommonMethods() {
     }
