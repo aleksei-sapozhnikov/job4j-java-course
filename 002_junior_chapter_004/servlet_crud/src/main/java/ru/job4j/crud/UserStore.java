@@ -152,12 +152,33 @@ public class UserStore implements Store<User> {
                 update.getName(), update.getLogin(), update.getEmail(),
                 update.getId());
         try {
-            METHODS.dbPerformUpdate(this.connection, query);
-            result = true;
+            result = this.doUpdateQueryAndCheck(query);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
         return result;
+    }
+
+    /**
+     * Performs update query and check it happened as needed.
+     * <p>
+     * If more than one row is changed - there is a serious error and
+     * RuntimeException is thrown. User id must be unique and only one
+     * row can change.
+     *
+     * @param query Update query to perform.
+     * @return <tt>true</tt> if 1 row changed, <tt>false</tt> if none.
+     * @throws SQLException     Provides information on a database access error or other errors.
+     * @throws RuntimeException If more than 1 row is changed. That indicates a serious problem
+     *                          because user id must be unique and lead to only one user.
+     */
+    private boolean doUpdateQueryAndCheck(String query) throws SQLException {
+        int changedRowsNeeded = 1;
+        int rowsChanged = METHODS.dbPerformUpdate(this.connection, query);
+        if (rowsChanged > 1) {
+            throw new RuntimeException("Update method changed more than 1 row");
+        }
+        return rowsChanged == changedRowsNeeded;
     }
 
     /**

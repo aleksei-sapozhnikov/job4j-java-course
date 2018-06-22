@@ -2,6 +2,7 @@ package ru.job4j.crud;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.util.Objects;
 
 /**
  * Simple user object.
@@ -118,5 +119,37 @@ public class User {
                 this.id, this.name, this.login, this.email,
                 Instant.ofEpochMilli(this.created).atZone(ZoneId.systemDefault())
         );
+    }
+
+    /**
+     * Returns <tt>true</tt> if this user is equal to the given object.
+     * Takes in account all fields except id given by database.
+     *
+     * @param object Given object to compare with.
+     * @return <tt>true</tt> if this User is equal to object, <tt>false</tt> if not.
+     */
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) {
+            return true;
+        }
+        if (object == null || getClass() != object.getClass()) {
+            return false;
+        }
+        User that = (User) object;
+        return this.created == that.created
+                && Objects.equals(this.name, that.name)
+                && Objects.equals(this.login, that.login)
+                && Objects.equals(this.email, that.email);
+    }
+
+    /**
+     * Calculates integer hashcode().
+     *
+     * @return Integer hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, login, email, created);
     }
 }
