@@ -19,13 +19,13 @@ import java.util.Properties;
 
 public class CommonMethods {
 
-    private static CommonMethods INSTANCE = CommonMethods.getInstance();
+    private static CommonMethods instance = CommonMethods.getInstance();
 
     private CommonMethods() {
     }
 
     public static CommonMethods getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     /**

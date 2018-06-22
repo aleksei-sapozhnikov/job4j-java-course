@@ -10,15 +10,32 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
+/**
+ * Storage for Users. Each User is identified by integer id given by
+ * the storage as the result of the "add" operation.
+ * <p>
+ * Singleton class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 0.1
+ */
 public class UserStore implements Store<User> {
-
-    private static final String PROPERTIES = "ru/job4j/crud/default.properties";
-    private static UserStore instance = null;
-
+    /**
+     * Properties file loaded as resource.
+     */
+    private static final String PROPERTIES = "ru/job4j/crud/app.properties";
+    /**
+     * Container of common useful methods.
+     */
     private static final CommonMethods METHODS = CommonMethods.getInstance();
-
+    /**
+     * Logger.
+     */
     private static final Logger LOG = LogManager.getLogger(UserStore.class);
-
+    /**
+     * Map with sql queries.
+     */
     private static final Map<String, String> QUERIES = new HashMap<String, String>() {
         {
             put("createTables", CreateQuery.createTables());
@@ -30,7 +47,13 @@ public class UserStore implements Store<User> {
             put("findAllUsers", CreateQuery.findAllUsers());
         }
     };
-
+    /**
+     * Class instance.
+     */
+    private static UserStore instance = null;
+    /**
+     * Database connection.
+     */
     private final Connection connection;
 
     static {
@@ -41,6 +64,13 @@ public class UserStore implements Store<User> {
         }
     }
 
+    /**
+     * Constructs new UserStore object.
+     *
+     * @throws IOException            Signals that an I/O exception of some sort has occurred.
+     * @throws SQLException           Provides information on a database access error or other errors.
+     * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
+     */
     private UserStore() throws IOException, SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = METHODS.loadProperties(this, PROPERTIES);
@@ -51,10 +81,18 @@ public class UserStore implements Store<User> {
         this.createTables();
     }
 
+    /**
+     * Returns class instance.
+     *
+     * @return Class instance.
+     */
     public static UserStore getInstance() {
         return instance;
     }
 
+    /**
+     * Creates needed tables in the database if needed.
+     */
     private void createTables() {
         try {
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
@@ -63,7 +101,10 @@ public class UserStore implements Store<User> {
         }
     }
 
-    public void dropTables() {
+    /**
+     * Drops all existing tables in the database.
+     */
+    void dropAllExistingTables() {
         try {
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("dropTables"));
         } catch (SQLException e) {
@@ -71,6 +112,13 @@ public class UserStore implements Store<User> {
         }
     }
 
+    /**
+     * Adds new User to the storage.
+     *
+     * @param add User to add.
+     * @return Unique id given to the object by the
+     * storage system or <tt>-1</tt> if couldn't add it.
+     */
     @Override
     public int add(User add) {
         int id = -1;
@@ -88,6 +136,14 @@ public class UserStore implements Store<User> {
         return id;
     }
 
+    /**
+     * Updates User fields.
+     *
+     * @param update object with the same unique id as of the object
+     *               being updated and with new fields values.
+     * @return <tt>true</tt> if updated successfully, <tt>false</tt> if not
+     * (e.g. object with this id was not found).
+     */
     @Override
     public boolean update(User update) {
         boolean result = false;
@@ -103,6 +159,12 @@ public class UserStore implements Store<User> {
         return result;
     }
 
+    /**
+     * Deletes user with given id from the storage.
+     *
+     * @param id Id of the object to delete.
+     * @return Deleted object if found and deleted, <tt>null</tt> if not.
+     */
     @Override
     public User delete(int id) {
         User result = null;
@@ -116,6 +178,12 @@ public class UserStore implements Store<User> {
         return result;
     }
 
+    /**
+     * Returns user with given id.
+     *
+     * @param id Id of the needed object.
+     * @return Object with given id or <tt>null</tt> if object not found.
+     */
     @Override
     public User findById(int id) {
         User result = null;
@@ -130,6 +198,11 @@ public class UserStore implements Store<User> {
         return result;
     }
 
+    /**
+     * Returns array of all users stored in the storage.
+     *
+     * @return Array of stored objects.
+     */
     @Override
     public User[] findAll() {
         List<User> result = new LinkedList<>();
@@ -147,6 +220,13 @@ public class UserStore implements Store<User> {
         return result.toArray(new User[0]);
     }
 
+    /**
+     * Forms user object from the ResultSet returned by sql query.
+     *
+     * @param res ResultSet returned by query.
+     * @return User object.
+     * @throws SQLException Provides information on a database access error or other errors.
+     */
     private User formUser(ResultSet res) throws SQLException {
         return new User(
                 res.getInt(1),                      // id
@@ -156,14 +236,6 @@ public class UserStore implements Store<User> {
                 res.getTimestamp(5).getTime()       // created
         );
     }
-
-    private User formUser(int id, User old, User upd) {
-        String name = upd.getName() != null ? upd.getName() : old.getName();
-        String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
-        String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
-        return new User(id, name, login, email, old.getCreated());
-    }
-
 
     /**
      * Class to create sql queries strings.

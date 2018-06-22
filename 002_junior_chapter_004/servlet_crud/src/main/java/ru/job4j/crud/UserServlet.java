@@ -12,18 +12,38 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+/**
+ * Presentation layer servlet. Gets requests for actions:
+ * create, update, delete user or show all users. Shows result.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 0.1
+ */
 public class UserServlet extends HttpServlet {
-
+    /**
+     * Logger.
+     */
     private static final Logger LOG = LogManager.getLogger(UserServlet.class);
+    /**
+     * Logic layer to validate and add/update/delete/show all objects.
+     */
     private final Validator<User> logic = UserValidator.getInstance();
+    /**
+     * Actions dispatch.
+     */
     private final ActionDispatch dispatch = new ActionDispatch().init();
 
     /**
-     * Метод doGet - должен отдавать список всех пользователей в системе.
+     * Handles GET requests. Shows all users currently stored.
+     *
+     * @param req  Object that contains the request the client has made of the servlet.
+     * @param resp Object that contains the response the servlet sends to the client
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         User[] users = this.logic.findAll();
+        resp.setContentType("text/html");
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append("List of all users:").append(System.lineSeparator());
             for (User user : users) {
@@ -34,27 +54,48 @@ public class UserServlet extends HttpServlet {
     }
 
     /**
-     * Метод doPost - должен  уметь делать три вещи, создавать пользователя, обновлять поля пользователя, удалять пользователя.
-     * <p>
-     * https://github.com/peterarsentev/code_quality_principles#2-dispatch-pattern-instead-of-multiple-if-statements-and-switch-anti-pattern
+     * Handles POST requests. Does three actions: create/u[date/insert user.
+     *
+     * @param req  Object that contains the request the client has made of the servlet.
+     * @param resp Object that contains the response the servlet sends to the client.
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String result = this.dispatch.handle(req.getParameter("action"), req, resp);
+        resp.setContentType("text/html");
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
             writer.flush();
         }
     }
 
-
+    /**
+     * Dispatch class. Handles different given actions.
+     */
     private class ActionDispatch {
+        /**
+         * Map of possible actions.
+         */
         Map<String, BiFunction<HttpServletRequest, HttpServletResponse, String>> dispatch = new HashMap<>();
 
+        /**
+         * Tries to find handler for given action.
+         * <p>
+         * If no matching for the given action found, the "unknown" action handler if called.
+         *
+         * @param action Given action.
+         * @param resp   Object that contains the response the servlet sends to the client.
+         * @return String with action result.
+         */
         private String handle(final String action, final HttpServletRequest req, final HttpServletResponse resp) {
             return this.dispatch.getOrDefault(action, this.toUnknown()).apply(req, resp);
         }
 
+        /**
+         * Initiates dispacth and returns its initiated object.
+         *
+         * @return Initiated dispatch object.
+         */
         private ActionDispatch init() {
             this.load("create", this.toCreate());
             this.load("update", this.toUpdate());
@@ -62,10 +103,21 @@ public class UserServlet extends HttpServlet {
             return this;
         }
 
+        /**
+         * Loads given action to the "action-handler" map.
+         *
+         * @param action  Given action.
+         * @param handler Action handler.
+         */
         private void load(String action, BiFunction<HttpServletRequest, HttpServletResponse, String> handler) {
             this.dispatch.put(action, handler);
         }
 
+        /**
+         * Returns handler for the "create" action.
+         *
+         * @return Handler for the "create" action.
+         */
         private BiFunction<HttpServletRequest, HttpServletResponse, String> toCreate() {
             return (req, resp) -> {
                 User adding = this.formUser(req);
@@ -75,6 +127,11 @@ public class UserServlet extends HttpServlet {
             };
         }
 
+        /**
+         * Returns handler for the "update" action.
+         *
+         * @return Handler for the "update" action.
+         */
         private BiFunction<HttpServletRequest, HttpServletResponse, String> toUpdate() {
             return (req, resp) -> {
                 String result;
@@ -91,6 +148,11 @@ public class UserServlet extends HttpServlet {
             };
         }
 
+        /**
+         * Returns handler for the "delete" action.
+         *
+         * @return Handler for the "delete" action.
+         */
         private BiFunction<HttpServletRequest, HttpServletResponse, String> toDelete() {
             return (req, resp) -> {
                 String result;
@@ -106,11 +168,23 @@ public class UserServlet extends HttpServlet {
             };
         }
 
+        /**
+         * Returns handler for the "unknown" action. "Unknown" action is called if
+         * no matching handler was found for the given action in the "handle" method.
+         *
+         * @return Handler for the "unknown" action.
+         */
         private BiFunction<HttpServletRequest, HttpServletResponse, String> toUnknown() {
             return (req, resp) ->
                     "Unknown action type. Possible: \"create\', \"update\", \"delete\". Did nothing.";
         }
 
+        /**
+         * Forms User object from the request.
+         *
+         * @param req Object that contains the request the client has made of the servlet.
+         * @return User object formed from the request.
+         */
         private User formUser(HttpServletRequest req) {
             return new User(
                     req.getParameter("name"),
@@ -120,6 +194,12 @@ public class UserServlet extends HttpServlet {
             );
         }
 
+        /**
+         * Tries to get id from the request and returns if got it.
+         *
+         * @param req Object that contains the request the client has made of the servlet.
+         * @return Id parsed from the request or <tt>-1</tt> if couldn't.
+         */
         private int getId(HttpServletRequest req) {
             int result = -1;
             String idString = req.getParameter("id");
