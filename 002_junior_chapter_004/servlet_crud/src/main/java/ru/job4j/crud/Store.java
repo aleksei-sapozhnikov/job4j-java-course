@@ -52,4 +52,9 @@ public interface Store<T> {
      * @return Array of stored objects.
      */
     T[] findAll();
+
+    /**
+     * Clears currently existing storage structure and creates it again.
+     */
+    void clearExistingStructureAndCreateAgain();
 }

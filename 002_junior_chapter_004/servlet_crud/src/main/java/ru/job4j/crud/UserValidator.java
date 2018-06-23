@@ -28,6 +28,14 @@ public class UserValidator implements Validator<User> {
     private final Store<User> store = UserStore.getInstance();
 
     /**
+     * Drops all existing tables in the store.
+     */
+    @Override
+    public void clearExistingStructureAndCreateAgain() {
+        this.store.clearExistingStructureAndCreateAgain();
+    }
+
+    /**
      * Returns this class instance.
      *
      * @return This class instance.

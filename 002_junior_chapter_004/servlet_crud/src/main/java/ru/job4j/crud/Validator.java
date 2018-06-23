@@ -53,4 +53,9 @@ public interface Validator<T> {
      * @return Object with given id if found, <tt>null</tt> if not found.
      */
     T findById(int id);
+
+    /**
+     * Clears currently existing storage structure and creates it again.
+     */
+    void clearExistingStructureAndCreateAgain();
 }

@@ -27,17 +27,20 @@ public class UserStoreTest {
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
         UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
+        store.clearExistingStructureAndCreateAgain();
         User added = new User("nameOne", "loginOne", "email@one.com", 123);
         int id = store.add(added);
         assertThat(store.findById(id), is(added));
         assertThat(store.findAll()[0], is(added));
     }
 
+    /**
+     * Test update()
+     */
     @Test
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
         UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
+        store.clearExistingStructureAndCreateAgain();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
         User upd = new User(id, "new_name", "new_login", "new_email", 456);
@@ -50,7 +53,7 @@ public class UserStoreTest {
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
         UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
+        store.clearExistingStructureAndCreateAgain();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
         int badId = id + 2134;
@@ -61,10 +64,13 @@ public class UserStoreTest {
         assertThat(result, is(expected));
     }
 
+    /**
+     * Test delete()
+     */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
         UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
+        store.clearExistingStructureAndCreateAgain();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
         User deleted = store.delete(id);
@@ -76,7 +82,7 @@ public class UserStoreTest {
     @Test
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
         UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
+        store.clearExistingStructureAndCreateAgain();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
         int badId = id + 123;
@@ -92,7 +98,7 @@ public class UserStoreTest {
     @Test
     public void whenAddedUsersCanFindThemById() {
         UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
+        store.clearExistingStructureAndCreateAgain();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);
         User three = new User("name_3", "login_3", "email_3", 789);
@@ -110,7 +116,7 @@ public class UserStoreTest {
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
         UserStore store = UserStore.getInstance();
-        store.dropExistingAndCreateNeededTables();
+        store.clearExistingStructureAndCreateAgain();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);
         User three = new User("name_3", "login_3", "email_3", 789);

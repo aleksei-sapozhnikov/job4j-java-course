@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.*;
 
 /**
@@ -105,7 +107,8 @@ public class UserStore implements Store<User> {
     /**
      * Drops all existing tables in the database.
      */
-    void dropExistingAndCreateNeededTables() {
+    @Override
+    public void clearExistingStructureAndCreateAgain() {
         try {
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("dropTables"));
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
@@ -122,11 +125,13 @@ public class UserStore implements Store<User> {
      * storage system or <tt>-1</tt> if couldn't add it.
      */
     @Override
-    public int add(User add) {
+    public int add(final User add) {
         int id = -1;
         String query = String.format(
                 QUERIES.get("insertUser"),
-                add.getName(), add.getLogin(), add.getEmail(), new java.sql.Timestamp(add.getCreated())
+                add.getName(), add.getLogin(), add.getEmail(),
+                Timestamp.from(Instant.ofEpochMilli(add.getCreated()))
+//                new java.sql.Timestamp(add.getCreated(), Calendar.getInstance(TimeZone.getTimeZone("GMT")))
         );
         try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
             if (res.next()) {
@@ -147,7 +152,7 @@ public class UserStore implements Store<User> {
      * (e.g. object with this id was not found).
      */
     @Override
-    public boolean update(User update) {
+    public boolean update(final User update) {
         boolean result = false;
         String query = String.format(QUERIES.get("updateUserById"),
                 update.getName(), update.getLogin(), update.getEmail(),
@@ -173,7 +178,7 @@ public class UserStore implements Store<User> {
      * @throws RuntimeException If more than 1 row is changed. That indicates a serious problem
      *                          because user id must be unique and lead to only one user.
      */
-    private boolean doUpdateQueryAndCheck(String query) throws SQLException {
+    private boolean doUpdateQueryAndCheck(final String query) throws SQLException {
         int changedRowsNeeded = 1;
         int rowsChanged = METHODS.dbPerformUpdate(this.connection, query);
         if (rowsChanged > 1) {
@@ -189,7 +194,7 @@ public class UserStore implements Store<User> {
      * @return Deleted object if found and deleted, <tt>null</tt> if not.
      */
     @Override
-    public User delete(int id) {
+    public User delete(final int id) {
         User result = null;
         try {
             result = this.findById(id);
@@ -208,7 +213,7 @@ public class UserStore implements Store<User> {
      * @return Object with given id or <tt>null</tt> if object not found.
      */
     @Override
-    public User findById(int id) {
+    public User findById(final int id) {
         User result = null;
         String queryOld = String.format(QUERIES.get("findUserById"), id);
         try (ResultSet res = this.connection.createStatement().executeQuery(queryOld)) {
@@ -277,7 +282,7 @@ public class UserStore implements Store<User> {
                     .add("name TEXT,")
                     .add("login TEXT,")
                     .add("email TEXT,")
-                    .add("created TIMESTAMP")
+                    .add("created TIMESTAMP WITH TIME ZONE")
                     .add(");")
                     .toString();
         }
