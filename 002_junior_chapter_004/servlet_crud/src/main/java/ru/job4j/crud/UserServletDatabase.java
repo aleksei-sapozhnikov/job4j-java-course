@@ -20,15 +20,15 @@ import java.util.function.BiFunction;
  * @version $Id$
  * @since 0.1
  */
-public class UserServlet extends HttpServlet {
+public class UserServletDatabase extends HttpServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserServlet.class);
+    private static final Logger LOG = LogManager.getLogger(UserServletDatabase.class);
     /**
      * Logic layer to validate and add/update/delete/show all objects.
      */
-    private final Validator<User> logic = UserValidator.getInstance();
+    private final Validator<User> logic = UserValidatorDatabase.getInstance();
     /**
      * Actions dispatch.
      */
