@@ -57,5 +57,5 @@ public interface Validator<T> {
     /**
      * Clears currently existing storage structure and creates it again.
      */
-    void clearExistingStructureAndCreateAgain();
+    void clear();
 }

@@ -22,7 +22,7 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-public class UserStore implements Store<User> {
+public class UserStoreDatabase implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
@@ -34,7 +34,7 @@ public class UserStore implements Store<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserStore.class);
+    private static final Logger LOG = LogManager.getLogger(UserStoreDatabase.class);
     /**
      * Map with sql queries.
      */
@@ -52,11 +52,11 @@ public class UserStore implements Store<User> {
     /**
      * Class instance.
      */
-    private static UserStore instance = null;
+    private static UserStoreDatabase instance = null;
 
     static {
         try {
-            instance = new UserStore();
+            instance = new UserStoreDatabase();
         } catch (IOException | SQLException | ClassNotFoundException e) {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
@@ -68,13 +68,13 @@ public class UserStore implements Store<User> {
     private final Connection connection;
 
     /**
-     * Constructs new UserStore object.
+     * Constructs new UserStoreDatabase object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
      * @throws SQLException           Provides information on a database access error or other errors.
      * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
      */
-    private UserStore() throws IOException, SQLException, ClassNotFoundException {
+    private UserStoreDatabase() throws IOException, SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = METHODS.loadProperties(this, PROPERTIES);
         this.connection = METHODS.getConnectionToDatabase(
@@ -89,7 +89,7 @@ public class UserStore implements Store<User> {
      *
      * @return Class instance.
      */
-    public static UserStore getInstance() {
+    public static UserStoreDatabase getInstance() {
         return instance;
     }
 
@@ -108,7 +108,7 @@ public class UserStore implements Store<User> {
      * Drops all existing tables in the database.
      */
     @Override
-    public void clearExistingStructureAndCreateAgain() {
+    public void clear() {
         try {
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("dropTables"));
             METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
