@@ -7,13 +7,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringJoiner;
 import java.util.function.BiFunction;
 
-public class ServletActionsDispatch {
+public class ActionsDispatch {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(ServletActionsDispatch.class);
+    private static final Logger LOG = LogManager.getLogger(ActionsDispatch.class);
     /**
      * Logic layer class validating and adding/updating/deleting users.
      */
@@ -23,7 +24,7 @@ public class ServletActionsDispatch {
      */
     private Map<String, BiFunction<HttpServletRequest, HttpServletResponse, String>> dispatch = new HashMap<>();
 
-    public ServletActionsDispatch(Validator<User> logic) {
+    public ActionsDispatch(Validator<User> logic) {
         this.logic = logic;
     }
 
@@ -45,10 +46,11 @@ public class ServletActionsDispatch {
      *
      * @return Initiated dispatch object.
      */
-    public ServletActionsDispatch init() {
+    public ActionsDispatch init() {
         this.load("create", this.toCreate());
         this.load("update", this.toUpdate());
         this.load("delete", this.toDelete());
+        this.load("showAll", this.toShowAll());
         return this;
     }
 
@@ -118,6 +120,22 @@ public class ServletActionsDispatch {
     }
 
     /**
+     * Returns handler for the "delete" action.
+     *
+     * @return Handler for the "delete" action.
+     */
+    private BiFunction<HttpServletRequest, HttpServletResponse, String> toShowAll() {
+        return (req, resp) -> {
+            User[] users = this.logic.findAll();
+            StringJoiner result = new StringJoiner("");
+            for (User user : users) {
+                result.add(user.toString());
+            }
+            return result.toString();
+        };
+    }
+
+    /**
      * Returns handler for the "unknown" action. "Unknown" action is called if
      * no matching handler was found for the given action in the "handle" method.
      *
@@ -125,7 +143,7 @@ public class ServletActionsDispatch {
      */
     private BiFunction<HttpServletRequest, HttpServletResponse, String> toUnknown() {
         return (req, resp) ->
-                "Unknown action type. Possible: \"create\', \"update\", \"delete\". Did nothing.";
+                "Unknown action type. Did nothing.";
     }
 
     /**
