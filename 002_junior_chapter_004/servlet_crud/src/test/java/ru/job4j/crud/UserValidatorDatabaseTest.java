@@ -1,6 +1,7 @@
 package ru.job4j.crud;
 
 import org.junit.Test;
+import ru.job4j.crud.database.UserValidatorDatabase;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;

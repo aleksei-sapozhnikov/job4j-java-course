@@ -6,12 +6,12 @@
          version="2.4">
     <servlet>
         <servlet-name>UserServletCollection</servlet-name>
-        <servlet-class>ru.job4j.crud.UserServletCollection</servlet-class>
+        <servlet-class>ru.job4j.crud.collection.UserServletCollection</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>UserServletDatabase</servlet-name>
-        <servlet-class>ru.job4j.crud.UserServletDatabase</servlet-class>
+        <servlet-class>ru.job4j.crud.database.UserServletDatabase</servlet-class>
         <load-on-startup>2</load-on-startup>
     </servlet>
     <servlet-mapping>
