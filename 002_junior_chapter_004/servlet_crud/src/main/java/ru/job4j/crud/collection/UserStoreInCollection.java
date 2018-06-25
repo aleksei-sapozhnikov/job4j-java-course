@@ -1,22 +1,36 @@
-package ru.job4j.crud;
+package ru.job4j.crud.collection;
 
 import net.jcip.annotations.ThreadSafe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Store;
+import ru.job4j.crud.User;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Storage for Users. Uses database.
+ * <p>
+ * Each User is identified by integer id given by
+ * the storage as the result of the "add" operation.
+ * <p>
+ * Singleton class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 0.1
+ */
 @ThreadSafe
-public class UserStoreCollection implements Store<User> {
+public class UserStoreInCollection implements Store<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserStoreCollection.class);
+    private static final Logger LOG = LogManager.getLogger(UserStoreInCollection.class);
     /**
      * Instance field.
      */
-    private static UserStoreCollection instance = new UserStoreCollection();
+    private static UserStoreInCollection instance = new UserStoreInCollection();
     /**
      * Inner storage for Users.
      */
@@ -27,9 +41,9 @@ public class UserStoreCollection implements Store<User> {
     private final AtomicInteger idNumber = new AtomicInteger(1);
 
     /**
-     * Constructs new UserStoreDatabase object.
+     * Constructs new UserStoreInDatabase object.
      */
-    private UserStoreCollection() {
+    private UserStoreInCollection() {
     }
 
     /**
@@ -37,7 +51,7 @@ public class UserStoreCollection implements Store<User> {
      *
      * @return Class instance.
      */
-    public static UserStoreCollection getInstance() {
+    public static UserStoreInCollection getInstance() {
         return instance;
     }
 

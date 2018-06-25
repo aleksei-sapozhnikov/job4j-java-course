@@ -1,57 +1,36 @@
-package ru.job4j.crud;
+package ru.job4j.crud.abstractclasses;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.User;
+import ru.job4j.crud.Validator;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Presentation layer servlet. Gets requests for actions:
- * create, update, delete user or show all users. Shows result.
+ * General class for a presentation layer "update" servlet.
+ * Shows form to update user fields and updates them.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
  * @since 0.1
  */
-public abstract class AbstractUserServlet extends HttpServlet {
+public abstract class AbstractUserServletUpdate extends AbstractUserServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(AbstractUserServlet.class);
-    /**
-     * Logic layer to validate and add/update/delete/show all objects.
-     */
-    private final Validator<User> logic;
-    /**
-     * Actions dispatch.
-     */
-    private final ServletActionsDispatch dispatch;
+    private static final Logger LOG = LogManager.getLogger(AbstractUserServletUpdate.class);
 
     /**
      * Constructor to initiate needed fields.
      *
      * @param logic Logic layer class object.
      */
-    protected AbstractUserServlet(Validator<User> logic) {
-        this.logic = logic;
-        this.dispatch = new ServletActionsDispatch(this.logic).init();
-    }
-
-    /**
-     * Is called when servlet stops working.
-     * Closes connection to database.
-     */
-    @Override
-    public void destroy() {
-        try {
-            this.logic.close();
-        } catch (Exception e) {
-            LOG.error(e.getStackTrace());
-        }
+    protected AbstractUserServletUpdate(Validator<User> logic) {
+        super(logic);
     }
 
     /**
@@ -62,13 +41,14 @@ public abstract class AbstractUserServlet extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        User[] users = this.logic.findAll();
-        resp.setContentType("text/html");
+        String result = this.uniteStrings(
+                this.htmlHead("Update user"),
+                this.dispatch.handle("formUpdate", req, resp),
+                this.htmlTail()
+        );
+        resp.setContentType(this.getResponceContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append("List of all users:").append(System.lineSeparator());
-            for (User user : users) {
-                writer.append(user.toString()).append(System.lineSeparator());
-            }
+            writer.append(result);
             writer.flush();
         }
     }
@@ -81,8 +61,14 @@ public abstract class AbstractUserServlet extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.dispatch.handle(req.getParameter("action"), req, resp);
-        resp.setContentType("text/html");
+        String result = this.uniteStrings(
+                this.htmlHead("User update result"),
+                this.dispatch.handle("update", req, resp),
+                "<br><br>",
+                this.dispatch.handle("showAll", req, resp),
+                this.htmlTail()
+        );
+        resp.setContentType(this.getResponceContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
             writer.flush();

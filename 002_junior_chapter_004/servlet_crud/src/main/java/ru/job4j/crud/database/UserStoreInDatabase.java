@@ -1,8 +1,10 @@
-package ru.job4j.crud;
+package ru.job4j.crud.database;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.CommonMethods;
+import ru.job4j.crud.Store;
+import ru.job4j.crud.User;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -13,7 +15,9 @@ import java.time.Instant;
 import java.util.*;
 
 /**
- * Storage for Users. Each User is identified by integer id given by
+ * Storage for Users. Uses database.
+ * <p>
+ * Each User is identified by integer id given by
  * the storage as the result of the "add" operation.
  * <p>
  * Singleton class.
@@ -22,7 +26,7 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-public class UserStoreDatabase implements Store<User> {
+public class UserStoreInDatabase implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
@@ -34,7 +38,7 @@ public class UserStoreDatabase implements Store<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserStoreDatabase.class);
+    private static final Logger LOG = LogManager.getLogger(UserStoreInDatabase.class);
     /**
      * Map with sql queries.
      */
@@ -52,11 +56,11 @@ public class UserStoreDatabase implements Store<User> {
     /**
      * Class instance.
      */
-    private static UserStoreDatabase instance = null;
+    private static UserStoreInDatabase instance = null;
 
     static {
         try {
-            instance = new UserStoreDatabase();
+            instance = new UserStoreInDatabase();
         } catch (IOException | SQLException | ClassNotFoundException e) {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
@@ -68,13 +72,13 @@ public class UserStoreDatabase implements Store<User> {
     private final Connection connection;
 
     /**
-     * Constructs new UserStoreDatabase object.
+     * Constructs new UserStoreInDatabase object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
      * @throws SQLException           Provides information on a database access error or other errors.
      * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
      */
-    private UserStoreDatabase() throws IOException, SQLException, ClassNotFoundException {
+    private UserStoreInDatabase() throws IOException, SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = METHODS.loadProperties(this, PROPERTIES);
         this.connection = METHODS.getConnectionToDatabase(
@@ -89,7 +93,7 @@ public class UserStoreDatabase implements Store<User> {
      *
      * @return Class instance.
      */
-    public static UserStoreDatabase getInstance() {
+    public static UserStoreInDatabase getInstance() {
         return instance;
     }
 
@@ -131,7 +135,6 @@ public class UserStoreDatabase implements Store<User> {
                 QUERIES.get("insertUser"),
                 add.getName(), add.getLogin(), add.getEmail(),
                 Timestamp.from(Instant.ofEpochMilli(add.getCreated()))
-//                new java.sql.Timestamp(add.getCreated(), Calendar.getInstance(TimeZone.getTimeZone("GMT")))
         );
         try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
             if (res.next()) {

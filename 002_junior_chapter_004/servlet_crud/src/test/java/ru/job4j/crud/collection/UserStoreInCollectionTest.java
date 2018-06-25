@@ -1,22 +1,23 @@
-package ru.job4j.crud;
+package ru.job4j.crud.collection;
 
 import org.junit.Test;
+import ru.job4j.crud.User;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class UserStoreCollectionTest {
+public class UserStoreInCollectionTest {
 
     /**
      * Test Singleton and getInstance()
      */
     @Test
     public void whenGetInstanceThenTheOnlyObjectInstance() {
-        UserStoreCollection store1 = UserStoreCollection.getInstance();
-        UserStoreCollection store2 = UserStoreCollection.getInstance();
-        UserStoreCollection store3 = UserStoreCollection.getInstance();
+        UserStoreInCollection store1 = UserStoreInCollection.getInstance();
+        UserStoreInCollection store2 = UserStoreInCollection.getInstance();
+        UserStoreInCollection store3 = UserStoreInCollection.getInstance();
         assertThat(store1 == store2, is(true));
         assertThat(store1 == store3, is(true));
     }
@@ -26,7 +27,7 @@ public class UserStoreCollectionTest {
      */
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
-        UserStoreCollection store = UserStoreCollection.getInstance();
+        UserStoreInCollection store = UserStoreInCollection.getInstance();
         store.clear();
         User added = new User("nameOne", "loginOne", "email@one.com", 123);
         int id = store.add(added);
@@ -39,7 +40,7 @@ public class UserStoreCollectionTest {
      */
     @Test
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
-        UserStoreCollection store = UserStoreCollection.getInstance();
+        UserStoreInCollection store = UserStoreInCollection.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
@@ -52,7 +53,7 @@ public class UserStoreCollectionTest {
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        UserStoreCollection store = UserStoreCollection.getInstance();
+        UserStoreInCollection store = UserStoreInCollection.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
@@ -69,7 +70,7 @@ public class UserStoreCollectionTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        UserStoreCollection store = UserStoreCollection.getInstance();
+        UserStoreInCollection store = UserStoreInCollection.getInstance();
         store.clear();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
@@ -81,7 +82,7 @@ public class UserStoreCollectionTest {
 
     @Test
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
-        UserStoreCollection store = UserStoreCollection.getInstance();
+        UserStoreInCollection store = UserStoreInCollection.getInstance();
         store.clear();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
@@ -97,7 +98,7 @@ public class UserStoreCollectionTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        UserStoreCollection store = UserStoreCollection.getInstance();
+        UserStoreInCollection store = UserStoreInCollection.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);
@@ -115,7 +116,7 @@ public class UserStoreCollectionTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        UserStoreCollection store = UserStoreCollection.getInstance();
+        UserStoreInCollection store = UserStoreInCollection.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);
