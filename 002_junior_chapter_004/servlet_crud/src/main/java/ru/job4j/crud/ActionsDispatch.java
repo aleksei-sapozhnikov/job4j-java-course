@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 import java.util.function.BiFunction;
 
 public class ActionsDispatch {
@@ -48,7 +47,9 @@ public class ActionsDispatch {
      */
     public ActionsDispatch init() {
         this.load("create", this.toCreate());
+        this.load("formCreate", this.toFormCreate());
         this.load("update", this.toUpdate());
+        this.load("formUpdate", this.toFormUpdate());
         this.load("delete", this.toDelete());
         this.load("showAll", this.toShowAll());
         return this;
@@ -72,9 +73,64 @@ public class ActionsDispatch {
     private BiFunction<HttpServletRequest, HttpServletResponse, String> toCreate() {
         return (req, resp) -> {
             User adding = this.formUser(req);
-            return logic.add(adding) != -1
-                    ? String.format("Added user : %s", adding.toString())
+            int id = logic.add(adding);
+            return id != -1
+                    ? String.format("Added user : %s", new User(id, adding.getName(), adding.getLogin(), adding.getEmail(), adding.getCreated()).toString())
                     : String.format("Failed to add user: %s", adding.toString());
+        };
+    }
+
+    /**
+     * Returns handler for the "formCreate" action.
+     *
+     * @return Handler for the "formCreate" action.
+     */
+    private BiFunction<HttpServletRequest, HttpServletResponse, String> toFormCreate() {
+        return (req, resp) -> {
+            String storageContext = this.getStorageContextPath(req);
+            return this.htmlFormCreateUser(storageContext);
+        };
+    }
+
+    private String getStorageContextPath(HttpServletRequest req) {
+        String context = req.getContextPath();
+        String storage = req.getServletPath().split("/")[1];
+        return context.concat("/").concat(storage);
+    }
+
+    private String htmlFormCreateUser(String storageContextPath) {
+        return new StringBuilder()
+                .append("<form action = \"").append(storageContextPath).append("/create").append("\" ")
+                .append("method = \"post\">")
+                .append("User name: <input type=\"text\" name=\"name\">").append("<br>")
+                .append("User login: <input type=\"text\" name=\"login\">").append("<br>")
+                .append("User email: <input type=\"text\" name=\"email\">").append("<br>")
+                .append("<input type=\"submit\" value=\"create\"> ")
+                .append("</form>")
+                .toString();
+    }
+
+    /**
+     * Returns handler for the "formUpdate" action.
+     *
+     * @return Handler for the "formUpdate" action.
+     */
+    private BiFunction<HttpServletRequest, HttpServletResponse, String> toFormUpdate() {
+        return (req, resp) -> {
+            int id = this.getId(req);
+            User upd = this.logic.findById(id);
+            String storageContext = this.getStorageContextPath(req);
+            String result = new StringBuilder()
+                    .append("<form action = \"").append(storageContext).append("/update").append("\" ")
+                    .append("method = \"post\">")
+                    .append("User name: <input type=\"text\" name=\"name\" value = \"").append(upd.getName()).append("\"> ").append("<br>")
+                    .append("User login: <input type=\"text\" name=\"login\" value = \"").append(upd.getLogin()).append("\"> ").append("<br>")
+                    .append("User email: <input type=\"text\" name=\"email\" value = \"").append(upd.getEmail()).append("\"> ").append("<br>")
+                    .append("<input type=\"hidden\" name=\"id\" value = \"").append(upd.getId()).append("\"> ")
+                    .append("<input type=\"submit\" value=\"обновить\"> ")
+                    .append("</form>")
+                    .toString();
+            return result;
         };
     }
 
@@ -120,19 +176,57 @@ public class ActionsDispatch {
     }
 
     /**
-     * Returns handler for the "delete" action.
+     * Returns handler for the "showAll" action.
      *
-     * @return Handler for the "delete" action.
+     * @return Handler for the "showAll" action.
      */
     private BiFunction<HttpServletRequest, HttpServletResponse, String> toShowAll() {
         return (req, resp) -> {
             User[] users = this.logic.findAll();
-            StringJoiner result = new StringJoiner("");
+            String storageContext = this.getStorageContextPath(req);
+            StringBuilder result = new StringBuilder()
+                    .append("List of all users:").append("<br>")
+                    .append("<table border = 1>");
             for (User user : users) {
-                result.add(user.toString());
+                result.append("<tr>");
+                result.append("<td>").append(user.toString()).append("</td>");
+                result.append("<td>").append(this.htmlButtonUpdateUser(storageContext, user.getId())).append("</td>");
+                result.append("<td>").append(this.htmlButtonDeleteUser(storageContext, user.getId())).append("</td>");
+                result.append("</tr>");
             }
+            result.append("</table>");
+            result.append(this.htmlButtonCreateUser(storageContext));
             return result.toString();
         };
+    }
+
+    private String htmlButtonUpdateUser(String contextPath, int userId) {
+        return new StringBuilder()
+                .append("<form action = \"").append(contextPath).append("/update").append("\" ")
+                .append("method = \"get\">")
+                .append("<input type=\"hidden\" name=\"id\" value=\"").append(userId).append("\"> ")
+                .append("<input type=\"submit\" value=\"изменить\"> ")
+                .append("</form>")
+                .toString();
+    }
+
+    private String htmlButtonDeleteUser(String contextPath, int userId) {
+        return new StringBuilder()
+                .append("<form action = \"").append(contextPath).append("\" ")
+                .append("method = \"post\">")
+                .append("<input type=\"hidden\" name=\"id\" value=\"").append(userId).append("\"> ")
+                .append("<input type=\"submit\" value=\"удалить\">")
+                .append("</form>")
+                .toString();
+    }
+
+    private String htmlButtonCreateUser(String contextPath) {
+        return new StringBuilder()
+                .append("<form action = \"").append(contextPath).append("/create").append("\" ")
+                .append("method = \"get\">")
+                .append("<input type=\"submit\" value=\"создать\">")
+                .append("</form>")
+                .toString();
     }
 
     /**

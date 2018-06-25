@@ -40,15 +40,15 @@ public abstract class AbstractUserServletCreate extends AbstractUserServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
+        String result = this.dispatch.handle("formCreate", req, resp);
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            //TODO: форму для создания нового польователя
-            writer.append("Форма для нового пользователя");
+            writer.append(result);
             writer.flush();
         }
     }
 
     /**
-     * Handles POST requests. Does three actions: create/u[date/insert user.
+     * Handles POST requests. Does three actions: create/update/delete user.
      *
      * @param req  Object that contains the request the client has made of the servlet.
      * @param resp Object that contains the response the servlet sends to the client.
@@ -60,6 +60,7 @@ public abstract class AbstractUserServletCreate extends AbstractUserServlet {
         resp.setContentType("text/html");
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
+            writer.append("<br><br>");
             writer.append(users);
             writer.flush();
         }

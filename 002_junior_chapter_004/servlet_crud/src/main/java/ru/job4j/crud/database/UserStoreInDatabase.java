@@ -24,7 +24,7 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-public class UserStoreDatabase implements Store<User> {
+public class UserStoreInDatabase implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
@@ -36,7 +36,7 @@ public class UserStoreDatabase implements Store<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserStoreDatabase.class);
+    private static final Logger LOG = LogManager.getLogger(UserStoreInDatabase.class);
     /**
      * Map with sql queries.
      */
@@ -54,11 +54,11 @@ public class UserStoreDatabase implements Store<User> {
     /**
      * Class instance.
      */
-    private static UserStoreDatabase instance = null;
+    private static UserStoreInDatabase instance = null;
 
     static {
         try {
-            instance = new UserStoreDatabase();
+            instance = new UserStoreInDatabase();
         } catch (IOException | SQLException | ClassNotFoundException e) {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
@@ -70,13 +70,13 @@ public class UserStoreDatabase implements Store<User> {
     private final Connection connection;
 
     /**
-     * Constructs new UserStoreDatabase object.
+     * Constructs new UserStoreInDatabase object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
      * @throws SQLException           Provides information on a database access error or other errors.
      * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
      */
-    private UserStoreDatabase() throws IOException, SQLException, ClassNotFoundException {
+    private UserStoreInDatabase() throws IOException, SQLException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = METHODS.loadProperties(this, PROPERTIES);
         this.connection = METHODS.getConnectionToDatabase(
@@ -91,7 +91,7 @@ public class UserStoreDatabase implements Store<User> {
      *
      * @return Class instance.
      */
-    public static UserStoreDatabase getInstance() {
+    public static UserStoreInDatabase getInstance() {
         return instance;
     }
 

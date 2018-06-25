@@ -40,9 +40,20 @@ public abstract class AbstractUserServletShowDelete extends AbstractUserServlet 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String result = this.dispatch.handle("showAll", req, resp);
+        String start = new StringBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">")
+                .append("<html xmlns=\"http://www.w3.org/1999/xhtml\">")
+                .append("<head>")
+                .append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=cp1251\" />")
+                .append("</head>")
+                .append("<title>Список всех пользователей</title>")
+                .append("</head><body>")
+                .toString();
+        String end = "</body></html>";
         resp.setContentType("text/html");
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
+            writer.append(start);
             writer.append(result);
+            writer.append(end);
             writer.flush();
         }
     }
@@ -56,9 +67,12 @@ public abstract class AbstractUserServletShowDelete extends AbstractUserServlet 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         String result = this.dispatch.handle("delete", req, resp);
+        String users = this.dispatch.handle("showAll", req, resp);
         resp.setContentType("text/html");
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
+            writer.append("<br><br>");
+            writer.append(users);
             writer.flush();
         }
     }

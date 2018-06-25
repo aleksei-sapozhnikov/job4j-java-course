@@ -6,9 +6,12 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServlet;
 
 public class AbstractUserServlet extends HttpServlet {
-    private static final Logger LOG = LogManager.getLogger(AbstractUserServlet.class);
     /**
      * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(AbstractUserServlet.class);
+    /**
+     * Logic layer object.
      */
     protected final Validator<User> logic;
     /**

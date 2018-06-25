@@ -1,4 +1,4 @@
-package ru.job4j.crud.database;
+package ru.job4j.crud.collection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,21 +13,21 @@ import ru.job4j.crud.AbstractUserValidator;
  * @version $Id$
  * @since 0.1
  */
-public class UserValidatorDatabase extends AbstractUserValidator {
+public class UserValidatorInCollection extends AbstractUserValidator {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserValidatorDatabase.class);
+    private static final Logger LOG = LogManager.getLogger(UserValidatorInCollection.class);
     /**
      * Instance field.
      */
-    private static UserValidatorDatabase instance = new UserValidatorDatabase();
+    private static UserValidatorInCollection instance = new UserValidatorInCollection();
 
     /**
      * Constructs this class singleton instance.
      */
-    private UserValidatorDatabase() {
-        super(UserStoreDatabase.getInstance());
+    private UserValidatorInCollection() {
+        super(UserStoreInCollection.getInstance());
     }
 
     /**
@@ -35,7 +35,9 @@ public class UserValidatorDatabase extends AbstractUserValidator {
      *
      * @return This class instance.
      */
-    public static UserValidatorDatabase getInstance() {
+    public static UserValidatorInCollection getInstance() {
         return instance;
     }
+
+
 }

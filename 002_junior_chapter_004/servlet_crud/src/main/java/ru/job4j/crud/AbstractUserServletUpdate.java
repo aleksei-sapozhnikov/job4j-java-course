@@ -53,9 +53,9 @@ public abstract class AbstractUserServletUpdate extends AbstractUserServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
+        String result = this.dispatch.handle("formUpdate", req, resp);
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            //TODO: ФОРМА ОБНОВЛЕНИЯ ПОЛЬЗОВАТЕЛЯ
-            writer.append("Форма обновления").append(System.lineSeparator());
+            writer.append(result);
             writer.flush();
         }
     }
@@ -68,10 +68,13 @@ public abstract class AbstractUserServletUpdate extends AbstractUserServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.dispatch.handle("delete", req, resp);
+        String result = this.dispatch.handle("update", req, resp);
+        String users = this.dispatch.handle("showAll", req, resp);
         resp.setContentType("text/html");
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
+            writer.append("<br><br>");
+            writer.append(users);
             writer.flush();
         }
     }

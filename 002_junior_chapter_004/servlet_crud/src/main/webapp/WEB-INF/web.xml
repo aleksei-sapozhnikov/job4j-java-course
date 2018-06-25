@@ -4,24 +4,65 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
+    <!---->
+    <!-- Servlets for collection -->
     <servlet>
-        <servlet-name>UserServletCollection</servlet-name>
-        <servlet-class>ru.job4j.crud.collection.UserServletCollection</servlet-class>
+        <servlet-name>UserServletShowDeleteInCollection</servlet-name>
+        <servlet-class>ru.job4j.crud.collection.UserServletShowDeleteInCollection</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <servlet-name>UserServletDatabase</servlet-name>
-        <servlet-class>ru.job4j.crud.database.UserServletDatabase</servlet-class>
-        <load-on-startup>2</load-on-startup>
+        <servlet-name>UserServletCreateInCollection</servlet-name>
+        <servlet-class>ru.job4j.crud.collection.UserServletCreateInCollection</servlet-class>
+        <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>UserServletUpdateInCollection</servlet-name>
+        <servlet-class>ru.job4j.crud.collection.UserServletUpdateInCollection</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- Servlets for collection mapping -->
     <servlet-mapping>
-        <servlet-name>UserServletCollection</servlet-name>
+        <servlet-name>UserServletShowDeleteInCollection</servlet-name>
         <url-pattern>/collection</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UserServletDatabase</servlet-name>
+        <servlet-name>UserServletCreateInCollection</servlet-name>
+        <url-pattern>/collection/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserServletUpdateInCollection</servlet-name>
+        <url-pattern>/collection/update</url-pattern>
+    </servlet-mapping>
+    <!---->
+    <!-- Servlets for database -->
+    <servlet>
+        <servlet-name>UserServletShowDeleteInDatabase</servlet-name>
+        <servlet-class>ru.job4j.crud.database.UserServletShowDeleteInDatabase</servlet-class>
+        <load-on-startup>2</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>UserServletCreateInDatabase</servlet-name>
+        <servlet-class>ru.job4j.crud.database.UserServletCreateInDatabase</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>UserServletUpdateInDatabase</servlet-name>
+        <servlet-class>ru.job4j.crud.database.UserServletUpdateInDatabase</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- Servlets for database mapping -->
+    <servlet-mapping>
+        <servlet-name>UserServletShowDeleteInDatabase</servlet-name>
         <url-pattern>/database</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>UserServletCreateInDatabase</servlet-name>
+        <url-pattern>/database/create</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UserServletUpdateInDatabase</servlet-name>
+        <url-pattern>/database/update</url-pattern>
+    </servlet-mapping>
 </web-app>
 

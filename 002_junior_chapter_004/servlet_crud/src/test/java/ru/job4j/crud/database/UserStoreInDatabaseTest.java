@@ -1,23 +1,23 @@
-package ru.job4j.crud;
+package ru.job4j.crud.database;
 
 import org.junit.Test;
-import ru.job4j.crud.database.UserStoreDatabase;
+import ru.job4j.crud.User;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class UserStoreDatabaseTest {
+public class UserStoreInDatabaseTest {
 
     /**
      * Test Singleton and getInstance()
      */
     @Test
     public void whenGetInstanceThenTheOnlyObjectInstance() {
-        UserStoreDatabase store1 = UserStoreDatabase.getInstance();
-        UserStoreDatabase store2 = UserStoreDatabase.getInstance();
-        UserStoreDatabase store3 = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store1 = UserStoreInDatabase.getInstance();
+        UserStoreInDatabase store2 = UserStoreInDatabase.getInstance();
+        UserStoreInDatabase store3 = UserStoreInDatabase.getInstance();
         assertThat(store1 == store2, is(true));
         assertThat(store1 == store3, is(true));
     }
@@ -27,7 +27,7 @@ public class UserStoreDatabaseTest {
      */
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
-        UserStoreDatabase store = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User added = new User("nameOne", "loginOne", "email@one.com", 123);
         int id = store.add(added);
@@ -40,7 +40,7 @@ public class UserStoreDatabaseTest {
      */
     @Test
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
-        UserStoreDatabase store = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
@@ -53,7 +53,7 @@ public class UserStoreDatabaseTest {
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        UserStoreDatabase store = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
@@ -70,7 +70,7 @@ public class UserStoreDatabaseTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        UserStoreDatabase store = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
@@ -82,7 +82,7 @@ public class UserStoreDatabaseTest {
 
     @Test
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
-        UserStoreDatabase store = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
@@ -98,7 +98,7 @@ public class UserStoreDatabaseTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        UserStoreDatabase store = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);
@@ -116,7 +116,7 @@ public class UserStoreDatabaseTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        UserStoreDatabase store = UserStoreDatabase.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);

@@ -10,15 +10,15 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @ThreadSafe
-public class UserStoreCollection implements Store<User> {
+public class UserStoreInCollection implements Store<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserStoreCollection.class);
+    private static final Logger LOG = LogManager.getLogger(UserStoreInCollection.class);
     /**
      * Instance field.
      */
-    private static UserStoreCollection instance = new UserStoreCollection();
+    private static UserStoreInCollection instance = new UserStoreInCollection();
     /**
      * Inner storage for Users.
      */
@@ -29,9 +29,9 @@ public class UserStoreCollection implements Store<User> {
     private final AtomicInteger idNumber = new AtomicInteger(1);
 
     /**
-     * Constructs new UserStoreDatabase object.
+     * Constructs new UserStoreInDatabase object.
      */
-    private UserStoreCollection() {
+    private UserStoreInCollection() {
     }
 
     /**
@@ -39,7 +39,7 @@ public class UserStoreCollection implements Store<User> {
      *
      * @return Class instance.
      */
-    public static UserStoreCollection getInstance() {
+    public static UserStoreInCollection getInstance() {
         return instance;
     }
 

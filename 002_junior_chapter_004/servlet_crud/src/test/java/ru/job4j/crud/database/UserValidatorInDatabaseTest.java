@@ -1,23 +1,23 @@
-package ru.job4j.crud;
+package ru.job4j.crud.database;
 
 import org.junit.Test;
-import ru.job4j.crud.collection.UserValidatorCollection;
+import ru.job4j.crud.User;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class UserValidatorCollectionTest {
+public class UserValidatorInDatabaseTest {
 
     /**
      * Test Singleton and getInstance()
      */
     @Test
     public void whenGetInstanceThenTheOnlyObjectInstance() {
-        UserValidatorCollection validator1 = UserValidatorCollection.getInstance();
-        UserValidatorCollection validator2 = UserValidatorCollection.getInstance();
-        UserValidatorCollection validator3 = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator1 = UserValidatorInDatabase.getInstance();
+        UserValidatorInDatabase validator2 = UserValidatorInDatabase.getInstance();
+        UserValidatorInDatabase validator3 = UserValidatorInDatabase.getInstance();
         assertThat(validator1 == validator2, is(true));
         assertThat(validator1 == validator3, is(true));
     }
@@ -27,7 +27,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenAddValidUserThenHeIsInStoreAndCanFindHimById() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User added = new User("nameOne", "loginOne", "email@one.com", 123);
         int id = validator.add(added);
@@ -40,7 +40,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenInvalidFieldThenReturnMinusOneAndNotAdded() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User nameInvalid = new User(null, "login", "email@mail.com", 123);
         User loginInvalid = new User("name", null, "email@mail.com", 123);
@@ -58,7 +58,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenUpdateUserThenFieldsChange() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old@email.com", 123);
         int id = validator.add(old);
@@ -71,7 +71,7 @@ public class UserValidatorCollectionTest {
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User add = new User("old_name", "old_login", "old@email.com", 123);
         int id = validator.add(add);
@@ -89,7 +89,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenUpdateUserHasWrongEmailThenFalseAndNothingChanges() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old@email.com", 123);
         int id = validator.add(old);
@@ -105,7 +105,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenUpdateUserWithOnlyNameNotNullThenNameChange() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old@email.com", 123);
         int id = validator.add(old);
@@ -118,7 +118,7 @@ public class UserValidatorCollectionTest {
 
     @Test
     public void whenUpdateUserWithOnlyLoginNotNullThenLoginChange() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old@email.com", 123);
         int id = validator.add(old);
@@ -132,7 +132,7 @@ public class UserValidatorCollectionTest {
 
     @Test
     public void whenUpdateUserWithOnlyEmailNotNullThenEmailChange() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old@email.com", 123);
         int id = validator.add(old);
@@ -145,7 +145,7 @@ public class UserValidatorCollectionTest {
 
     @Test
     public void whenUpdateUserWithAllFieldsNullThenNothingChanged() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old@email.com", 123);
         int id = validator.add(old);
@@ -161,7 +161,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User add = new User("name", "login", "email@mail.com", 123);
         int id = validator.add(add);
@@ -173,7 +173,7 @@ public class UserValidatorCollectionTest {
 
     @Test
     public void whenDeleteUserWithWrongIdThenReturnedNullAndUserStaysInStorage() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User add = new User("name", "login", "email@mail.com", 123);
         int id = validator.add(add);
@@ -189,7 +189,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User one = new User("name_1", "login_1", "email@one.ru", 123);
         User two = new User("name_2", "login_2", "email@two.ru", 456);
@@ -207,7 +207,7 @@ public class UserValidatorCollectionTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        UserValidatorCollection validator = UserValidatorCollection.getInstance();
+        UserValidatorInDatabase validator = UserValidatorInDatabase.getInstance();
         validator.clear();
         User one = new User("name_1", "login_1", "email@one.ru", 123);
         User two = new User("name_2", "login_2", "email@two.ru", 456);
