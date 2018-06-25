@@ -3,6 +3,8 @@ package ru.job4j.crud;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.sql.SQLException;
+
 /**
  * Logic layer for Users store. Validates each object before adding it to storage.
  * <p>
@@ -12,7 +14,7 @@ import org.apache.logging.log4j.Logger;
  * @version $Id$
  * @since 0.1
  */
-public class UserValidatorDatabase implements Validator<User> {
+public class UserValidatorDatabase implements Validator<User>, AutoCloseable {
     /**
      * Logger.
      */
@@ -170,6 +172,18 @@ public class UserValidatorDatabase implements Validator<User> {
     private boolean validateEmail(String email) {
         return email != null
                 && email.contains("@");
+    }
+
+    /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * {@code try}-with-resources statement.
+     *
+     * @throws SQLException If problems occured while closing the connection.
+     */
+    @Override
+    public void close() throws Exception {
+        this.store.close();
     }
 
 }

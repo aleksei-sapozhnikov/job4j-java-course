@@ -138,4 +138,11 @@ public class UserStoreCollection implements Store<User> {
         this.storage.clear();
         this.idNumber.set(1);
     }
+
+    /**
+     * Closes all resources opened by  this store
+     */
+    @Override
+    public void close() {
+    }
 }

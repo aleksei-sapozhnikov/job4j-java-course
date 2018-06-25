@@ -57,4 +57,9 @@ public interface Store<T> {
      * Clears currently existing storage structure and creates it again.
      */
     void clear();
+
+    /**
+     * Closes all resources opened by  this store
+     */
+    void close() throws Exception;
 }

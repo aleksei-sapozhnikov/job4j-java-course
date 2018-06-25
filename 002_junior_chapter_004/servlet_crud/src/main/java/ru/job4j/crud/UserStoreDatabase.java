@@ -266,6 +266,20 @@ public class UserStoreDatabase implements Store<User> {
     }
 
     /**
+     * Closes this resource, relinquishing any underlying resources.
+     * This method is invoked automatically on objects managed by the
+     * {@code try}-with-resources statement.
+     *
+     * @throws SQLException If problems occured while closing the connection.
+     */
+    @Override
+    public void close() throws SQLException {
+        if (this.connection != null) {
+            this.connection.close();
+        }
+    }
+
+    /**
      * Class to create sql queries strings.
      */
     private static class CreateQuery {

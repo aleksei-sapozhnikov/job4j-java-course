@@ -172,4 +172,13 @@ public class UserValidatorCollection implements Validator<User> {
                 && email.contains("@");
     }
 
+    /**
+     * Closes all resources opened by this store.
+     *
+     * @throws Exception If problems while closing occurred.
+     */
+    @Override
+    public void close() throws Exception {
+        this.store.close();
+    }
 }

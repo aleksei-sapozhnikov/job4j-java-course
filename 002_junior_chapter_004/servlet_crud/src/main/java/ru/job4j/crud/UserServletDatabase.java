@@ -35,6 +35,19 @@ public class UserServletDatabase extends HttpServlet {
     private final ActionDispatch dispatch = new ActionDispatch().init();
 
     /**
+     * Is called when servlet stops working.
+     * Closes connection to database.
+     */
+    @Override
+    public void destroy() {
+        try {
+            this.logic.close();
+        } catch (Exception e) {
+            LOG.error(e.getStackTrace());
+        }
+    }
+
+    /**
      * Handles GET requests. Shows all users currently stored.
      *
      * @param req  Object that contains the request the client has made of the servlet.
