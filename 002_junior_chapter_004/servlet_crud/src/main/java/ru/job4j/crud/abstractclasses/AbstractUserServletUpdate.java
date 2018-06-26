@@ -46,7 +46,7 @@ public abstract class AbstractUserServletUpdate extends AbstractUserServlet {
                 this.dispatch.handle("formUpdate", req, resp),
                 this.htmlTail()
         );
-        resp.setContentType(this.getResponceContentType());
+        resp.setContentType(this.getResponseContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
             writer.flush();
@@ -61,18 +61,8 @@ public abstract class AbstractUserServletUpdate extends AbstractUserServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.uniteStrings(
-                this.htmlHead("User update result"),
-                this.dispatch.handle("update", req, resp),
-                "<br><br>",
-                this.dispatch.handle("showAll", req, resp),
-                this.htmlTail()
-        );
-        resp.setContentType(this.getResponceContentType());
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(result);
-            writer.flush();
-        }
+        this.dispatch.handle("update", req, resp);
+        resp.sendRedirect(this.getStorageContextPath(req));
     }
 
 }

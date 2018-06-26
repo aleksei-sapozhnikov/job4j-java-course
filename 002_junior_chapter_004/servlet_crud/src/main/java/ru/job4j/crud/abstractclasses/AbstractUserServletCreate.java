@@ -46,7 +46,7 @@ public abstract class AbstractUserServletCreate extends AbstractUserServlet {
                 this.dispatch.handle("formCreate", req, resp),
                 this.htmlTail()
         );
-        resp.setContentType(this.getResponceContentType());
+        resp.setContentType(this.getResponseContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
             writer.flush();
@@ -61,18 +61,8 @@ public abstract class AbstractUserServletCreate extends AbstractUserServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.uniteStrings("<br>",
-                this.htmlHead("User create result"),
-                this.dispatch.handle("create", req, resp),
-                "<br><br>",
-                this.dispatch.handle("showAll", req, resp),
-                this.htmlTail()
-        );
-        resp.setContentType(this.getResponceContentType());
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(result);
-            writer.flush();
-        }
+        this.dispatch.handle("create", req, resp);
+        resp.sendRedirect(this.getStorageContextPath(req));
     }
 
 }

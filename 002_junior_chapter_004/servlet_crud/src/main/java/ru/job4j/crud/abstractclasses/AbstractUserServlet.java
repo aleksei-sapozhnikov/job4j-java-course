@@ -7,6 +7,7 @@ import ru.job4j.crud.User;
 import ru.job4j.crud.Validator;
 
 import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * General User HttpServlet class. Holds methods and fields needed
@@ -83,7 +84,7 @@ public class AbstractUserServlet extends HttpServlet {
      *
      * @return Responce content type field value.
      */
-    protected String getResponceContentType() {
+    protected String getResponseContentType() {
         return RESPONSE_CONTENT_TYPE;
     }
 
@@ -122,5 +123,21 @@ public class AbstractUserServlet extends HttpServlet {
         } catch (Exception e) {
             LOG.error(e.getStackTrace());
         }
+    }
+
+    /**
+     * Returns context path for a storage in use now.
+     * <p>
+     * E.g.: general context path is "localhost:8080/crud".
+     * Storage context path for the "database" storage is localhost:8080/crud/database
+     * Storage context path for the "collection" storage is localhost:8080/crud/collection
+     *
+     * @param req Http servlet request to get context path from.
+     * @return Storage context path.
+     */
+    protected String getStorageContextPath(HttpServletRequest req) {
+        String context = req.getContextPath();
+        String storage = req.getServletPath().split("/")[1];
+        return String.join("/", context, storage);
     }
 }
