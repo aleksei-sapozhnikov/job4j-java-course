@@ -181,5 +181,4 @@ public abstract class AbstractUserValidator implements Validator<User> {
     public void close() throws Exception {
         this.store.close();
     }
-
 }

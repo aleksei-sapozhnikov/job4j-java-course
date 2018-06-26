@@ -8,7 +8,6 @@ import ru.job4j.crud.Validator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * General class for a presentation layer "show and delete" servlet.
@@ -41,16 +40,7 @@ public abstract class AbstractUserServletShowDelete extends AbstractUserServlet 
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.uniteStrings(
-                this.htmlHead("All users list"),
-                this.dispatch.handle("showAll", req, resp),
-                this.htmlTail()
-        );
-        resp.setContentType(this.getResponceContentType());
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(result);
-            writer.flush();
-        }
+        resp.sendRedirect(String.join("/", this.getStorageContextPath(req), "list.jsp"));
     }
 
     /**
@@ -61,16 +51,9 @@ public abstract class AbstractUserServletShowDelete extends AbstractUserServlet 
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.uniteStrings(
-                this.dispatch.handle("delete", req, resp),
-                "<br><br>",
-                this.dispatch.handle("showAll", req, resp)
-        );
-        resp.setContentType(this.getResponceContentType());
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(result);
-            writer.flush();
-        }
+        this.dispatch.handle("delete", req, resp);
+        String path = this.getStorageContextPath(req);
+        resp.sendRedirect(path);
     }
 
 }
