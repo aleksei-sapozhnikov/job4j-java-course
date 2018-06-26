@@ -8,7 +8,6 @@ import ru.job4j.crud.Validator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * General class for a presentation layer "create" servlet.
@@ -41,16 +40,7 @@ public abstract class AbstractUserServletCreate extends AbstractUserServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.uniteStrings(
-                this.htmlHead("Create new user"),
-                this.dispatch.handle("formCreate", req, resp),
-                this.htmlTail()
-        );
-        resp.setContentType(this.getResponseContentType());
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(result);
-            writer.flush();
-        }
+        resp.sendRedirect(String.join("/", this.getStorageContextPath(req), "create.jsp"));
     }
 
     /**

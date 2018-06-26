@@ -5,13 +5,11 @@
 </head>
 <body>
 
-<a href="collection.jsp">Коллекция</a>
-<br><br>
-<a href="database.jsp">База данных</a>
-<br><br>
-<%=request.getContextPath()%>
-<br><br>
-<%=request.getServletPath()%>
-
+<form action="<%=request.getContextPath()%>/collection">
+    <p align="center"><input type="submit" value="Collection"></p>
+</form>
+<form action="<%=request.getContextPath()%>/database">
+    <p align="center"><input type="submit" value="Database"></p>
+</form>
 </body>
 </html>

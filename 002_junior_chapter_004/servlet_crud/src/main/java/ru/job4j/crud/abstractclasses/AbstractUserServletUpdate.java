@@ -8,7 +8,6 @@ import ru.job4j.crud.Validator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 /**
  * General class for a presentation layer "update" servlet.
@@ -41,16 +40,12 @@ public abstract class AbstractUserServletUpdate extends AbstractUserServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.uniteStrings(
-                this.htmlHead("Update user"),
-                this.dispatch.handle("formUpdate", req, resp),
-                this.htmlTail()
-        );
-        resp.setContentType(this.getResponseContentType());
-        try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(result);
-            writer.flush();
-        }
+        resp.sendRedirect(String.format("%s?%s",
+                String.join("/", this.getStorageContextPath(req), "update.jsp"),
+                String.join("&",
+                        "id=".concat(req.getParameter("id"))
+                )
+        ));
     }
 
     /**

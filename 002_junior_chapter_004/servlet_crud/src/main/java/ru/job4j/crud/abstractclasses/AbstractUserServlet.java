@@ -23,34 +23,6 @@ public class AbstractUserServlet extends HttpServlet {
      */
     private static final Logger LOG = LogManager.getLogger(AbstractUserServlet.class);
     /**
-     * String for the HttpServletResponse.setContentType() method.
-     */
-    private static final String RESPONSE_CONTENT_TYPE = "text/html";
-    /**
-     * String format for every html page start tags.
-     * <p>
-     * Has parameter %s in title for String.format() method.
-     */
-    private static final String HTML_START = new StringBuilder()
-            .append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">")
-            .append("<html xmlns=\"http://www.w3.org/1999/xhtml\">")
-            .append("<head>")
-            .append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=cp1251\" />")
-            .append("</head>")
-            .append("<title>")
-            .append("%s")
-            .append("</title>")
-            .append("</head>")
-            .append("<body>")
-            .toString();
-    /**
-     * String format for every html page ending tags.
-     */
-    private static final String HTML_END = new StringBuilder()
-            .append("</body>")
-            .append("</html>")
-            .toString();
-    /**
      * Logic layer object making validation, adding/updating/deleting/etc. operations.
      */
     protected final Validator<User> logic;
@@ -67,34 +39,6 @@ public class AbstractUserServlet extends HttpServlet {
     protected AbstractUserServlet(Validator<User> logic) {
         this.logic = logic;
         this.dispatch = new ActionsDispatch(this.logic).init();
-    }
-
-    /**
-     * Forms head elements for html page with given title.
-     *
-     * @param pageTitle Title for the page.
-     * @return Head elements for html page.
-     */
-    protected String htmlHead(String pageTitle) {
-        return String.format(HTML_START, pageTitle);
-    }
-
-    /**
-     * Returns response html content type.
-     *
-     * @return Responce content type field value.
-     */
-    protected String getResponseContentType() {
-        return RESPONSE_CONTENT_TYPE;
-    }
-
-    /**
-     * Forms tail elements for html page.
-     *
-     * @return Tail html elements.
-     */
-    protected String htmlTail() {
-        return HTML_END;
     }
 
     /**
