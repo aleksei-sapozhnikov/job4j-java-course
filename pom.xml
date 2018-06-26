@@ -22,6 +22,7 @@
         <module>002_junior_chapter_003</module>
         <module>002_junior_chapter_004</module>
         <module>examples</module>
+        <module>common_methods</module>
     </modules>
 
     <dependencies>

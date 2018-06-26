@@ -15,7 +15,9 @@ import java.time.Instant;
 import java.util.*;
 
 /**
- * Storage for Users. Each User is identified by integer id given by
+ * Storage for Users. Uses database.
+ * <p>
+ * Each User is identified by integer id given by
  * the storage as the result of the "add" operation.
  * <p>
  * Singleton class.
@@ -133,7 +135,6 @@ public class UserStoreInDatabase implements Store<User> {
                 QUERIES.get("insertUser"),
                 add.getName(), add.getLogin(), add.getEmail(),
                 Timestamp.from(Instant.ofEpochMilli(add.getCreated()))
-//                new java.sql.Timestamp(add.getCreated(), Calendar.getInstance(TimeZone.getTimeZone("GMT")))
         );
         try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
             if (res.next()) {

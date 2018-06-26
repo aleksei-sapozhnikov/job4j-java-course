@@ -2,10 +2,12 @@ package ru.job4j.crud.database;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.AbstractUserValidator;
+import ru.job4j.crud.abstractclasses.AbstractUserValidator;
 
 /**
- * Logic layer for Users store. Validates each object before adding it to storage.
+ * Logic layer for Users store using database.
+ * <p>
+ * Validates each object before adding it to storage.
  * <p>
  * Singleton class.
  *

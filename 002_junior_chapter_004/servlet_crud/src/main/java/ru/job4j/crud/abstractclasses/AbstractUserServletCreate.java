@@ -1,7 +1,9 @@
-package ru.job4j.crud;
+package ru.job4j.crud.abstractclasses;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.User;
+import ru.job4j.crud.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,8 +11,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Presentation layer servlet. Gets requests for actions:
- * create, update, delete user or show all users. Shows result.
+ * General class for a presentation layer "create" servlet.
+ * Shows form to add user and creates new user in store.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
@@ -39,8 +41,12 @@ public abstract class AbstractUserServletCreate extends AbstractUserServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        resp.setContentType("text/html");
-        String result = this.dispatch.handle("formCreate", req, resp);
+        String result = this.uniteStrings(
+                this.htmlHead("Create new user"),
+                this.dispatch.handle("formCreate", req, resp),
+                this.htmlTail()
+        );
+        resp.setContentType(this.getResponceContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
             writer.flush();
@@ -55,13 +61,16 @@ public abstract class AbstractUserServletCreate extends AbstractUserServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.dispatch.handle("create", req, resp);
-        String users = this.dispatch.handle("showAll", req, resp);
-        resp.setContentType("text/html");
+        String result = this.uniteStrings("<br>",
+                this.htmlHead("User create result"),
+                this.dispatch.handle("create", req, resp),
+                "<br><br>",
+                this.dispatch.handle("showAll", req, resp),
+                this.htmlTail()
+        );
+        resp.setContentType(this.getResponceContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
-            writer.append("<br><br>");
-            writer.append(users);
             writer.flush();
         }
     }

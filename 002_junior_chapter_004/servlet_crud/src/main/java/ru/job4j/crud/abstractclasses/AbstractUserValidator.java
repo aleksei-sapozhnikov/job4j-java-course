@@ -1,8 +1,22 @@
-package ru.job4j.crud;
+package ru.job4j.crud.abstractclasses;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Store;
+import ru.job4j.crud.User;
+import ru.job4j.crud.Validator;
 
+/**
+ * General class for a logic layer.
+ * <p>
+ * Validates each object before adding it to storage.
+ * <p>
+ * Singleton class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 0.1
+ */
 public abstract class AbstractUserValidator implements Validator<User> {
     /**
      * Logger.

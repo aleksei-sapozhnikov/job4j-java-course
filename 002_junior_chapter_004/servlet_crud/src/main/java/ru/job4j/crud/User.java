@@ -5,7 +5,7 @@ import java.time.ZoneId;
 import java.util.Objects;
 
 /**
- * Simple user object.
+ * Simple user object to store in the "User storage".
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$

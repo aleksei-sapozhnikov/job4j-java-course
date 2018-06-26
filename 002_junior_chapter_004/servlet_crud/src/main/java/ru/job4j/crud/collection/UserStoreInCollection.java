@@ -9,6 +9,18 @@ import ru.job4j.crud.User;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Storage for Users. Uses database.
+ * <p>
+ * Each User is identified by integer id given by
+ * the storage as the result of the "add" operation.
+ * <p>
+ * Singleton class.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 0.1
+ */
 @ThreadSafe
 public class UserStoreInCollection implements Store<User> {
     /**

@@ -1,7 +1,9 @@
-package ru.job4j.crud;
+package ru.job4j.crud.abstractclasses;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.User;
+import ru.job4j.crud.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -9,25 +11,25 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * Presentation layer servlet. Gets requests for actions:
- * create, update, delete user or show all users. Shows result.
+ * General class for a presentation layer "update" servlet.
+ * Shows form to update user fields and updates them.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$
  * @since 0.1
  */
-public abstract class AbstractUserServletShowDelete extends AbstractUserServlet {
+public abstract class AbstractUserServletUpdate extends AbstractUserServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(AbstractUserServletShowDelete.class);
+    private static final Logger LOG = LogManager.getLogger(AbstractUserServletUpdate.class);
 
     /**
      * Constructor to initiate needed fields.
      *
      * @param logic Logic layer class object.
      */
-    protected AbstractUserServletShowDelete(Validator<User> logic) {
+    protected AbstractUserServletUpdate(Validator<User> logic) {
         super(logic);
     }
 
@@ -39,21 +41,14 @@ public abstract class AbstractUserServletShowDelete extends AbstractUserServlet 
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.dispatch.handle("showAll", req, resp);
-        String start = new StringBuilder("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">")
-                .append("<html xmlns=\"http://www.w3.org/1999/xhtml\">")
-                .append("<head>")
-                .append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=cp1251\" />")
-                .append("</head>")
-                .append("<title>Список всех пользователей</title>")
-                .append("</head><body>")
-                .toString();
-        String end = "</body></html>";
-        resp.setContentType("text/html");
+        String result = this.uniteStrings(
+                this.htmlHead("Update user"),
+                this.dispatch.handle("formUpdate", req, resp),
+                this.htmlTail()
+        );
+        resp.setContentType(this.getResponceContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
-            writer.append(start);
             writer.append(result);
-            writer.append(end);
             writer.flush();
         }
     }
@@ -66,13 +61,16 @@ public abstract class AbstractUserServletShowDelete extends AbstractUserServlet 
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = this.dispatch.handle("delete", req, resp);
-        String users = this.dispatch.handle("showAll", req, resp);
-        resp.setContentType("text/html");
+        String result = this.uniteStrings(
+                this.htmlHead("User update result"),
+                this.dispatch.handle("update", req, resp),
+                "<br><br>",
+                this.dispatch.handle("showAll", req, resp),
+                this.htmlTail()
+        );
+        resp.setContentType(this.getResponceContentType());
         try (PrintWriter writer = new PrintWriter(resp.getOutputStream())) {
             writer.append(result);
-            writer.append("<br><br>");
-            writer.append(users);
             writer.flush();
         }
     }
