@@ -30,7 +30,7 @@ public class UserStoreInDatabase implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
-    private static final String PROPERTIES = "ru/job4j/crud/app.properties";
+    private static final String PROPERTIES = "ru/job4j/crud/database/database.properties";
     /**
      * Container of common useful methods.
      */
