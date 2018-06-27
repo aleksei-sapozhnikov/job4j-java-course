@@ -1,5 +1,6 @@
 package ru.job4j.crud.database;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.CommonMethods;
@@ -36,6 +37,10 @@ public class UserStoreInDatabase implements Store<User> {
      */
     private static final CommonMethods METHODS = CommonMethods.getInstance();
     /**
+     * Connection pool data source - creates connections to database.
+     */
+    private static final BasicDataSource CONNECTION_POOL = new BasicDataSource();
+    /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(UserStoreInDatabase.class);
@@ -56,36 +61,50 @@ public class UserStoreInDatabase implements Store<User> {
     /**
      * Class instance.
      */
-    private static UserStoreInDatabase instance = null;
+    private static UserStoreInDatabase instance;
 
     static {
         try {
             instance = new UserStoreInDatabase();
-        } catch (IOException | SQLException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
     }
 
     /**
-     * Database connection.
-     */
-    private final Connection connection;
-
-    /**
      * Constructs new UserStoreInDatabase object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
-     * @throws SQLException           Provides information on a database access error or other errors.
      * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
      */
-    private UserStoreInDatabase() throws IOException, SQLException, ClassNotFoundException {
+    private UserStoreInDatabase() throws IOException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = METHODS.loadProperties(this, PROPERTIES);
-        this.connection = METHODS.getConnectionToDatabase(
-                prop.getProperty("db.type"), prop.getProperty("db.address"), prop.getProperty("db.name"),
-                prop.getProperty("db.user"), prop.getProperty("db.password")
-        );
+        this.configureConnectionPool(CONNECTION_POOL, prop.getProperty("db.type"), prop.getProperty("db.address"),
+                prop.getProperty("db.name"), prop.getProperty("db.user"), prop.getProperty("db.password"));
         this.createTables();
+    }
+
+    /**
+     * Configures connection-to-database pool.
+     *
+     * @param pool     Pool to configure.
+     * @param type     Database type.
+     * @param address  Database address.
+     * @param name     Database name.
+     * @param user     Database user.
+     * @param password Database password.
+     */
+    private void configureConnectionPool(BasicDataSource pool, String type, String address,
+                                         String name, String user, String password) {
+        String url = String.format("jdbc:%s:%s%s", type, address, "".equals(name) ? "" : "/".concat(name));
+        pool.setDriverClassName("org.postgresql.Driver");
+        pool.setUrl(url);
+        pool.setUsername(user);
+        pool.setPassword(password);
+        pool.setMinIdle(5);
+        pool.setMaxIdle(10);
+        pool.setMaxOpenPreparedStatements(100);
     }
 
     /**
@@ -101,8 +120,8 @@ public class UserStoreInDatabase implements Store<User> {
      * Creates needed tables in the database if needed.
      */
     private void createTables() {
-        try {
-            METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
+        try (Connection connection = CONNECTION_POOL.getConnection()) {
+            METHODS.dbPerformUpdate(connection, QUERIES.get("createTables"));
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -113,9 +132,9 @@ public class UserStoreInDatabase implements Store<User> {
      */
     @Override
     public void clear() {
-        try {
-            METHODS.dbPerformUpdate(this.connection, QUERIES.get("dropTables"));
-            METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
+        try (Connection connection = CONNECTION_POOL.getConnection()) {
+            METHODS.dbPerformUpdate(connection, QUERIES.get("dropTables"));
+            METHODS.dbPerformUpdate(connection, QUERIES.get("createTables"));
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -136,7 +155,9 @@ public class UserStoreInDatabase implements Store<User> {
                 add.getName(), add.getLogin(), add.getEmail(),
                 Timestamp.from(Instant.ofEpochMilli(add.getCreated()))
         );
-        try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             ResultSet res = connection.createStatement().executeQuery(query)
+        ) {
             if (res.next()) {
                 id = res.getInt(1);
             }
@@ -160,8 +181,8 @@ public class UserStoreInDatabase implements Store<User> {
         String query = String.format(QUERIES.get("updateUserById"),
                 update.getName(), update.getLogin(), update.getEmail(),
                 update.getId());
-        try {
-            result = this.doUpdateQueryAndCheck(query);
+        try (Connection connection = CONNECTION_POOL.getConnection()) {
+            result = this.doUpdateQueryAndCheck(query, connection);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -175,15 +196,16 @@ public class UserStoreInDatabase implements Store<User> {
      * RuntimeException is thrown. User id must be unique and only one
      * row can change.
      *
-     * @param query Update query to perform.
+     * @param query      Update query to perform.
+     * @param connection Database connection to use.
      * @return <tt>true</tt> if 1 row changed, <tt>false</tt> if none.
      * @throws SQLException     Provides information on a database access error or other errors.
      * @throws RuntimeException If more than 1 row is changed. That indicates a serious problem
      *                          because user id must be unique and lead to only one user.
      */
-    private boolean doUpdateQueryAndCheck(final String query) throws SQLException {
+    private boolean doUpdateQueryAndCheck(final String query, Connection connection) throws SQLException {
         int changedRowsNeeded = 1;
-        int rowsChanged = METHODS.dbPerformUpdate(this.connection, query);
+        int rowsChanged = METHODS.dbPerformUpdate(connection, query);
         if (rowsChanged > 1) {
             throw new RuntimeException("Update method changed more than 1 row");
         }
@@ -199,10 +221,10 @@ public class UserStoreInDatabase implements Store<User> {
     @Override
     public User delete(final int id) {
         User result = null;
-        try {
+        try (Connection connection = CONNECTION_POOL.getConnection()) {
             result = this.findById(id);
             String query = String.format(QUERIES.get("deleteUserById"), id);
-            METHODS.dbPerformUpdate(this.connection, query);
+            METHODS.dbPerformUpdate(connection, query);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -219,7 +241,9 @@ public class UserStoreInDatabase implements Store<User> {
     public User findById(final int id) {
         User result = null;
         String queryOld = String.format(QUERIES.get("findUserById"), id);
-        try (ResultSet res = this.connection.createStatement().executeQuery(queryOld)) {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             ResultSet res = connection.createStatement().executeQuery(queryOld)
+        ) {
             if (res.next()) {
                 result = this.formUser(res);
             }
@@ -238,7 +262,9 @@ public class UserStoreInDatabase implements Store<User> {
     public User[] findAll() {
         List<User> result = new LinkedList<>();
         String query = QUERIES.get("findAllUsers");
-        try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             ResultSet res = connection.createStatement().executeQuery(query)
+        ) {
             while (res.next()) {
                 result.add(
                         this.formUser(res)
@@ -277,9 +303,7 @@ public class UserStoreInDatabase implements Store<User> {
      */
     @Override
     public void close() throws SQLException {
-        if (this.connection != null) {
-            this.connection.close();
-        }
+        CONNECTION_POOL.close();
     }
 
     /**
