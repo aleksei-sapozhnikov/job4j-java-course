@@ -1,16 +1,14 @@
 package ru.job4j.crud.database;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.CommonMethods;
 import ru.job4j.crud.Store;
 import ru.job4j.crud.User;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.io.InputStream;
+import java.sql.*;
 import java.time.Instant;
 import java.util.*;
 
@@ -32,9 +30,9 @@ public class UserStoreInDatabase implements Store<User> {
      */
     private static final String PROPERTIES = "ru/job4j/crud/database/database.properties";
     /**
-     * Container of common useful methods.
+     * Connection pool data source - creates connections to database.
      */
-    private static final CommonMethods METHODS = CommonMethods.getInstance();
+    private static final BasicDataSource CONNECTION_POOL = new BasicDataSource();
     /**
      * Logger.
      */
@@ -56,36 +54,68 @@ public class UserStoreInDatabase implements Store<User> {
     /**
      * Class instance.
      */
-    private static UserStoreInDatabase instance = null;
+    private static UserStoreInDatabase instance;
 
     static {
         try {
             instance = new UserStoreInDatabase();
-        } catch (IOException | SQLException | ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
     }
 
     /**
-     * Database connection.
-     */
-    private final Connection connection;
-
-    /**
      * Constructs new UserStoreInDatabase object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
-     * @throws SQLException           Provides information on a database access error or other errors.
      * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
      */
-    private UserStoreInDatabase() throws IOException, SQLException, ClassNotFoundException {
+    private UserStoreInDatabase() throws IOException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
-        Properties prop = METHODS.loadProperties(this, PROPERTIES);
-        this.connection = METHODS.getConnectionToDatabase(
-                prop.getProperty("db.type"), prop.getProperty("db.address"), prop.getProperty("db.name"),
-                prop.getProperty("db.user"), prop.getProperty("db.password")
-        );
+        Properties prop = this.loadProperties(PROPERTIES);
+        this.configureConnectionPool(CONNECTION_POOL,
+                prop.getProperty("db.type"), prop.getProperty("db.address"),
+                prop.getProperty("db.name"), prop.getProperty("db.user"), prop.getProperty("db.password"));
         this.createTables();
+    }
+
+    /**
+     * Loads properties file using ClassLoader.
+     *
+     * @param propFile path to the properties file
+     *                 e.g: "ru/job4j/vacancies/main.properties"
+     * @return Properties object with values read from file.
+     * @throws IOException If problems happened with reading from/to InputStream.
+     */
+    private Properties loadProperties(String propFile) throws IOException {
+        Properties props = new Properties();
+        ClassLoader loader = this.getClass().getClassLoader();
+        try (InputStream input = loader.getResourceAsStream(propFile)) {
+            props.load(input);
+        }
+        return props;
+    }
+
+    /**
+     * Configures connection-to-database pool.
+     *
+     * @param pool     Pool to configure.
+     * @param type     Database type.
+     * @param address  Database address.
+     * @param name     Database name.
+     * @param user     Database user.
+     * @param password Database password.
+     */
+    private void configureConnectionPool(BasicDataSource pool, String type, String address,
+                                         String name, String user, String password) {
+        String url = String.format("jdbc:%s:%s%s", type, address, "".equals(name) ? "" : "/".concat(name));
+        pool.setDriverClassName("org.postgresql.Driver");
+        pool.setUrl(url);
+        pool.setUsername(user);
+        pool.setPassword(password);
+        pool.setMinIdle(5);
+        pool.setMaxIdle(10);
+        pool.setMaxOpenPreparedStatements(100);
     }
 
     /**
@@ -101,8 +131,10 @@ public class UserStoreInDatabase implements Store<User> {
      * Creates needed tables in the database if needed.
      */
     private void createTables() {
-        try {
-            METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement create = connection.prepareStatement(QUERIES.get("createTables"))
+        ) {
+            create.execute();
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -113,9 +145,12 @@ public class UserStoreInDatabase implements Store<User> {
      */
     @Override
     public void clear() {
-        try {
-            METHODS.dbPerformUpdate(this.connection, QUERIES.get("dropTables"));
-            METHODS.dbPerformUpdate(this.connection, QUERIES.get("createTables"));
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement drop = connection.prepareStatement(QUERIES.get("dropTables"));
+             PreparedStatement create = connection.prepareStatement(QUERIES.get("createTables"))
+        ) {
+            drop.execute();
+            create.execute();
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -131,15 +166,10 @@ public class UserStoreInDatabase implements Store<User> {
     @Override
     public int add(final User add) {
         int id = -1;
-        String query = String.format(
-                QUERIES.get("insertUser"),
-                add.getName(), add.getLogin(), add.getEmail(),
-                Timestamp.from(Instant.ofEpochMilli(add.getCreated()))
-        );
-        try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
-            if (res.next()) {
-                id = res.getInt(1);
-            }
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement insert = connection.prepareStatement(QUERIES.get("insertUser"))
+        ) {
+            id = this.dbInsertUser(insert, add, id);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -147,21 +177,44 @@ public class UserStoreInDatabase implements Store<User> {
     }
 
     /**
+     * Performs database insert operation with particular user and returns id given by database.
+     *
+     * @param statement Prepared statement to put user field values in.
+     * @param user      User object to insert into database.
+     * @return New integer id given to this user in database or previous id value if somehow new
+     * id was not given by database.
+     * @throws SQLException Provides information on a database access
+     *                      error or other errors.
+     */
+    private int dbInsertUser(PreparedStatement statement, User user, int prevId) throws SQLException {
+        int result = prevId;
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getLogin());
+        statement.setString(3, user.getEmail());
+        statement.setTimestamp(4, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
+        try (ResultSet res = statement.executeQuery()) {
+            if (res.next()) {
+                result = res.getInt(1);
+            }
+        }
+        return result;
+    }
+
+    /**
      * Updates User fields.
      *
-     * @param update object with the same unique id as of the object
-     *               being updated and with new fields values.
+     * @param upd object with the same unique id as of the object
+     *            being updated and with new fields values.
      * @return <tt>true</tt> if updated successfully, <tt>false</tt> if not
      * (e.g. object with this id was not found).
      */
     @Override
-    public boolean update(final User update) {
+    public boolean update(final User upd) {
         boolean result = false;
-        String query = String.format(QUERIES.get("updateUserById"),
-                update.getName(), update.getLogin(), update.getEmail(),
-                update.getId());
-        try {
-            result = this.doUpdateQueryAndCheck(query);
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement update = connection.prepareStatement(QUERIES.get("updateUserById"))
+        ) {
+            result = this.doUpdateUserAndCheckRowsChanged(update, upd);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -175,15 +228,20 @@ public class UserStoreInDatabase implements Store<User> {
      * RuntimeException is thrown. User id must be unique and only one
      * row can change.
      *
-     * @param query Update query to perform.
+     * @param statement Prepared statement to put user field values in.
+     * @param user      User object with id of user to update and new field values.
      * @return <tt>true</tt> if 1 row changed, <tt>false</tt> if none.
      * @throws SQLException     Provides information on a database access error or other errors.
      * @throws RuntimeException If more than 1 row is changed. That indicates a serious problem
      *                          because user id must be unique and lead to only one user.
      */
-    private boolean doUpdateQueryAndCheck(final String query) throws SQLException {
+    private boolean doUpdateUserAndCheckRowsChanged(PreparedStatement statement, User user) throws SQLException {
         int changedRowsNeeded = 1;
-        int rowsChanged = METHODS.dbPerformUpdate(this.connection, query);
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getLogin());
+        statement.setString(3, user.getEmail());
+        statement.setInt(4, user.getId());
+        int rowsChanged = statement.executeUpdate();
         if (rowsChanged > 1) {
             throw new RuntimeException("Update method changed more than 1 row");
         }
@@ -199,14 +257,27 @@ public class UserStoreInDatabase implements Store<User> {
     @Override
     public User delete(final int id) {
         User result = null;
-        try {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement delete = connection.prepareStatement(QUERIES.get("deleteUserById"))
+        ) {
             result = this.findById(id);
-            String query = String.format(QUERIES.get("deleteUserById"), id);
-            METHODS.dbPerformUpdate(this.connection, query);
+            this.dbDeleteUser(delete, id);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
         return result;
+    }
+
+    /**
+     * Performs "delete" query in database.
+     *
+     * @param statement Prepared statement to put user field values in.
+     * @param id        Id of user to delete.
+     * @throws SQLException Provides information on a database access error or other errors.
+     */
+    private void dbDeleteUser(PreparedStatement statement, int id) throws SQLException {
+        statement.setInt(1, id);
+        statement.execute();
     }
 
     /**
@@ -218,13 +289,30 @@ public class UserStoreInDatabase implements Store<User> {
     @Override
     public User findById(final int id) {
         User result = null;
-        String queryOld = String.format(QUERIES.get("findUserById"), id);
-        try (ResultSet res = this.connection.createStatement().executeQuery(queryOld)) {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement find = connection.prepareStatement(QUERIES.get("findUserById"))
+        ) {
+            result = this.dbSelectUserById(find, id);
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
+        }
+        return result;
+    }
+
+    /**
+     * Selects user with given id in database.
+     *
+     * @param statement Prepared statement to put user field values in.
+     * @param id        Id of user to find.
+     * @throws SQLException Provides information on a database access error or other errors.
+     */
+    private User dbSelectUserById(PreparedStatement statement, int id) throws SQLException {
+        User result = null;
+        statement.setInt(1, id);
+        try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
                 result = this.formUser(res);
             }
-        } catch (SQLException e) {
-            LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
         return result;
     }
@@ -237,18 +325,32 @@ public class UserStoreInDatabase implements Store<User> {
     @Override
     public User[] findAll() {
         List<User> result = new LinkedList<>();
-        String query = QUERIES.get("findAllUsers");
-        try (ResultSet res = this.connection.createStatement().executeQuery(query)) {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement find = connection.prepareStatement(QUERIES.get("findAllUsers"))
+        ) {
+            result = this.dbSelectAllUsers(find);
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
+        }
+        return result.toArray(new User[0]);
+    }
+
+    /**
+     * Selects all users from database.
+     *
+     * @param statement Prepared statement to put user field values in.
+     * @throws SQLException Provides information on a database access error or other errors.
+     */
+    private List<User> dbSelectAllUsers(PreparedStatement statement) throws SQLException {
+        List<User> result = new LinkedList<>();
+        try (ResultSet res = statement.executeQuery()) {
             while (res.next()) {
                 result.add(
                         this.formUser(res)
                 );
             }
-        } catch (SQLException e) {
-            LOG.error(String.format("SQL exception: %s", e.getMessage()));
-            result.clear();
         }
-        return result.toArray(new User[0]);
+        return result;
     }
 
     /**
@@ -277,9 +379,7 @@ public class UserStoreInDatabase implements Store<User> {
      */
     @Override
     public void close() throws SQLException {
-        if (this.connection != null) {
-            this.connection.close();
-        }
+        CONNECTION_POOL.close();
     }
 
     /**
@@ -331,7 +431,7 @@ public class UserStoreInDatabase implements Store<User> {
             return new StringJoiner(" ")
                     .add("INSERT INTO users")
                     .add("(name, login, email, created)")
-                    .add("VALUES (\'%s\', \'%s\', \'%s\', \'%s\')")
+                    .add("VALUES (?, ?, ?, ?)")
                     .add("RETURNING id")
                     .toString();
         }
@@ -344,8 +444,8 @@ public class UserStoreInDatabase implements Store<User> {
         private static String updateUserById() {
             return new StringJoiner(" ")
                     .add("UPDATE users")
-                    .add("SET name = \'%s\', login = \'%s\', email = \'%s\'")
-                    .add("WHERE users.id = \'%s\'")
+                    .add("SET name = ?, login = ?, email = ?")
+                    .add("WHERE users.id = ?")
                     .toString();
         }
 
@@ -357,7 +457,7 @@ public class UserStoreInDatabase implements Store<User> {
         private static String deleteUserById() {
             return new StringJoiner(" ")
                     .add("DELETE FROM users")
-                    .add("WHERE users.id = \'%s\'")
+                    .add("WHERE users.id = ?")
                     .toString();
         }
 
@@ -369,7 +469,7 @@ public class UserStoreInDatabase implements Store<User> {
         private static String findUserById() {
             return new StringJoiner(" ")
                     .add("SELECT id, name, login, email, created FROM users")
-                    .add("WHERE id = \'%s\'")
+                    .add("WHERE id = ?")
                     .toString();
         }
 
