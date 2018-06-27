@@ -6,7 +6,7 @@
 <body>
 
 <div align="center">
-    <h1>User store user</h1>
+    <h1>User store</h1>
 </div>
 
 <form action="<%=request.getContextPath()%>/collection">
