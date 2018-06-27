@@ -5,11 +5,15 @@
 </head>
 <body>
 
+<div align="center">
+    <h1>User store user</h1>
+</div>
+
 <form action="<%=request.getContextPath()%>/collection">
-    <p align="center"><input type="submit" value="Collection"></p>
+    <div align="center"><input type="submit" value="Collection"></div>
 </form>
 <form action="<%=request.getContextPath()%>/database">
-    <p align="center"><input type="submit" value="Database"></p>
+    <div align="center"><input type="submit" value="Database"></div>
 </form>
 </body>
 </html>
