@@ -20,6 +20,8 @@ Modules structure corresponds with the course programme:
 
 - 002_junior_chapter_003. Databases, PostgreSQL, JDBC, XML.
 
+- 002_junior_chapter_004. Servlets, JSP, Mockito.
+
 # Алексей Сапожников (vermucht@gmail.com)
 
 В данном репозитории я выполняю задания курса "От нуля до трудоустройства", 
@@ -38,3 +40,5 @@ Modules structure corresponds with the course programme:
 - 002_junior_chapter_002. Мультипоточность.
 
 - 002_junior_chapter_003. Базы данных, PostgreSQL, JDBC, XML.
+
+- 002_junior_chapter_004. Сервлеты, JSP, Mockito.
