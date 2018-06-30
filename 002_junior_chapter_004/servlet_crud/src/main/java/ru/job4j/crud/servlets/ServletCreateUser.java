@@ -2,7 +2,7 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.ActionsDispatch;
+import ru.job4j.crud.DispatchServletActions;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +43,7 @@ public class ServletCreateUser extends AbstractServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         String store = req.getParameter("store");
-        ActionsDispatch dispatch = ACT_DISPATCH.get(store);
+        DispatchServletActions dispatch = ACT_DISPATCH.get(store);
         if (dispatch != null) {
             dispatch.handle("create", req, resp);
             resp.sendRedirect(String.join("/",

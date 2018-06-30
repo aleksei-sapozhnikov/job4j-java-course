@@ -2,7 +2,7 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.ActionsDispatch;
+import ru.job4j.crud.DispatchServletActions;
 import ru.job4j.crud.User;
 import ru.job4j.crud.Validator;
 import ru.job4j.crud.collection.UserValidatorInCollection;
@@ -37,10 +37,10 @@ public abstract class AbstractServlet extends HttpServlet {
     /**
      * Actions dispatch map.
      */
-    protected static final Map<String, ActionsDispatch> ACT_DISPATCH = new HashMap<String, ActionsDispatch>() {
+    protected static final Map<String, DispatchServletActions> ACT_DISPATCH = new HashMap<String, DispatchServletActions>() {
         {
-            put("collection", new ActionsDispatch(UserValidatorInCollection.getInstance()).init());
-            put("database", new ActionsDispatch(UserValidatorInDatabase.getInstance()).init());
+            put("collection", new DispatchServletActions(UserValidatorInCollection.getInstance()).init());
+            put("database", new DispatchServletActions(UserValidatorInDatabase.getInstance()).init());
         }
     };
     /**

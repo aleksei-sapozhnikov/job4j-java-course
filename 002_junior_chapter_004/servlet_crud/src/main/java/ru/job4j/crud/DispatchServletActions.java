@@ -15,11 +15,11 @@ import java.util.function.BiFunction;
  * Irs functions return String result which is to be included into
  * html page going to user.
  */
-public class ActionsDispatch {
+public class DispatchServletActions {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(ActionsDispatch.class);
+    private static final Logger LOG = LogManager.getLogger(DispatchServletActions.class);
     /**
      * Logic layer class validating and adding/updating/deleting users.
      */
@@ -27,14 +27,14 @@ public class ActionsDispatch {
     /**
      * Map of possible actions.
      */
-    private Map<String, BiFunction<HttpServletRequest, HttpServletResponse, String>> dispatch = new HashMap<>();
+    private Map<String, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
 
     /**
      * Constructs new instance.
      *
      * @param logic Logic layer object to perform operations on.
      */
-    public ActionsDispatch(Validator<User> logic) {
+    public DispatchServletActions(Validator<User> logic) {
         this.logic = logic;
     }
 
@@ -47,7 +47,7 @@ public class ActionsDispatch {
      * @param resp   Object that contains the response the servlet sends to the client.
      * @return String with action result.
      */
-    public String handle(final String action, final HttpServletRequest req, final HttpServletResponse resp) {
+    public Boolean handle(final String action, final HttpServletRequest req, final HttpServletResponse resp) {
         return this.dispatch.getOrDefault(action, this.toUnknown()).apply(req, resp);
     }
 
@@ -56,7 +56,7 @@ public class ActionsDispatch {
      *
      * @return Initiated dispatch object.
      */
-    public ActionsDispatch init() {
+    public DispatchServletActions init() {
         this.load("create", this.toCreate());
         this.load("update", this.toUpdate());
         this.load("delete", this.toDelete());
@@ -69,7 +69,7 @@ public class ActionsDispatch {
      * @param action  Given action.
      * @param handler Action handler.
      */
-    private void load(String action, BiFunction<HttpServletRequest, HttpServletResponse, String> handler) {
+    private void load(String action, BiFunction<HttpServletRequest, HttpServletResponse, Boolean> handler) {
         this.dispatch.put(action, handler);
     }
 
@@ -78,16 +78,11 @@ public class ActionsDispatch {
      *
      * @return Handler for the "create" action.
      */
-    private BiFunction<HttpServletRequest, HttpServletResponse, String> toCreate() {
+    private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toCreate() {
         return (req, resp) -> {
             User add = this.formUser(req);
             int id = logic.add(add);
-            return id != -1
-                    ? String.format("Added user : %s",
-                    new User(id, add.getName(), add.getLogin(),
-                            add.getEmail(), add.getCreated())
-                            .toString())
-                    : String.format("Failed to add user: %s", add.toString());
+            return id != -1;
         };
     }
 
@@ -96,17 +91,13 @@ public class ActionsDispatch {
      *
      * @return Handler for the "update" action.
      */
-    private BiFunction<HttpServletRequest, HttpServletResponse, String> toUpdate() {
+    private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toUpdate() {
         return (req, resp) -> {
-            String result;
+            boolean result = false;
             int id = this.getId(req);
             if (id != -1) {
                 User updater = this.formUser(req);
-                result = logic.update(id, updater)
-                        ? String.format("Successfully updated user with id = %s.", id)
-                        : String.format("Failed to update user with id = %s.", id);
-            } else {
-                result = "User delete failed: could not parse id.";
+                result = logic.update(id, updater);
             }
             return result;
         };
@@ -117,16 +108,12 @@ public class ActionsDispatch {
      *
      * @return Handler for the "delete" action.
      */
-    private BiFunction<HttpServletRequest, HttpServletResponse, String> toDelete() {
+    private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toDelete() {
         return (req, resp) -> {
-            String result;
+            boolean result = false;
             int id = this.getId(req);
             if (id != -1) {
-                result = logic.delete(id) != null
-                        ? String.format("Successfully deleted user with id = %s", id)
-                        : String.format("Failed to delete user with id = %s.", id);
-            } else {
-                result = "User delete failed: could not parse id.";
+                result = logic.delete(id) != null;
             }
             return result;
         };
@@ -138,9 +125,11 @@ public class ActionsDispatch {
      *
      * @return Handler for the "unknown" action.
      */
-    private BiFunction<HttpServletRequest, HttpServletResponse, String> toUnknown() {
-        return (req, resp) ->
-                "Unknown action type. Did nothing.";
+    private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toUnknown() {
+        return (req, resp) -> {
+            LOG.error("Unknown action type. Did nothing.");
+            return false;
+        };
     }
 
     /**
