@@ -4,65 +4,44 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
-    <!---->
-    <!-- Servlets for collection -->
+
     <servlet>
-        <servlet-name>UserServletShowDeleteInCollection</servlet-name>
-        <servlet-class>ru.job4j.crud.collection.UserServletShowDeleteInCollection</servlet-class>
+        <servlet-name>MainPage</servlet-name>
+        <servlet-class>ru.job4j.crud.servlets.ServletMainPage</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <servlet-name>UserServletCreateInCollection</servlet-name>
-        <servlet-class>ru.job4j.crud.collection.UserServletCreateInCollection</servlet-class>
+        <servlet-name>ShowDeleteUser</servlet-name>
+        <servlet-class>ru.job4j.crud.servlets.ServletShowDeleteUser</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <servlet-name>UserServletUpdateInCollection</servlet-name>
-        <servlet-class>ru.job4j.crud.collection.UserServletUpdateInCollection</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <!-- Servlets for collection mapping -->
-    <servlet-mapping>
-        <servlet-name>UserServletShowDeleteInCollection</servlet-name>
-        <url-pattern>/collection</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UserServletCreateInCollection</servlet-name>
-        <url-pattern>/collection/create</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>UserServletUpdateInCollection</servlet-name>
-        <url-pattern>/collection/update</url-pattern>
-    </servlet-mapping>
-    <!---->
-    <!-- Servlets for database -->
-    <servlet>
-        <servlet-name>UserServletShowDeleteInDatabase</servlet-name>
-        <servlet-class>ru.job4j.crud.database.UserServletShowDeleteInDatabase</servlet-class>
-        <load-on-startup>2</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>UserServletCreateInDatabase</servlet-name>
-        <servlet-class>ru.job4j.crud.database.UserServletCreateInDatabase</servlet-class>
+        <servlet-name>CreateUser</servlet-name>
+        <servlet-class>ru.job4j.crud.servlets.ServletCreateUser</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
-        <servlet-name>UserServletUpdateInDatabase</servlet-name>
-        <servlet-class>ru.job4j.crud.database.UserServletUpdateInDatabase</servlet-class>
+        <servlet-name>UpdateUser</servlet-name>
+        <servlet-class>ru.job4j.crud.servlets.ServletUpdateUser</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
-    <!-- Servlets for database mapping -->
+
     <servlet-mapping>
-        <servlet-name>UserServletShowDeleteInDatabase</servlet-name>
-        <url-pattern>/database</url-pattern>
+        <servlet-name>MainPage</servlet-name>
+        <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UserServletCreateInDatabase</servlet-name>
-        <url-pattern>/database/create</url-pattern>
+        <servlet-name>ShowDeleteUser</servlet-name>
+        <url-pattern>/list</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>UserServletUpdateInDatabase</servlet-name>
-        <url-pattern>/database/update</url-pattern>
+        <servlet-name>CreateUser</servlet-name>
+        <url-pattern>/create</url-pattern>
     </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>UpdateUser</servlet-name>
+        <url-pattern>/update</url-pattern>
+    </servlet-mapping>
+
 </web-app>
 

@@ -2,7 +2,7 @@ package ru.job4j.crud.collection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.abstractclasses.AbstractUserValidator;
+import ru.job4j.crud.AbstractUserValidator;
 
 /**
  * Logic layer for Users store using collection.

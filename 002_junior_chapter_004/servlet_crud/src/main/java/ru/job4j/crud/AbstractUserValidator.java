@@ -1,10 +1,7 @@
-package ru.job4j.crud.abstractclasses;
+package ru.job4j.crud;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.Store;
-import ru.job4j.crud.User;
-import ru.job4j.crud.Validator;
 
 /**
  * General class for a logic layer.
