@@ -4,8 +4,8 @@
  * <p>
  * User can create new element, update its fields or delete it from the storage.
  * <p>
- * The root package holds interfaces and objects which are used for all operations.
- * The subpackages hold storage-type-specific classes and abstract classes they inherit.
+ * The root package holds User class representing items stored. Sub-packages store
+ * interfaces and realizations of presentation, logic and store layers.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$

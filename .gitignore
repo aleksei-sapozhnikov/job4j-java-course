@@ -3,7 +3,7 @@ target
 out
 
 # IDEA files
-.idea
+*.idea
 *.iml
 
 # Compiled class file
@@ -16,7 +16,7 @@ out
 *.ctxt
 
 # Mobile Tools for Java (J2ME)
-.mtj.tmp/
+*.mtj.tmp/
 
 # Package Files #
 *.jar
@@ -27,7 +27,7 @@ out
 *.rar
 
 # web-app meta files
-.MF
+*.MF
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
