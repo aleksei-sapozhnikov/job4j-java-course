@@ -30,12 +30,14 @@
             <td align="left">User email:</td>
             <td><input type="text" name="email" value="${user.email}"></td>
         </tr>
+        <tr>
+            <td align="center" valign="center">
+                <input type="hidden" name="store" value="${store}"/>
+                <input type="hidden" name="id" value="${user.id}">
+                <input type="submit" value="update">
+            </td>
+        </tr>
     </table>
-    <p align="center">
-        <input type="hidden" name="store" value="${store}"/>
-        <input type="hidden" name="id" value="${user.id}">
-        <input type="submit" value="update">
-    </p>
 </form>
 
 </body>
