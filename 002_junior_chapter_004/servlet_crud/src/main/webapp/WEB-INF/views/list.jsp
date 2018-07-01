@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<jsp:useBean id="dateTime" class="java.util.Date"/>
+<jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <c:set var="store" value="${param.store}"/>
 <c:set var="create" value="create"/>
@@ -15,7 +15,7 @@
 <body>
 
 <p align="center">
-    <a href="<c:url value="${context}"/>">Index page</a>
+    <a href="<c:url value="/"/>">Index page</a>
 </p>
 
 <form action="${context}/${create}" method="get">
@@ -52,7 +52,7 @@
             </td>
             <td>
                 <jsp:setProperty name="dateTime" property="time" value="${user.created}"/>
-                <fmt:formatDate value="${dateTime}" pattern="dd.mm.yyyy HH:mm:ss"/>
+                <fmt:formatDate value="${dateTime}" pattern="dd.MM.yyyy HH:mm:ss"/>
             </td>
             <td>
                 <form action="${update}" method="get">
