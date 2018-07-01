@@ -41,7 +41,10 @@ public class ServletShowDeleteUser extends AbstractServlet {
             HttpSession session = req.getSession(false);
             synchronized (session) {
                 if (session == null || session.getAttribute("login") == null) {
-                    resp.sendRedirect(String.join("/", req.getContextPath(), "login"));
+                    resp.sendRedirect(String.format("%s?%s",
+                            String.join("/", req.getContextPath(), "login"),
+                            String.join("=", this.getUrlParamStore(), store)
+                    ));
                 } else {
                     req.setAttribute("users", logic.findAll());
                     req.getRequestDispatcher(String.join("/", this.getViewsDir(), "list.jsp")).forward(req, resp);

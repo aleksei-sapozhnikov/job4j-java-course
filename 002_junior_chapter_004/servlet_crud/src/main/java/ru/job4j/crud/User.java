@@ -78,7 +78,7 @@ public class User {
      * @param created Date of creation in milliseconds.
      */
     public User(String name, String login, String email, long created) {
-        this(-1, name, login, email, created);
+        this(-1, name, login, "", email, created);
     }
 
     /**

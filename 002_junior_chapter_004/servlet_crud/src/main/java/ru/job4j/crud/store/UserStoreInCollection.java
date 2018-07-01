@@ -67,7 +67,7 @@ public class UserStoreInCollection implements Store<User> {
     @Override
     public int add(final User model) {
         final int id = this.idNumber.getAndIncrement();
-        User adding = new User(id, model.getName(), model.getLogin(), model.getEmail(), model.getCreated());
+        User adding = new User(id, model.getName(), model.getLogin(), model.getPassword(), model.getEmail(), model.getCreated());
         this.storage.put(id, adding);
         return id;
     }

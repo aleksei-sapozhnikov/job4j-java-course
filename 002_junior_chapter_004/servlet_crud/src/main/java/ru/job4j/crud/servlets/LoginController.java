@@ -32,7 +32,9 @@ public class LoginController extends AbstractServlet {
             synchronized (session) {
                 session.setAttribute("login", login);
             }
-            resp.sendRedirect(req.getContextPath());
+            resp.sendRedirect(String.format("%s?%s",
+                    String.join("/", req.getContextPath(), "list"),
+                    String.join("=", this.getUrlParamStore(), store)));
         } else {
             req.setAttribute("error", "Invalid credentials");
             this.doGet(req, resp);

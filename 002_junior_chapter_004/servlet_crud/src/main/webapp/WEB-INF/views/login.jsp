@@ -2,9 +2,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <c:set var="store" value="${param.store}"/>
-<c:set var="error" value="${param.error}"/>
 <c:set var="list" value="list"/>
 <c:set var="login" value="login"/>
+<%--@elvariable id="error" type="java.lang.String"--%>
+<c:set var="error" value="${error}"/>
 
 <html>
 
@@ -24,7 +25,7 @@
     </div>
 </c:if>
 
-<form action="<c:url value="${context}/${login}"/>">
+<form action="<c:url value="/${login}"/>" method="post">
     <table align="center">
         <tr>
             <td align="left" valign="center">Login:</td>
