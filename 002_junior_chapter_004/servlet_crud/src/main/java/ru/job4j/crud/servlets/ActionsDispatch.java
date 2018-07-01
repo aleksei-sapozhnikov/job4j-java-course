@@ -2,6 +2,7 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Role;
 import ru.job4j.crud.User;
 import ru.job4j.crud.logic.Validator;
 
@@ -17,11 +18,11 @@ import java.util.function.BiFunction;
  * Irs functions return String result which is to be included into
  * html page going to user.
  */
-public class DispatchServletActions {
+public class ActionsDispatch {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DispatchServletActions.class);
+    private static final Logger LOG = LogManager.getLogger(ActionsDispatch.class);
     /**
      * Logic layer class validating and adding/updating/deleting users.
      */
@@ -29,14 +30,14 @@ public class DispatchServletActions {
     /**
      * Map of possible actions.
      */
-    private Map<String, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
+    private final Map<String, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
 
     /**
      * Constructs new instance.
      *
      * @param logic Logic layer object to perform operations on.
      */
-    public DispatchServletActions(Validator<User> logic) {
+    public ActionsDispatch(Validator<User> logic) {
         this.logic = logic;
     }
 
@@ -54,11 +55,11 @@ public class DispatchServletActions {
     }
 
     /**
-     * Initiates dispacth and returns its initiated object.
+     * Initiates dispatch and returns its initiated object.
      *
      * @return Initiated dispatch object.
      */
-    public DispatchServletActions init() {
+    public ActionsDispatch init() {
         this.load("create", this.toCreate());
         this.load("update", this.toUpdate());
         this.load("delete", this.toDelete());
@@ -144,8 +145,10 @@ public class DispatchServletActions {
         return new User(
                 req.getParameter("name"),
                 req.getParameter("login"),
+                req.getParameter("password"),
                 req.getParameter("email"),
-                System.currentTimeMillis()
+                System.currentTimeMillis(),
+                Role.valueOf(req.getParameter("role"))
         );
     }
 

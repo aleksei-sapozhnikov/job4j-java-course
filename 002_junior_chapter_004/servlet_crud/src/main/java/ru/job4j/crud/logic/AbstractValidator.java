@@ -2,6 +2,7 @@ package ru.job4j.crud.logic;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Role;
 import ru.job4j.crud.User;
 import ru.job4j.crud.store.Store;
 
@@ -18,11 +19,11 @@ import java.util.List;
  * @version $Id$
  * @since 0.1
  */
-public abstract class AbstractUserValidator implements Validator<User> {
+public abstract class AbstractValidator implements Validator<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(AbstractUserValidator.class);
+    private static final Logger LOG = LogManager.getLogger(AbstractValidator.class);
     /**
      * Store where users are held.
      */
@@ -33,8 +34,9 @@ public abstract class AbstractUserValidator implements Validator<User> {
      *
      * @param store Memory layer class object.
      */
-    protected AbstractUserValidator(Store<User> store) {
+    protected AbstractValidator(Store<User> store) {
         this.store = store;
+        this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis(), Role.ADMIN));
     }
 
     /**
@@ -64,13 +66,22 @@ public abstract class AbstractUserValidator implements Validator<User> {
     public boolean update(int id, User upd) {
         boolean result = false;
         User old = this.findById(id);
-        User temp = old != null
-                ? this.updateFields(old, upd)
-                : null;
-        if (this.validateUser(temp)) {
+        User temp = old != null ? this.updateFields(old, upd) : null;
+        if (this.validateUser(temp) && this.validateRoleUpdate(old.getRole(), temp.getRole())) {
             result = this.store.update(temp);
         }
         return result;
+    }
+
+    /**
+     * Validates if it is valid to change old role to new one.
+     *
+     * @param old Old role.
+     * @param upd New role.
+     * @return <tt>true</tt> if valid, <tt>false</tt> if not.
+     */
+    private boolean validateRoleUpdate(Role old, Role upd) {
+        return old == Role.ADMIN || old == upd;
     }
 
     /**
@@ -85,15 +96,17 @@ public abstract class AbstractUserValidator implements Validator<User> {
     private User updateFields(User old, User upd) {
         String name = upd.getName() != null ? upd.getName() : old.getName();
         String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
+        String password = upd.getPassword() != null ? upd.getPassword() : old.getPassword();
         String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
-        return new User(old.getId(), name, login, email, old.getCreated());
+        Role role = upd.getRole() != null ? upd.getRole() : old.getRole();
+        return new User(old.getId(), name, login, password, email, old.getCreated(), role);
     }
 
     /**
      * Deletes user with given id.
      *
      * @param id Id of the user to delete.
-     * @return Deleted object if deleted suucessfull, <tt>null</tt> if not.
+     * @return Deleted object if deleted successful, <tt>null</tt> if not.
      */
     @Override
     public User delete(int id) {
@@ -131,7 +144,9 @@ public abstract class AbstractUserValidator implements Validator<User> {
         return user != null
                 && this.validateName(user.getName())
                 && this.validateLogin(user.getLogin())
-                && this.validateEmail(user.getEmail());
+                && this.validatePassword(user.getPassword())
+                && this.validateEmail(user.getEmail())
+                && this.validateRole(user.getRole());
     }
 
     /**
@@ -141,7 +156,8 @@ public abstract class AbstractUserValidator implements Validator<User> {
      * @return <tt>true</tt> if name is valid, <tt>false</tt> if not.
      */
     private boolean validateName(String name) {
-        return name != null;
+        return name != null
+                && !name.equals("");
     }
 
     /**
@@ -151,7 +167,19 @@ public abstract class AbstractUserValidator implements Validator<User> {
      * @return <tt>true</tt> if login is valid, <tt>false</tt> if not.
      */
     private boolean validateLogin(String login) {
-        return login != null;
+        return login != null
+                && !login.equals("");
+    }
+
+    /**
+     * Validates user password.
+     *
+     * @param password User password.
+     * @return <tt>true</tt> if email is valid, <tt>false</tt> if not.
+     */
+    private boolean validatePassword(String password) {
+        return password != null
+                && !password.equals("");
     }
 
     /**
@@ -162,7 +190,18 @@ public abstract class AbstractUserValidator implements Validator<User> {
      */
     private boolean validateEmail(String email) {
         return email != null
+                && !email.equals("")
                 && email.contains("@");
+    }
+
+    /**
+     * Validates user role.
+     *
+     * @param role User role/
+     * @return <tt>true</tt> if role is valid, <tt>false</tt> if not.
+     */
+    private boolean validateRole(Role role) {
+        return role != null;
     }
 
     /**
@@ -181,5 +220,24 @@ public abstract class AbstractUserValidator implements Validator<User> {
     @Override
     public void close() throws Exception {
         this.store.close();
+    }
+
+    /**
+     * Returns user by login and password.
+     *
+     * @param login    User login.
+     * @param password User password.
+     * @return User object with given login and password or <tt>null</tt> if user not found.
+     */
+    @Override
+    public User findByCredentials(String login, String password) {
+        User result = null;
+        for (User user : this.findAll()) {
+            if (login.equals(user.getLogin()) && password.equals(user.getPassword())) {
+                result = user;
+                break;
+            }
+        }
+        return result;
     }
 }

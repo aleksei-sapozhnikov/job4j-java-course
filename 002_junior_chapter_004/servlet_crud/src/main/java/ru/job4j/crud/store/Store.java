@@ -64,4 +64,6 @@ public interface Store<T> {
      * Closes all resources opened by  this store
      */
     void close() throws Exception;
+
+
 }

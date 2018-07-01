@@ -25,6 +25,10 @@ public class User {
      */
     private final String login;
     /**
+     * User password to enter storage system.
+     */
+    private final String password;
+    /**
      * Email.
      */
     private final String email;
@@ -32,34 +36,43 @@ public class User {
      * Date when this user was created in milliseconds.
      */
     private final long created;
+    /**
+     * User role in the system.
+     */
+    private final Role role;
 
     /**
      * Constructs new User object.
      *
-     * @param id      Unique id.
-     * @param name    User name.
-     * @param login   Login in the system.
-     * @param email   User email.
-     * @param created Date of creation in milliseconds.
+     * @param id       Unique id.
+     * @param name     User name.
+     * @param login    Login in the system.
+     * @param password Password for user to enter system.
+     * @param email    User email.
+     * @param created  Date of creation in milliseconds.
+     * @param role     User role in the system.
      */
-    public User(int id, String name, String login, String email, long created) {
+    public User(int id, String name, String login, String password, String email, long created, Role role) {
         this.id = id;
         this.name = name;
         this.login = login;
+        this.password = password;
         this.email = email;
         this.created = created;
+        this.role = role;
     }
 
     /**
-     * Constructs new User object with default id = -1.
+     * Constructs new User object with default id = "-1".
      *
      * @param name    User name.
      * @param login   Login in the system.
      * @param email   User email.
      * @param created Date of creation in milliseconds.
+     * @param role    User role in the system.
      */
-    public User(String name, String login, String email, long created) {
-        this(-1, name, login, email, created);
+    public User(String name, String login, String password, String email, long created, Role role) {
+        this(-1, name, login, password, email, created, role);
     }
 
     /**
@@ -90,6 +103,15 @@ public class User {
     }
 
     /**
+     * Returns user password.
+     *
+     * @return User password.
+     */
+    public String getPassword() {
+        return this.password;
+    }
+
+    /**
      * Returns user email.
      *
      * @return User email.
@@ -108,6 +130,16 @@ public class User {
     }
 
     /**
+     * Returns user's role.
+     *
+     * @return User's role.
+     */
+    public Role getRole() {
+        return this.role;
+    }
+
+
+    /**
      * Returns string describing current user object.
      *
      * @return String describing current user object.
@@ -115,8 +147,8 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "[user id = %s, name = %s, login = %s, email = %s, created = %s]",
-                this.id, this.name, this.login, this.email,
+                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s]",
+                this.id, this.name, this.login, this.password, this.email,
                 Instant.ofEpochMilli(this.created).atZone(ZoneId.systemDefault())
         );
     }
@@ -140,7 +172,9 @@ public class User {
         return this.created == that.created
                 && Objects.equals(this.name, that.name)
                 && Objects.equals(this.login, that.login)
-                && Objects.equals(this.email, that.email);
+                && Objects.equals(this.password, that.password)
+                && Objects.equals(this.email, that.email)
+                && Objects.equals(this.role, that.role);
     }
 
     /**
@@ -150,6 +184,6 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, login, email, created);
+        return Objects.hash(this.name, this.login, this.password, this.email, this.created, this.role);
     }
 }
