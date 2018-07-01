@@ -1,4 +1,6 @@
-package ru.job4j.crud;
+package ru.job4j.crud.store;
+
+import java.util.List;
 
 /**
  * Storage for objects. Each object is identified by integer id given by
@@ -47,11 +49,11 @@ public interface Store<T> {
     T findById(int id);
 
     /**
-     * Returns array of all objects stored in the storage.
+     * Returns list of all objects stored in the storage.
      *
-     * @return Array of stored objects.
+     * @return List of stored objects.
      */
-    T[] findAll();
+    List<T> findAll();
 
     /**
      * Clears currently existing storage structure and creates it again.

@@ -1,11 +1,12 @@
-package ru.job4j.crud.collection;
+package ru.job4j.crud.store;
 
 import net.jcip.annotations.ThreadSafe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.Store;
 import ru.job4j.crud.User;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -67,9 +68,7 @@ public class UserStoreInCollection implements Store<User> {
     public int add(final User model) {
         final int id = this.idNumber.getAndIncrement();
         User adding = new User(id, model.getName(), model.getLogin(), model.getEmail(), model.getCreated());
-        if (this.storage.putIfAbsent(id, adding) != null) {
-            throw new RuntimeException("User with the same id is already in the map.");
-        }
+        this.storage.put(id, adding);
         return id;
     }
 
@@ -139,9 +138,8 @@ public class UserStoreInCollection implements Store<User> {
      * @return Array of stored objects.
      */
     @Override
-    public User[] findAll() {
-        return this.storage.values()
-                .toArray(new User[0]);
+    public List<User> findAll() {
+        return new LinkedList<>(storage.values());
     }
 
     /**

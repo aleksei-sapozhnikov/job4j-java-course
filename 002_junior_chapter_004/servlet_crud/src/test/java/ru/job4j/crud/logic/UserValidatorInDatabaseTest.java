@@ -1,7 +1,9 @@
-package ru.job4j.crud.database;
+package ru.job4j.crud.logic;
 
 import org.junit.Test;
 import ru.job4j.crud.User;
+
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
@@ -32,7 +34,7 @@ public class UserValidatorInDatabaseTest {
         User added = new User("nameOne", "loginOne", "email@one.com", 123);
         int id = validator.add(added);
         assertThat(validator.findById(id), is(added));
-        assertThat(validator.findAll()[0], is(added));
+        assertThat(validator.findAll().get(0), is(added));
     }
 
     /**
@@ -50,7 +52,7 @@ public class UserValidatorInDatabaseTest {
         assertThat(validator.add(loginInvalid), is(-1));
         assertThat(validator.add(emailInvalid1), is(-1));
         assertThat(validator.add(emailInvalid2), is(-1));
-        assertThat(validator.findAll(), is(new User[0]));
+        assertThat(validator.findAll(), is(Collections.EMPTY_LIST));
     }
 
     /**
@@ -168,7 +170,7 @@ public class UserValidatorInDatabaseTest {
         User deleted = validator.delete(id);
         assertThat(deleted, is(add));
         assertThat(validator.findById(id), nullValue());
-        assertThat(validator.findAll(), is(new User[0]));
+        assertThat(validator.findAll(), is(Collections.EMPTY_LIST));
     }
 
     @Test
@@ -181,7 +183,7 @@ public class UserValidatorInDatabaseTest {
         User deleted = validator.delete(badId);
         assertThat(deleted, nullValue());
         assertThat(validator.findById(id), is(add));
-        assertThat(validator.findAll(), is(new User[]{add}));
+        assertThat(validator.findAll(), is(Collections.singletonList(add)));
     }
 
     /**
@@ -215,7 +217,7 @@ public class UserValidatorInDatabaseTest {
         validator.add(one);
         validator.add(two);
         validator.add(three);
-        User[] result = validator.findAll();
+        User[] result = validator.findAll().toArray(new User[0]);
         User[] expected = {two, one, three};    // order shouldn't matter in assert
         assertThat(result, arrayContainingInAnyOrder(expected));
     }

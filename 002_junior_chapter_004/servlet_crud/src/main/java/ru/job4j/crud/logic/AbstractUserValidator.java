@@ -1,7 +1,11 @@
-package ru.job4j.crud;
+package ru.job4j.crud.logic;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.User;
+import ru.job4j.crud.store.Store;
+
+import java.util.List;
 
 /**
  * General class for a logic layer.
@@ -102,7 +106,7 @@ public abstract class AbstractUserValidator implements Validator<User> {
      * @return Array of users stored now.
      */
     @Override
-    public User[] findAll() {
+    public List<User> findAll() {
         return this.store.findAll();
     }
 

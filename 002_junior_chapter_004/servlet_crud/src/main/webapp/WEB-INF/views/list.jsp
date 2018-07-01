@@ -39,6 +39,7 @@
         <th colspan="2">Actions</th>
     </tr>
 
+    <jsp:useBean id="users" scope="request" type="java.util.List"/>
     <c:forEach items="${users}" var="user">
         <tr align="center" valign="center">
             <td><c:out value="${user.id}"/>

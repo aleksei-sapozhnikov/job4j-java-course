@@ -2,7 +2,6 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.DispatchServletActions;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +27,12 @@ public class ServletCreateUser extends AbstractServlet {
      *
      * @param req  Object that contains the request the client has made of the servlet.
      * @param resp Object that contains the response the servlet sends to the client
+     * @throws ServletException General exception a servlet can throw when it encounters difficulty.
+     * @throws IOException      Signals that an I/O exception of some sort has occurred.
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.getRequestDispatcher(String.join("/", VIEWS_DIR, "create.jsp")).forward(req, resp);
+        req.getRequestDispatcher(String.join("/", this.getViewsDir(), "create.jsp")).forward(req, resp);
     }
 
     /**
@@ -39,17 +40,18 @@ public class ServletCreateUser extends AbstractServlet {
      *
      * @param req  Object that contains the request the client has made of the servlet.
      * @param resp Object that contains the response the servlet sends to the client.
+     * @throws IOException Signals that an I/O exception of some sort has occurred.
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String store = req.getParameter("store");
-        DispatchServletActions dispatch = ACT_DISPATCH.get(store);
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String store = req.getParameter(this.getUrlParamStore());
+        DispatchServletActions dispatch = this.getDispatchers().get(store);
         if (dispatch != null) {
             dispatch.handle("create", req, resp);
             resp.sendRedirect(String.join("/",
-                    req.getContextPath(), String.format("list?store=%s", store)));
+                    req.getContextPath(), String.format("list?%s=%s", this.getUrlParamStore(), store)));
         } else {
-            LOG.error("Unknown \"store\" parameter, going to main page");
+            LOG.error(String.format("Unknown \"%s\" parameter, going to main page", this.getUrlParamStore()));
             resp.sendRedirect(req.getContextPath());
         }
     }

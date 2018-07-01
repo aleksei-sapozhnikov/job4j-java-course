@@ -1,23 +1,25 @@
-package ru.job4j.crud.collection;
+package ru.job4j.crud.store;
 
 import org.junit.Test;
 import ru.job4j.crud.User;
+
+import java.util.Collections;
 
 import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class UserStoreInCollectionTest {
+public class UserStoreInDatabaseTest {
 
     /**
      * Test Singleton and getInstance()
      */
     @Test
     public void whenGetInstanceThenTheOnlyObjectInstance() {
-        UserStoreInCollection store1 = UserStoreInCollection.getInstance();
-        UserStoreInCollection store2 = UserStoreInCollection.getInstance();
-        UserStoreInCollection store3 = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store1 = UserStoreInDatabase.getInstance();
+        UserStoreInDatabase store2 = UserStoreInDatabase.getInstance();
+        UserStoreInDatabase store3 = UserStoreInDatabase.getInstance();
         assertThat(store1 == store2, is(true));
         assertThat(store1 == store3, is(true));
     }
@@ -27,12 +29,12 @@ public class UserStoreInCollectionTest {
      */
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
-        UserStoreInCollection store = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User added = new User("nameOne", "loginOne", "email@one.com", 123);
         int id = store.add(added);
         assertThat(store.findById(id), is(added));
-        assertThat(store.findAll()[0], is(added));
+        assertThat(store.findAll().get(0), is(added));
     }
 
     /**
@@ -40,7 +42,7 @@ public class UserStoreInCollectionTest {
      */
     @Test
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
-        UserStoreInCollection store = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
@@ -53,7 +55,7 @@ public class UserStoreInCollectionTest {
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        UserStoreInCollection store = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_email", 123);
         int id = store.add(add);
@@ -70,19 +72,19 @@ public class UserStoreInCollectionTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        UserStoreInCollection store = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
         User deleted = store.delete(id);
         assertThat(deleted, is(add));
         assertThat(store.findById(id), nullValue());
-        assertThat(store.findAll(), is(new User[0]));
+        assertThat(store.findAll(), is(Collections.EMPTY_LIST));
     }
 
     @Test
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
-        UserStoreInCollection store = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User add = new User("name", "login", "email", 123);
         int id = store.add(add);
@@ -90,7 +92,7 @@ public class UserStoreInCollectionTest {
         User deleted = store.delete(badId);
         assertThat(deleted, nullValue());
         assertThat(store.findById(id), is(add));
-        assertThat(store.findAll(), is(new User[]{add}));
+        assertThat(store.findAll(), is(Collections.singletonList(add)));
     }
 
     /**
@@ -98,7 +100,7 @@ public class UserStoreInCollectionTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        UserStoreInCollection store = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);
@@ -116,7 +118,7 @@ public class UserStoreInCollectionTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        UserStoreInCollection store = UserStoreInCollection.getInstance();
+        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "email_1", 123);
         User two = new User("name_2", "login_2", "email_2", 456);
@@ -124,7 +126,7 @@ public class UserStoreInCollectionTest {
         store.add(one);
         store.add(two);
         store.add(three);
-        User[] result = store.findAll();
+        User[] result = store.findAll().toArray(new User[0]);
         User[] expected = {two, one, three};    // order shouldn't matter in assert
         assertThat(result, arrayContainingInAnyOrder(expected));
     }

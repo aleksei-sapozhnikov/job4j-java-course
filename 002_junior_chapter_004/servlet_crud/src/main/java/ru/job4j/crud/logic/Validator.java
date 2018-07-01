@@ -1,4 +1,6 @@
-package ru.job4j.crud;
+package ru.job4j.crud.logic;
+
+import java.util.List;
 
 /**
  * Logic layer for objects store. Validates each object before adding it to storage.
@@ -44,7 +46,7 @@ public interface Validator<T> {
      *
      * @return Array of objects stored now.
      */
-    T[] findAll();
+    List<T> findAll();
 
     /**
      * Finds object in the storage by id.

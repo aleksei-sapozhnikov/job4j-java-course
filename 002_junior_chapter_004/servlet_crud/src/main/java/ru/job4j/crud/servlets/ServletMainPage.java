@@ -31,6 +31,6 @@ public class ServletMainPage extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(String.join("/", VIEWS_DIR, "index.jsp")).forward(req, resp);
+        req.getRequestDispatcher(String.join("/", this.getViewsDir(), "index.jsp")).forward(req, resp);
     }
 }

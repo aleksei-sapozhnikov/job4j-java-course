@@ -1,9 +1,8 @@
-package ru.job4j.crud.database;
+package ru.job4j.crud.store;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.Store;
 import ru.job4j.crud.User;
 
 import java.io.IOException;
@@ -80,6 +79,15 @@ public class UserStoreInDatabase implements Store<User> {
     }
 
     /**
+     * Returns class instance.
+     *
+     * @return Class instance.
+     */
+    public static UserStoreInDatabase getInstance() {
+        return instance;
+    }
+
+    /**
      * Loads properties file using ClassLoader.
      *
      * @param propFile path to the properties file
@@ -116,15 +124,6 @@ public class UserStoreInDatabase implements Store<User> {
         pool.setMinIdle(5);
         pool.setMaxIdle(10);
         pool.setMaxOpenPreparedStatements(100);
-    }
-
-    /**
-     * Returns class instance.
-     *
-     * @return Class instance.
-     */
-    public static UserStoreInDatabase getInstance() {
-        return instance;
     }
 
     /**
@@ -323,7 +322,7 @@ public class UserStoreInDatabase implements Store<User> {
      * @return Array of stored objects.
      */
     @Override
-    public User[] findAll() {
+    public List<User> findAll() {
         List<User> result = new LinkedList<>();
         try (Connection connection = CONNECTION_POOL.getConnection();
              PreparedStatement find = connection.prepareStatement(QUERIES.get("findAllUsers"))
@@ -332,7 +331,7 @@ public class UserStoreInDatabase implements Store<User> {
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
-        return result.toArray(new User[0]);
+        return result;
     }
 
     /**
