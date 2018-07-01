@@ -8,6 +8,7 @@ import ru.job4j.crud.logic.Validator;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -37,8 +38,15 @@ public class ServletShowDeleteUser extends AbstractServlet {
         String store = req.getParameter(this.getUrlParamStore());
         Validator<User> logic = this.getValidators().get(store);
         if (logic != null) {
-            req.setAttribute("users", logic.findAll());
-            req.getRequestDispatcher(String.join("/", this.getViewsDir(), "list.jsp")).forward(req, resp);
+            HttpSession session = req.getSession(false);
+            synchronized (session) {
+                if (session == null || session.getAttribute("login") == null) {
+                    resp.sendRedirect(String.join("/", req.getContextPath(), "login"));
+                } else {
+                    req.setAttribute("users", logic.findAll());
+                    req.getRequestDispatcher(String.join("/", this.getViewsDir(), "list.jsp")).forward(req, resp);
+                }
+            }
         } else {
             LOG.error(String.format("Unknown \"%s\" parameter, going to main page", this.getUrlParamStore()));
             resp.sendRedirect(req.getContextPath());

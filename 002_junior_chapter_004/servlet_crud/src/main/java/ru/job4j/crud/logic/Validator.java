@@ -65,4 +65,12 @@ public interface Validator<T> {
      * Closes all resources opened by this store.
      */
     void close() throws Exception;
+
+    /**
+     * Checks if system contains model with right login/password parameters
+     *
+     * @param login    Model login.
+     * @param password Model password.
+     */
+    boolean containsCredentials(String login, String password);
 }

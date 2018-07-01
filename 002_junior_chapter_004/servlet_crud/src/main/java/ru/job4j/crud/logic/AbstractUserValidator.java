@@ -35,6 +35,7 @@ public abstract class AbstractUserValidator implements Validator<User> {
      */
     protected AbstractUserValidator(Store<User> store) {
         this.store = store;
+        this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis()));
     }
 
     /**
@@ -181,5 +182,23 @@ public abstract class AbstractUserValidator implements Validator<User> {
     @Override
     public void close() throws Exception {
         this.store.close();
+    }
+
+    /**
+     * Checks if system contains model with right login/password parameters
+     *
+     * @param login    User login.
+     * @param password User password.
+     */
+    @Override
+    public boolean containsCredentials(String login, String password) {
+        boolean result = false;
+        for (User user : this.findAll()) {
+            if (login.equals(user.getLogin()) && password.equals(user.getPassword())) {
+                result = true;
+                break;
+            }
+        }
+        return result;
     }
 }

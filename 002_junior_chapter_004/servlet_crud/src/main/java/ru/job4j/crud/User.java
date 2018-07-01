@@ -32,6 +32,29 @@ public class User {
      * Date when this user was created in milliseconds.
      */
     private final long created;
+    /**
+     * User password to enter storage system.
+     */
+    private final String password;
+
+    /**
+     * Constructs new User object.
+     *
+     * @param id       Unique id.
+     * @param name     User name.
+     * @param login    Login in the system.
+     * @param password Password for user to enter system.
+     * @param email    User email.
+     * @param created  Date of creation in milliseconds.
+     */
+    public User(int id, String name, String login, String password, String email, long created) {
+        this.id = id;
+        this.name = name;
+        this.login = login;
+        this.password = password;
+        this.email = email;
+        this.created = created;
+    }
 
     /**
      * Constructs new User object.
@@ -43,15 +66,11 @@ public class User {
      * @param created Date of creation in milliseconds.
      */
     public User(int id, String name, String login, String email, long created) {
-        this.id = id;
-        this.name = name;
-        this.login = login;
-        this.email = email;
-        this.created = created;
+        this(id, name, login, "", email, created);
     }
 
     /**
-     * Constructs new User object with default id = -1.
+     * Constructs new User object with default id = -1 and password="".
      *
      * @param name    User name.
      * @param login   Login in the system.
@@ -60,6 +79,19 @@ public class User {
      */
     public User(String name, String login, String email, long created) {
         this(-1, name, login, email, created);
+    }
+
+    /**
+     * Constructs new User object with default id = -1 and password="".
+     *
+     * @param name     User name.
+     * @param login    Login in the system.
+     * @param password Password for user to enter system.
+     * @param email    User email.
+     * @param created  Date of creation in milliseconds.
+     */
+    public User(String name, String login, String password, String email, long created) {
+        this(-1, name, login, password, email, created);
     }
 
     /**
@@ -87,6 +119,15 @@ public class User {
      */
     public String getLogin() {
         return this.login;
+    }
+
+    /**
+     * Returns user password.
+     *
+     * @return User password.
+     */
+    public String getPassword() {
+        return this.password;
     }
 
     /**
