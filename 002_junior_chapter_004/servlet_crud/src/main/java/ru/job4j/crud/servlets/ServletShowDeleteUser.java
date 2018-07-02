@@ -2,13 +2,10 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.User;
-import ru.job4j.crud.logic.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -35,25 +32,8 @@ public class ServletShowDeleteUser extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String store = req.getParameter(this.getUrlParamStore());
-        Validator<User> logic = this.getValidators().get(store);
-        if (logic != null) {
-            HttpSession session = req.getSession(false);
-            synchronized (session) {
-                if (session == null || session.getAttribute("login") == null) {
-                    resp.sendRedirect(String.format("%s?%s",
-                            String.join("/", req.getContextPath(), "login"),
-                            String.join("=", this.getUrlParamStore(), store)
-                    ));
-                } else {
-                    req.setAttribute("users", logic.findAll());
-                    req.getRequestDispatcher(String.join("/", this.getViewsDir(), "list.jsp")).forward(req, resp);
-                }
-            }
-        } else {
-            LOG.error(String.format("Unknown \"%s\" parameter, going to main page", this.getUrlParamStore()));
-            resp.sendRedirect(req.getContextPath());
-        }
+        req.setAttribute("users", VALIDATOR.findAll());
+        req.getRequestDispatcher(String.join("/", this.getViewsDir(), "list.jsp")).forward(req, resp);
     }
 
     /**
@@ -65,16 +45,8 @@ public class ServletShowDeleteUser extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String store = req.getParameter(this.getUrlParamStore());
-        DispatchServletActions dispatch = this.getDispatchers().get(store);
-        if (dispatch != null) {
-            dispatch.handle("delete", req, resp);
-            resp.sendRedirect(String.join("/",
-                    req.getContextPath(), String.format("list?store=%s", store)));
-        } else {
-            LOG.error(String.format("Unknown \"%s\" parameter, going to main page", this.getUrlParamStore()));
-            resp.sendRedirect(req.getContextPath());
-        }
+        DISPATCH.handle("delete", req, resp);
+        resp.sendRedirect(req.getContextPath());
     }
 
 }

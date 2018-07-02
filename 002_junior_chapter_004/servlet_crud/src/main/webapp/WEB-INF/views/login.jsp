@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="store" value="${param.store}"/>
 <c:set var="list" value="list"/>
 <c:set var="login" value="login"/>
 <%--@elvariable id="error" type="java.lang.String"--%>
@@ -10,18 +9,20 @@
 <html>
 
 <head>
-    <title>Login : ${store}</title>
+    <title>Login</title>
 </head>
 
 <body>
 
 <div align="center">
-    <h1>Login: ${store}</h1>
+    <h1>Login</h1>
 </div>
 
 <c:if test="${error != ''}">
-    <div style="background-color: red">
-        <c:out value="${error}"/>
+    <div style="background-color: red" align="center">
+        <span style="color: white; ">
+            <c:out value="${error}"/>
+        </span>
     </div>
 </c:if>
 
@@ -37,7 +38,6 @@
         </tr>
         <tr>
             <td align="left" valign="center" colspan="2">
-                <input type="hidden" name="store" value="${store}"/>
                 <input type="submit" value="login"/>
             </td>
         </tr>

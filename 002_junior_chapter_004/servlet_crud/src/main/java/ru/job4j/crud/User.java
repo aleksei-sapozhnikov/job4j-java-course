@@ -25,6 +25,10 @@ public class User {
      */
     private final String login;
     /**
+     * User password to enter storage system.
+     */
+    private final String password;
+    /**
      * Email.
      */
     private final String email;
@@ -32,10 +36,6 @@ public class User {
      * Date when this user was created in milliseconds.
      */
     private final long created;
-    /**
-     * User password to enter storage system.
-     */
-    private final String password;
 
     /**
      * Constructs new User object.
