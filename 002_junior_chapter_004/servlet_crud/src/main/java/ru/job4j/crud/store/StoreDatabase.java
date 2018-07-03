@@ -23,7 +23,7 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-public class UserStoreInDatabase implements Store<User> {
+public class StoreDatabase implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
@@ -35,7 +35,7 @@ public class UserStoreInDatabase implements Store<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(UserStoreInDatabase.class);
+    private static final Logger LOG = LogManager.getLogger(StoreDatabase.class);
     /**
      * Map with sql queries.
      */
@@ -53,23 +53,23 @@ public class UserStoreInDatabase implements Store<User> {
     /**
      * Class instance.
      */
-    private static UserStoreInDatabase instance;
+    private static StoreDatabase instance;
 
     static {
         try {
-            instance = new UserStoreInDatabase();
+            instance = new StoreDatabase();
         } catch (IOException | ClassNotFoundException e) {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
     }
 
     /**
-     * Constructs new UserStoreInDatabase object.
+     * Constructs new StoreDatabase object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
      * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
      */
-    private UserStoreInDatabase() throws IOException, ClassNotFoundException {
+    private StoreDatabase() throws IOException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = this.loadProperties(PROPERTIES);
         this.configureConnectionPool(CONNECTION_POOL,
@@ -83,7 +83,7 @@ public class UserStoreInDatabase implements Store<User> {
      *
      * @return Class instance.
      */
-    public static UserStoreInDatabase getInstance() {
+    public static StoreDatabase getInstance() {
         return instance;
     }
 
@@ -189,8 +189,9 @@ public class UserStoreInDatabase implements Store<User> {
         int result = prevId;
         statement.setString(1, user.getName());
         statement.setString(2, user.getLogin());
-        statement.setString(3, user.getEmail());
-        statement.setTimestamp(4, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
+        statement.setString(3, user.getPassword());
+        statement.setString(4, user.getEmail());
+        statement.setTimestamp(5, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
                 result = res.getInt(1);
@@ -238,8 +239,9 @@ public class UserStoreInDatabase implements Store<User> {
         int changedRowsNeeded = 1;
         statement.setString(1, user.getName());
         statement.setString(2, user.getLogin());
-        statement.setString(3, user.getEmail());
-        statement.setInt(4, user.getId());
+        statement.setString(3, user.getPassword());
+        statement.setString(4, user.getEmail());
+        statement.setInt(5, user.getId());
         int rowsChanged = statement.executeUpdate();
         if (rowsChanged > 1) {
             throw new RuntimeException("Update method changed more than 1 row");
@@ -364,8 +366,9 @@ public class UserStoreInDatabase implements Store<User> {
                 res.getInt(1),                      // id
                 res.getString(2),                   // name
                 res.getString(3),                   // login
-                res.getString(4),                   // email
-                res.getTimestamp(5).getTime()       // created
+                res.getString(4),                   // password
+                res.getString(5),                   // email
+                res.getTimestamp(6).getTime()       // created
         );
     }
 
@@ -396,7 +399,8 @@ public class UserStoreInDatabase implements Store<User> {
                     .add("CREATE TABLE IF NOT EXISTS users (")
                     .add("id SERIAL PRIMARY KEY,")
                     .add("name TEXT,")
-                    .add("login TEXT,")
+                    .add("login TEXT UNIQUE,")
+                    .add("password TEXT,")
                     .add("email TEXT,")
                     .add("created TIMESTAMP WITH TIME ZONE")
                     .add(");")
@@ -429,8 +433,8 @@ public class UserStoreInDatabase implements Store<User> {
         private static String insertUser() {
             return new StringJoiner(" ")
                     .add("INSERT INTO users")
-                    .add("(name, login, email, created)")
-                    .add("VALUES (?, ?, ?, ?)")
+                    .add("(name, login, password, email, created)")
+                    .add("VALUES (?, ?, ?, ?, ?)")
                     .add("RETURNING id")
                     .toString();
         }
@@ -443,7 +447,7 @@ public class UserStoreInDatabase implements Store<User> {
         private static String updateUserById() {
             return new StringJoiner(" ")
                     .add("UPDATE users")
-                    .add("SET name = ?, login = ?, email = ?")
+                    .add("SET name = ?, login = ?, password = ?, email = ? ")
                     .add("WHERE users.id = ?")
                     .toString();
         }
@@ -467,7 +471,7 @@ public class UserStoreInDatabase implements Store<User> {
          */
         private static String findUserById() {
             return new StringJoiner(" ")
-                    .add("SELECT id, name, login, email, created FROM users")
+                    .add("SELECT id, name, login, password, email, created FROM users")
                     .add("WHERE id = ?")
                     .toString();
         }
@@ -479,7 +483,7 @@ public class UserStoreInDatabase implements Store<User> {
          */
         private static String findAllUsers() {
             return new StringJoiner(" ")
-                    .add("SELECT id, name, login, email, created FROM users")
+                    .add("SELECT id, name, login, password, email, created FROM users")
                     .add("ORDER BY id")
                     .toString();
         }

@@ -44,16 +44,7 @@ public class ServletCreateUser extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String store = req.getParameter(this.getUrlParamStore());
-        DispatchServletActions dispatch = this.getDispatchers().get(store);
-        if (dispatch != null) {
-            dispatch.handle("create", req, resp);
-            resp.sendRedirect(String.join("/",
-                    req.getContextPath(), String.format("list?%s=%s", this.getUrlParamStore(), store)));
-        } else {
-            LOG.error(String.format("Unknown \"%s\" parameter, going to main page", this.getUrlParamStore()));
-            resp.sendRedirect(req.getContextPath());
-        }
+        DISPATCH.handle("create", req, resp);
+        resp.sendRedirect(req.getContextPath());
     }
-
 }

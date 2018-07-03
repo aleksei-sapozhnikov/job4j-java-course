@@ -144,6 +144,7 @@ public class DispatchServletActions {
         return new User(
                 req.getParameter("name"),
                 req.getParameter("login"),
+                req.getParameter("password"),
                 req.getParameter("email"),
                 System.currentTimeMillis()
         );

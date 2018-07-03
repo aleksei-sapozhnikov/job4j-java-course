@@ -10,16 +10,16 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class UserStoreInDatabaseTest {
+public class StoreDatabaseTest {
 
     /**
      * Test Singleton and getInstance()
      */
     @Test
     public void whenGetInstanceThenTheOnlyObjectInstance() {
-        UserStoreInDatabase store1 = UserStoreInDatabase.getInstance();
-        UserStoreInDatabase store2 = UserStoreInDatabase.getInstance();
-        UserStoreInDatabase store3 = UserStoreInDatabase.getInstance();
+        StoreDatabase store1 = StoreDatabase.getInstance();
+        StoreDatabase store2 = StoreDatabase.getInstance();
+        StoreDatabase store3 = StoreDatabase.getInstance();
         assertThat(store1 == store2, is(true));
         assertThat(store1 == store3, is(true));
     }
@@ -29,9 +29,9 @@ public class UserStoreInDatabaseTest {
      */
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
-        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
+        StoreDatabase store = StoreDatabase.getInstance();
         store.clear();
-        User added = new User("nameOne", "loginOne", "email@one.com", 123);
+        User added = new User("nameOne", "loginOne", "passwordOne", "email@one.com", 123);
         int id = store.add(added);
         assertThat(store.findById(id), is(added));
         assertThat(store.findAll().get(0), is(added));
@@ -42,28 +42,28 @@ public class UserStoreInDatabaseTest {
      */
     @Test
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
-        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
+        StoreDatabase store = StoreDatabase.getInstance();
         store.clear();
-        User add = new User("old_name", "old_login", "old_email", 123);
+        User add = new User("old_name", "old_login", "old_password", "old_email", 123);
         int id = store.add(add);
-        User upd = new User(id, "new_name", "new_login", "new_email", 456);
+        User upd = new User(id, "new_name", "new_login", "new_password", "new_email", 456);
         assertThat(store.update(upd), is(true));
         User result = store.findById(id);
-        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getEmail(), add.getCreated());
+        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getPassword(), upd.getEmail(), add.getCreated());
         assertThat(result, is(expected));
     }
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
+        StoreDatabase store = StoreDatabase.getInstance();
         store.clear();
-        User add = new User("old_name", "old_login", "old_email", 123);
+        User add = new User("old_name", "old_login", "old_password", "old_email", 123);
         int id = store.add(add);
         int badId = id + 2134;
-        User update = new User(badId, "new_name", "new_login", "new_email", 456);
+        User update = new User(badId, "new_name", "new_login", "new_password", "new_email", 456);
         assertThat(store.update(update), is(false));
         User result = store.findById(id);
-        User expected = new User(id, add.getName(), add.getLogin(), add.getEmail(), add.getCreated());
+        User expected = new User(id, add.getName(), add.getLogin(), add.getPassword(), add.getEmail(), add.getCreated());
         assertThat(result, is(expected));
     }
 
@@ -72,9 +72,9 @@ public class UserStoreInDatabaseTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
+        StoreDatabase store = StoreDatabase.getInstance();
         store.clear();
-        User add = new User("name", "login", "email", 123);
+        User add = new User("name", "login", "password", "email", 123);
         int id = store.add(add);
         User deleted = store.delete(id);
         assertThat(deleted, is(add));
@@ -84,9 +84,9 @@ public class UserStoreInDatabaseTest {
 
     @Test
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
-        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
+        StoreDatabase store = StoreDatabase.getInstance();
         store.clear();
-        User add = new User("name", "login", "email", 123);
+        User add = new User("name", "login", "password", "email", 123);
         int id = store.add(add);
         int badId = id + 123;
         User deleted = store.delete(badId);
@@ -100,11 +100,11 @@ public class UserStoreInDatabaseTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
+        StoreDatabase store = StoreDatabase.getInstance();
         store.clear();
-        User one = new User("name_1", "login_1", "email_1", 123);
-        User two = new User("name_2", "login_2", "email_2", 456);
-        User three = new User("name_3", "login_3", "email_3", 789);
+        User one = new User("name_1", "login_1", "password_1", "email_1", 123);
+        User two = new User("name_2", "login_2", "password_2", "email_2", 456);
+        User three = new User("name_3", "login_3", "password_3", "email_3", 789);
         int idOne = store.add(one);
         int idTwo = store.add(two);
         int idThree = store.add(three);
@@ -118,11 +118,11 @@ public class UserStoreInDatabaseTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        UserStoreInDatabase store = UserStoreInDatabase.getInstance();
+        StoreDatabase store = StoreDatabase.getInstance();
         store.clear();
-        User one = new User("name_1", "login_1", "email_1", 123);
-        User two = new User("name_2", "login_2", "email_2", 456);
-        User three = new User("name_3", "login_3", "email_3", 789);
+        User one = new User("name_1", "login_1", "password_1", "email_1", 123);
+        User two = new User("name_2", "login_2", "password_2", "email_2", 456);
+        User three = new User("name_3", "login_3", "password_3", "email_3", 789);
         store.add(one);
         store.add(two);
         store.add(three);

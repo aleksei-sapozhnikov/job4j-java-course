@@ -2,8 +2,6 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.User;
-import ru.job4j.crud.logic.Validator;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,9 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class LoginController extends AbstractServlet {
-    private final Logger log = LogManager.getLogger(LoginController.class);
-
+public class ServletLogIn extends AbstractServlet {
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(ServletLogIn.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -23,18 +23,14 @@ public class LoginController extends AbstractServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String store = req.getParameter(this.getUrlParamStore());
-        Validator<User> validator = this.getValidators().get(store);
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        if (validator.containsCredentials(login, password)) {
+        if (VALIDATOR.containsCredentials(login, password)) {
             HttpSession session = req.getSession();
             synchronized (session) {
                 session.setAttribute("login", login);
             }
-            resp.sendRedirect(String.format("%s?%s",
-                    String.join("/", req.getContextPath(), "list"),
-                    String.join("=", this.getUrlParamStore(), store)));
+            resp.sendRedirect(String.join("/", req.getContextPath(), "list"));
         } else {
             req.setAttribute("error", "Invalid credentials");
             this.doGet(req, resp);

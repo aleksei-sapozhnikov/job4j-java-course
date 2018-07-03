@@ -57,38 +57,12 @@ public class User {
     }
 
     /**
-     * Constructs new User object.
-     *
-     * @param id      Unique id.
-     * @param name    User name.
-     * @param login   Login in the system.
-     * @param email   User email.
-     * @param created Date of creation in milliseconds.
-     */
-    public User(int id, String name, String login, String email, long created) {
-        this(id, name, login, "", email, created);
-    }
-
-    /**
-     * Constructs new User object with default id = -1 and password="".
+     * Constructs new User object with default id = "-1".
      *
      * @param name    User name.
      * @param login   Login in the system.
      * @param email   User email.
      * @param created Date of creation in milliseconds.
-     */
-    public User(String name, String login, String email, long created) {
-        this(-1, name, login, "", email, created);
-    }
-
-    /**
-     * Constructs new User object with default id = -1 and password="".
-     *
-     * @param name     User name.
-     * @param login    Login in the system.
-     * @param password Password for user to enter system.
-     * @param email    User email.
-     * @param created  Date of creation in milliseconds.
      */
     public User(String name, String login, String password, String email, long created) {
         this(-1, name, login, password, email, created);
@@ -156,8 +130,8 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "[user id = %s, name = %s, login = %s, email = %s, created = %s]",
-                this.id, this.name, this.login, this.email,
+                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s]",
+                this.id, this.name, this.login, this.password, this.email,
                 Instant.ofEpochMilli(this.created).atZone(ZoneId.systemDefault())
         );
     }
@@ -181,6 +155,7 @@ public class User {
         return this.created == that.created
                 && Objects.equals(this.name, that.name)
                 && Objects.equals(this.login, that.login)
+                && Objects.equals(this.password, that.password)
                 && Objects.equals(this.email, that.email);
     }
 
@@ -191,6 +166,6 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(name, login, email, created);
+        return Objects.hash(this.name, this.login, this.password, this.email, this.created);
     }
 }

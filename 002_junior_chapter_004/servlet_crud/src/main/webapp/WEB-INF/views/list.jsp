@@ -3,30 +3,30 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="store" value="${param.store}"/>
 <c:set var="create" value="create"/>
 <c:set var="update" value="update"/>
 <c:set var="delete" value="list"/>
 
 <html>
 <head>
-    <title>User list: ${store}</title>
+    <title>User list</title>
 </head>
 <body>
 
-<p align="center">
-    <a href="<c:url value="/"/>">Index page</a>
-</p>
+<form action="<c:url value="/logout"/>" method="post">
+    <div align="center">
+        <input type="submit" value="logout">
+    </div>
+</form>
 
-<form action="${context}/${create}" method="get">
+<form action="<c:url value="/create"/>" method="get">
     <p align="center">
-        <input type="hidden" name="store" value="${store}"/>
         <input type="submit" value="create user"/>
     </p>
 </form>
 
 <div align="center">
-    <h1>Users list: ${store}</h1>
+    <h1>Users list</h1>
 </div>
 
 <table style="border: 1px solid black;" cellpadding="5px" cellspacing="0px" border="1px" align="center" valign="center">
@@ -56,14 +56,12 @@
             </td>
             <td>
                 <form action="${update}" method="get">
-                    <input type="hidden" name="store" value="${store}"/>
                     <input type="hidden" name="id" value="${user.id}">
                     <input type="submit" value="update">
                 </form>
             </td>
             <td>
                 <form action="${delete}" method="post">
-                    <input type="hidden" name="store" value="${store}"/>
                     <input type="hidden" name="id" value="${user.id}">
                     <input type="submit" value="delete">
                 </form>

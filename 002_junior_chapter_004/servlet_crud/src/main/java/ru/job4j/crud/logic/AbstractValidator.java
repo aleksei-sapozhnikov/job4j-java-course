@@ -18,11 +18,11 @@ import java.util.List;
  * @version $Id$
  * @since 0.1
  */
-public abstract class AbstractUserValidator implements Validator<User> {
+public abstract class AbstractValidator implements Validator<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(AbstractUserValidator.class);
+    private static final Logger LOG = LogManager.getLogger(AbstractValidator.class);
     /**
      * Store where users are held.
      */
@@ -33,7 +33,7 @@ public abstract class AbstractUserValidator implements Validator<User> {
      *
      * @param store Memory layer class object.
      */
-    protected AbstractUserValidator(Store<User> store) {
+    protected AbstractValidator(Store<User> store) {
         this.store = store;
         this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis()));
     }
@@ -86,8 +86,9 @@ public abstract class AbstractUserValidator implements Validator<User> {
     private User updateFields(User old, User upd) {
         String name = upd.getName() != null ? upd.getName() : old.getName();
         String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
+        String password = upd.getPassword() != null ? upd.getPassword() : old.getPassword();
         String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
-        return new User(old.getId(), name, login, email, old.getCreated());
+        return new User(old.getId(), name, login, password, email, old.getCreated());
     }
 
     /**
@@ -132,6 +133,7 @@ public abstract class AbstractUserValidator implements Validator<User> {
         return user != null
                 && this.validateName(user.getName())
                 && this.validateLogin(user.getLogin())
+                && this.validatePassword(user.getPassword())
                 && this.validateEmail(user.getEmail());
     }
 
@@ -156,6 +158,17 @@ public abstract class AbstractUserValidator implements Validator<User> {
     }
 
     /**
+     * Validates user password.
+     *
+     * @param password User password.
+     * @return <tt>true</tt> if email is valid, <tt>false</tt> if not.
+     */
+    private boolean validatePassword(String password) {
+        return password != null
+                && !password.equals("");
+    }
+
+    /**
      * Validates user email.
      *
      * @param email User email.
@@ -163,6 +176,7 @@ public abstract class AbstractUserValidator implements Validator<User> {
      */
     private boolean validateEmail(String email) {
         return email != null
+                && !email.equals("")
                 && email.contains("@");
     }
 
