@@ -36,6 +36,10 @@ public class User {
      * Date when this user was created in milliseconds.
      */
     private final long created;
+    /**
+     * User role in the system.
+     */
+    private final Role role;
 
     /**
      * Constructs new User object.
@@ -46,14 +50,16 @@ public class User {
      * @param password Password for user to enter system.
      * @param email    User email.
      * @param created  Date of creation in milliseconds.
+     * @param role     User role in the system.
      */
-    public User(int id, String name, String login, String password, String email, long created) {
+    public User(int id, String name, String login, String password, String email, long created, Role role) {
         this.id = id;
         this.name = name;
         this.login = login;
         this.password = password;
         this.email = email;
         this.created = created;
+        this.role = role;
     }
 
     /**
@@ -63,9 +69,10 @@ public class User {
      * @param login   Login in the system.
      * @param email   User email.
      * @param created Date of creation in milliseconds.
+     * @param role    User role in the system.
      */
-    public User(String name, String login, String password, String email, long created) {
-        this(-1, name, login, password, email, created);
+    public User(String name, String login, String password, String email, long created, Role role) {
+        this(-1, name, login, password, email, created, role);
     }
 
     /**
@@ -123,6 +130,16 @@ public class User {
     }
 
     /**
+     * Returns user's role.
+     *
+     * @return User's role.
+     */
+    public Role getRole() {
+        return this.role;
+    }
+
+
+    /**
      * Returns string describing current user object.
      *
      * @return String describing current user object.
@@ -156,7 +173,8 @@ public class User {
                 && Objects.equals(this.name, that.name)
                 && Objects.equals(this.login, that.login)
                 && Objects.equals(this.password, that.password)
-                && Objects.equals(this.email, that.email);
+                && Objects.equals(this.email, that.email)
+                && Objects.equals(this.role, that.role);
     }
 
     /**
@@ -166,6 +184,6 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.name, this.login, this.password, this.email, this.created);
+        return Objects.hash(this.name, this.login, this.password, this.email, this.created, this.role);
     }
 }

@@ -1,6 +1,7 @@
 package ru.job4j.crud.store;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Storage for objects. Each object is identified by integer id given by
@@ -56,6 +57,13 @@ public interface Store<T> {
     List<T> findAll();
 
     /**
+     * Returns map with all possible model roles.
+     *
+     * @return Map with all possible model roles.
+     */
+    Map<String, ? extends Enum> getRolesMap();
+
+    /**
      * Clears currently existing storage structure and creates it again.
      */
     void clear();
@@ -64,4 +72,6 @@ public interface Store<T> {
      * Closes all resources opened by  this store
      */
     void close() throws Exception;
+
+
 }

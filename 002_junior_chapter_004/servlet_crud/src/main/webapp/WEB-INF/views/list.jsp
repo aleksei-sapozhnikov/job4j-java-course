@@ -35,8 +35,9 @@
         <th>name</th>
         <th>login</th>
         <th>email</th>
+        <th>role</th>
         <th>created</th>
-        <th colspan="2">Actions</th>
+        <th colspan="2">actions</th>
     </tr>
 
     <jsp:useBean id="users" scope="request" type="java.util.List"/>
@@ -49,6 +50,8 @@
             <td><c:out value="${user.login}"/>
             </td>
             <td><c:out value="${user.email}"/>
+            </td>
+            <td><c:out value="${user.role}"/>
             </td>
             <td>
                 <jsp:setProperty name="dateTime" property="time" value="${user.created}"/>

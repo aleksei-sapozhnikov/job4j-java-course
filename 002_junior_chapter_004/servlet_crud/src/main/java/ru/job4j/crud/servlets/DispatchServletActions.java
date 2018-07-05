@@ -2,6 +2,7 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Role;
 import ru.job4j.crud.User;
 import ru.job4j.crud.logic.Validator;
 
@@ -146,8 +147,8 @@ public class DispatchServletActions {
                 req.getParameter("login"),
                 req.getParameter("password"),
                 req.getParameter("email"),
-                System.currentTimeMillis()
-        );
+                System.currentTimeMillis(),
+                (Role) logic.getRolesMap().get(req.getParameter("role")));
     }
 
     /**

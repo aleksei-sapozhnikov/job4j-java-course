@@ -30,6 +30,24 @@
             <td><input type="text" name="email" value="${user.email}"></td>
         </tr>
         <tr>
+            <td align="left">User role:</td>
+            <td>
+                <select name="role">
+                    <%--@elvariable id="roles" type="java.util.Collection"--%>
+                    <c:forEach items="${roles}" var="role">
+                        <c:choose>
+                            <c:when test="${role == user.role}">
+                                <option value="${role}" selected="selected">${role}</option>
+                            </c:when>
+                            <c:otherwise>
+                                <option value="${role}">${role}</option>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td align="center" valign="center">
                 <input type="hidden" name="id" value="${user.id}">
                 <input type="submit" value="update">

@@ -32,6 +32,7 @@ public class ServletCreateUser extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
+        req.setAttribute("roles", VALIDATOR.getRolesMap().values());
         req.getRequestDispatcher(String.join("/", this.getViewsDir(), "create.jsp")).forward(req, resp);
     }
 

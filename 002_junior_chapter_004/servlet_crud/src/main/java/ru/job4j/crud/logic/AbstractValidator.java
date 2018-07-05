@@ -2,10 +2,12 @@ package ru.job4j.crud.logic;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Role;
 import ru.job4j.crud.User;
 import ru.job4j.crud.store.Store;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * General class for a logic layer.
@@ -35,7 +37,7 @@ public abstract class AbstractValidator implements Validator<User> {
      */
     protected AbstractValidator(Store<User> store) {
         this.store = store;
-        this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis()));
+        this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis(), Role.ADMIN));
     }
 
     /**
@@ -88,7 +90,8 @@ public abstract class AbstractValidator implements Validator<User> {
         String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
         String password = upd.getPassword() != null ? upd.getPassword() : old.getPassword();
         String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
-        return new User(old.getId(), name, login, password, email, old.getCreated());
+        Role role = upd.getRole() != null ? upd.getRole() : old.getRole();
+        return new User(old.getId(), name, login, password, email, old.getCreated(), role);
     }
 
     /**
@@ -134,7 +137,18 @@ public abstract class AbstractValidator implements Validator<User> {
                 && this.validateName(user.getName())
                 && this.validateLogin(user.getLogin())
                 && this.validatePassword(user.getPassword())
-                && this.validateEmail(user.getEmail());
+                && this.validateEmail(user.getEmail())
+                && this.validateRole(user.getRole());
+    }
+
+    /**
+     * Returns map with all possible model roles.
+     *
+     * @return Map with all possible model roles.
+     */
+    @Override
+    public Map<String, ? extends Enum> getRolesMap() {
+        return this.store.getRolesMap();
     }
 
     /**
@@ -178,6 +192,16 @@ public abstract class AbstractValidator implements Validator<User> {
         return email != null
                 && !email.equals("")
                 && email.contains("@");
+    }
+
+    /**
+     * Validates user role.
+     *
+     * @param role User role/
+     * @return <tt>true</tt> if role is valid, <tt>false</tt> if not.
+     */
+    private boolean validateRole(Role role) {
+        return role != null;
     }
 
     /**

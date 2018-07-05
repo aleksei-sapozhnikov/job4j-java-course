@@ -3,6 +3,7 @@ package ru.job4j.crud.store;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Role;
 import ru.job4j.crud.User;
 
 import java.io.IOException;
@@ -51,6 +52,14 @@ public class StoreDatabase implements Store<User> {
         }
     };
     /**
+     * Map with roles.
+     */
+    private static final Map<String, Role> ROLES = Collections.unmodifiableMap(new HashMap<String, Role>() {{
+        put(Role.ADMIN.toString(), Role.ADMIN);
+        put(Role.USER.toString(), Role.USER);
+    }});
+
+    /**
      * Class instance.
      */
     private static StoreDatabase instance;
@@ -85,6 +94,16 @@ public class StoreDatabase implements Store<User> {
      */
     public static StoreDatabase getInstance() {
         return instance;
+    }
+
+    /**
+     * Returns map with all possible user roles.
+     *
+     * @return Possible user roles.
+     */
+    @Override
+    public Map<String, Role> getRolesMap() {
+        return ROLES;
     }
 
     /**
@@ -192,6 +211,7 @@ public class StoreDatabase implements Store<User> {
         statement.setString(3, user.getPassword());
         statement.setString(4, user.getEmail());
         statement.setTimestamp(5, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
+        statement.setString(6, user.getRole().toString());
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
                 result = res.getInt(1);
@@ -241,7 +261,8 @@ public class StoreDatabase implements Store<User> {
         statement.setString(2, user.getLogin());
         statement.setString(3, user.getPassword());
         statement.setString(4, user.getEmail());
-        statement.setInt(5, user.getId());
+        statement.setString(5, user.getRole().toString());
+        statement.setInt(6, user.getId());
         int rowsChanged = statement.executeUpdate();
         if (rowsChanged > 1) {
             throw new RuntimeException("Update method changed more than 1 row");
@@ -368,7 +389,8 @@ public class StoreDatabase implements Store<User> {
                 res.getString(3),                   // login
                 res.getString(4),                   // password
                 res.getString(5),                   // email
-                res.getTimestamp(6).getTime()       // created
+                res.getTimestamp(6).getTime(),      // created
+                ROLES.get(res.getString(7))         // role
         );
     }
 
@@ -402,7 +424,8 @@ public class StoreDatabase implements Store<User> {
                     .add("login TEXT UNIQUE,")
                     .add("password TEXT,")
                     .add("email TEXT,")
-                    .add("created TIMESTAMP WITH TIME ZONE")
+                    .add("created TIMESTAMP WITH TIME ZONE,")
+                    .add("role TEXT")
                     .add(");")
                     .toString();
         }
@@ -433,8 +456,8 @@ public class StoreDatabase implements Store<User> {
         private static String insertUser() {
             return new StringJoiner(" ")
                     .add("INSERT INTO users")
-                    .add("(name, login, password, email, created)")
-                    .add("VALUES (?, ?, ?, ?, ?)")
+                    .add("(name, login, password, email, created, role)")
+                    .add("VALUES (?, ?, ?, ?, ?, ?)")
                     .add("RETURNING id")
                     .toString();
         }
@@ -447,7 +470,7 @@ public class StoreDatabase implements Store<User> {
         private static String updateUserById() {
             return new StringJoiner(" ")
                     .add("UPDATE users")
-                    .add("SET name = ?, login = ?, password = ?, email = ? ")
+                    .add("SET name = ?, login = ?, password = ?, email = ?, role = ? ")
                     .add("WHERE users.id = ?")
                     .toString();
         }
@@ -471,7 +494,7 @@ public class StoreDatabase implements Store<User> {
          */
         private static String findUserById() {
             return new StringJoiner(" ")
-                    .add("SELECT id, name, login, password, email, created FROM users")
+                    .add("SELECT id, name, login, password, email, created, role FROM users")
                     .add("WHERE id = ?")
                     .toString();
         }
@@ -483,7 +506,7 @@ public class StoreDatabase implements Store<User> {
          */
         private static String findAllUsers() {
             return new StringJoiner(" ")
-                    .add("SELECT id, name, login, password, email, created FROM users")
+                    .add("SELECT id, name, login, password, email, created, role FROM users")
                     .add("ORDER BY id")
                     .toString();
         }

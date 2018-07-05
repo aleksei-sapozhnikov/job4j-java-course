@@ -32,6 +32,17 @@
             <td><input type="text" name="email"></td>
         </tr>
         <tr>
+            <td align="left">User role:</td>
+            <td>
+                <select name="role">
+                    <%--@elvariable id="roles" type="java.util.Collection"--%>
+                    <c:forEach items="${roles}" var="role">
+                        <option value="${role}">${role}</option>
+                    </c:forEach>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td align="center" valign="center">
                 <input type="submit" value="create">
             </td>
