@@ -1,7 +1,6 @@
 package ru.job4j.crud.logic;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Logic layer for objects store. Validates each object before adding it to storage.
@@ -56,13 +55,6 @@ public interface Validator<T> {
      * @return Object with given id if found, <tt>null</tt> if not found.
      */
     T findById(int id);
-
-    /**
-     * Returns map with all possible model roles.
-     *
-     * @return Map with all possible model roles.
-     */
-    Map<String, ? extends Enum> getRolesMap();
 
     /**
      * Clears currently existing storage structure and creates it again.

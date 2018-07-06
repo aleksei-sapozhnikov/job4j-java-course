@@ -7,7 +7,6 @@ import ru.job4j.crud.User;
 import ru.job4j.crud.store.Store;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * General class for a logic layer.
@@ -139,16 +138,6 @@ public abstract class AbstractValidator implements Validator<User> {
                 && this.validatePassword(user.getPassword())
                 && this.validateEmail(user.getEmail())
                 && this.validateRole(user.getRole());
-    }
-
-    /**
-     * Returns map with all possible model roles.
-     *
-     * @return Map with all possible model roles.
-     */
-    @Override
-    public Map<String, ? extends Enum> getRolesMap() {
-        return this.store.getRolesMap();
     }
 
     /**

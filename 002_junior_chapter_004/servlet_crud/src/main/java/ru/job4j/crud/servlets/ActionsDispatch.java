@@ -148,7 +148,8 @@ public class ActionsDispatch {
                 req.getParameter("password"),
                 req.getParameter("email"),
                 System.currentTimeMillis(),
-                (Role) logic.getRolesMap().get(req.getParameter("role")));
+                Role.valueOf(req.getParameter("role"))
+        );
     }
 
     /**

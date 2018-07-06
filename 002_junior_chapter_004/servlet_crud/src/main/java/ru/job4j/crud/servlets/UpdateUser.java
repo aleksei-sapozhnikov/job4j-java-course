@@ -2,12 +2,14 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Role;
 import ru.job4j.crud.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * General class for a presentation layer "update" servlet.
@@ -36,7 +38,7 @@ public class UpdateUser extends AbstractServlet {
         Integer id = Integer.valueOf(req.getParameter("id"));
         User user = VALIDATOR.findById(id);
         req.setAttribute("user", user);
-        req.setAttribute("roles", VALIDATOR.getRolesMap().values());
+        req.setAttribute("roles", Arrays.asList(Role.values()));
         req.getRequestDispatcher(String.join("/", this.getViewsDir(), "update.jsp")).forward(req, resp);
     }
 

@@ -2,11 +2,13 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.Role;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Presentation layer "create" servlet.
@@ -32,7 +34,7 @@ public class CreateUser extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setAttribute("roles", VALIDATOR.getRolesMap().values());
+        req.setAttribute("roles", Arrays.asList(Role.values()));
         req.getRequestDispatcher(String.join("/", this.getViewsDir(), "create.jsp")).forward(req, resp);
     }
 

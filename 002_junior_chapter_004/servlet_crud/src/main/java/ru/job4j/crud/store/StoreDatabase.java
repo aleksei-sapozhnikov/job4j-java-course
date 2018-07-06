@@ -51,13 +51,6 @@ public class StoreDatabase implements Store<User> {
             put("findAllUsers", CreateQuery.findAllUsers());
         }
     };
-    /**
-     * Map with roles.
-     */
-    private static final Map<String, Role> ROLES = Collections.unmodifiableMap(new HashMap<String, Role>() {{
-        put(Role.ADMIN.toString(), Role.ADMIN);
-        put(Role.USER.toString(), Role.USER);
-    }});
 
     /**
      * Class instance.
@@ -94,16 +87,6 @@ public class StoreDatabase implements Store<User> {
      */
     public static StoreDatabase getInstance() {
         return instance;
-    }
-
-    /**
-     * Returns map with all possible user roles.
-     *
-     * @return Possible user roles.
-     */
-    @Override
-    public Map<String, Role> getRolesMap() {
-        return ROLES;
     }
 
     /**
@@ -384,13 +367,13 @@ public class StoreDatabase implements Store<User> {
      */
     private User formUser(ResultSet res) throws SQLException {
         return new User(
-                res.getInt(1),                      // id
-                res.getString(2),                   // name
-                res.getString(3),                   // login
-                res.getString(4),                   // password
-                res.getString(5),                   // email
-                res.getTimestamp(6).getTime(),      // created
-                ROLES.get(res.getString(7))         // role
+                res.getInt(1),                              // id
+                res.getString(2),                           // name
+                res.getString(3),                           // login
+                res.getString(4),                           // password
+                res.getString(5),                           // email
+                res.getTimestamp(6).getTime(),              // created
+                Role.valueOf(res.getString(7))              // role
         );
     }
 
