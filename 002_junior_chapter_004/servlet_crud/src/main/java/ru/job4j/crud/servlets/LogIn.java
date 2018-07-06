@@ -2,6 +2,7 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -9,11 +10,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class ServletLogIn extends AbstractServlet {
+public class LogIn extends AbstractServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(ServletLogIn.class);
+    private static final Logger LOG = LogManager.getLogger(LogIn.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -25,10 +26,11 @@ public class ServletLogIn extends AbstractServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String login = req.getParameter("login");
         String password = req.getParameter("password");
-        if (VALIDATOR.containsCredentials(login, password)) {
+        User user = VALIDATOR.findByCredentials(login, password);
+        if (user != null) {
             HttpSession session = req.getSession();
             synchronized (session) {
-                session.setAttribute("login", login);
+                session.setAttribute("user", user);
             }
             resp.sendRedirect(String.join("/", req.getContextPath(), "list"));
         } else {

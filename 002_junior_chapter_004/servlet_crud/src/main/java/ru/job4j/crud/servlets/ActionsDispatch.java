@@ -18,11 +18,11 @@ import java.util.function.BiFunction;
  * Irs functions return String result which is to be included into
  * html page going to user.
  */
-public class DispatchServletActions {
+public class ActionsDispatch {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DispatchServletActions.class);
+    private static final Logger LOG = LogManager.getLogger(ActionsDispatch.class);
     /**
      * Logic layer class validating and adding/updating/deleting users.
      */
@@ -37,7 +37,7 @@ public class DispatchServletActions {
      *
      * @param logic Logic layer object to perform operations on.
      */
-    public DispatchServletActions(Validator<User> logic) {
+    public ActionsDispatch(Validator<User> logic) {
         this.logic = logic;
     }
 
@@ -59,7 +59,7 @@ public class DispatchServletActions {
      *
      * @return Initiated dispatch object.
      */
-    public DispatchServletActions init() {
+    public ActionsDispatch init() {
         this.load("create", this.toCreate());
         this.load("update", this.toUpdate());
         this.load("delete", this.toDelete());

@@ -223,17 +223,18 @@ public abstract class AbstractValidator implements Validator<User> {
     }
 
     /**
-     * Checks if system contains model with right login/password parameters
+     * Returns user by login and password.
      *
      * @param login    User login.
      * @param password User password.
+     * @return User object with given login and password or <tt>null</tt> if user not found.
      */
     @Override
-    public boolean containsCredentials(String login, String password) {
-        boolean result = false;
+    public User findByCredentials(String login, String password) {
+        User result = null;
         for (User user : this.findAll()) {
             if (login.equals(user.getLogin()) && password.equals(user.getPassword())) {
-                result = true;
+                result = user;
                 break;
             }
         }

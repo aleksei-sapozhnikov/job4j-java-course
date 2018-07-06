@@ -6,33 +6,38 @@
          version="2.4">
 
     <servlet>
-        <servlet-name>ShowDeleteUser</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.ServletShowDeleteUser</servlet-class>
+        <servlet-name>ShowUsers</servlet-name>
+        <servlet-class>ru.job4j.crud.servlets.ShowUsers</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>CreateUser</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.ServletCreateUser</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.CreateUser</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>UpdateUser</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.ServletUpdateUser</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.UpdateUser</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet>
+        <servlet-name>DeleteUser</servlet-name>
+        <servlet-class>ru.job4j.crud.servlets.DeleteUser</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>LogIn</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.ServletLogIn</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.LogIn</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>LogOut</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.ServletLogOut</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.LogOut</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>ShowDeleteUser</servlet-name>
+        <servlet-name>ShowUsers</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
@@ -44,6 +49,10 @@
         <url-pattern>/update</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
+        <servlet-name>DeleteUser</servlet-name>
+        <url-pattern>/delete</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
         <servlet-name>LogIn</servlet-name>
         <url-pattern>/login</url-pattern>
     </servlet-mapping>
@@ -53,13 +62,33 @@
     </servlet-mapping>
 
     <filter>
-        <filter-name>User Authenticator</filter-name>
-        <filter-class>ru.job4j.crud.filters.AuthenticationFilter</filter-class>
+        <filter-name>LoginInSystem</filter-name>
+        <filter-class>ru.job4j.crud.filters.LoginFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>UpdateDeleteFilter</filter-name>
+        <filter-class>ru.job4j.crud.filters.UpdateDeleteFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CreateFilter</filter-name>
+        <filter-class>ru.job4j.crud.filters.CreateFilter</filter-class>
     </filter>
 
     <filter-mapping>
-        <filter-name>User Authenticator</filter-name>
+        <filter-name>LoginInSystem</filter-name>
         <url-pattern>*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>UpdateDeleteFilter</filter-name>
+        <url-pattern>/update</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>UpdateDeleteFilter</filter-name>
+        <url-pattern>/delete</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CreateFilter</filter-name>
+        <url-pattern>/create</url-pattern>
     </filter-mapping>
 
 </web-app>

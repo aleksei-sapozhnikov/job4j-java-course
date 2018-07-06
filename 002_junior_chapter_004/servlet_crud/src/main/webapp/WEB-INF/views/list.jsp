@@ -1,3 +1,4 @@
+<jsp:useBean id="user" scope="request" type="ru.job4j.crud.User"/>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -5,13 +6,35 @@
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <c:set var="create" value="create"/>
 <c:set var="update" value="update"/>
-<c:set var="delete" value="list"/>
+<c:set var="delete" value="delete"/>
 
 <html>
 <head>
     <title>User list</title>
 </head>
 <body>
+
+<c:if test="${error != ''}">
+    <div style="background-color: red" align="center">
+        <span style="color: white; ">
+            <c:out value="${error}"/>
+        </span>
+    </div>
+    <br>
+</c:if>
+
+<c:if test="${param.errorString != null}">
+    <div style="background-color: red" align="center">
+        <span style="color: white; ">
+            <c:out value="${param.errorString}"/>
+        </span>
+    </div>
+    <br>
+</c:if>
+
+<div align="center">
+    logged: id=${user.id}, name=${user.name}, role=${user.role}
+</div>
 
 <form action="<c:url value="/logout"/>" method="post">
     <div align="center">

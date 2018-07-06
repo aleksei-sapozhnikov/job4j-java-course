@@ -3,7 +3,7 @@
  * handle user input from views, make actions and redirect to needed views which will
  * be shown to user.
  * <p>
- * DispatchServletActions class is one handling operations with store ("Model"): adding,
+ * ActionsDispatch class is one handling operations with store ("Model"): adding,
  * deleting, modifying elemnents.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)

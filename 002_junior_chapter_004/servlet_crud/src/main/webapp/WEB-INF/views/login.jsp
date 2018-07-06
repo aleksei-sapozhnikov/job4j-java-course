@@ -24,6 +24,7 @@
             <c:out value="${error}"/>
         </span>
     </div>
+    <br>
 </c:if>
 
 <form action="<c:url value="/${login}"/>" method="post">

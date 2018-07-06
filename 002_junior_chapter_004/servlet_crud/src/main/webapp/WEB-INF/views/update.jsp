@@ -26,6 +26,10 @@
             <td><input type="text" name="login" value="${user.login}"></td>
         </tr>
         <tr>
+            <td align="left">User password:</td>
+            <td><input type="text" name="password" value="${user.password}"></td>
+        </tr>
+        <tr>
             <td align="left">User email:</td>
             <td><input type="text" name="email" value="${user.email}"></td>
         </tr>

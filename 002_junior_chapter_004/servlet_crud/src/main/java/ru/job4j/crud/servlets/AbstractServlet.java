@@ -32,7 +32,7 @@ public abstract class AbstractServlet extends HttpServlet {
     /**
      * Logic layer object - servlet actions dispatch.
      */
-    protected static final DispatchServletActions DISPATCH = new DispatchServletActions(VALIDATOR).init();
+    protected static final ActionsDispatch DISPATCH = new ActionsDispatch(VALIDATOR).init();
 
     /**
      * Returns views directory path.

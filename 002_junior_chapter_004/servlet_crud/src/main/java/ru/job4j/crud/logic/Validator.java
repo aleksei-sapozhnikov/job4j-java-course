@@ -80,5 +80,5 @@ public interface Validator<T> {
      * @param login    Model login.
      * @param password Model password.
      */
-    boolean containsCredentials(String login, String password);
+    T findByCredentials(String login, String password);
 }
