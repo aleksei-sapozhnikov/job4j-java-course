@@ -16,10 +16,6 @@ public class LogOut extends AbstractServlet {
     private static final Logger LOG = LogManager.getLogger(LogOut.class);
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    }
-
-    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         HttpSession session = req.getSession(false);
         synchronized (session) {

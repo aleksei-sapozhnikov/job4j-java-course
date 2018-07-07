@@ -51,8 +51,9 @@ public class UpdateUser extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        DISPATCH.handle("update", req, resp);
-        resp.sendRedirect(req.getContextPath());
+        boolean success = DISPATCH.handle("update", req, resp);
+        String errorString = success ? "" : String.join("=", "errorString", "user UPDATE failed");
+        resp.sendRedirect(String.join("?", req.getContextPath(), errorString));
     }
 
 

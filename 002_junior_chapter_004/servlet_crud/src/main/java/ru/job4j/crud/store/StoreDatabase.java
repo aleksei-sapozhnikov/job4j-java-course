@@ -382,7 +382,7 @@ public class StoreDatabase implements Store<User> {
      * This method is invoked automatically on objects managed by the
      * {@code try}-with-resources statement.
      *
-     * @throws SQLException If problems occured while closing the connection.
+     * @throws SQLException If problems occurred while closing the connection.
      */
     @Override
     public void close() throws SQLException {

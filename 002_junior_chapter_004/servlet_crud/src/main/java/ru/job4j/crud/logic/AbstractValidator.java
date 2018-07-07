@@ -66,13 +66,25 @@ public abstract class AbstractValidator implements Validator<User> {
     public boolean update(int id, User upd) {
         boolean result = false;
         User old = this.findById(id);
-        User temp = old != null
-                ? this.updateFields(old, upd)
-                : null;
+        User temp = null;
+        if (old != null && this.validateRoleUpdate(old.getRole(), upd.getRole())) {
+            temp = this.updateFields(old, upd);
+        }
         if (this.validateUser(temp)) {
             result = this.store.update(temp);
         }
         return result;
+    }
+
+    /**
+     * Validates if it is valid to change old role to new one.
+     *
+     * @param old Old role.
+     * @param upd New role.
+     * @return <tt>true</tt> if valid, <tt>false</tt> if not.
+     */
+    private boolean validateRoleUpdate(Role old, Role upd) {
+        return old == Role.ADMIN || old == upd;
     }
 
     /**
@@ -147,7 +159,8 @@ public abstract class AbstractValidator implements Validator<User> {
      * @return <tt>true</tt> if name is valid, <tt>false</tt> if not.
      */
     private boolean validateName(String name) {
-        return name != null;
+        return name != null
+                && !name.equals("");
     }
 
     /**
@@ -157,7 +170,8 @@ public abstract class AbstractValidator implements Validator<User> {
      * @return <tt>true</tt> if login is valid, <tt>false</tt> if not.
      */
     private boolean validateLogin(String login) {
-        return login != null;
+        return login != null
+                && !login.equals("");
     }
 
     /**

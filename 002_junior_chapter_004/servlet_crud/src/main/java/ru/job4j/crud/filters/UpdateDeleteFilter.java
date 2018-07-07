@@ -48,7 +48,7 @@ public class UpdateDeleteFilter implements Filter {
                 } else {
                     resp.sendRedirect(String.format("%s?%s",
                             String.join("/", req.getContextPath(), "list"),
-                            String.join("=", "errorString", String.format("update/delete user with id=%s forbidden", updateId))
+                            String.join("=", "errorString", String.format("update / delete user with id=%s forbidden", updateId))
                     ));
                 }
             }

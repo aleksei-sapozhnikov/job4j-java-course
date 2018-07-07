@@ -47,7 +47,8 @@ public class CreateUser extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        DISPATCH.handle("create", req, resp);
-        resp.sendRedirect(req.getContextPath());
+        boolean success = DISPATCH.handle("create", req, resp);
+        String errorString = success ? "" : String.join("=", "errorString", "user CREATE failed");
+        resp.sendRedirect(String.join("?", req.getContextPath(), errorString));
     }
 }
