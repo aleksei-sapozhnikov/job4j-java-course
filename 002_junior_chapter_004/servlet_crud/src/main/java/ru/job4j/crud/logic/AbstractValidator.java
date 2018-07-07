@@ -66,11 +66,8 @@ public abstract class AbstractValidator implements Validator<User> {
     public boolean update(int id, User upd) {
         boolean result = false;
         User old = this.findById(id);
-        User temp = null;
-        if (old != null && this.validateRoleUpdate(old.getRole(), upd.getRole())) {
-            temp = this.updateFields(old, upd);
-        }
-        if (this.validateUser(temp)) {
+        User temp = old != null ? this.updateFields(old, upd) : null;
+        if (this.validateUser(temp) && this.validateRoleUpdate(old.getRole(), temp.getRole())) {
             result = this.store.update(temp);
         }
         return result;
