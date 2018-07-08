@@ -12,16 +12,16 @@ import static org.junit.Assert.assertThat;
 import static ru.job4j.crud.Role.ADMIN;
 import static ru.job4j.crud.Role.USER;
 
-public class ValidatorDatabaseTest {
+public class DatabaseValidatorTest {
 
     /**
      * Test Singleton and getInstance()
      */
     @Test
     public void whenGetInstanceThenTheOnlyObjectInstance() {
-        ValidatorDatabase validator1 = ValidatorDatabase.getInstance();
-        ValidatorDatabase validator2 = ValidatorDatabase.getInstance();
-        ValidatorDatabase validator3 = ValidatorDatabase.getInstance();
+        DatabaseValidator validator1 = DatabaseValidator.getInstance();
+        DatabaseValidator validator2 = DatabaseValidator.getInstance();
+        DatabaseValidator validator3 = DatabaseValidator.getInstance();
         assertThat(validator1 == validator2, is(true));
         assertThat(validator1 == validator3, is(true));
     }
@@ -31,7 +31,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenAddValidUserThenHeIsInStoreAndCanFindHimById() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User added = new User("nameOne", "loginOne", "passwordOne", "email@one.com", 123, ADMIN);
         int id = validator.add(added);
@@ -44,7 +44,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenInvalidFieldThenReturnMinusOneAndNotAdded() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User nameInvalid = new User(null, "login", "password", "email@mail.com", 123, ADMIN);
         User loginInvalid = new User("name", null, "password", "email@mail.com", 123, USER);
@@ -66,7 +66,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenUpdateUserThenFieldsChange() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
         int id = validator.add(old);
@@ -79,7 +79,7 @@ public class ValidatorDatabaseTest {
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User add = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
         int id = validator.add(add);
@@ -97,7 +97,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenUpdateUserHasWrongEmailThenFalseAndNothingChanges() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
         int id = validator.add(old);
@@ -113,7 +113,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenUpdateUserWithOnlyNameNotNullThenNameChange() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, USER);
         int id = validator.add(old);
@@ -126,7 +126,7 @@ public class ValidatorDatabaseTest {
 
     @Test
     public void whenUpdateUserWithOnlyLoginNotNullThenLoginChange() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
         int id = validator.add(old);
@@ -139,7 +139,7 @@ public class ValidatorDatabaseTest {
 
     @Test
     public void whenUpdateUserWithOnlyPasswordNotNullThenPasswordChange() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, USER);
         int id = validator.add(old);
@@ -153,7 +153,7 @@ public class ValidatorDatabaseTest {
 
     @Test
     public void whenUpdateUserWithOnlyEmailNotNullThenEmailChange() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
         int id = validator.add(old);
@@ -166,7 +166,7 @@ public class ValidatorDatabaseTest {
 
     @Test
     public void whenUpdateUserWithOnlyRoleNotNullThenRoleChange() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
         int id = validator.add(old);
@@ -179,7 +179,7 @@ public class ValidatorDatabaseTest {
 
     @Test
     public void whenUpdateUserWithAllFieldsNullThenNothingChanged() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
         int id = validator.add(old);
@@ -195,7 +195,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User add = new User("name", "login", "password", "email@mail.com", 123, USER);
         int id = validator.add(add);
@@ -207,7 +207,7 @@ public class ValidatorDatabaseTest {
 
     @Test
     public void whenDeleteUserWithWrongIdThenReturnedNullAndUserStaysInStorage() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User add = new User("name", "login", "password", "email@mail.com", 123, ADMIN);
         int id = validator.add(add);
@@ -223,7 +223,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User one = new User("name_1", "login_1", "password_1", "email@one.ru", 123, ADMIN);
         User two = new User("name_2", "login_2", "password_2", "email@two.ru", 456, USER);
@@ -241,7 +241,7 @@ public class ValidatorDatabaseTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        ValidatorDatabase validator = ValidatorDatabase.getInstance();
+        DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
         User one = new User("name_1", "login_1", "password_1", "email@one.ru", 123, USER);
         User two = new User("name_2", "login_2", "password_2", "email@two.ru", 456, ADMIN);

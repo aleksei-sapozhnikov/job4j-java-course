@@ -3,8 +3,8 @@ package ru.job4j.crud.servlets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.User;
+import ru.job4j.crud.logic.DatabaseValidator;
 import ru.job4j.crud.logic.Validator;
-import ru.job4j.crud.logic.ValidatorDatabase;
 
 import javax.servlet.http.HttpServlet;
 
@@ -28,7 +28,7 @@ public abstract class AbstractServlet extends HttpServlet {
     /**
      * Logic layer object - validator.
      */
-    protected static final Validator<User> VALIDATOR = ValidatorDatabase.getInstance();
+    protected static final Validator<User> VALIDATOR = DatabaseValidator.getInstance();
     /**
      * Logic layer object - servlet actions dispatch.
      */

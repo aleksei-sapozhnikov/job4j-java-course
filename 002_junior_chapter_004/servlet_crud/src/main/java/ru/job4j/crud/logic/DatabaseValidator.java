@@ -15,20 +15,20 @@ import ru.job4j.crud.store.StoreDatabase;
  * @version $Id$
  * @since 0.1
  */
-public class ValidatorDatabase extends AbstractValidator {
+public class DatabaseValidator extends AbstractValidator {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(ValidatorDatabase.class);
+    private static final Logger LOG = LogManager.getLogger(DatabaseValidator.class);
     /**
      * Instance field.
      */
-    private static ValidatorDatabase instance = new ValidatorDatabase();
+    private static DatabaseValidator instance = new DatabaseValidator();
 
     /**
      * Constructs this class singleton instance.
      */
-    private ValidatorDatabase() {
+    private DatabaseValidator() {
         super(StoreDatabase.getInstance());
     }
 
@@ -37,7 +37,7 @@ public class ValidatorDatabase extends AbstractValidator {
      *
      * @return This class instance.
      */
-    public static ValidatorDatabase getInstance() {
+    public static DatabaseValidator getInstance() {
         return instance;
     }
 }

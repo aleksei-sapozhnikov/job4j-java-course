@@ -18,8 +18,7 @@ public class CreateFilter implements Filter {
     private static final Logger LOG = LogManager.getLogger(CreateFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
-
+    public void init(FilterConfig filterConfig) {
     }
 
     @Override
@@ -29,20 +28,23 @@ public class CreateFilter implements Filter {
         HttpSession session = req.getSession();
         synchronized (session) {
             User user = (User) session.getAttribute("user");
-            if (user.getRole() == Role.ADMIN) {
-                chain.doFilter(req, resp);
-            } else {
-                resp.sendRedirect(String.format("%s?%s",
-                        String.join("/", req.getContextPath(), "list"),
-                        String.join("=", "errorString", "only ADMIN can create users")
-                ));
-            }
+            this.filterCanCreate(user, req, resp, chain);
         }
+    }
 
+    private void filterCanCreate(User user, HttpServletRequest req, HttpServletResponse resp,
+                                 FilterChain chain) throws IOException, ServletException {
+        if (user.getRole() == Role.ADMIN) {
+            chain.doFilter(req, resp);
+        } else {
+            String url = String.join("/", req.getContextPath(), "list");
+            String params = String.join("&",
+                    String.join("=", "errorString", "only ADMIN may create users"));
+            resp.sendRedirect(String.join("?", url, params));
+        }
     }
 
     @Override
     public void destroy() {
-
     }
 }

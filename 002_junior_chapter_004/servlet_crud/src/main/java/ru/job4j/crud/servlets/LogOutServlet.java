@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class LogOut extends AbstractServlet {
+public class LogOutServlet extends AbstractServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(LogOut.class);
+    private static final Logger LOG = LogManager.getLogger(LogOutServlet.class);
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

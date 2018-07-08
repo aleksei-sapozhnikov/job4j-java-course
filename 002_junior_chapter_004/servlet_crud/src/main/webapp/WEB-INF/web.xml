@@ -7,32 +7,32 @@
 
     <servlet>
         <servlet-name>ShowUsers</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.ShowUsers</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.ShowUsersServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>CreateUser</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.CreateUser</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.CreateUserServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>UpdateUser</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.UpdateUser</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.UpdateUserServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>DeleteUser</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.DeleteUser</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.DeleteUserServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>LogIn</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.LogIn</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.LogInServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
         <servlet-name>LogOut</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.LogOut</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.LogOutServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 

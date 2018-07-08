@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 import static ru.job4j.crud.Role.ADMIN;
 import static ru.job4j.crud.Role.USER;
 
-public class StoreDatabaseTest {
+public class DatabaseStoreTest {
 
     /**
      * Test Singleton and getInstance()

@@ -7,11 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class DeleteUser extends AbstractServlet {
+public class DeleteUserServlet extends AbstractServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DeleteUser.class);
+    private static final Logger LOG = LogManager.getLogger(DeleteUserServlet.class);
 
     /**
      * Handles POST requests. Does three actions: create/u[date/insert user.

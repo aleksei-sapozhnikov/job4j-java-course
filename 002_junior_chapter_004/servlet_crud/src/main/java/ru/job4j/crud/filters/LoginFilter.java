@@ -13,7 +13,7 @@ public class LoginFilter implements Filter {
     private static final Logger LOG = LogManager.getLogger(LoginFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
     }
 
 
@@ -24,17 +24,19 @@ public class LoginFilter implements Filter {
         if (req.getRequestURI().contains("/login")) {
             chain.doFilter(req, resp);
         } else {
-            this.onPageFilter(req, resp, chain);
+            this.filterUserLogged(req, resp, chain);
         }
     }
 
-    private void onPageFilter(HttpServletRequest req, HttpServletResponse resp, FilterChain chain) throws IOException, ServletException {
+    private void filterUserLogged(HttpServletRequest req, HttpServletResponse resp,
+                                  FilterChain chain) throws IOException, ServletException {
         HttpSession session = req.getSession();
         synchronized (session) {
-            if (session.getAttribute("user") == null) {
-                resp.sendRedirect(String.join("/", req.getContextPath(), "login"));
-            } else {
+            if (session.getAttribute("user") != null) {
                 chain.doFilter(req, resp);
+            } else {
+                String url = String.join("/", req.getContextPath(), "login");
+                resp.sendRedirect(url);
             }
         }
     }

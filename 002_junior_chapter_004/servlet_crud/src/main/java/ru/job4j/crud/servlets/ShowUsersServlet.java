@@ -16,11 +16,11 @@ import java.io.IOException;
  * @version $Id$
  * @since 0.1
  */
-public class ShowUsers extends AbstractServlet {
+public class ShowUsersServlet extends AbstractServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(ShowUsers.class);
+    private static final Logger LOG = LogManager.getLogger(ShowUsersServlet.class);
 
     /**
      * Handles GET requests. Shows all users currently stored.

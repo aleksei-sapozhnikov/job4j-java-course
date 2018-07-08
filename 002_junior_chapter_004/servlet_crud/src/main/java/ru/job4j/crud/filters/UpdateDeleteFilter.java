@@ -4,8 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.Role;
 import ru.job4j.crud.User;
-import ru.job4j.crud.logic.Validator;
-import ru.job4j.crud.logic.ValidatorDatabase;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -22,13 +20,9 @@ public class UpdateDeleteFilter implements Filter {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(UpdateDeleteFilter.class);
-    /**
-     * Validator.
-     */
-    private Validator<User> validator = ValidatorDatabase.getInstance();
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
 
     }
 
@@ -39,19 +33,30 @@ public class UpdateDeleteFilter implements Filter {
         HttpSession session = req.getSession();
         synchronized (session) {
             User user = (User) session.getAttribute("user");
-            if (user.getRole() == Role.ADMIN) {
-                chain.doFilter(req, resp);
-            } else {
-                int updateId = Integer.valueOf(req.getParameter("id"));
-                if (user.getId() == updateId) {
-                    chain.doFilter(req, resp);
-                } else {
-                    resp.sendRedirect(String.format("%s?%s",
-                            String.join("/", req.getContextPath(), "list"),
-                            String.join("=", "errorString", String.format("update / delete user with id=%s forbidden", updateId))
-                    ));
-                }
-            }
+            this.filterCanUpdate(user, req, resp, chain);
+        }
+    }
+
+    private void filterCanUpdate(User user, HttpServletRequest req, HttpServletResponse resp,
+                                 FilterChain chain) throws IOException, ServletException {
+        if (user.getRole() == Role.ADMIN) {
+            chain.doFilter(req, resp);
+        } else {
+            this.filterIdTheSame(user, req, resp, chain);
+        }
+    }
+
+    private void filterIdTheSame(User user, HttpServletRequest req, HttpServletResponse resp,
+                                 FilterChain chain) throws IOException, ServletException {
+        int updateId = Integer.valueOf(req.getParameter("id"));
+        if (user.getId() == updateId) {
+            chain.doFilter(req, resp);
+        } else {
+            String url = String.join("/", req.getContextPath(), "list");
+            String params = String.join("&",
+                    String.join("=", "errorString", "you can UPDATE / DELETE only yourself")
+            );
+            resp.sendRedirect(String.join("?", url, params));
         }
     }
 
