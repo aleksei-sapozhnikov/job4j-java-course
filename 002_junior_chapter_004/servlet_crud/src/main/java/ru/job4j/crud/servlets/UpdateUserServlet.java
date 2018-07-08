@@ -52,11 +52,11 @@ public class UpdateUserServlet extends AbstractServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         boolean success = DISPATCH.handle("update", req, resp);
-        String url = String.join("/", req.getContextPath(), "list");
+        String url = req.getContextPath();
         String params = String.join("&",
                 success ? "" : String.join("=", "error", "user UPDATE failed")
         );
-        resp.sendRedirect(String.join("?", url, params));
+        resp.sendRedirect(String.join("".equals(params) ? "" : "?", url, params));
     }
 
 }
