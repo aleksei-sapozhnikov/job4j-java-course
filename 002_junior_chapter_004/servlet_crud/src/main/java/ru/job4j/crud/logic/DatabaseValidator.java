@@ -23,7 +23,7 @@ public class DatabaseValidator extends AbstractValidator {
     /**
      * Instance field.
      */
-    private static final DatabaseValidator instance = new DatabaseValidator();
+    private static final DatabaseValidator INSTANCE = new DatabaseValidator();
 
     /**
      * Constructs this class singleton instance.
@@ -38,6 +38,6 @@ public class DatabaseValidator extends AbstractValidator {
      * @return This class instance.
      */
     public static DatabaseValidator getInstance() {
-        return instance;
+        return INSTANCE;
     }
 }
