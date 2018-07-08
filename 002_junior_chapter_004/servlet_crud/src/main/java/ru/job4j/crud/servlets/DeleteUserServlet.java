@@ -22,8 +22,8 @@ public class DeleteUserServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        boolean success = DISPATCH.handle("delete", req, resp);
-        String errorString = success ? "" : String.join("=", "errorString", "user DELETE failed");
-        resp.sendRedirect(String.join("?", req.getContextPath(), errorString));
+        DISPATCH.handle("delete", req, resp);
+        String url = String.join("/", req.getContextPath());
+        resp.sendRedirect(url);
     }
 }

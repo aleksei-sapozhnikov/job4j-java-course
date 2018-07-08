@@ -2,7 +2,7 @@ package ru.job4j.crud.logic;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.store.StoreDatabase;
+import ru.job4j.crud.store.DatabaseStore;
 
 /**
  * Logic layer for Users store using database.
@@ -23,13 +23,13 @@ public class DatabaseValidator extends AbstractValidator {
     /**
      * Instance field.
      */
-    private static DatabaseValidator instance = new DatabaseValidator();
+    private static final DatabaseValidator instance = new DatabaseValidator();
 
     /**
      * Constructs this class singleton instance.
      */
     private DatabaseValidator() {
-        super(StoreDatabase.getInstance());
+        super(DatabaseStore.getInstance());
     }
 
     /**

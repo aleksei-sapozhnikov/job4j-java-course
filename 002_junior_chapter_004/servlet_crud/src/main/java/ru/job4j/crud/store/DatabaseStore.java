@@ -24,7 +24,7 @@ import java.util.*;
  * @version $Id$
  * @since 0.1
  */
-public class StoreDatabase implements Store<User> {
+public class DatabaseStore implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
@@ -36,7 +36,7 @@ public class StoreDatabase implements Store<User> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(StoreDatabase.class);
+    private static final Logger LOG = LogManager.getLogger(DatabaseStore.class);
     /**
      * Map with sql queries.
      */
@@ -55,23 +55,23 @@ public class StoreDatabase implements Store<User> {
     /**
      * Class instance.
      */
-    private static StoreDatabase instance;
+    private static DatabaseStore instance;
 
     static {
         try {
-            instance = new StoreDatabase();
+            instance = new DatabaseStore();
         } catch (IOException | ClassNotFoundException e) {
             LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
         }
     }
 
     /**
-     * Constructs new StoreDatabase object.
+     * Constructs new DatabaseStore object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
      * @throws ClassNotFoundException Shows that no definition for the class with the specified name could be found.
      */
-    private StoreDatabase() throws IOException, ClassNotFoundException {
+    private DatabaseStore() throws IOException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = this.loadProperties(PROPERTIES);
         this.configureConnectionPool(CONNECTION_POOL,
@@ -85,7 +85,7 @@ public class StoreDatabase implements Store<User> {
      *
      * @return Class instance.
      */
-    public static StoreDatabase getInstance() {
+    public static DatabaseStore getInstance() {
         return instance;
     }
 

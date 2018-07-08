@@ -30,7 +30,7 @@ public class ActionsDispatch {
     /**
      * Map of possible actions.
      */
-    private Map<String, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
+    private final Map<String, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
 
     /**
      * Constructs new instance.
@@ -55,7 +55,7 @@ public class ActionsDispatch {
     }
 
     /**
-     * Initiates dispacth and returns its initiated object.
+     * Initiates dispatch and returns its initiated object.
      *
      * @return Initiated dispatch object.
      */

@@ -39,7 +39,7 @@ public class CreateUserServlet extends AbstractServlet {
     }
 
     /**
-     * Handles POST requests. Does three actions: create/update/delete user.
+     * Handles POST requests. Creates new user in database or redirects with error if creation failed.
      *
      * @param req  Object that contains the request the client has made of the servlet.
      * @param resp Object that contains the response the servlet sends to the client.
@@ -48,7 +48,10 @@ public class CreateUserServlet extends AbstractServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         boolean success = DISPATCH.handle("create", req, resp);
-        String errorString = success ? "" : String.join("=", "errorString", "user CREATE failed");
-        resp.sendRedirect(String.join("?", req.getContextPath(), errorString));
+        String url = String.join("/", req.getContextPath(), "list");
+        String params = String.join("&",
+                success ? "" : String.join("=", "error", "user CREATE failed")
+        );
+        resp.sendRedirect(String.join("?", url, params));
     }
 }

@@ -1,5 +1,5 @@
 <jsp:useBean id="user" scope="request" type="ru.job4j.crud.User"/>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
@@ -14,6 +14,7 @@
 </head>
 <body>
 
+<%--@elvariable id="error" type="java.lang.String"--%>
 <c:if test="${error != ''}">
     <div style="background-color: red" align="center">
         <span style="color: white; ">
@@ -23,10 +24,10 @@
     <br>
 </c:if>
 
-<c:if test="${param.errorString != null}">
+<c:if test="${param.error != null}">
     <div style="background-color: red" align="center">
         <span style="color: white; ">
-            <c:out value="${param.errorString}"/>
+            <c:out value="${param.error}"/>
         </span>
     </div>
     <br>

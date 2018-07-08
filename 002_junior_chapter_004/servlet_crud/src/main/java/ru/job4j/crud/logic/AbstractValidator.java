@@ -106,7 +106,7 @@ public abstract class AbstractValidator implements Validator<User> {
      * Deletes user with given id.
      *
      * @param id Id of the user to delete.
-     * @return Deleted object if deleted suucessfull, <tt>null</tt> if not.
+     * @return Deleted object if deleted successful, <tt>null</tt> if not.
      */
     @Override
     public User delete(int id) {

@@ -19,9 +19,9 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenGetInstanceThenTheOnlyObjectInstance() {
-        StoreDatabase store1 = StoreDatabase.getInstance();
-        StoreDatabase store2 = StoreDatabase.getInstance();
-        StoreDatabase store3 = StoreDatabase.getInstance();
+        DatabaseStore store1 = DatabaseStore.getInstance();
+        DatabaseStore store2 = DatabaseStore.getInstance();
+        DatabaseStore store3 = DatabaseStore.getInstance();
         assertThat(store1 == store2, is(true));
         assertThat(store1 == store3, is(true));
     }
@@ -31,7 +31,7 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
-        StoreDatabase store = StoreDatabase.getInstance();
+        DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
         User added = new User("nameOne", "loginOne", "passwordOne", "email@one.com", 123, ADMIN);
         int id = store.add(added);
@@ -44,7 +44,7 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
-        StoreDatabase store = StoreDatabase.getInstance();
+        DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN);
         int id = store.add(add);
@@ -57,7 +57,7 @@ public class DatabaseStoreTest {
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        StoreDatabase store = StoreDatabase.getInstance();
+        DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
         User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN);
         int id = store.add(add);
@@ -74,7 +74,7 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        StoreDatabase store = StoreDatabase.getInstance();
+        DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
         User add = new User("name", "login", "password", "email", 123, ADMIN);
         int id = store.add(add);
@@ -86,7 +86,7 @@ public class DatabaseStoreTest {
 
     @Test
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
-        StoreDatabase store = StoreDatabase.getInstance();
+        DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
         User add = new User("name", "login", "password", "email", 123, USER);
         int id = store.add(add);
@@ -102,7 +102,7 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        StoreDatabase store = StoreDatabase.getInstance();
+        DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "password_1", "email_1", 123, ADMIN);
         User two = new User("name_2", "login_2", "password_2", "email_2", 456, USER);
@@ -120,7 +120,7 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        StoreDatabase store = StoreDatabase.getInstance();
+        DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
         User one = new User("name_1", "login_1", "password_1", "email_1", 123, USER);
         User two = new User("name_2", "login_2", "password_2", "email_2", 456, ADMIN);

@@ -4,7 +4,7 @@
  * be shown to user.
  * <p>
  * ActionsDispatch class is one handling operations with store ("Model"): adding,
- * deleting, modifying elemnents.
+ * deleting, modifying elements.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version $Id$

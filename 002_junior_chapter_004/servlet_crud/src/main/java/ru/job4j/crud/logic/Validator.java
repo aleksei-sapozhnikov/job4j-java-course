@@ -37,7 +37,7 @@ public interface Validator<T> {
      * Deletes object with given id.
      *
      * @param id Id of the object to delete.
-     * @return Deleted object if deleted suucessfull, <tt>null</tt> if not.
+     * @return Deleted object if deleted successful, <tt>null</tt> if not.
      */
     T delete(int id);
 

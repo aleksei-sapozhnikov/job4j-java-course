@@ -20,11 +20,11 @@ public abstract class AbstractServlet extends HttpServlet {
     /**
      * Logger.
      */
-    protected static final Logger LOG = LogManager.getLogger(AbstractServlet.class);
+    private static final Logger LOG = LogManager.getLogger(AbstractServlet.class);
     /**
      * Main directory where views are stored.
      */
-    protected static final String VIEWS_DIR = "/WEB-INF/views";
+    private static final String VIEWS_DIR = "/WEB-INF/views";
     /**
      * Logic layer object - validator.
      */
