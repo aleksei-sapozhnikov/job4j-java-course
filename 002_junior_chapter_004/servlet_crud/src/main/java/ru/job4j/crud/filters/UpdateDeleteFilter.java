@@ -88,7 +88,7 @@ public class UpdateDeleteFilter implements Filter {
         if (user.getId() == updateId) {
             chain.doFilter(req, resp);
         } else {
-            String url = String.join("/", req.getContextPath(), "list");
+            String url = req.getContextPath();
             String params = String.join("&",
                     String.join("=", "error", "logged user may only UPDATE / DELETE himself")
             );
@@ -101,6 +101,5 @@ public class UpdateDeleteFilter implements Filter {
      */
     @Override
     public void destroy() {
-
     }
 }

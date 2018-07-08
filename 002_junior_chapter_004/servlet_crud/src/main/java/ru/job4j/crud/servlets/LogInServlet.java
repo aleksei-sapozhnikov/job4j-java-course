@@ -55,7 +55,7 @@ public class LogInServlet extends AbstractServlet {
         if (user != null) {
             HttpSession session = req.getSession();
             session.setAttribute("user", user);
-            resp.sendRedirect(String.join("/", req.getContextPath(), "list"));
+            resp.sendRedirect(req.getContextPath());
         } else {
             req.setAttribute("error", "Invalid credentials");
             this.doGet(req, resp);

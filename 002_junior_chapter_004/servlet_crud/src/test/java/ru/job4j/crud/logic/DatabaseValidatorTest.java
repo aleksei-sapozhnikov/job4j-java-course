@@ -191,6 +191,49 @@ public class DatabaseValidatorTest {
     }
 
     /**
+     * Test changing roles in update()
+     */
+
+    @Test
+    public void whenAdminChangesHisRoleThenTrue() {
+        DatabaseValidator validator = DatabaseValidator.getInstance();
+        validator.clear();
+        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN);
+        User upd = new User("upd_name", "upd_login", "upd_password", "upd@email.com", 123, USER);
+        int id = validator.add(old);
+        assertThat(validator.update(id, upd), is(true));
+        User result = validator.findById(id);
+        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getPassword(), upd.getEmail(), upd.getCreated(), upd.getRole());
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenUserDoesNotChangeHisRoleThenTrue() {
+        DatabaseValidator validator = DatabaseValidator.getInstance();
+        validator.clear();
+        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, USER);
+        User upd = new User("upd_name", "upd_login", "upd_password", "upd@email.com", 123, USER);
+        int id = validator.add(old);
+        assertThat(validator.update(id, upd), is(true));
+        User result = validator.findById(id);
+        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getPassword(), upd.getEmail(), upd.getCreated(), upd.getRole());
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenUserTriesToChangeHisRoleThenFalse() {
+        DatabaseValidator validator = DatabaseValidator.getInstance();
+        validator.clear();
+        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, USER);
+        int id = validator.add(old);
+        User upd = new User("upd_name", "upd_login", "upd_password", "upd@email.com", 123, ADMIN);
+        assertThat(validator.update(id, upd), is(false));
+        User result = validator.findById(id);
+        User expected = new User(id, old.getName(), old.getLogin(), old.getPassword(), old.getEmail(), old.getCreated(), old.getRole());
+        assertThat(result, is(expected));
+    }
+
+    /**
      * Test delete()
      */
     @Test
