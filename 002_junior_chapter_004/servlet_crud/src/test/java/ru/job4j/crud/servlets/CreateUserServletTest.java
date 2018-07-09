@@ -32,42 +32,45 @@ public class CreateUserServletTest {
         this.validator.clear();
     }
 
+    /**
+     * Test doPost()
+     */
     @Test
     public void whenCreateUserWithValidFieldsThenUserInStorage() throws IOException {
-        // mock
-        when(this.request.getContextPath()).thenReturn("stub");
-        when(this.request.getParameter("name")).thenReturn("testerName");
-        when(this.request.getParameter("login")).thenReturn("testerLogin");
-        when(this.request.getParameter("password")).thenReturn("testerPassword");
-        when(this.request.getParameter("email")).thenReturn("testerEmail@mail.com");
-        when(this.request.getParameter("role")).thenReturn("USER");
-        // do test
+        User create = new User("newName", "newLogin", "newPassword", "newEmail@mail.com", 123, Role.USER);
+        when(this.request.getContextPath()).thenReturn("root");
+        when(this.request.getParameter("name")).thenReturn(create.getName());
+        when(this.request.getParameter("login")).thenReturn(create.getLogin());
+        when(this.request.getParameter("password")).thenReturn(create.getPassword());
+        when(this.request.getParameter("email")).thenReturn(create.getEmail());
+        when(this.request.getParameter("role")).thenReturn(create.getRole().toString());
         this.servlet.doPost(this.request, this.response);
-        User result = this.validator.findByCredentials("testerLogin", "testerPassword");
-        // assert
-        assertThat(result.getName(), is("testerName"));
-        assertThat(result.getLogin(), is("testerLogin"));
-        assertThat(result.getPassword(), is("testerPassword"));
-        assertThat(result.getEmail(), is("testerEmail@mail.com"));
-        assertThat(result.getRole(), is(Role.USER));
-        verify(this.response).sendRedirect("stub");
+        User result = this.validator.findByCredentials(create.getLogin(), create.getPassword());
+        assertThat(result.getName(), is(create.getName()));
+        assertThat(result.getLogin(), is(create.getLogin()));
+        assertThat(result.getPassword(), is(create.getPassword()));
+        assertThat(result.getEmail(), is(create.getEmail()));
+        assertThat(result.getRole(), is(create.getRole()));
+        verify(this.response).sendRedirect("root");
     }
 
     @Test
     public void whenCreateUserWithWrongFieldsThenUserNotInStorage() throws IOException, ServletException {
-        // mock
-        when(this.request.getContextPath()).thenReturn("stub");
-        when(this.request.getParameter("name")).thenReturn("testerName");
-        when(this.request.getParameter("login")).thenReturn("testerLogin");
-        when(this.request.getParameter("password")).thenReturn("testerPassword");
-        when(this.request.getParameter("email")).thenReturn("testerEmail");          // invalid: no @ sign
-        when(this.request.getParameter("role")).thenReturn("USER");
-        // do test
+        // user with wrong email: no '@' sign
+        User wrong = new User("newName", "newLogin", "newPassword", "newEmail", 123, Role.USER);
+        when(this.request.getContextPath()).thenReturn("root");
+        when(this.request.getParameter("name")).thenReturn(wrong.getName());
+        when(this.request.getParameter("login")).thenReturn(wrong.getLogin());
+        when(this.request.getParameter("password")).thenReturn(wrong.getPassword());
+        when(this.request.getParameter("email")).thenReturn(wrong.getEmail());
+        when(this.request.getParameter("role")).thenReturn(wrong.getRole().toString());
         this.servlet.doPost(this.request, this.response);
-        // assert
-        verify(this.response).sendRedirect("stub?error=user CREATE failed");
+        verify(this.response).sendRedirect("root?error=user CREATE failed");
     }
 
+    /**
+     * Test doGet()
+     */
     @Test
     public void whenGetMethodThenRedirectToCreatePage() throws IOException, ServletException {
         when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);

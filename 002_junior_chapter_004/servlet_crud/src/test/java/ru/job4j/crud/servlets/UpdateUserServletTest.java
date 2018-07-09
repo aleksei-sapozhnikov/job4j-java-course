@@ -33,6 +33,9 @@ public class UpdateUserServletTest {
         this.validator.clear();
     }
 
+    /**
+     * Test doPost()
+     */
     @Test
     public void whenUserUpdateSuccessfulThenUpdatedAndNoErrors() throws IOException {
         User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
@@ -44,7 +47,7 @@ public class UpdateUserServletTest {
         when(this.request.getParameter("password")).thenReturn(newer.getPassword());
         when(this.request.getParameter("email")).thenReturn(newer.getEmail());
         when(this.request.getParameter("role")).thenReturn(newer.getRole().toString());
-        when(this.request.getContextPath()).thenReturn("stub");
+        when(this.request.getContextPath()).thenReturn("root");
         this.servlet.doPost(this.request, this.response);
         User result = this.validator.findById(id);
         assertThat(result.getName(), is(newer.getName()));
@@ -53,7 +56,7 @@ public class UpdateUserServletTest {
         assertThat(result.getEmail(), is(newer.getEmail()));
         assertThat(result.getRole(), is(newer.getRole()));
         assertThat(result.getCreated(), is(older.getCreated()));    // create time shouldn't change
-        verify(this.response).sendRedirect("stub");
+        verify(this.response).sendRedirect("root");
     }
 
     @Test
@@ -61,13 +64,14 @@ public class UpdateUserServletTest {
         User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
         User newer = new User("newName", "", "newPassword", "newE@mail.com", 11232, Role.USER); // invalid login
         int id = this.validator.add(older);
+        when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getParameter("id")).thenReturn(Integer.toString(id));
         when(this.request.getParameter("name")).thenReturn(newer.getName());
         when(this.request.getParameter("login")).thenReturn(newer.getLogin());
         when(this.request.getParameter("password")).thenReturn(newer.getPassword());
         when(this.request.getParameter("email")).thenReturn(newer.getEmail());
         when(this.request.getParameter("role")).thenReturn(newer.getRole().toString());
-        when(this.request.getContextPath()).thenReturn("stub");
+        when(this.request.getContextPath()).thenReturn("root");
         this.servlet.doPost(this.request, this.response);
         User result = this.validator.findById(id);
         assertThat(result.getName(), is(older.getName()));
@@ -76,9 +80,12 @@ public class UpdateUserServletTest {
         assertThat(result.getEmail(), is(older.getEmail()));
         assertThat(result.getRole(), is(older.getRole()));
         assertThat(result.getCreated(), is(older.getCreated()));
-        verify(this.response).sendRedirect("stub?error=user UPDATE failed");
+        verify(this.response).sendRedirect("root?error=user UPDATE failed");
     }
 
+    /**
+     * Test doGet()
+     */
     @Test
     public void whenDoGetThenForwardToUpdateFormWithAttributeObjects() throws IOException, ServletException {
         User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
