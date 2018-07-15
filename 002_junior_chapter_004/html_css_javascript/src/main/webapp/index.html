@@ -10,12 +10,19 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
-        function validate(tableName) {
-            var result;
-            var firstName = document.forms[tableName]["first_name"].value;
-            var lastName = document.forms[tableName]["last_name"].value;
-            var sex = document.forms[tableName]["sex"].value;
-            var description = document.forms[tableName]["description"].value;
+        function addIfValid() {
+            if (validate()) {
+                return addRow();
+            } else {
+                return false;
+            }
+        }
+
+        function validate() {
+            var firstName = $('#first_name').val();
+            var lastName = $('#last_name').val();
+            var sex = $("#sex").find("input[type='radio']:checked").val();
+            var description = $('#description').val();
             var empties = [];
             // constraints
             if (firstName === "") {
@@ -24,13 +31,14 @@
             if (lastName === "") {
                 empties.push("last name");
             }
-            if (sex === "") {
+            if (!sex) {
                 empties.push("sex");
             }
             if (description === "") {
                 empties.push("description");
             }
             // validation
+            var result;
             if (empties.length === 0) {
                 result = true;
             } else {
@@ -38,6 +46,22 @@
                 alert("Values can't be empty: " + empties);
             }
             return result;
+        }
+
+        function addRow() {
+            var firstName = $('#first_name').val();
+            var lastName = $('#last_name').val();
+            var sex = $("#sex").find("input[type='radio']:checked").val();
+            var description = $('#description').val();
+            $('#user_table').find('tr:last').after(
+                '<tr>' +
+                '<td>' + firstName + '</td>' +
+                '<td>' + lastName + '</td>' +
+                '<td>' + sex + '</td>' +
+                '<td>' + description + '</td>' +
+                '</tr>'
+            );
+            return false;
         }
     </script>
 
@@ -66,18 +90,17 @@
             </div>
         </div>
         <!--sex-->
-        <div class="form-group">
-            <label class="control-label col-lg-1" for="sex">Sex:</label>
+        <div class="form-group" id="sex">
+            <label class="control-label col-lg-1">Sex:</label>
             <div class="col-lg-10">
-                <input type="hidden" id="sex"/>
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="male">Male
+                    <input type="radio" name="sex" value="Male"/>Male
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="female">Female
+                    <input type="radio" name="sex" value="Female"/>Female
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="other" disabled>Other
+                    <input type="radio" name="sex" value="other" disabled/>Other
                 </label>
             </div>
         </div>
@@ -92,7 +115,7 @@
         </div>
         <div class="form-group">
             <div class="col-xs-offset-5 col-xs-2">
-                <button type="submit" class="btn btn-default" onclick="validate('create_user');">Create</button>
+                <button type="submit" class="btn btn-default" onclick="return addIfValid();">Create</button>
             </div>
         </div>
     </form>
@@ -102,7 +125,7 @@
 <div class="container">
     <h2>User list</h2>
     <p>Users in system now</p>
-    <table class="table table-hover">
+    <table class="table table-hover" id="user_table">
         <thead>
         <tr>
             <th>First name</th>
