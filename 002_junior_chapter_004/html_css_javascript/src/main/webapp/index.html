@@ -20,11 +20,11 @@
             var lastName = $('#last_name').val();
             var sex = $("#sex").find("input[type='radio']:checked").val();
             var description = $('#description').val();
+            var result = false;
             if (validate(firstName, lastName, sex, description)) {
-                return addRow(firstName, lastName, sex, description);
-            } else {
-                return false;
+                result = addRow(firstName, lastName, sex, description);
             }
+            return result;
         }
 
         /**
