@@ -10,21 +10,29 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
+
+        /**
+         * Adds row to users table if user values are valid.
+         * @returns {boolean} always false.
+         */
         function addIfValid() {
-            if (validate()) {
-                return addRow();
+            var firstName = $('#first_name').val();
+            var lastName = $('#last_name').val();
+            var sex = $("#sex").find("input[type='radio']:checked").val();
+            var description = $('#description').val();
+            if (validate(firstName, lastName, sex, description)) {
+                return addRow(firstName, lastName, sex, description);
             } else {
                 return false;
             }
         }
 
-        function validate() {
-            var firstName = $('#first_name').val();
-            var lastName = $('#last_name').val();
-            var sex = $("#sex").find("input[type='radio']:checked").val();
-            var description = $('#description').val();
+        /**
+         * Validates input.
+         * @returns {boolean} true if valid, false if not.
+         */
+        function validate(firstName, lastName, sex, description) {
             var empties = [];
-            // constraints
             if (firstName === "") {
                 empties.push("first name");
             }
@@ -48,11 +56,11 @@
             return result;
         }
 
-        function addRow() {
-            var firstName = $('#first_name').val();
-            var lastName = $('#last_name').val();
-            var sex = $("#sex").find("input[type='radio']:checked").val();
-            var description = $('#description').val();
+        /**
+         * Adds row to table.
+         * @returns {boolean} always false.
+         */
+        function addRow(firstName, lastName, sex, description) {
             $('#user_table').find('tr:last').after(
                 '<tr>' +
                 '<td>' + firstName + '</td>' +
@@ -73,26 +81,27 @@
     <h2>Create user</h2>
     <p>Fill inputs and click Create button to add a new user</p>
     <form class="form-horizontal" name="create_user">
-        <!--name-->
+        <!--first name-->
         <div class="form-group">
-            <label class="control-label col-lg-1" for="first_name">Name:</label>
-            <div class="col-lg-10">
+            <label class="control-label col-sm-2" for="first_name">First name:</label>
+            <div class="col-sm-10">
                 <input type="text" class="form-control" id="first_name"
-                       placeholder="Enter user first name (example: Joe)" name="first_name">
+                       placeholder="Enter user first name (example: John)" name="first_name">
             </div>
         </div>
-        <!--surname-->
+        <!--second name-->
         <div class="form-group">
-            <label class="control-label col-lg-1" for="last_name">Surname:</label>
-            <div class="col-lg-10">
-                <input type="text" class="form-control" id="last_name" placeholder="Enter user surname (example: Morton"
+            <label class="control-label col-sm-2" for="last_name">Second name:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control" id="last_name"
+                       placeholder="Enter user second name (example: Cavendish)"
                        name="last_name">
             </div>
         </div>
         <!--sex-->
         <div class="form-group" id="sex">
-            <label class="control-label col-lg-1">Sex:</label>
-            <div class="col-lg-10">
+            <label class="control-label col-sm-2">Sex:</label>
+            <div class="col-sm-10">
                 <label class="radio-inline">
                     <input type="radio" name="sex" value="Male"/>Male
                 </label>
@@ -106,18 +115,20 @@
         </div>
         <!--description-->
         <div class="form-group">
-            <label class="control-label col-lg-1" for="description">Description:</label>
-            <div class="col-lg-10">
+            <label class="control-label col-sm-2" for="description">Description:</label>
+            <div class="col-sm-10">
                 <textarea class="form-control" id="description"
                           placeholder="Enter user description (example: blue eyes, smoker, humorous, etc."
                           name="description"></textarea>
             </div>
         </div>
+        <!--submit-->
         <div class="form-group">
             <div class="col-xs-offset-5 col-xs-2">
                 <button type="submit" class="btn btn-default" onclick="return addIfValid();">Create</button>
             </div>
         </div>
+        <!--form ending-->
     </form>
 </div>
 
