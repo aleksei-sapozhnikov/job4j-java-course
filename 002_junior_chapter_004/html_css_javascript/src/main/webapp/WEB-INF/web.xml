@@ -3,4 +3,15 @@
          xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
+
+    <servlet>
+        <servlet-name>JSONReader</servlet-name>
+        <servlet-class>ru.job4j.json.JSONReader</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>JSONReader</servlet-name>
+        <url-pattern>/json</url-pattern>
+    </servlet-mapping>
+
 </web-app>

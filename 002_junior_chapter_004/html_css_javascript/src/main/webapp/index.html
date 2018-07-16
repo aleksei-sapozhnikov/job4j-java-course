@@ -22,7 +22,26 @@
             var description = $('#description').val();
             var result = false;
             if (validate(firstName, lastName, sex, description)) {
-                result = addRow(firstName, lastName, sex, description);
+                var human = {
+                    firstName: firstName,
+                    lastName: lastName,
+                    sex: sex,
+                    description: description
+                };
+                var jsonHuman = JSON.stringify(human);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/json",
+                    dataType: "json",
+                    data: {
+                        o: jsonHuman
+                    },
+                    success: success
+                });
+
+
+                // result = addRow(firstName, lastName, sex, description);
             }
             return result;
         }
@@ -71,6 +90,7 @@
             );
             return false;
         }
+
     </script>
 
 </head>
@@ -103,13 +123,13 @@
             <label class="control-label col-sm-2">Sex:</label>
             <div class="col-sm-10">
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="Male"/>Male
+                    <input type="radio" name="sex" value="MALE"/>Male
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="Female"/>Female
+                    <input type="radio" name="sex" value="FEMALE"/>Female
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="other" disabled/>Other
+                    <input type="radio" name="sex" value="OTHER" disabled/>Other
                 </label>
             </div>
         </div>
