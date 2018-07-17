@@ -10,6 +10,10 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <script>
+        /**
+         * Context path.
+         */
+        var context = location.href;
 
         /**
          * Adds row to users table if user values are valid.
@@ -17,46 +21,53 @@
          */
         function addIfValid() {
             var firstName = $('#first_name').val();
-            var lastName = $('#last_name').val();
+            var secondName = $('#second_name').val();
             var sex = $("#sex").find("input[type='radio']:checked").val();
             var description = $('#description').val();
             var result = false;
-            if (validate(firstName, lastName, sex, description)) {
-                var human = {
-                    firstName: firstName,
-                    lastName: lastName,
-                    sex: sex,
-                    description: description
-                };
-                var jsonHuman = JSON.stringify(human);
-
-                $.ajax({
-                    type: "POST",
-                    url: "/json",
-                    dataType: "json",
-                    data: {
-                        o: jsonHuman
-                    },
-                    success: success
-                });
-
-
-                // result = addRow(firstName, lastName, sex, description);
+            if (validate(firstName, secondName, sex, description)) {
+                var human = makeHumanObject(firstName, secondName, sex, description);
+                ajaxSend(human);
             }
             return result;
+        }
+
+        /**
+         * Returns human object as json string.
+         */
+        function makeHumanObject(firstName, secondName, sex, description) {
+            return {
+                firstName: firstName,
+                secondName: secondName,
+                sex: sex,
+                description: description
+            };
+        }
+
+        /**
+         * Makes ajax request with given human string.
+         */
+        function ajaxSend(human) {
+            $.ajax({
+                type: "POST",
+                url: context + "/json",
+                dataType: "json",
+                data: JSON.stringify(human),
+                success: addRow(human)
+            });
         }
 
         /**
          * Validates input.
          * @returns {boolean} true if valid, false if not.
          */
-        function validate(firstName, lastName, sex, description) {
+        function validate(firstName, secondName, sex, description) {
             var empties = [];
             if (firstName === "") {
                 empties.push("first name");
             }
-            if (lastName === "") {
-                empties.push("last name");
+            if (secondName === "") {
+                empties.push("second name");
             }
             if (!sex) {
                 empties.push("sex");
@@ -79,13 +90,13 @@
          * Adds row to table.
          * @returns {boolean} always false.
          */
-        function addRow(firstName, lastName, sex, description) {
+        function addRow(human) {
             $('#user_table').find('tr:last').after(
                 '<tr>' +
-                '<td>' + firstName + '</td>' +
-                '<td>' + lastName + '</td>' +
-                '<td>' + sex + '</td>' +
-                '<td>' + description + '</td>' +
+                '<td>' + human.firstName + '</td>' +
+                '<td>' + human.secondName + '</td>' +
+                '<td>' + human.sex + '</td>' +
+                '<td>' + human.description + '</td>' +
                 '</tr>'
             );
             return false;
@@ -111,11 +122,11 @@
         </div>
         <!--second name-->
         <div class="form-group">
-            <label class="control-label col-sm-2" for="last_name">Second name:</label>
+            <label class="control-label col-sm-2" for="second_name">Second name:</label>
             <div class="col-sm-10">
-                <input type="text" class="form-control" id="last_name"
+                <input type="text" class="form-control" id="second_name"
                        placeholder="Enter user second name (example: Cavendish)"
-                       name="last_name">
+                       name="second_name">
             </div>
         </div>
         <!--sex-->
@@ -123,13 +134,13 @@
             <label class="control-label col-sm-2">Sex:</label>
             <div class="col-sm-10">
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="MALE"/>Male
+                    <input type="radio" name="sex" value="MALE"/>MALE
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="FEMALE"/>Female
+                    <input type="radio" name="sex" value="FEMALE"/>FEMALE
                 </label>
                 <label class="radio-inline">
-                    <input type="radio" name="sex" value="OTHER" disabled/>Other
+                    <input type="radio" name="sex" value="OTHER" disabled/>OTHER
                 </label>
             </div>
         </div>
@@ -160,30 +171,13 @@
         <thead>
         <tr>
             <th>First name</th>
-            <th>Last name</th>
+            <th>Second name</th>
             <th>Sex</th>
             <th>Description</th>
         </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>John</td>
-            <td>Doe</td>
-            <td>Male</td>
-            <td>Brown hair, smoker</td>
-        </tr>
-        <tr>
-            <td>Mary</td>
-            <td>Moe</td>
-            <td>Female</td>
-            <td>Thin, blues eyes</td>
-        </tr>
-        <tr>
-            <td>July</td>
-            <td>Dooley</td>
-            <td>Female</td>
-            <td>John's friend, likes mockito</td>
-        </tr>
+
         </tbody>
     </table>
 </div>
