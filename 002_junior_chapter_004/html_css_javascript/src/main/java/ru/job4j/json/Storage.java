@@ -34,7 +34,7 @@ public class Storage<T> {
      */
     public void add(T object) {
         this.store.put(object, this.dummy);
-        LOG.info(String.format("Objects in storage: %s", this.store.size()));
+        LOG.info(String.format("Added object: %s. Objects in storage: %s", object, this.store.size()));
     }
 
 }

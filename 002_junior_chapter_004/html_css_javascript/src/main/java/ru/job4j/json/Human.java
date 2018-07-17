@@ -76,22 +76,11 @@ public class Human {
         return this.description;
     }
 
-//    public void setFirstName(String firstName) {
-//        this.firstName = firstName;
-//    }
-//
-//    public void setSecondName(String secondName) {
-//        this.secondName = secondName;
-//    }
-//
-//    public void setSex(Sex sex) {
-//        this.sex = sex;
-//    }
-//
-//    public void setDescription(String description) {
-//        this.description = description;
-//    }
-
+    /**
+     * Returns string describing object.
+     *
+     * @return String describing object.
+     */
     @Override
     public String toString() {
         return String.format(
