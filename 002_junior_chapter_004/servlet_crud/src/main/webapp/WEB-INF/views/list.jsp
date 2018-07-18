@@ -7,87 +7,43 @@
 <c:set var="create" value="create"/>
 <c:set var="update" value="update"/>
 <c:set var="delete" value="delete"/>
-<c:set var="logout" value="logout"/>
-<c:set var="create" value="create"/>
 
 <html>
 <head>
     <title>User list</title>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 </head>
 <body>
 
-<nav class="navbar navbar">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Main page</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li><a href="${context}/${create}">Create user</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="${context}/">
-                    <span class="glyphicon glyphicon-user"></span>
-                    Welcome, ${user.name} (id=${user.id}, ${user.role})
-                </a>
-            </li>
-            <li>
-                <form action="${context}/${logout}" method="post" class="inline">
-                    <span class="glyphicon glyphicon-log-out"></span>
-                    <button type="submit" class="link-button">
-                        Exit
-                    </button>
-                </form>
-            </li>
-        </ul>
+<%--@elvariable id="error" type="java.lang.String"--%>
+<c:if test="${error != ''}">
+    <div style="background-color: red" align="center">
+        <span style="color: white; ">
+            <c:out value="${error}"/>
+        </span>
     </div>
-</nav>
+    <br>
+</c:if>
 
-<form action="results.php" method="POST" role="form" class="form-horizontal">
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-default">Search</button>
-        </div>
+<c:if test="${param.error != null}">
+    <div style="background-color: red" align="center">
+        <span style="color: white; ">
+            <c:out value="${param.error}"/>
+        </span>
     </div>
-</form>
-
+    <br>
+</c:if>
 
 <div align="center">
     logged: id=${user.id}, name=${user.name}, role=${user.role}
 </div>
 
-<%--@elvariable id="error" type="java.lang.String"--%>
-<c:if test="${error != null}">
-    <div class="text-center">
-        <div class="alert alert-danger">
-            <strong>Error!</strong> ${error}
-        </div>
-    </div>
-</c:if>
-
-<c:if test="${param.error != null}">
-    <div class="text-center">
-        <div class="alert alert-danger">
-            <strong>Error!</strong> ${param.error}
-        </div>
-    </div>
-</c:if>
-
-<form action="<c:url value="${logout}"/>" method="post">
+<form action="<c:url value="/logout"/>" method="post">
     <div align="center">
         <input type="submit" value="logout">
     </div>
 </form>
 
-<form action="<c:url value="${context}/${create}"/>" method="get">
+<form action="<c:url value="/create"/>" method="get">
     <p align="center">
         <input type="submit" value="create user"/>
     </p>

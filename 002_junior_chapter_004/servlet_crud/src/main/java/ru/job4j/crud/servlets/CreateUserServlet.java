@@ -50,7 +50,7 @@ public class CreateUserServlet extends AbstractServlet {
         boolean success = DISPATCH.handle("create", req, resp);
         String url = req.getContextPath();
         String params = String.join("&",
-                success ? null : String.join("=", "error", "user CREATE failed")
+                success ? "" : String.join("=", "error", "user CREATE failed")
         );
         resp.sendRedirect(String.join("".equals(params) ? "" : "?", url, params));
     }

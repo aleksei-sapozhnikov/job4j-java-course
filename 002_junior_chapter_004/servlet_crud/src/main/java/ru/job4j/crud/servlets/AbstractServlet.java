@@ -18,14 +18,6 @@ import javax.servlet.http.HttpServlet;
  */
 public abstract class AbstractServlet extends HttpServlet {
     /**
-     * Logger.
-     */
-    private static final Logger LOG = LogManager.getLogger(AbstractServlet.class);
-    /**
-     * Main directory where views are stored.
-     */
-    private static final String VIEWS_DIR = "/WEB-INF/views";
-    /**
      * Logic layer object - validator.
      */
     protected static final Validator<User> VALIDATOR = DatabaseValidator.getInstance();
@@ -33,6 +25,14 @@ public abstract class AbstractServlet extends HttpServlet {
      * Logic layer object - servlet actions dispatch.
      */
     protected static final ActionsDispatch DISPATCH = new ActionsDispatch(VALIDATOR).init();
+    /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(AbstractServlet.class);
+    /**
+     * Main directory where views are stored.
+     */
+    private static final String VIEWS_DIR = "/WEB-INF/views";
 
     /**
      * Returns views directory path.
