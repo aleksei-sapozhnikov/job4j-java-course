@@ -49,7 +49,7 @@ public class UpdateDeleteFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("loggedUser");
         this.filterCanUpdate(user, req, resp, chain);
     }
 

@@ -1,69 +1,60 @@
-<jsp:useBean id="user" scope="request" type="ru.job4j.crud.User"/>
 <%@ page contentType="text/html;charset=UTF-8" %>
+
+<!-- JSP libraries -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
+
+<!-- Paths -->
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="create" value="create"/>
-<c:set var="update" value="update"/>
-<c:set var="delete" value="delete"/>
-<c:set var="logout" value="logout"/>
-<c:set var="create" value="create"/>
+<c:set var="create" value="/create"/>
+<c:set var="update" value="/update"/>
+<c:set var="delete" value="/delete"/>
+<c:set var="logout" value="/logout"/>
+<c:set var="create" value="/create"/>
+<c:set var="login" value="/login"/>
+
+<!-- Objects -->
+<jsp:useBean id="users" scope="request" type="java.util.List"/>
+<jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
+
 
 <html>
 <head>
     <title>User list</title>
-
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <c:import url="import_head_libraries.jsp"/>
 </head>
 <body>
 
-<nav class="navbar navbar">
+<!-- Navigation bar -->
+<nav class="navbar navbar-default">
     <div class="container-fluid">
-        <div class="navbar-header">
-            <a class="navbar-brand" href="#">Main page</a>
-        </div>
-        <ul class="nav navbar-nav">
-            <li><a href="${context}/${create}">Create user</a></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                <a href="${context}/">
-                    <span class="glyphicon glyphicon-user"></span>
-                    Welcome, ${user.name} (id=${user.id}, ${user.role})
-                </a>
-            </li>
-            <li>
-                <form action="${context}/${logout}" method="post" class="inline">
-                    <span class="glyphicon glyphicon-log-out"></span>
-                    <button type="submit" class="link-button">
-                        Exit
-                    </button>
-                </form>
-            </li>
-        </ul>
+        <form class="navbar-form navbar-left" action="${context}" method="GET">
+            <button type="submit" class="btn btn-primary navbar-btn">Home</button>
+        </form>
+        <form class="navbar-form navbar-left" action="${context}${create}" method="GET">
+            <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
+        </form>
+        <%--@elvariable id="loggedUser" type="ru.job4j.crud.User"--%>
+        <c:if test="${loggedUser != null}">
+            <div class="nav navbar-nav navbar-right">
+                <div class="row">
+                    <div class="col-sm-8">
+                        <p class="navbar-text">Logged: ${loggedUser.name} (id: ${loggedUser.id},
+                            role: ${loggedUser.role})</p>
+                    </div>
+                    <div class="col-sm-4">
+                        <form class="navbar-form" action="${context}${logout}" method="POST">
+                            <button type="submit" class="btn btn-primary navbar-btn">Logout</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </c:if>
     </div>
 </nav>
 
-<form action="results.php" method="POST" role="form" class="form-horizontal">
-    <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" class="btn btn-default">Search</button>
-        </div>
-    </div>
-</form>
 
-
-<div align="center">
-    logged: id=${user.id}, name=${user.name}, role=${user.role}
-</div>
-
+<!-- Error messages show -->
 <%--@elvariable id="error" type="java.lang.String"--%>
 <c:if test="${error != null}">
     <div class="text-center">
@@ -72,7 +63,6 @@
         </div>
     </div>
 </c:if>
-
 <c:if test="${param.error != null}">
     <div class="text-center">
         <div class="alert alert-danger">
@@ -81,65 +71,60 @@
     </div>
 </c:if>
 
-<form action="<c:url value="${logout}"/>" method="post">
-    <div align="center">
-        <input type="submit" value="logout">
-    </div>
-</form>
-
-<form action="<c:url value="${context}/${create}"/>" method="get">
-    <p align="center">
-        <input type="submit" value="create user"/>
-    </p>
-</form>
-
-<div align="center">
-    <h1>Users list</h1>
+<!-- User list table -->
+<div class="container col-sm-offset-2 col-sm-8">
+    <h2>User list</h2>
+    <p>Users registered in the system</p>
+    <table class="table table-hover">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Login</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <c:forEach items="${users}" var="user">
+            <tr>
+                <td><c:out value="${user.id}"/>
+                </td>
+                <td><c:out value="${user.name}"/>
+                </td>
+                <td><c:out value="${user.login}"/>
+                </td>
+                <td><c:out value="${user.email}"/>
+                </td>
+                <td><c:out value="${user.role}"/>
+                </td>
+                <td>
+                    <jsp:setProperty name="dateTime" property="time" value="${user.created}"/>
+                    <fmt:formatDate value="${dateTime}" pattern="dd.MM.yyyy HH:mm:ss"/>
+                </td>
+                <td>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <form action="${context}${update}" method="get">
+                                <input type="hidden" name="id" value="${user.id}">
+                                <button type="submit" class="btn btn-default">Update</button>
+                            </form>
+                        </div>
+                        <div class="col-sm-6">
+                            <form action="${context}${delete}" method="post">
+                                <input type="hidden" name="id" value="${user.id}">
+                                <button type="submit" class="btn btn-default">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </c:forEach>
+        </tbody>
+    </table>
 </div>
 
-<table style="border: 1px solid black;" cellpadding="5px" cellspacing="0px" border="1px" align="center" valign="center">
-    <tr align="center" valign="center">
-        <th>id</th>
-        <th>name</th>
-        <th>login</th>
-        <th>email</th>
-        <th>role</th>
-        <th>created</th>
-        <th colspan="2">actions</th>
-    </tr>
-
-    <jsp:useBean id="users" scope="request" type="java.util.List"/>
-    <c:forEach items="${users}" var="user">
-        <tr align="center" valign="center">
-            <td><c:out value="${user.id}"/>
-            </td>
-            <td><c:out value="${user.name}"/>
-            </td>
-            <td><c:out value="${user.login}"/>
-            </td>
-            <td><c:out value="${user.email}"/>
-            </td>
-            <td><c:out value="${user.role}"/>
-            </td>
-            <td>
-                <jsp:setProperty name="dateTime" property="time" value="${user.created}"/>
-                <fmt:formatDate value="${dateTime}" pattern="dd.MM.yyyy HH:mm:ss"/>
-            </td>
-            <td>
-                <form action="${update}" method="get">
-                    <input type="hidden" name="id" value="${user.id}">
-                    <input type="submit" value="update">
-                </form>
-            </td>
-            <td>
-                <form action="${delete}" method="post">
-                    <input type="hidden" name="id" value="${user.id}">
-                    <input type="submit" value="delete">
-                </form>
-            </td>
-        </tr>
-    </c:forEach>
-
-</table>
 </body>
 </html>

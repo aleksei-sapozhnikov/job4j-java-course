@@ -36,7 +36,7 @@ public class CreateUserServletTest {
      * Test doPost()
      */
     @Test
-    public void whenCreateUserWithValidFieldsThenUserInStorage() throws IOException {
+    public void whenCreateUserWithValidFieldsThenUserInStorage() throws IOException, ServletException {
         User create = new User("newName", "newLogin", "newPassword", "newEmail@mail.com", 123, Role.USER);
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getParameter("name")).thenReturn(create.getName());

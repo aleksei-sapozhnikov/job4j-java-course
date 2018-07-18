@@ -49,7 +49,7 @@ public class CreateFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User) session.getAttribute("loggedUser");
         this.filterHasAccessToCreate(user, req, resp, chain);
     }
 

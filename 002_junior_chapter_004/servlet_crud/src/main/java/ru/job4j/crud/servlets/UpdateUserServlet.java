@@ -50,13 +50,14 @@ public class UpdateUserServlet extends AbstractServlet {
      * @throws IOException Signals that an I/O exception of some sort has occurred.*
      */
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         boolean success = DISPATCH.handle("update", req, resp);
-        String url = req.getContextPath();
-        String params = String.join("&",
-                success ? "" : String.join("=", "error", "user UPDATE failed")
-        );
-        resp.sendRedirect(String.join("".equals(params) ? "" : "?", url, params));
+        if (success) {
+            resp.sendRedirect(req.getContextPath());
+        } else {
+            req.setAttribute("error", "user UPDATE failed on server-side");
+            this.doGet(req, resp);
+        }
     }
 
 }

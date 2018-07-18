@@ -37,7 +37,7 @@ public class UpdateUserServletTest {
      * Test doPost()
      */
     @Test
-    public void whenUserUpdateSuccessfulThenUpdatedAndNoErrors() throws IOException {
+    public void whenUserUpdateSuccessfulThenUpdatedAndNoErrors() throws IOException, ServletException {
         User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
         User newer = new User("newName", "newLogin", "newPassword", "newE@mail.com", 11232, Role.USER);
         int id = this.validator.add(older);
@@ -60,7 +60,7 @@ public class UpdateUserServletTest {
     }
 
     @Test
-    public void whenUserUpdateFailedThenRemainsOldAndErrorMessage() throws IOException {
+    public void whenUserUpdateFailedThenRemainsOldAndErrorMessage() throws IOException, ServletException {
         User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
         User newer = new User("newName", "", "newPassword", "newE@mail.com", 11232, Role.USER); // invalid login
         int id = this.validator.add(older);

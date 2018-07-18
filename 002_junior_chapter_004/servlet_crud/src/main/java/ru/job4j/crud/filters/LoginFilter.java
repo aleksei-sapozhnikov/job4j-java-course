@@ -66,7 +66,7 @@ public class LoginFilter implements Filter {
     private void filterUserLogged(HttpServletRequest req, HttpServletResponse resp,
                                   FilterChain chain) throws IOException, ServletException {
         HttpSession session = req.getSession();
-        if (session.getAttribute("user") != null) {
+        if (session.getAttribute("loggedUser") != null) {
             chain.doFilter(req, resp);
         } else {
             String url = String.join("/", req.getContextPath(), "login");
