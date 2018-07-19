@@ -88,11 +88,11 @@ public class UpdateDeleteFilter implements Filter {
         if (user.getId() == updateId) {
             chain.doFilter(req, resp);
         } else {
-            String url = req.getContextPath();
-            String params = String.join("&",
-                    String.join("=", "error", "logged user may only UPDATE / DELETE himself")
-            );
-            resp.sendRedirect(String.join("?", url, params));
+            String full = req.getRequestURI();
+            String servlet = req.getServletPath();
+            String parent = full.substring(0, full.length() - servlet.length());
+            req.setAttribute("error", "Message from server: user may only UPDATE / DELETE himself");
+            req.getRequestDispatcher(parent).forward(req, resp);
         }
     }
 
