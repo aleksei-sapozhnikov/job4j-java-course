@@ -53,7 +53,6 @@
     </div>
 </nav>
 
-
 <!-- Error messages show -->
 <%--@elvariable id="error" type="java.lang.String"--%>
 <c:if test="${error != null}">
