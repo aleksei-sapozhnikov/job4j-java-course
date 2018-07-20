@@ -68,11 +68,8 @@ public class CreateFilter implements Filter {
         if (user.getRole() == Role.ADMIN) {
             chain.doFilter(req, resp);
         } else {
-            String full = req.getRequestURI();
-            String servlet = req.getServletPath();
-            String parent = full.substring(0, full.length() - servlet.length());
             req.setAttribute("error", "Message from server: only ADMIN may create users");
-            req.getRequestDispatcher(parent).forward(req, resp);
+            req.getRequestDispatcher(req.getContextPath()).forward(req, resp);
         }
     }
 

@@ -46,7 +46,7 @@ public class LogInServletTest {
         when(this.request.getSession()).thenReturn(this.httpSession);
         User user = this.validator.findByCredentials("login_1", "password_1");
         this.servlet.doPost(this.request, this.response);
-        verify(httpSession).setAttribute("user", user);
+        verify(httpSession).setAttribute("loggedUser", user);
         verify(this.response).sendRedirect("root");
     }
 

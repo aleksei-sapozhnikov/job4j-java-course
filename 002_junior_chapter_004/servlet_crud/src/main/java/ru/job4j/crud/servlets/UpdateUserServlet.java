@@ -55,7 +55,7 @@ public class UpdateUserServlet extends AbstractServlet {
         if (success) {
             resp.sendRedirect(req.getContextPath());
         } else {
-            req.setAttribute("error", "user UPDATE failed on server-side");
+            req.setAttribute("error", "Message from server: user UPDATE failed");
             this.doGet(req, resp);
         }
     }

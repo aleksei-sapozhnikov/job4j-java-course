@@ -21,7 +21,7 @@
 <html>
 <head>
     <title>User list</title>
-    <c:import url="import_head_libraries.jsp"/>
+    <c:import url="imports/i_headLibraries.jsp"/>
 </head>
 <body>
 
@@ -113,7 +113,7 @@
                             </form>
                         </div>
                         <div class="col-sm-6">
-                            <form action="${context}${delete}" method="post">
+                            <form action="${context}${delete}" method="get">
                                 <input type="hidden" name="id" value="${user.id}">
                                 <button type="submit" class="btn btn-default">Delete</button>
                             </form>

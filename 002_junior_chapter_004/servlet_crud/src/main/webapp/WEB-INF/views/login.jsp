@@ -16,39 +16,19 @@
 
 <head>
     <title>Login</title>
-    <c:import url="import_head_libraries.jsp"/>
+    <c:import url="imports/i_headLibraries.jsp"/>
 </head>
 
 <body>
 
-
-<!-- Navigation bar -->
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <form class="navbar-form navbar-left" action="${context}" method="GET">
-            <button type="submit" class="btn btn-primary navbar-btn">Home</button>
-        </form>
-        <form class="navbar-form navbar-left" action="${context}${create}" method="GET">
-            <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
-        </form>
-        <%--@elvariable id="loggedUser" type="ru.job4j.crud.User"--%>
-        <c:if test="${loggedUser != null}">
-            <div class="nav navbar-nav navbar-right">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUser.name} (id: ${loggedUser.id},
-                            role: ${loggedUser.role})</p>
-                    </div>
-                    <div class="col-sm-4">
-                        <form class="navbar-form" action="${context}${logout}" method="POST">
-                            <button type="submit" class="btn btn-primary navbar-btn">Logout</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </c:if>
-    </div>
-</nav>
+<!-- Paths -->
+<c:set var="context" value="${pageContext.request.contextPath}"/>
+<c:set var="create" value="/create"/>
+<c:set var="update" value="/update"/>
+<c:set var="delete" value="/delete"/>
+<c:set var="logout" value="/logout"/>
+<c:set var="create" value="/create"/>
+<c:set var="login" value="/login"/>
 
 <!-- Error messages show -->
 <%--@elvariable id="error" type="java.lang.String"--%>

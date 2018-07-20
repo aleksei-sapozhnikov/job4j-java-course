@@ -45,12 +45,13 @@ public class UpdateDeleteFilter implements Filter {
      * @throws ServletException A general exception a servlet can throw when it encounters difficulty.
      */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response,
+                         FilterChain chain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("loggedUser");
-        this.filterCanUpdate(user, req, resp, chain);
+        this.filterIfCanModify(user, req, resp, chain);
     }
 
     /**
@@ -63,8 +64,8 @@ public class UpdateDeleteFilter implements Filter {
      * @throws IOException      Signals that an I/O exception of some sort has occurred.
      * @throws ServletException A general exception a servlet can throw when it encounters difficulty.
      */
-    private void filterCanUpdate(User user, HttpServletRequest req, HttpServletResponse resp,
-                                 FilterChain chain) throws IOException, ServletException {
+    private void filterIfCanModify(User user, HttpServletRequest req, HttpServletResponse resp,
+                                   FilterChain chain) throws IOException, ServletException {
         if (user.getRole() == Role.ADMIN) {
             chain.doFilter(req, resp);
         } else {
@@ -84,15 +85,12 @@ public class UpdateDeleteFilter implements Filter {
      */
     private void filterIdTheSame(User user, HttpServletRequest req, HttpServletResponse resp,
                                  FilterChain chain) throws IOException, ServletException {
-        int updateId = Integer.valueOf(req.getParameter("id"));
-        if (user.getId() == updateId) {
+        int modifyId = Integer.valueOf(req.getParameter("id"));
+        if (user.getId() == modifyId) {
             chain.doFilter(req, resp);
         } else {
-            String full = req.getRequestURI();
-            String servlet = req.getServletPath();
-            String parent = full.substring(0, full.length() - servlet.length());
             req.setAttribute("error", "Message from server: user may only UPDATE / DELETE himself");
-            req.getRequestDispatcher(parent).forward(req, resp);
+            req.getRequestDispatcher(req.getContextPath()).forward(req, resp);
         }
     }
 

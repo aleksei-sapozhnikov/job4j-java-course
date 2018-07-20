@@ -41,7 +41,7 @@ public class LoginFilterTest {
         User user = new User("stub", "stub", "stub", "stub@email.com", 123, Role.USER);
         when(this.request.getRequestURI()).thenReturn("root/some_address");
         when(this.request.getSession()).thenReturn(this.httpSession);
-        when(this.httpSession.getAttribute("user")).thenReturn(user);
+        when(this.httpSession.getAttribute("loggedUser")).thenReturn(user);
         this.filter.doFilter(this.request, this.response, this.chain);
         verify(this.chain).doFilter(this.request, this.response);
     }

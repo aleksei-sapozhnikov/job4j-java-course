@@ -34,7 +34,7 @@ public class CreateFilterTest {
     public void whenAdminThenPass() throws IOException, ServletException {
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getSession()).thenReturn(this.httpSession);
-        when(this.httpSession.getAttribute("user")).thenReturn(this.admin);
+        when(this.httpSession.getAttribute("loggedUser")).thenReturn(this.admin);
         this.filter.doFilter(this.request, this.response, this.chain);
         verify(this.chain).doFilter(this.request, this.response);
     }
@@ -43,9 +43,11 @@ public class CreateFilterTest {
     public void whenAUserThenRedirectToMainPageWithForbiddenError() throws IOException, ServletException {
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getSession()).thenReturn(this.httpSession);
-        when(this.httpSession.getAttribute("user")).thenReturn(this.user);
+        when(this.httpSession.getAttribute("loggedUser")).thenReturn(this.user);
+        when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
         this.filter.doFilter(this.request, this.response, this.chain);
-        verify(this.response).sendRedirect("root/list?error=only ADMIN may create users");
+        verify(this.request).setAttribute(eq("error"), anyString());
+        verify(this.requestDispatcher).forward(this.request, this.response);
     }
 
 }

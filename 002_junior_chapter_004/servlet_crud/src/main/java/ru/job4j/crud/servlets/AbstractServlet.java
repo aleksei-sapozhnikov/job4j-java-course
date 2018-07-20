@@ -33,6 +33,10 @@ public abstract class AbstractServlet extends HttpServlet {
      * Logic layer object - servlet actions dispatch.
      */
     protected static final ActionsDispatch DISPATCH = new ActionsDispatch(VALIDATOR).init();
+    /**
+     * String to name logged user in session.
+     */
+    protected static final String USER_LOGGED_IN_SESSION = "loggedUser";
 
     /**
      * Returns views directory path.

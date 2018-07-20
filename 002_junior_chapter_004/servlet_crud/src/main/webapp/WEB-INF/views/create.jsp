@@ -2,6 +2,7 @@
 
 <!-- JSP libraries -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="C" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!-- Paths -->
 <c:set var="context" value="${pageContext.request.contextPath}"/>
@@ -15,7 +16,7 @@
 <html>
 <head>
     <title>Create user</title>
-    <c:import url="import_head_libraries.jsp"/>
+    <c:import url="imports/i_headLibraries.jsp"/>
 </head>
 
 <body>

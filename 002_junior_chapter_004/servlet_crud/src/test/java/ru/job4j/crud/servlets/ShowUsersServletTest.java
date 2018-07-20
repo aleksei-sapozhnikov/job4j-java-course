@@ -45,7 +45,6 @@ public class ShowUsersServletTest {
         when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
         this.servlet.doGet(this.request, this.response);
         verify(this.request).setAttribute("users", users);
-        verify(this.request).setAttribute("user", users.get(0));
         verify(this.request).getRequestDispatcher(String.join("/", servlet.getViewsDir(), "list.jsp"));
     }
 

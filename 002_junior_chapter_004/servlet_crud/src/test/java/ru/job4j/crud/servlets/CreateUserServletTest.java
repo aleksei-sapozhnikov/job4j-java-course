@@ -64,8 +64,10 @@ public class CreateUserServletTest {
         when(this.request.getParameter("password")).thenReturn(wrong.getPassword());
         when(this.request.getParameter("email")).thenReturn(wrong.getEmail());
         when(this.request.getParameter("role")).thenReturn(wrong.getRole().toString());
+        when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
         this.servlet.doPost(this.request, this.response);
-        verify(this.response).sendRedirect("root?error=user CREATE failed");
+        verify(this.request).setAttribute(eq("error"), anyString());
+        verify(this.requestDispatcher).forward(this.request, this.response);
     }
 
     /**

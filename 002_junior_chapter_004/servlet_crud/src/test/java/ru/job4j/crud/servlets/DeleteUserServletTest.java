@@ -33,7 +33,7 @@ public class DeleteUserServletTest {
     }
 
     /**
-     * Test doPost()
+     * Test doGet()
      */
     @Test
     public void whenDeleteUserThenFindResultNullRedirect() throws IOException {
@@ -42,7 +42,7 @@ public class DeleteUserServletTest {
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getParameter("id")).thenReturn(Integer.toString(id));
         User beforeDelete = this.validator.findById(id);
-        this.servlet.doPost(this.request, this.response);
+        this.servlet.doGet(this.request, this.response);
         User afterDelete = this.validator.findById(id);
         assertNotNull(beforeDelete);
         assertNull(afterDelete);

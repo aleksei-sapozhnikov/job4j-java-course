@@ -51,7 +51,7 @@ public class CreateUserServlet extends AbstractServlet {
         if (success) {
             resp.sendRedirect(req.getContextPath());
         } else {
-            req.setAttribute("error", "user CREATE failed on server-side");
+            req.setAttribute("error", "Message from server: user CREATE failed");
             this.doGet(req, resp);
         }
     }

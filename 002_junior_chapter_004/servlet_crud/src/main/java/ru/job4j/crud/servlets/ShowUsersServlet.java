@@ -32,8 +32,8 @@ public class ShowUsersServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setAttribute("user", req.getSession().getAttribute("user"));
         req.setAttribute("users", VALIDATOR.findAll());
-        req.getRequestDispatcher(String.join("/", this.getViewsDir(), "list.jsp")).forward(req, resp);
+        String url = String.join("/", this.getViewsDir(), "list.jsp");
+        req.getRequestDispatcher(url).forward(req, resp);
     }
 }

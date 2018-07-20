@@ -72,6 +72,7 @@ public class UpdateUserServletTest {
         when(this.request.getParameter("email")).thenReturn(newer.getEmail());
         when(this.request.getParameter("role")).thenReturn(newer.getRole().toString());
         when(this.request.getContextPath()).thenReturn("root");
+        when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
         this.servlet.doPost(this.request, this.response);
         User result = this.validator.findById(id);
         assertThat(result.getName(), is(older.getName()));
@@ -80,7 +81,8 @@ public class UpdateUserServletTest {
         assertThat(result.getEmail(), is(older.getEmail()));
         assertThat(result.getRole(), is(older.getRole()));
         assertThat(result.getCreated(), is(older.getCreated()));
-        verify(this.response).sendRedirect("root?error=user UPDATE failed");
+        verify(this.request).setAttribute(eq("error"), anyString());
+        verify(this.requestDispatcher).forward(request, response);
     }
 
     /**
