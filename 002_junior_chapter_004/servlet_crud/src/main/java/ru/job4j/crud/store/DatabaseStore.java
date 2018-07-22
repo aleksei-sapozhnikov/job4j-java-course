@@ -38,21 +38,6 @@ public class DatabaseStore implements Store<User> {
      */
     private static final Logger LOG = LogManager.getLogger(DatabaseStore.class);
     /**
-     * Map with sql queries.
-     */
-    private static final Map<String, String> QUERIES = new HashMap<String, String>() {
-        {
-            put("createTables", CreateQuery.createTables());
-            put("dropTables", CreateQuery.dropAllTables());
-            put("insertUser", CreateQuery.insertUser());
-            put("updateUserById", CreateQuery.updateUserById());
-            put("deleteUserById", CreateQuery.deleteUserById());
-            put("findUserById", CreateQuery.findUserById());
-            put("findAllUsers", CreateQuery.findAllUsers());
-        }
-    };
-
-    /**
      * Class instance.
      */
     private static DatabaseStore instance;
@@ -66,6 +51,11 @@ public class DatabaseStore implements Store<User> {
     }
 
     /**
+     * Map with sql queries.
+     */
+    private final Map<String, String> queries;
+
+    /**
      * Constructs new DatabaseStore object.
      *
      * @throws IOException            Signals that an I/O exception of some sort has occurred.
@@ -74,6 +64,7 @@ public class DatabaseStore implements Store<User> {
     private DatabaseStore() throws IOException, ClassNotFoundException {
         Class.forName("org.postgresql.Driver");
         Properties prop = this.loadProperties(PROPERTIES);
+        this.queries = this.loadQueries(prop);
         this.configureConnectionPool(CONNECTION_POOL,
                 prop.getProperty("db.type"), prop.getProperty("db.address"),
                 prop.getProperty("db.name"), prop.getProperty("db.user"), prop.getProperty("db.password"));
@@ -107,6 +98,24 @@ public class DatabaseStore implements Store<User> {
     }
 
     /**
+     * Returns map with sql queries.
+     *
+     * @param prop Properties where to load queries from.
+     * @return Map with sql queries.
+     */
+    private Map<String, String> loadQueries(Properties prop) {
+        Map<String, String> result = new HashMap<>();
+        result.put("createTables", prop.getProperty("query.createTables"));
+        result.put("dropTables", prop.getProperty("query.dropAllTables"));
+        result.put("insertUser", prop.getProperty("query.insertUser"));
+        result.put("updateUserById", prop.getProperty("query.updateUserById"));
+        result.put("deleteUserById", prop.getProperty("query.deleteUserById"));
+        result.put("findUserById", prop.getProperty("query.findUserById"));
+        result.put("findAllUsers", prop.getProperty("query.findAllUsers"));
+        return result;
+    }
+
+    /**
      * Configures connection-to-database pool.
      *
      * @param pool     Pool to configure.
@@ -133,7 +142,7 @@ public class DatabaseStore implements Store<User> {
      */
     private void createTables() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement create = connection.prepareStatement(QUERIES.get("createTables"))
+             PreparedStatement create = connection.prepareStatement(queries.get("createTables"))
         ) {
             create.execute();
         } catch (SQLException e) {
@@ -147,8 +156,8 @@ public class DatabaseStore implements Store<User> {
     @Override
     public void clear() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement drop = connection.prepareStatement(QUERIES.get("dropTables"));
-             PreparedStatement create = connection.prepareStatement(QUERIES.get("createTables"))
+             PreparedStatement drop = connection.prepareStatement(queries.get("dropTables"));
+             PreparedStatement create = connection.prepareStatement(queries.get("createTables"))
         ) {
             drop.execute();
             create.execute();
@@ -168,7 +177,7 @@ public class DatabaseStore implements Store<User> {
     public int add(final User add) {
         int id = -1;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement insert = connection.prepareStatement(QUERIES.get("insertUser"))
+             PreparedStatement insert = connection.prepareStatement(queries.get("insertUser"))
         ) {
             id = this.dbInsertUser(insert, add, id);
         } catch (SQLException e) {
@@ -215,7 +224,7 @@ public class DatabaseStore implements Store<User> {
     public boolean update(final User upd) {
         boolean result = false;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement update = connection.prepareStatement(QUERIES.get("updateUserById"))
+             PreparedStatement update = connection.prepareStatement(queries.get("updateUserById"))
         ) {
             result = this.doUpdateUserAndCheckRowsChanged(update, upd);
         } catch (SQLException e) {
@@ -263,7 +272,7 @@ public class DatabaseStore implements Store<User> {
     public User delete(final int id) {
         User result = null;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement delete = connection.prepareStatement(QUERIES.get("deleteUserById"))
+             PreparedStatement delete = connection.prepareStatement(queries.get("deleteUserById"))
         ) {
             result = this.findById(id);
             this.dbDeleteUser(delete, id);
@@ -295,7 +304,7 @@ public class DatabaseStore implements Store<User> {
     public User findById(final int id) {
         User result = null;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement find = connection.prepareStatement(QUERIES.get("findUserById"))
+             PreparedStatement find = connection.prepareStatement(queries.get("findUserById"))
         ) {
             result = this.dbSelectUserById(find, id);
         } catch (SQLException e) {
@@ -331,7 +340,7 @@ public class DatabaseStore implements Store<User> {
     public List<User> findAll() {
         List<User> result = new LinkedList<>();
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement find = connection.prepareStatement(QUERIES.get("findAllUsers"))
+             PreparedStatement find = connection.prepareStatement(queries.get("findAllUsers"))
         ) {
             result = this.dbSelectAllUsers(find);
         } catch (SQLException e) {
@@ -387,111 +396,5 @@ public class DatabaseStore implements Store<User> {
     @Override
     public void close() throws SQLException {
         CONNECTION_POOL.close();
-    }
-
-    /**
-     * Class to create sql queries strings.
-     */
-    private static class CreateQuery {
-
-        /**
-         * Forms sql query to create needed tables.
-         *
-         * @return Sql query to create needed tables.
-         */
-        private static String createTables() {
-            return new StringJoiner(" ")
-                    .add("CREATE TABLE IF NOT EXISTS users (")
-                    .add("id SERIAL PRIMARY KEY,")
-                    .add("name TEXT,")
-                    .add("login TEXT UNIQUE,")
-                    .add("password TEXT,")
-                    .add("email TEXT,")
-                    .add("created TIMESTAMP WITH TIME ZONE,")
-                    .add("role TEXT")
-                    .add(");")
-                    .toString();
-        }
-
-        /**
-         * Forms sql query to drop all existing tables in database.
-         * That is needed for testing (to clear testing database used
-         * by many applications).
-         *
-         * @return Sql query to to drop all existing tables in database.
-         */
-        private static String dropAllTables() {
-            return new StringJoiner(" ")
-                    .add("DO $$")
-                    .add("DECLARE brow record; BEGIN")
-                    .add("FOR brow IN (select 'drop table \"' || tablename || '\" cascade;' as table_name")
-                    .add("FROM pg_tables WHERE schemaname = 'public')")
-                    .add("LOOP EXECUTE brow.table_name; END LOOP;")
-                    .add("END; $$")
-                    .toString();
-        }
-
-        /**
-         * Forms sql query to insert new user into database.
-         *
-         * @return Sql query to insert new user into database.
-         */
-        private static String insertUser() {
-            return new StringJoiner(" ")
-                    .add("INSERT INTO users")
-                    .add("(name, login, password, email, created, role)")
-                    .add("VALUES (?, ?, ?, ?, ?, ?)")
-                    .add("RETURNING id")
-                    .toString();
-        }
-
-        /**
-         * Forms sql query to update user.
-         *
-         * @return Sql query to update user.
-         */
-        private static String updateUserById() {
-            return new StringJoiner(" ")
-                    .add("UPDATE users")
-                    .add("SET name = ?, login = ?, password = ?, email = ?, role = ? ")
-                    .add("WHERE users.id = ?")
-                    .toString();
-        }
-
-        /**
-         * Forms sql query to delete user.
-         *
-         * @return Sql query to delete user.
-         */
-        private static String deleteUserById() {
-            return new StringJoiner(" ")
-                    .add("DELETE FROM users")
-                    .add("WHERE users.id = ?")
-                    .toString();
-        }
-
-        /**
-         * Forms sql query to find user by id.
-         *
-         * @return Sql query to find user by id.
-         */
-        private static String findUserById() {
-            return new StringJoiner(" ")
-                    .add("SELECT id, name, login, password, email, created, role FROM users")
-                    .add("WHERE id = ?")
-                    .toString();
-        }
-
-        /**
-         * Forms sql query to find all users in database.
-         *
-         * @return Sql query to find all users in database.
-         */
-        private static String findAllUsers() {
-            return new StringJoiner(" ")
-                    .add("SELECT id, name, login, password, email, created, role FROM users")
-                    .add("ORDER BY id")
-                    .toString();
-        }
     }
 }
