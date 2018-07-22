@@ -38,8 +38,8 @@ public class UpdateUserServletTest {
      */
     @Test
     public void whenUserUpdateSuccessfulThenUpdatedAndNoErrors() throws IOException, ServletException {
-        User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
-        User newer = new User("newName", "newLogin", "newPassword", "newE@mail.com", 11232, Role.USER);
+        User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER, "oldCountry", "oldCity");
+        User newer = new User("newName", "newLogin", "newPassword", "newE@mail.com", 11232, Role.USER, "newCountry", "newCity");
         int id = this.validator.add(older);
         when(this.request.getParameter("id")).thenReturn(Integer.toString(id));
         when(this.request.getParameter("name")).thenReturn(newer.getName());
@@ -61,8 +61,8 @@ public class UpdateUserServletTest {
 
     @Test
     public void whenUserUpdateFailedThenRemainsOldAndErrorMessage() throws IOException, ServletException {
-        User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
-        User newer = new User("newName", "", "newPassword", "newE@mail.com", 11232, Role.USER); // invalid login
+        User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER, "oldCountry", "oldCity");
+        User newer = new User("newName", "", "newPassword", "newE@mail.com", 11232, Role.USER, "newCountry", "newCity"); // invalid login
         int id = this.validator.add(older);
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getParameter("id")).thenReturn(Integer.toString(id));
@@ -90,7 +90,7 @@ public class UpdateUserServletTest {
      */
     @Test
     public void whenDoGetThenForwardToUpdateFormWithAttributeObjects() throws IOException, ServletException {
-        User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER);
+        User older = new User("oldName", "oldLogin", "oldPassword", "oldE@mail.com", 12, Role.USER, "oldCountry", "oldCity");
         int id = this.validator.add(older);
         when(this.request.getParameter("id")).thenReturn(Integer.toString(id));
         when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);

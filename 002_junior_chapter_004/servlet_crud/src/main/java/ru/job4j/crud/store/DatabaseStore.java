@@ -198,12 +198,16 @@ public class DatabaseStore implements Store<User> {
      */
     private int dbInsertUser(PreparedStatement statement, User user, int prevId) throws SQLException {
         int result = prevId;
-        statement.setString(1, user.getName());
-        statement.setString(2, user.getLogin());
-        statement.setString(3, user.getPassword());
-        statement.setString(4, user.getEmail());
-        statement.setTimestamp(5, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
-        statement.setString(6, user.getRole().toString());
+        statement.setString(1, user.getCountry());
+        statement.setString(2, user.getCity());
+        statement.setString(3, user.getName());
+        statement.setString(4, user.getLogin());
+        statement.setString(5, user.getPassword());
+        statement.setString(6, user.getEmail());
+        statement.setTimestamp(7, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
+        statement.setString(8, user.getRole().toString());
+        statement.setString(9, user.getCountry());
+        statement.setString(10, user.getCity());
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
                 result = res.getInt(1);
@@ -382,7 +386,9 @@ public class DatabaseStore implements Store<User> {
                 res.getString(4),                           // password
                 res.getString(5),                           // email
                 res.getTimestamp(6).getTime(),              // created
-                Role.valueOf(res.getString(7))              // role
+                Role.valueOf(res.getString(7)),              // role
+                "country",
+                "city"
         );
     }
 

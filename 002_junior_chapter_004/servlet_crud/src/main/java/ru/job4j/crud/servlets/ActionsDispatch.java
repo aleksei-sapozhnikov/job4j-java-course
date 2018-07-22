@@ -148,7 +148,9 @@ public class ActionsDispatch {
                 req.getParameter("password"),
                 req.getParameter("email"),
                 System.currentTimeMillis(),
-                Role.valueOf(req.getParameter("role"))
+                Role.valueOf(req.getParameter("role")),
+                req.getParameter("country"),
+                req.getParameter("city")
         );
     }
 

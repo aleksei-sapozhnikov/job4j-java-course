@@ -38,7 +38,7 @@ public class LoginFilterTest {
 
     @Test
     public void whenHaveUserInSessionThenPass() throws IOException, ServletException {
-        User user = new User("stub", "stub", "stub", "stub@email.com", 123, Role.USER);
+        User user = new User("stub", "stub", "stub", "stub@email.com", 123, Role.USER, "stub", "stub");
         when(this.request.getRequestURI()).thenReturn("root/some_address");
         when(this.request.getSession()).thenReturn(this.httpSession);
         when(this.httpSession.getAttribute("loggedUser")).thenReturn(user);

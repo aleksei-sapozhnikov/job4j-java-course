@@ -37,7 +37,7 @@ public class DeleteUserServletTest {
      */
     @Test
     public void whenDeleteUserThenFindResultNullRedirect() throws IOException {
-        User add = new User("name", "login", "password", "e@mail.com", 12, Role.ADMIN);
+        User add = new User("name", "login", "password", "e@mail.com", 12, Role.ADMIN, "country", "city");
         int id = this.validator.add(add);
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getParameter("id")).thenReturn(Integer.toString(id));

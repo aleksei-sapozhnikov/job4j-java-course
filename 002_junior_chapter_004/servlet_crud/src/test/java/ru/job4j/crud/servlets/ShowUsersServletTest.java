@@ -32,8 +32,8 @@ public class ShowUsersServletTest {
     @Before
     public void initValidator() {
         this.validator.clear();
-        this.validator.add(new User("name_1", "login_1", "password_1", "email_1_@mail.com", 123, Role.USER));
-        this.validator.add(new User("name_2", "login_2", "password_2", "email_2_@mail.com", 3432, Role.ADMIN));
+        this.validator.add(new User("name_1", "login_1", "password_1", "email_1_@mail.com", 123, Role.USER, "country_1", "city_1"));
+        this.validator.add(new User("name_2", "login_2", "password_2", "email_2_@mail.com", 3432, Role.ADMIN, "country_2", "city_2"));
     }
 
     @Test

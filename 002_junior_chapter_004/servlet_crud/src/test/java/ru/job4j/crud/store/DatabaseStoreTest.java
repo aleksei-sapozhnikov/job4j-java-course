@@ -33,7 +33,7 @@ public class DatabaseStoreTest {
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
         DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
-        User added = new User("nameOne", "loginOne", "passwordOne", "email@one.com", 123, ADMIN);
+        User added = new User("nameOne", "loginOne", "passwordOne", "email@one.com", 123, ADMIN, "country", "city");
         int id = store.add(added);
         assertThat(store.findById(id), is(added));
         assertThat(store.findAll().get(0), is(added));
@@ -46,12 +46,13 @@ public class DatabaseStoreTest {
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
         DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
-        User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN);
+        User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN, "old_country", "old_city");
         int id = store.add(add);
-        User upd = new User(id, "new_name", "new_login", "new_password", "new_email", 456, USER);
+        User upd = new User(id, "new_name", "new_login", "new_password", "new_email", 456, USER, "new_country", "new_city");
         assertThat(store.update(upd), is(true));
         User result = store.findById(id);
-        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getPassword(), upd.getEmail(), add.getCreated(), upd.getRole());
+        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getPassword(), upd.getEmail(),
+                add.getCreated(), upd.getRole(), upd.getCountry(), upd.getCity());
         assertThat(result, is(expected));
     }
 
@@ -59,13 +60,14 @@ public class DatabaseStoreTest {
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
         DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
-        User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN);
+        User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN, "country", "city");
         int id = store.add(add);
         int badId = id + 2134;
-        User update = new User(badId, "new_name", "new_login", "new_password", "new_email", 456, USER);
+        User update = new User(badId, "new_name", "new_login", "new_password", "new_email", 456, USER, "country", "city");
         assertThat(store.update(update), is(false));
         User result = store.findById(id);
-        User expected = new User(id, add.getName(), add.getLogin(), add.getPassword(), add.getEmail(), add.getCreated(), add.getRole());
+        User expected = new User(id, add.getName(), add.getLogin(), add.getPassword(), add.getEmail(),
+                add.getCreated(), add.getRole(), add.getCountry(), add.getCity());
         assertThat(result, is(expected));
     }
 
@@ -76,7 +78,7 @@ public class DatabaseStoreTest {
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
         DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
-        User add = new User("name", "login", "password", "email", 123, ADMIN);
+        User add = new User("name", "login", "password", "email", 123, ADMIN, "country", "city");
         int id = store.add(add);
         User deleted = store.delete(id);
         assertThat(deleted, is(add));
@@ -88,7 +90,7 @@ public class DatabaseStoreTest {
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
         DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
-        User add = new User("name", "login", "password", "email", 123, USER);
+        User add = new User("name", "login", "password", "email", 123, USER, "country", "city");
         int id = store.add(add);
         int badId = id + 123;
         User deleted = store.delete(badId);
@@ -104,9 +106,9 @@ public class DatabaseStoreTest {
     public void whenAddedUsersCanFindThemById() {
         DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
-        User one = new User("name_1", "login_1", "password_1", "email_1", 123, ADMIN);
-        User two = new User("name_2", "login_2", "password_2", "email_2", 456, USER);
-        User three = new User("name_3", "login_3", "password_3", "email_3", 789, ADMIN);
+        User one = new User("name_1", "login_1", "password_1", "email_1", 123, ADMIN, "country_1", "city_1");
+        User two = new User("name_2", "login_2", "password_2", "email_2", 456, USER, "country_2", "city_2");
+        User three = new User("name_3", "login_3", "password_3", "email_3", 789, ADMIN, "country_3", "city_3");
         int idOne = store.add(one);
         int idTwo = store.add(two);
         int idThree = store.add(three);
@@ -122,9 +124,9 @@ public class DatabaseStoreTest {
     public void whenAddedUsersThenFindAllReturnsThemAll() {
         DatabaseStore store = DatabaseStore.getInstance();
         store.clear();
-        User one = new User("name_1", "login_1", "password_1", "email_1", 123, USER);
-        User two = new User("name_2", "login_2", "password_2", "email_2", 456, ADMIN);
-        User three = new User("name_3", "login_3", "password_3", "email_3", 789, USER);
+        User one = new User("name_1", "login_1", "password_1", "email_1", 123, USER, "country_1", "city_1");
+        User two = new User("name_2", "login_2", "password_2", "email_2", 456, ADMIN, "country_2", "city");
+        User three = new User("name_3", "login_3", "password_3", "email_3", 789, USER, "country_3", "city");
         store.add(one);
         store.add(two);
         store.add(three);

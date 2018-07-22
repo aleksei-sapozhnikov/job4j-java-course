@@ -37,7 +37,7 @@ public class CreateUserServletTest {
      */
     @Test
     public void whenCreateUserWithValidFieldsThenUserInStorage() throws IOException, ServletException {
-        User create = new User("newName", "newLogin", "newPassword", "newEmail@mail.com", 123, Role.USER);
+        User create = new User("newName", "newLogin", "newPassword", "newEmail@mail.com", 123, Role.USER, "newCountry", "newCity");
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getParameter("name")).thenReturn(create.getName());
         when(this.request.getParameter("login")).thenReturn(create.getLogin());
@@ -57,7 +57,7 @@ public class CreateUserServletTest {
     @Test
     public void whenCreateUserWithWrongFieldsThenUserNotInStorage() throws IOException, ServletException {
         // user with wrong email: no '@' sign
-        User wrong = new User("newName", "newLogin", "newPassword", "newEmail", 123, Role.USER);
+        User wrong = new User("newName", "newLogin", "newPassword", "newEmail", 123, Role.USER, "newCountry", "newCity");
         when(this.request.getContextPath()).thenReturn("root");
         when(this.request.getParameter("name")).thenReturn(wrong.getName());
         when(this.request.getParameter("login")).thenReturn(wrong.getLogin());

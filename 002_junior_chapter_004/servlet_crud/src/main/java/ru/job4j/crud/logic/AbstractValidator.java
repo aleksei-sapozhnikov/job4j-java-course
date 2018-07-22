@@ -36,7 +36,8 @@ public abstract class AbstractValidator implements Validator<User> {
      */
     protected AbstractValidator(Store<User> store) {
         this.store = store;
-        this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis(), Role.ADMIN));
+        this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis(),
+                Role.ADMIN, "root_country", "root_city"));
     }
 
     /**
@@ -99,7 +100,9 @@ public abstract class AbstractValidator implements Validator<User> {
         String password = upd.getPassword() != null ? upd.getPassword() : old.getPassword();
         String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
         Role role = upd.getRole() != null ? upd.getRole() : old.getRole();
-        return new User(old.getId(), name, login, password, email, old.getCreated(), role);
+        String country = upd.getCountry() != null ? upd.getCountry() : old.getCountry();
+        String city = upd.getCity() != null ? upd.getCity() : old.getCity();
+        return new User(old.getId(), name, login, password, email, old.getCreated(), role, country, city);
     }
 
     /**

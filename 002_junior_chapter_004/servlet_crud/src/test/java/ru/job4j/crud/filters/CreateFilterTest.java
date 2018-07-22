@@ -24,8 +24,8 @@ public class CreateFilterTest {
     private RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private HttpSession httpSession = mock(HttpSession.class);
 
-    private User user = new User("uName", "uLogin", "uPassword", "uEmail@mail.com", 123, Role.USER);
-    private User admin = new User("aName", "aLogin", "aPassword", "aEmail@mail.com", 123, Role.ADMIN);
+    private User user = new User("uName", "uLogin", "uPassword", "uEmail@mail.com", 123, Role.USER, "uCountry", "uCity");
+    private User admin = new User("aName", "aLogin", "aPassword", "aEmail@mail.com", 123, Role.ADMIN, "aCountry", "aCity");
 
     /**
      * Test doFilter()

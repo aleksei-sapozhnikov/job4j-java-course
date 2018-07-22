@@ -18,14 +18,14 @@ public class UserTest {
     @Test
     public void whenGetterThenValue() {
         // with given id
-        User givenId = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN);
+        User givenId = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
         assertThat(givenId.getId(), is(32));
         assertThat(givenId.getName(), is("name"));
         assertThat(givenId.getLogin(), is("login"));
         assertThat(givenId.getEmail(), is("e@mail.com"));
         assertThat(givenId.getCreated(), is(123L));
         // with default id = -1
-        User defaultId = new User("name", "login", "password", "e@mail.com", 123L, USER);
+        User defaultId = new User("name", "login", "password", "e@mail.com", 123L, USER, "country", "city");
         assertThat(defaultId.getId(), is(-1));
         assertThat(defaultId.getName(), is("name"));
         assertThat(defaultId.getLogin(), is("login"));
@@ -38,7 +38,7 @@ public class UserTest {
      */
     @Test
     public void whenToStringThenStringAsNeeded() {
-        User user = new User(32, "name", "login", "password", "e@mail.com", 123L, USER);
+        User user = new User(32, "name", "login", "password", "e@mail.com", 123L, USER, "country", "city");
         String result = user.toString();
         String expected = String.format(
                 "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s]",
@@ -52,17 +52,19 @@ public class UserTest {
      */
     @Test
     public void testEqualsVariantsAndHashcode() {
-        User main = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN);
+        User main = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
         // Vacancies to compare
         User itself = main;
-        User same = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN);
-        User idOther = new User(43, "name", "login", "password", "e@mail.com", 123L, ADMIN);
-        User nameOther = new User(32, "otherName", "login", "password", "e@mail.com", 123L, ADMIN);
-        User loginOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, ADMIN);
-        User passwordOther = new User(32, "name", "otherLogin", "otherPassword", "e@mail.com", 123L, ADMIN);
-        User emailOther = new User(32, "name", "login", "password", "eOther@mail.com", 123L, ADMIN);
-        User createdOther = new User(32, "name", "login", "password", "e@mail.com", 456L, ADMIN);
-        User roleOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, USER);
+        User same = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
+        User idOther = new User(43, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
+        User nameOther = new User(32, "otherName", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
+        User loginOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, ADMIN, "country", "city");
+        User passwordOther = new User(32, "name", "otherLogin", "otherPassword", "e@mail.com", 123L, ADMIN, "country", "city");
+        User emailOther = new User(32, "name", "login", "password", "eOther@mail.com", 123L, ADMIN, "country", "city");
+        User createdOther = new User(32, "name", "login", "password", "e@mail.com", 456L, ADMIN, "country", "city");
+        User roleOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, USER, "country", "city");
+        User countryOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, USER, "otherCountry", "city");
+        User cityOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, USER, "country", "otherCity");
         String classOther = "I'm the User!";
         User nullUser = null;
         // equal

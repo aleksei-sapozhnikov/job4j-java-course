@@ -40,6 +40,14 @@ public class User {
      * User role in the system.
      */
     private final Role role;
+    /**
+     * Country of origin.
+     */
+    private final String country;
+    /**
+     * City of origin.
+     */
+    private final String city;
 
     /**
      * Constructs new User object.
@@ -52,7 +60,8 @@ public class User {
      * @param created  Date of creation in milliseconds.
      * @param role     User role in the system.
      */
-    public User(int id, String name, String login, String password, String email, long created, Role role) {
+    public User(int id, String name, String login, String password, String email, long created,
+                Role role, String country, String city) {
         this.id = id;
         this.name = name;
         this.login = login;
@@ -60,6 +69,8 @@ public class User {
         this.email = email;
         this.created = created;
         this.role = role;
+        this.country = country;
+        this.city = city;
     }
 
     /**
@@ -71,8 +82,9 @@ public class User {
      * @param created Date of creation in milliseconds.
      * @param role    User role in the system.
      */
-    public User(String name, String login, String password, String email, long created, Role role) {
-        this(-1, name, login, password, email, created, role);
+    public User(String name, String login, String password, String email, long created,
+                Role role, String country, String city) {
+        this(-1, name, login, password, email, created, role, country, city);
     }
 
     /**
@@ -138,6 +150,23 @@ public class User {
         return this.role;
     }
 
+    /**
+     * Returns user's country of origin..
+     *
+     * @return User's country of origin.
+     */
+    public String getCountry() {
+        return this.country;
+    }
+
+    /**
+     * Returns user's city of origin.
+     *
+     * @return User's city of origin.
+     */
+    public String getCity() {
+        return this.city;
+    }
 
     /**
      * Returns string describing current user object.
@@ -174,7 +203,9 @@ public class User {
                 && Objects.equals(this.login, that.login)
                 && Objects.equals(this.password, that.password)
                 && Objects.equals(this.email, that.email)
-                && Objects.equals(this.role, that.role);
+                && Objects.equals(this.role, that.role)
+                && Objects.equals(this.country, that.country)
+                && Objects.equals(this.city, that.city);
     }
 
     /**
@@ -184,6 +215,7 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.name, this.login, this.password, this.email, this.created, this.role);
+        return Objects.hash(this.name, this.login, this.password, this.email, this.created,
+                this.role, this.country, this.city);
     }
 }
