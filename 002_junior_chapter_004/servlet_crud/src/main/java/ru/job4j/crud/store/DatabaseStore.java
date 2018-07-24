@@ -107,11 +107,10 @@ public class DatabaseStore implements Store<User> {
     private Map<String, String> loadQueries(Properties prop) {
         Map<String, String> result = new HashMap<>();
         // structure
-        result.put("createTables", prop.getProperty("sql.structure.createTables"));
-        result.put("dropTables", prop.getProperty("sql.structure.dropTables"));
-        result.put("dropFunctions", prop.getProperty("sql.structure.dropFunctions"));
+        result.put("structureCreateTables", prop.getProperty("sql.structure.createTables"));
+        result.put("structureDropTables", prop.getProperty("sql.structure.dropTables"));
+        result.put("structureDropFunctions", prop.getProperty("sql.structure.dropFunctions"));
         // functions
-        result.put("functionDropFunctions", prop.getProperty("sql.function.dropFunctions"));
         result.put("functionInsertUser", prop.getProperty("sql.function.insertUser"));
         result.put("functionUpdateUser", prop.getProperty("sql.function.updateUser"));
         // queries
@@ -150,7 +149,7 @@ public class DatabaseStore implements Store<User> {
      */
     private void createTables() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement create = connection.prepareStatement(queries.get("createTables"))
+             PreparedStatement create = connection.prepareStatement(queries.get("structureCreateTables"))
         ) {
             create.execute();
         } catch (SQLException e) {
@@ -163,34 +162,10 @@ public class DatabaseStore implements Store<User> {
      */
     private void createFunctions() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement dropFunctions = connection.prepareStatement(queries.get("functionDropFunctions"));
              PreparedStatement create = connection.prepareStatement(queries.get("functionInsertUser"));
              PreparedStatement update = connection.prepareStatement(queries.get("functionUpdateUser"))
         ) {
-            connection.setAutoCommit(false);
-            try {
-                dropFunctions.execute();
-                create.execute();
-                update.execute();
-            } catch (Exception e) {
-                LOG.error(String.format("Exception: %s", e.getMessage()));
-                connection.rollback();
-            } finally {
-                connection.setAutoCommit(true);
-            }
-        } catch (SQLException e) {
-            LOG.error(String.format("SQL exception: %s", e.getMessage()));
-        }
-    }
-
-    /**
-     * Drops all existing tables in database.
-     */
-    private void dropTables() {
-        try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement drop = connection.prepareStatement(queries.get("dropTables"))
-        ) {
-            drop.execute();
+            this.queryAsOneTransaction(connection, create, update);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -201,7 +176,42 @@ public class DatabaseStore implements Store<User> {
      */
     private void dropFunctions() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement drop = connection.prepareStatement(queries.get("dropFunctions"))
+             PreparedStatement drop = connection.prepareStatement(queries.get("structureDropFunctions"))
+        ) {
+            drop.execute();
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
+        }
+    }
+
+    /**
+     * Performs sql queries as one transaction, by settin autocommit to "off".
+     *
+     * @param connection Connection to database.
+     * @param statements Statements to perform.
+     * @throws SQLException Provides information on a database access error or other errors
+     */
+    private void queryAsOneTransaction(Connection connection, PreparedStatement... statements) throws SQLException {
+        connection.setAutoCommit(false);
+        try {
+            for (PreparedStatement statement : statements) {
+                statement.execute();
+            }
+            connection.commit();
+        } catch (Exception e) {
+            LOG.error(String.format("Exception: %s", e.getMessage()));
+            connection.rollback();
+        } finally {
+            connection.setAutoCommit(true);
+        }
+    }
+
+    /**
+     * Drops all existing tables in database.
+     */
+    private void dropTables() {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement drop = connection.prepareStatement(queries.get("structureDropTables"))
         ) {
             drop.execute();
         } catch (SQLException e) {
@@ -247,8 +257,7 @@ public class DatabaseStore implements Store<User> {
      * @param user      User object to insert into database.
      * @return New integer id given to this user in database or previous id value if somehow new
      * id was not given by database.
-     * @throws SQLException Provides information on a database access
-     *                      error or other errors.
+     * @throws SQLException Provides information on a database access error or other errors.
      */
     private int dbInsertUser(PreparedStatement statement, User user, int prevId) throws SQLException {
         int result = prevId;
@@ -297,7 +306,7 @@ public class DatabaseStore implements Store<User> {
      * row can change.
      *
      * @param statement Prepared statement to put user field values in.
-     * @param upd      User object with id of user to update and new field values.
+     * @param upd       User object with id of user to update and new field values.
      * @return <tt>true</tt> if 1 row changed, <tt>false</tt> if none.
      * @throws SQLException     Provides information on a database access error or other errors.
      * @throws RuntimeException If more than 1 row is changed. That indicates a serious problem
