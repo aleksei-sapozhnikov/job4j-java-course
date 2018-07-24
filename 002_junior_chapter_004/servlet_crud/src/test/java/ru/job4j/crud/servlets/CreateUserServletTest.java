@@ -44,6 +44,8 @@ public class CreateUserServletTest {
         when(this.request.getParameter("password")).thenReturn(create.getPassword());
         when(this.request.getParameter("email")).thenReturn(create.getEmail());
         when(this.request.getParameter("role")).thenReturn(create.getRole().toString());
+        when(this.request.getParameter("country")).thenReturn(create.getCountry());
+        when(this.request.getParameter("city")).thenReturn(create.getCity());
         this.servlet.doPost(this.request, this.response);
         User result = this.validator.findByCredentials(create.getLogin(), create.getPassword());
         assertThat(result.getName(), is(create.getName()));
@@ -51,6 +53,8 @@ public class CreateUserServletTest {
         assertThat(result.getPassword(), is(create.getPassword()));
         assertThat(result.getEmail(), is(create.getEmail()));
         assertThat(result.getRole(), is(create.getRole()));
+        assertThat(result.getCountry(), is(create.getCountry()));
+        assertThat(result.getCity(), is(create.getCity()));
         verify(this.response).sendRedirect("root");
     }
 

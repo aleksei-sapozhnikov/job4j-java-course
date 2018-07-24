@@ -41,9 +41,11 @@ public class UserTest {
         User user = new User(32, "name", "login", "password", "e@mail.com", 123L, USER, "country", "city");
         String result = user.toString();
         String expected = String.format(
-                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s]",
+                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s, country=%s, city=%s]",
                 32, "name", "login", "password", "e@mail.com",
-                Instant.ofEpochMilli(123L).atZone(ZoneId.systemDefault()));
+                Instant.ofEpochMilli(123L).atZone(ZoneId.systemDefault()),
+                "country", "city"
+        );
         assertThat(result, is(expected));
     }
 
