@@ -43,10 +43,9 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
-        User added = this.userOne;
-        int id = this.store.add(added);
-        assertThat(this.store.findById(id), is(added));
-        assertThat(this.store.findAll().get(0), is(added));
+        int id = this.store.add(this.userOne);
+        assertThat(this.store.findById(id), is(this.userOne));
+        assertThat(this.store.findAll().get(0), is(this.userOne));
     }
 
     /**

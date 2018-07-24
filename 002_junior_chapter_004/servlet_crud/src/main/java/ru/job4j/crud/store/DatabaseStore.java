@@ -111,11 +111,11 @@ public class DatabaseStore implements Store<User> {
         result.put("structureDropTables", prop.getProperty("sql.structure.dropTables"));
         result.put("structureDropFunctions", prop.getProperty("sql.structure.dropFunctions"));
         // functions
-        result.put("functionInsertUser", prop.getProperty("sql.function.insertUser"));
-        result.put("functionUpdateUser", prop.getProperty("sql.function.updateUser"));
+        result.put("functionInsertUser", prop.getProperty("sql.createFunction.insertUser"));
+        result.put("functionUpdateUser", prop.getProperty("sql.createFunction.updateUser"));
         // queries
         result.put("insertUser", prop.getProperty("sql.query.insertUser"));
-        result.put("updateUserById", prop.getProperty("sql.query.updateUserById"));
+        result.put("updateUserById", prop.getProperty("sql.query.updateUser"));
         result.put("deleteUserById", prop.getProperty("sql.query.deleteUserById"));
         result.put("findUserById", prop.getProperty("sql.query.findUserById"));
         result.put("findAllUsers", prop.getProperty("sql.query.findAllUsers"));
