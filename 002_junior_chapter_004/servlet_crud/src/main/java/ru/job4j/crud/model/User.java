@@ -16,75 +16,22 @@ public class User {
      * Unique id.
      */
     private final int id;
-    /**
-     * Name.
-     */
-    private final String name;
-    /**
-     * Login in the system.
-     */
-    private final String login;
-    /**
-     * User password to enter storage system.
-     */
-    private final String password;
-    /**
-     * Email.
-     */
-    private final String email;
-    /**
-     * Date when this user was created in milliseconds.
-     */
-    private final long created;
-    /**
-     * User role in the system.
-     */
-    private final Role role;
-    /**
-     * Country of origin.
-     */
-    private final String country;
-    /**
-     * City of origin.
-     */
-    private final String city;
 
-    /**
-     * Constructs new User object.
-     *
-     * @param id       Unique id.
-     * @param name     User name.
-     * @param login    Login in the system.
-     * @param password Password for user to enter system.
-     * @param email    User email.
-     * @param created  Date of creation in milliseconds.
-     * @param role     User role in the system.
-     */
-    public User(int id, String name, String login, String password, String email,
-                long created, Role role, String country, String city) {
+    private final long created;
+
+    private final Credentials credentials;
+
+    private final Info info;
+
+    public User(int id, long created, Credentials credentials, Info info) {
         this.id = id;
-        this.name = name;
-        this.login = login;
-        this.password = password;
-        this.email = email;
         this.created = created;
-        this.role = role;
-        this.country = country;
-        this.city = city;
+        this.credentials = credentials;
+        this.info = info;
     }
 
-    /**
-     * Constructs new User object with default id = "-1".
-     *
-     * @param name    User name.
-     * @param login   Login in the system.
-     * @param email   User email.
-     * @param created Date of creation in milliseconds.
-     * @param role    User role in the system.
-     */
-    public User(String name, String login, String password, String email, long created,
-                Role role, String country, String city) {
-        this(-1, name, login, password, email, created, role, country, city);
+    public User(long created, Credentials credentials, Info info) {
+        this(-1, created, credentials, info);
     }
 
     /**
@@ -96,76 +43,16 @@ public class User {
         return this.id;
     }
 
-    /**
-     * Returns user name.
-     *
-     * @return User name.
-     */
-    public String getName() {
-        return this.name;
-    }
-
-    /**
-     * Returns user system login.
-     *
-     * @return User system login.
-     */
-    public String getLogin() {
-        return this.login;
-    }
-
-    /**
-     * Returns user password.
-     *
-     * @return User password.
-     */
-    public String getPassword() {
-        return this.password;
-    }
-
-    /**
-     * Returns user email.
-     *
-     * @return User email.
-     */
-    public String getEmail() {
-        return this.email;
-    }
-
-    /**
-     * Returns date when the user was created.
-     *
-     * @return Date when the user was created.
-     */
     public long getCreated() {
         return this.created;
     }
 
-    /**
-     * Returns user's role.
-     *
-     * @return User's role.
-     */
-    public Role getRole() {
-        return this.role;
+    public Credentials getCredentials() {
+        return this.credentials;
     }
 
-    /**
-     * Returns user's country of origin..
-     *
-     * @return User's country of origin.
-     */
-    public String getCountry() {
-        return this.country;
-    }
-
-    /**
-     * Returns user's city of origin.
-     *
-     * @return User's city of origin.
-     */
-    public String getCity() {
-        return this.city;
+    public Info getInfo() {
+        return this.info;
     }
 
     /**
@@ -176,16 +63,16 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s, country=%s, city=%s]",
-                this.id, this.name, this.login, this.password, this.email,
+                "[user id=%s, created=%s, %s, %s]",
+                this.id,
                 Instant.ofEpochMilli(this.created).atZone(ZoneId.systemDefault()),
-                this.country, this.city
+                this.credentials, this.info
         );
     }
 
     /**
      * Returns <tt>true</tt> if this user is equal to the given object.
-     * Takes in account all fields except id given by database.
+     * Takes in account all fields except id given by database and date of creation.
      *
      * @param object Given object to compare with.
      * @return <tt>true</tt> if this User is equal to object, <tt>false</tt> if not.
@@ -199,14 +86,8 @@ public class User {
             return false;
         }
         User that = (User) object;
-        return this.created == that.created
-                && Objects.equals(this.name, that.name)
-                && Objects.equals(this.login, that.login)
-                && Objects.equals(this.password, that.password)
-                && Objects.equals(this.email, that.email)
-                && Objects.equals(this.role, that.role)
-                && Objects.equals(this.country, that.country)
-                && Objects.equals(this.city, that.city);
+        return Objects.equals(this.credentials, that.credentials)
+                && Objects.equals(this.info, that.info);
     }
 
     /**
@@ -216,8 +97,7 @@ public class User {
      */
     @Override
     public int hashCode() {
-        return Objects.hash(this.name, this.login, this.password, this.email, this.created,
-                this.role, this.country, this.city);
+        return Objects.hash(this.credentials, this.info);
     }
 
     /**
@@ -228,7 +108,6 @@ public class User {
      * @return New user object same as given but with new id.
      */
     public User changeId(int newId) {
-        return new User(newId, this.name, this.login, this.password,
-                this.email, this.created, this.role, this.country, this.city);
+        return new User(newId, this.created, this.credentials, this.info);
     }
 }

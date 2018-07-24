@@ -2,6 +2,8 @@ package ru.job4j.crud.store;
 
 import org.junit.Before;
 import org.junit.Test;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import java.util.Collections;
@@ -17,9 +19,9 @@ public class DatabaseStoreTest {
 
     private final DatabaseStore store = DatabaseStore.getInstance();
 
-    private final User userOne = new User("name_1", "login_1", "password_1", "email@mail.com_1", 123, ADMIN, "country_1", "city_1");
-    private final User userTwo = new User("name_2", "login_2", "password_2", "email@mail.com_2", 123, USER, "country_2", "city_2");
-    private final User userThree = new User("name_3", "login_3", "password_3", "email@mail.com_3", 123, ADMIN, "country_3", "city_3");
+    private final User userOne = new User(32, 123L, new Credentials("login_1", "password_1", ADMIN), new Info("name_1", "e@mail.com_1", "country_1", "city_1"));
+    private final User userTwo = new User(32, 123L, new Credentials("login_2", "password_2", USER), new Info("name_2", "e@mail.com_2", "country_2", "city_2"));
+    private final User userThree = new User(32, 123L, new Credentials("login_3", "password_3", ADMIN), new Info("name_3", "e@mail.com_3", "country_3", "city_3"));
 
     @Before
     public void clearStore() {

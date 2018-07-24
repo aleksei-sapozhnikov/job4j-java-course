@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.crud.logic.DatabaseValidator;
 import ru.job4j.crud.logic.Validator;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.RequestDispatcher;
@@ -28,7 +30,7 @@ public class LogInServletTest {
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
 
-    private final User userRoleAdmin = new User("aName", "aLogin", "aPassword", "aEmail@mail.com", 123, ADMIN, "aCountry", "aCity");
+    private final User userRoleAdmin = new User(123L, new Credentials("aLogin", "aPassword", ADMIN), new Info("aName", "aEmail@mail.com", "aCountry", "aCity"));
 
     @Before
     public void initValidatorAndSetCommonMocks() {
@@ -45,8 +47,8 @@ public class LogInServletTest {
      */
     @Test
     public void whenStoreContainsGivenCredentialsThenAddsUserToSession() throws IOException, ServletException {
-        String login = this.userRoleAdmin.getLogin();
-        String password = this.userRoleAdmin.getPassword();
+        String login = this.userRoleAdmin.getCredentials().getLogin();
+        String password = this.userRoleAdmin.getCredentials().getPassword();
         User stored = this.validator.findByCredentials(login, password);
         when(this.request.getParameter("login")).thenReturn(login);
         when(this.request.getParameter("password")).thenReturn(password);

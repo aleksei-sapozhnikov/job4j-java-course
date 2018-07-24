@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.crud.logic.DatabaseValidator;
 import ru.job4j.crud.logic.Validator;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.RequestDispatcher;
@@ -16,7 +18,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Mockito.*;
 import static ru.job4j.crud.model.Role.ADMIN;
-import static ru.job4j.crud.model.Role.USER;
 
 
 public class DeleteUserServletTest {
@@ -30,8 +31,8 @@ public class DeleteUserServletTest {
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
 
-    private final User userRoleAdmin = new User("aName", "aLogin", "aPassword", "aEmail@mail.com", 123, ADMIN, "aCountry", "aCity");
-    private final User userRoleUser = new User("uName", "uLogin", "uPassword", "uEmail@mail.com", 456, USER, "uCountry", "uCity");
+    private final User userRoleAdmin = new User(123L, new Credentials("aLogin", "aPassword", ADMIN), new Info("aName", "aEmail@mail.com", "aCountry", "aCity"));
+    private final User userRoleUser = new User(456L, new Credentials("uLogin", "uPassword", ADMIN), new Info("uName", "uEmail@mail.com", "uCountry", "uCity"));
 
     @Before
     public void clearStorageAndSetCommonMocks() {

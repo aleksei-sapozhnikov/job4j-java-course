@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.crud.logic.DatabaseValidator;
 import ru.job4j.crud.logic.Validator;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.RequestDispatcher;
@@ -17,7 +19,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static ru.job4j.crud.model.Role.ADMIN;
-import static ru.job4j.crud.model.Role.USER;
 
 public class CreateUserServletTest {
 
@@ -27,9 +28,11 @@ public class CreateUserServletTest {
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
-    private final User userRoleAdmin = new User("aName", "aLogin", "aPassword", "aEmail@mail.com", 123, ADMIN, "aCountry", "aCity");
-    private final User userRoleUser = new User("uName", "uLogin", "uPassword", "uEmail@mail.com", 456, USER, "uCountry", "uCity");
-    private final User userEmailWrongFormat = new User("name", "login", "password", "email", 123, ADMIN, "country", "city");
+
+    private final User userRoleAdmin = new User(123L, new Credentials("aLogin", "aPassword", ADMIN), new Info("aName", "aEmail@mail.com", "aCountry", "aCity"));
+    private final User userRoleUser = new User(456L, new Credentials("uLogin", "uPassword", ADMIN), new Info("uName", "uEmail@mail.com", "uCountry", "uCity"));
+    private final User userEmailWrongFormat = new User(123L, new Credentials("login", "password", ADMIN), new Info("name", "email", "country", "city"));
+
     private CreateUserServlet servlet = new CreateUserServlet();
 
     @Before
@@ -42,13 +45,13 @@ public class CreateUserServletTest {
     }
 
     private void setMockForUserFields(User user) {
-        when(this.request.getParameter("name")).thenReturn(user.getName());
-        when(this.request.getParameter("login")).thenReturn(user.getLogin());
-        when(this.request.getParameter("password")).thenReturn(user.getPassword());
-        when(this.request.getParameter("email")).thenReturn(user.getEmail());
-        when(this.request.getParameter("role")).thenReturn(user.getRole().toString());
-        when(this.request.getParameter("country")).thenReturn(user.getCountry());
-        when(this.request.getParameter("city")).thenReturn(user.getCity());
+        when(this.request.getParameter("login")).thenReturn(user.getCredentials().getLogin());
+        when(this.request.getParameter("password")).thenReturn(user.getCredentials().getPassword());
+        when(this.request.getParameter("role")).thenReturn(user.getCredentials().getRole().toString());
+        when(this.request.getParameter("name")).thenReturn(user.getInfo().getName());
+        when(this.request.getParameter("email")).thenReturn(user.getInfo().getEmail());
+        when(this.request.getParameter("country")).thenReturn(user.getInfo().getCountry());
+        when(this.request.getParameter("city")).thenReturn(user.getInfo().getCity());
     }
 
     /**
@@ -59,16 +62,9 @@ public class CreateUserServletTest {
         this.setMockForUserFields(this.userRoleAdmin);
         this.servlet.doPost(this.request, this.response);
         User result = this.validator.findByCredentials(
-                this.userRoleAdmin.getLogin(), this.userRoleAdmin.getPassword()
+                this.userRoleAdmin.getCredentials().getLogin(), this.userRoleAdmin.getCredentials().getPassword()
         );
-        // "created" field different - so compare by fields
-        assertThat(result.getName(), is(this.userRoleAdmin.getName()));
-        assertThat(result.getLogin(), is(this.userRoleAdmin.getLogin()));
-        assertThat(result.getPassword(), is(this.userRoleAdmin.getPassword()));
-        assertThat(result.getEmail(), is(this.userRoleAdmin.getEmail()));
-        assertThat(result.getRole(), is(this.userRoleAdmin.getRole()));
-        assertThat(result.getCountry(), is(this.userRoleAdmin.getCountry()));
-        assertThat(result.getCity(), is(this.userRoleAdmin.getCity()));
+        assertThat(result, is(this.userRoleAdmin));
         verify(this.response).sendRedirect("contextPath");
     }
 

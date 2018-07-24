@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.crud.logic.DatabaseValidator;
 import ru.job4j.crud.logic.Validator;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 
@@ -32,10 +34,9 @@ public class UpdateUserServletTest {
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
 
-    private final User oldUser = new User("old_uName", "old_uLogin", "old_uPassword", "old_uEmail@mail.com", 234, USER, "old_uCountry", "old_uCity");
-    private final User newUser = new User("new_uName", "new_uLogin", "new_uPassword", "new_uEmail@mail.com", 567, USER, "new_uCountry", "new_uCity");
-
-    private final User userEmailWrongFormat = new User("name", "login", "password", "email", 123, ADMIN, "country", "city");
+    private final User oldUser = new User(234L, new Credentials("old_uLogin", "old_uPassword", USER), new Info("old_uName", "old_uEmail@mail.com", "old_uCountry", "old_uCity"));
+    private final User newUser = new User(456L, new Credentials("new_uLogin", "new_uPassword", USER), new Info("new_uName", "new_uEmail@mail.com", "new_uCountry", "new_uCity"));
+    private final User userEmailWrongFormat = new User(123L, new Credentials("login", "password", ADMIN), new Info("name", "email", "country", "city"));
 
     @Before
     public void initValidatorAndSetCommonMocks() {
@@ -48,13 +49,13 @@ public class UpdateUserServletTest {
 
     private void setMockForUserFields(int idToUpdate, User user) {
         when(this.request.getParameter("id")).thenReturn(Integer.toString(idToUpdate));
-        when(this.request.getParameter("name")).thenReturn(user.getName());
-        when(this.request.getParameter("login")).thenReturn(user.getLogin());
-        when(this.request.getParameter("password")).thenReturn(user.getPassword());
-        when(this.request.getParameter("email")).thenReturn(user.getEmail());
-        when(this.request.getParameter("role")).thenReturn(user.getRole().toString());
-        when(this.request.getParameter("country")).thenReturn(user.getCountry());
-        when(this.request.getParameter("city")).thenReturn(user.getCity());
+        when(this.request.getParameter("login")).thenReturn(user.getCredentials().getLogin());
+        when(this.request.getParameter("password")).thenReturn(user.getCredentials().getPassword());
+        when(this.request.getParameter("role")).thenReturn(user.getCredentials().getRole().toString());
+        when(this.request.getParameter("name")).thenReturn(user.getInfo().getName());
+        when(this.request.getParameter("email")).thenReturn(user.getInfo().getEmail());
+        when(this.request.getParameter("country")).thenReturn(user.getInfo().getCountry());
+        when(this.request.getParameter("city")).thenReturn(user.getInfo().getCity());
     }
 
     /**
@@ -65,13 +66,7 @@ public class UpdateUserServletTest {
         int id = this.validator.add(this.oldUser);
         this.setMockForUserFields(id, this.newUser);
         this.servlet.doPost(this.request, this.response);
-        User result = this.validator.findById(id);
-        assertThat(result.getName(), is(this.newUser.getName()));
-        assertThat(result.getLogin(), is(this.newUser.getLogin()));
-        assertThat(result.getPassword(), is(this.newUser.getPassword()));
-        assertThat(result.getEmail(), is(this.newUser.getEmail()));
-        assertThat(result.getRole(), is(this.newUser.getRole()));
-        assertThat(result.getCreated(), is(this.oldUser.getCreated()));    // create time shouldn't change
+        assertThat(this.validator.findById(id), is(this.newUser));
         verify(this.response).sendRedirect("contextPath");
     }
 
@@ -80,13 +75,7 @@ public class UpdateUserServletTest {
         int id = this.validator.add(this.oldUser);
         this.setMockForUserFields(id, this.userEmailWrongFormat);   // cannot update: wrong field
         this.servlet.doPost(this.request, this.response);
-        User result = this.validator.findById(id);
-        assertThat(result.getName(), is(this.oldUser.getName()));
-        assertThat(result.getLogin(), is(this.oldUser.getLogin()));
-        assertThat(result.getPassword(), is(this.oldUser.getPassword()));
-        assertThat(result.getEmail(), is(this.oldUser.getEmail()));
-        assertThat(result.getRole(), is(this.oldUser.getRole()));
-        assertThat(result.getCreated(), is(this.oldUser.getCreated()));
+        assertThat(this.validator.findById(id), is(this.newUser));
         verify(this.request).setAttribute(eq("error"), anyString());
         verify(this.requestDispatcher).forward(request, response);
     }

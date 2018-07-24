@@ -12,8 +12,8 @@ import static ru.job4j.crud.model.Role.USER;
 
 public class UserTest {
 
-    private final User givenId = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
-    private final User defaultId = new User("name", "login", "password", "e@mail.com", 123L, USER, "country", "city");
+    private final User givenId = new User(32, 123L, new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
+    private final User defaultId = new User(123L, new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
 
     /**
      * Test constructors and getters.
@@ -22,16 +22,14 @@ public class UserTest {
     public void whenGetterThenValue() {
         // with given id
         assertThat(this.givenId.getId(), is(32));
-        assertThat(this.givenId.getName(), is("name"));
-        assertThat(this.givenId.getLogin(), is("login"));
-        assertThat(this.givenId.getEmail(), is("e@mail.com"));
         assertThat(this.givenId.getCreated(), is(123L));
+        assertThat(this.givenId.getCredentials(), is(new Credentials("login", "password", ADMIN)));
+        assertThat(this.givenId.getInfo(), is(new Info("name", "e@mail.com", "country", "city")));
         // with default id
-        assertThat(this.defaultId.getId(), is(-1));
-        assertThat(this.defaultId.getName(), is("name"));
-        assertThat(this.defaultId.getLogin(), is("login"));
-        assertThat(this.defaultId.getEmail(), is("e@mail.com"));
+        assertThat(this.defaultId.getId(), is(32));
         assertThat(this.defaultId.getCreated(), is(123L));
+        assertThat(this.defaultId.getCredentials(), is(new Credentials("login", "password", ADMIN)));
+        assertThat(this.defaultId.getInfo(), is(new Info("name", "e@mail.com", "country", "city")));
     }
 
     /**
@@ -40,15 +38,11 @@ public class UserTest {
     @Test
     public void whenToStringThenStringAsNeeded() {
         String expected = String.format(
-                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s, country=%s, city=%s]",
-                this.givenId.getId(),
-                this.givenId.getName(),
-                this.givenId.getLogin(),
-                this.givenId.getPassword(),
-                this.givenId.getEmail(),
-                Instant.ofEpochMilli(this.givenId.getCreated()).atZone(ZoneId.systemDefault()),
-                this.givenId.getCountry(),
-                this.givenId.getCity()
+                "[user id=%s, created=%s, %s, %s]",
+                32,
+                Instant.ofEpochMilli(123L).atZone(ZoneId.systemDefault()),
+                new Credentials("login", "password", ADMIN),
+                new Info("name", "e@mail.com", "country", "city")
         );
         assertThat(this.givenId.toString(), is(expected));
     }
@@ -58,40 +52,31 @@ public class UserTest {
      */
     @Test
     public void testEqualsVariantsAndHashcode() {
-        User main = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
+        User main = new User(32, 123L, new Credentials("login", "password", USER), new Info("name", "e@mail.com", "country", "city"));
         // Vacancies to compare
         User itself = main;
-        User same = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
-        User idOther = new User(43, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
-        User nameOther = new User(32, "otherName", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
-        User loginOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, ADMIN, "country", "city");
-        User passwordOther = new User(32, "name", "otherLogin", "otherPassword", "e@mail.com", 123L, ADMIN, "country", "city");
-        User emailOther = new User(32, "name", "login", "password", "eOther@mail.com", 123L, ADMIN, "country", "city");
-        User createdOther = new User(32, "name", "login", "password", "e@mail.com", 456L, ADMIN, "country", "city");
-        User roleOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, USER, "country", "city");
-        User countryOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, USER, "otherCountry", "city");
-        User cityOther = new User(32, "name", "otherLogin", "password", "e@mail.com", 123L, USER, "country", "otherCity");
+        User same = new User(32, 123L, new Credentials("login", "password", USER), new Info("name", "e@mail.com", "country", "city"));
+        User idOther = new User(64, 123L, new Credentials("login", "password", USER), new Info("name", "e@mail.com", "country", "city"));
+        User createdOther = new User(32, 353L, new Credentials("login", "password", USER), new Info("name", "e@mail.com", "country", "city"));
+        User credentialsOther = new User(32, 123L, new Credentials("other_login", "other_password", USER), new Info("name", "e@mail.com", "country", "city"));
+        User infoOther = new User(32, 123L, new Credentials("login", "password", USER), new Info("other_name", "other_e@mail.com", "other_country", "other_city"));
         String classOther = "I'm the User!";
         User nullUser = null;
         // equal
         assertThat(main.equals(itself), is(true));
         assertThat(main.equals(same), is(true));
         assertThat(main.equals(idOther), is(true));
-        // not equal
-        assertThat(main.equals(nameOther), is(false));
-        assertThat(main.equals(loginOther), is(false));
-        assertThat(main.equals(passwordOther), is(false));
-        assertThat(main.equals(emailOther), is(false));
-        assertThat(main.equals(createdOther), is(false));
-        assertThat(main.equals(roleOther), is(false));
-        assertThat(main.equals(countryOther), is(false));
-        assertThat(main.equals(cityOther), is(false));
-        assertThat(main.equals(classOther), is(false));
-        assertThat(main.equals(nullUser), is(false));
+        assertThat(main.equals(createdOther), is(true));
         // hashcode of equal
         assertThat(main.hashCode() == itself.hashCode(), is(true));
         assertThat(main.hashCode() == same.hashCode(), is(true));
         assertThat(main.hashCode() == idOther.hashCode(), is(true));
+        assertThat(main.hashCode() == createdOther.hashCode(), is(true));
+        // not equal
+        assertThat(main.equals(credentialsOther), is(false));
+        assertThat(main.equals(infoOther), is(false));
+        assertThat(main.equals(classOther), is(false));
+        assertThat(main.equals(nullUser), is(false));
     }
 
     /**
