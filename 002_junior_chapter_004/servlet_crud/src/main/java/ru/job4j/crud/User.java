@@ -60,8 +60,8 @@ public class User {
      * @param created  Date of creation in milliseconds.
      * @param role     User role in the system.
      */
-    public User(int id, String name, String login, String password, String email, long created,
-                Role role, String country, String city) {
+    public User(int id, String name, String login, String password, String email,
+                long created, Role role, String country, String city) {
         this.id = id;
         this.name = name;
         this.login = login;
@@ -176,9 +176,10 @@ public class User {
     @Override
     public String toString() {
         return String.format(
-                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s]",
+                "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s, country=%s, city=%s]",
                 this.id, this.name, this.login, this.password, this.email,
-                Instant.ofEpochMilli(this.created).atZone(ZoneId.systemDefault())
+                Instant.ofEpochMilli(this.created).atZone(ZoneId.systemDefault()),
+                this.country, this.city
         );
     }
 

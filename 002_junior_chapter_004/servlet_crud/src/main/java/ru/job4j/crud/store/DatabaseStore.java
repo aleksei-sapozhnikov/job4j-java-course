@@ -69,6 +69,7 @@ public class DatabaseStore implements Store<User> {
                 prop.getProperty("db.type"), prop.getProperty("db.address"),
                 prop.getProperty("db.name"), prop.getProperty("db.user"), prop.getProperty("db.password"));
         this.createTables();
+        this.createFunctions();
     }
 
     /**
@@ -105,13 +106,20 @@ public class DatabaseStore implements Store<User> {
      */
     private Map<String, String> loadQueries(Properties prop) {
         Map<String, String> result = new HashMap<>();
-        result.put("createTables", prop.getProperty("query.createTables"));
-        result.put("dropTables", prop.getProperty("query.dropAllTables"));
-        result.put("insertUser", prop.getProperty("query.insertUser"));
-        result.put("updateUserById", prop.getProperty("query.updateUserById"));
-        result.put("deleteUserById", prop.getProperty("query.deleteUserById"));
-        result.put("findUserById", prop.getProperty("query.findUserById"));
-        result.put("findAllUsers", prop.getProperty("query.findAllUsers"));
+        // structure
+        result.put("createTables", prop.getProperty("sql.structure.createTables"));
+        result.put("dropTables", prop.getProperty("sql.structure.dropTables"));
+        result.put("dropFunctions", prop.getProperty("sql.structure.dropFunctions"));
+        // functions
+        result.put("functionDropFunctions", prop.getProperty("sql.function.dropFunctions"));
+        result.put("functionInsertUser", prop.getProperty("sql.function.insertUser"));
+        result.put("functionUpdateUser", prop.getProperty("sql.function.updateUser"));
+        // queries
+        result.put("insertUser", prop.getProperty("sql.query.insertUser"));
+        result.put("updateUserById", prop.getProperty("sql.query.updateUserById"));
+        result.put("deleteUserById", prop.getProperty("sql.query.deleteUserById"));
+        result.put("findUserById", prop.getProperty("sql.query.findUserById"));
+        result.put("findAllUsers", prop.getProperty("sql.query.findAllUsers"));
         return result;
     }
 
@@ -151,19 +159,65 @@ public class DatabaseStore implements Store<User> {
     }
 
     /**
-     * Drops all existing tables in the database.
+     * Creates database pl/sql functions.
      */
-    @Override
-    public void clear() {
+    private void createFunctions() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement drop = connection.prepareStatement(queries.get("dropTables"));
-             PreparedStatement create = connection.prepareStatement(queries.get("createTables"))
+             PreparedStatement dropFunctions = connection.prepareStatement(queries.get("functionDropFunctions"));
+             PreparedStatement create = connection.prepareStatement(queries.get("functionInsertUser"));
+             PreparedStatement update = connection.prepareStatement(queries.get("functionUpdateUser"))
         ) {
-            drop.execute();
-            create.execute();
+            connection.setAutoCommit(false);
+            try {
+                dropFunctions.execute();
+                create.execute();
+                update.execute();
+            } catch (Exception e) {
+                LOG.error(String.format("Exception: %s", e.getMessage()));
+                connection.rollback();
+            } finally {
+                connection.setAutoCommit(true);
+            }
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
+    }
+
+    /**
+     * Drops all existing tables in database.
+     */
+    private void dropTables() {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement drop = connection.prepareStatement(queries.get("dropTables"))
+        ) {
+            drop.execute();
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
+        }
+    }
+
+    /**
+     * Drops all existing functions in database.
+     */
+    private void dropFunctions() {
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement drop = connection.prepareStatement(queries.get("dropFunctions"))
+        ) {
+            drop.execute();
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
+        }
+    }
+
+    /**
+     * Drops all existing tables in the database and creates them anew.
+     */
+    @Override
+    public void clear() {
+        this.dropTables();
+        this.dropFunctions();
+        this.createTables();
+        this.createFunctions();
     }
 
     /**
@@ -198,16 +252,14 @@ public class DatabaseStore implements Store<User> {
      */
     private int dbInsertUser(PreparedStatement statement, User user, int prevId) throws SQLException {
         int result = prevId;
-        statement.setString(1, user.getCountry());
-        statement.setString(2, user.getCity());
-        statement.setString(3, user.getName());
-        statement.setString(4, user.getLogin());
-        statement.setString(5, user.getPassword());
-        statement.setString(6, user.getEmail());
-        statement.setTimestamp(7, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
-        statement.setString(8, user.getRole().toString());
-        statement.setString(9, user.getCountry());
-        statement.setString(10, user.getCity());
+        statement.setString(1, user.getName());
+        statement.setString(2, user.getLogin());
+        statement.setString(3, user.getPassword());
+        statement.setString(4, user.getEmail());
+        statement.setTimestamp(5, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
+        statement.setString(6, user.getRole().toString());
+        statement.setString(7, user.getCountry());
+        statement.setString(8, user.getCity());
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
                 result = res.getInt(1);
@@ -230,7 +282,7 @@ public class DatabaseStore implements Store<User> {
         try (Connection connection = CONNECTION_POOL.getConnection();
              PreparedStatement update = connection.prepareStatement(queries.get("updateUserById"))
         ) {
-            result = this.doUpdateUserAndCheckRowsChanged(update, upd);
+            result = this.updateUserAndCheckRowsChanged(update, upd);
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -245,23 +297,33 @@ public class DatabaseStore implements Store<User> {
      * row can change.
      *
      * @param statement Prepared statement to put user field values in.
-     * @param user      User object with id of user to update and new field values.
+     * @param upd      User object with id of user to update and new field values.
      * @return <tt>true</tt> if 1 row changed, <tt>false</tt> if none.
      * @throws SQLException     Provides information on a database access error or other errors.
      * @throws RuntimeException If more than 1 row is changed. That indicates a serious problem
      *                          because user id must be unique and lead to only one user.
      */
-    private boolean doUpdateUserAndCheckRowsChanged(PreparedStatement statement, User user) throws SQLException {
+    private boolean updateUserAndCheckRowsChanged(PreparedStatement statement, User upd) throws SQLException {
         int changedRowsNeeded = 1;
-        statement.setString(1, user.getName());
-        statement.setString(2, user.getLogin());
-        statement.setString(3, user.getPassword());
-        statement.setString(4, user.getEmail());
-        statement.setString(5, user.getRole().toString());
-        statement.setInt(6, user.getId());
-        int rowsChanged = statement.executeUpdate();
+        statement.setInt(1, upd.getId());
+        statement.setString(2, upd.getName());
+        statement.setString(3, upd.getLogin());
+        statement.setString(4, upd.getPassword());
+        statement.setString(5, upd.getEmail());
+        statement.setString(6, upd.getRole().toString());
+        statement.setString(7, upd.getCountry());
+        statement.setString(8, upd.getCity());
+        int rowsChanged;
+        try (ResultSet res = statement.executeQuery()) {
+            if (res.next()) {
+                rowsChanged = res.getInt(1);
+            } else {
+                LOG.error("Update method did not return number of rows changed");
+                rowsChanged = 0;
+            }
+        }
         if (rowsChanged > 1) {
-            throw new RuntimeException("Update method changed more than 1 row");
+            LOG.error("Update method changed more than 1 row");
         }
         return rowsChanged == changedRowsNeeded;
     }
@@ -386,9 +448,9 @@ public class DatabaseStore implements Store<User> {
                 res.getString(4),                           // password
                 res.getString(5),                           // email
                 res.getTimestamp(6).getTime(),              // created
-                Role.valueOf(res.getString(7)),              // role
-                "country",
-                "city"
+                Role.valueOf(res.getString(7)),             // role
+                res.getString(8),                           // country
+                res.getString(9)                            // city
         );
     }
 
