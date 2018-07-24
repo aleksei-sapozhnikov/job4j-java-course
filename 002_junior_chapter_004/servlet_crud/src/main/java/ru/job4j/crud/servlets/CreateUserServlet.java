@@ -2,7 +2,7 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.Role;
+import ru.job4j.crud.model.Role;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

@@ -1,7 +1,8 @@
 package ru.job4j.crud.logic;
 
+import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.crud.User;
+import ru.job4j.crud.model.User;
 
 import java.util.Collections;
 
@@ -9,10 +10,29 @@ import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static ru.job4j.crud.Role.ADMIN;
-import static ru.job4j.crud.Role.USER;
+import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Role.USER;
 
 public class DatabaseValidatorTest {
+
+    private final DatabaseValidator validator = DatabaseValidator.getInstance();
+
+    private final User userOne = new User("name_1", "login_1", "password_1", "email@mail.com_1", 123, ADMIN, "country_1", "city_1");
+    private final User userTwo = new User("name_2", "login_2", "password_2", "email@mail.com_2", 123, USER, "country_2", "city_2");
+
+    private final User userNameNull = new User(null, "login", "password", "email@mail.com", 123, ADMIN, "country", "city");
+    private final User userLoginNull = new User("name", null, "password", "email@mail.com", 123, USER, "country", "city");
+    private final User userPasswordNull = new User("name", "login", null, "email@mail.com", 123, ADMIN, "country", "city");
+    private final User userEmailNull = new User("name", "login", "password", null, 123, USER, "country", "city");
+    private final User userEmailWrongFormat = new User("name", "login", "password", "email", 123, ADMIN, "country", "city");
+    private final User userRoleNull = new User("name", "login", "password", "email@mail.com", 123, null, "country", "city");
+
+
+    @Before
+    public void clearStore() {
+        this.validator.clear();
+    }
+
 
     /**
      * Test Singleton and getInstance()
@@ -31,12 +51,9 @@ public class DatabaseValidatorTest {
      */
     @Test
     public void whenAddValidUserThenHeIsInStoreAndCanFindHimById() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User added = new User("nameOne", "loginOne", "passwordOne", "email@one.com", 123, ADMIN, "country", "city");
-        int id = validator.add(added);
-        assertThat(validator.findById(id), is(added));
-        assertThat(validator.findAll().get(0), is(added));
+        int id = validator.add(this.userOne);
+        assertThat(validator.findById(id), is(this.userOne));
+        assertThat(validator.findAll().get(0), is(this.userOne));
     }
 
     /**
@@ -46,18 +63,12 @@ public class DatabaseValidatorTest {
     public void whenInvalidFieldThenReturnMinusOneAndNotAdded() {
         DatabaseValidator validator = DatabaseValidator.getInstance();
         validator.clear();
-        User nameInvalid = new User(null, "login", "password", "email@mail.com", 123, ADMIN, "country", "city");
-        User loginInvalid = new User("name", null, "password", "email@mail.com", 123, USER, "country", "city");
-        User passwordInvalid = new User("name", "login", null, "email@mail.com", 123, ADMIN, "country", "city");
-        User emailInvalid1 = new User("name", "login", "password", "email.com", 123, USER, "country", "city");
-        User emailInvalid2 = new User("name", "login", "password", null, 123, ADMIN, "country", "city");
-        User roleInvalid = new User("name", "login", "password", "email@mail.com", 123, null, "country", "city");
-        assertThat(validator.add(nameInvalid), is(-1));
-        assertThat(validator.add(loginInvalid), is(-1));
-        assertThat(validator.add(passwordInvalid), is(-1));
-        assertThat(validator.add(emailInvalid1), is(-1));
-        assertThat(validator.add(emailInvalid2), is(-1));
-        assertThat(validator.add(roleInvalid), is(-1));
+        assertThat(validator.add(this.userNameNull), is(-1));
+        assertThat(validator.add(this.userLoginNull), is(-1));
+        assertThat(validator.add(this.userPasswordNull), is(-1));
+        assertThat(validator.add(this.userEmailNull), is(-1));
+        assertThat(validator.add(this.userEmailWrongFormat), is(-1));
+        assertThat(validator.add(this.userRoleNull), is(-1));
         assertThat(validator.findAll(), is(Collections.EMPTY_LIST));
     }
 
@@ -66,49 +77,45 @@ public class DatabaseValidatorTest {
      */
     @Test
     public void whenUpdateUserThenFieldsChange() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN, "oldCountry", "oldCity");
-        int id = validator.add(old);
-        User upd = new User("new_name", "new_login", "new_password", "new@email.ru", 456, USER, "newCountry", "newCity");
-        assertThat(validator.update(id, upd), is(true));
-        User result = validator.findById(id);
-        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getPassword(), upd.getEmail(),
-                old.getCreated(), upd.getRole(), upd.getCountry(), upd.getCity());
-        assertThat(result, is(expected));
+        int id = this.validator.add(this.userOne);
+        boolean updateResult = this.validator.update(id, this.userTwo);
+        User expected = new User(
+                id,
+                this.userTwo.getName(), this.userTwo.getLogin(), this.userTwo.getPassword(), this.userTwo.getEmail(),
+                this.userOne.getCreated(), // doesn't change
+                this.userTwo.getRole(), this.userTwo.getCountry(), this.userTwo.getCity()
+        );
+        assertThat(updateResult, is(true));
+        assertThat(validator.findById(id), is(expected));
     }
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User add = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN, "oldCountry", "oldCity");
-        int id = validator.add(add);
-        int badId = id + 2134;
-        User update = new User("new_name", "new_login", "new_password", "new@email.ru", 456, USER, "oldCountry", "oldCity");
-        assertThat(validator.update(badId, update), is(false));
-        User result = validator.findById(id);
-        User expected = new User(id, add.getName(), add.getLogin(), add.getPassword(), add.getEmail(),
-                add.getCreated(), add.getRole(), add.getCountry(), add.getCity());
-        assertThat(result, is(expected));
+        int rightId = this.validator.add(this.userOne);
+        int wrongId = rightId + 2134;
+        boolean updateResult = validator.update(wrongId, this.userTwo);
+        User expected = new User(
+                rightId,
+                this.userOne.getName(), this.userOne.getLogin(), this.userOne.getPassword(), this.userOne.getEmail(),
+                this.userOne.getCreated(), this.userOne.getRole(), this.userOne.getCountry(), this.userOne.getCity()
+        );
+        assertThat(updateResult, is(false));
+        assertThat(validator.findById(rightId), is(expected));
     }
-
 
     /**
      * Test update() validation.
      */
     @Test
     public void whenUpdateUserHasWrongEmailThenFalseAndNothingChanges() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN, "oldCountry", "oldCity");
-        int id = validator.add(old);
-        User update = new User("new_name", "new_login", "new_password", "new_email", 456, USER, "newCountry", "newCity");  // wrong email
-        assertThat(validator.update(id, update), is(false));
-        User result = validator.findById(id);
-        User expected = new User(id, old.getName(), old.getLogin(), old.getPassword(), old.getEmail(),
-                old.getCreated(), old.getRole(), old.getCountry(), old.getCity());
-        assertThat(result, is(expected));
+        int id = this.validator.add(this.userOne);
+        boolean updateResult = this.validator.update(id, this.userEmailWrongFormat);
+        User expected = new User(
+                id,
+                this.userOne.getName(), this.userOne.getLogin(), this.userOne.getPassword(), this.userOne.getEmail(),
+                this.userOne.getCreated(), this.userOne.getRole(), this.userOne.getCountry(), this.userOne.getCity());
+        assertThat(updateResult, is(false));
+        assertThat(this.validator.findById(id), is(expected));
     }
 
     /**
@@ -116,87 +123,90 @@ public class DatabaseValidatorTest {
      */
     @Test
     public void whenUpdateUserWithOnlyNameNotNullThenNameChange() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, USER, "oldCountry", "oldCity");
-        int id = validator.add(old);
+        int id = this.validator.add(this.userOne);
         User upd = new User("new_name", null, null, null, 456, null, null, null);
-        assertThat(validator.update(id, upd), is(true));
-        User result = validator.findById(id);
-        User expected = new User(id, upd.getName(), old.getLogin(), old.getPassword(),
-                old.getEmail(), old.getCreated(), old.getRole(), old.getCountry(), old.getCity());
-        assertThat(result, is(expected));
+        boolean updateResult = this.validator.update(id, upd);
+        User expected = new User(
+                id,
+                upd.getName(), // changed
+                this.userOne.getLogin(), this.userOne.getPassword(), this.userOne.getEmail(), this.userOne.getCreated(),
+                this.userOne.getRole(), this.userOne.getCountry(), this.userOne.getCity()
+        );
+        assertThat(updateResult, is(true));
+        assertThat(this.validator.findById(id), is(expected));
     }
 
     @Test
     public void whenUpdateUserWithOnlyLoginNotNullThenLoginChange() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN, "oldCountry", "oldCity");
-        int id = validator.add(old);
+        int id = this.validator.add(this.userOne);
         User upd = new User(null, "new_login", null, null, 456, null, null, null);
-        assertThat(validator.update(id, upd), is(true));
-        User result = validator.findById(id);
-        User expected = new User(id, old.getName(), upd.getLogin(), old.getPassword(),
-                old.getEmail(), old.getCreated(), old.getRole(), old.getCountry(), old.getCity());
-        assertThat(result, is(expected));
+        boolean updateResult = this.validator.update(id, upd);
+        User expected = new User(
+                id, this.userOne.getName(),
+                upd.getLogin(), // changed
+                this.userOne.getPassword(), this.userOne.getEmail(), this.userOne.getCreated(),
+                this.userOne.getRole(), this.userOne.getCountry(), this.userOne.getCity()
+        );
+        assertThat(updateResult, is(true));
+        assertThat(this.validator.findById(id), is(expected));
     }
 
     @Test
     public void whenUpdateUserWithOnlyPasswordNotNullThenPasswordChange() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, USER, "oldCountry", "oldCity");
-        int id = validator.add(old);
+        int id = this.validator.add(this.userOne);
         User upd = new User(null, null, "new_password", null, 456, null, null, null);
-        assertThat(validator.update(id, upd), is(true));
-        User result = validator.findById(id);
-        User expected = new User(id, old.getName(), old.getLogin(), upd.getPassword(),
-                old.getEmail(), old.getCreated(), old.getRole(), old.getCountry(), old.getCity());
-        assertThat(result, is(expected));
+        boolean updateResult = this.validator.update(id, upd);
+        User expected = new User(
+                id, this.userOne.getName(), this.userOne.getLogin(),
+                upd.getPassword(), // changed
+                this.userOne.getEmail(), this.userOne.getCreated(),
+                this.userOne.getRole(), this.userOne.getCountry(), this.userOne.getCity()
+        );
+        assertThat(updateResult, is(true));
+        assertThat(this.validator.findById(id), is(expected));
     }
 
 
     @Test
     public void whenUpdateUserWithOnlyEmailNotNullThenEmailChange() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN, "oldCountry", "oldCity");
-        int id = validator.add(old);
+        int id = this.validator.add(this.userOne);
         User upd = new User(null, null, null, "new@email.com", 456, null, null, null);
-        assertThat(validator.update(id, upd), is(true));
-        User result = validator.findById(id);
-        User expected = new User(id, old.getName(), old.getLogin(), old.getPassword(),
-                upd.getEmail(), old.getCreated(), old.getRole(), old.getCountry(), old.getCity());
-        assertThat(result, is(expected));
+        boolean updateResult = this.validator.update(id, upd);
+        User expected = new User(
+                id, this.userOne.getName(), this.userOne.getLogin(), this.userOne.getPassword(),
+                upd.getEmail(), // changed
+                this.userOne.getCreated(), this.userOne.getRole(), this.userOne.getCountry(), this.userOne.getCity()
+        );
+        assertThat(updateResult, is(true));
+        assertThat(this.validator.findById(id), is(expected));
     }
 
     @Test
     public void whenUpdateUserWithOnlyRoleNotNullThenRoleChange() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN, "oldCountry", "oldCity");
-        int id = validator.add(old);
+        int id = this.validator.add(this.userOne);
         User upd = new User(null, null, null, null, 456, USER, null, null);
-        assertThat(validator.update(id, upd), is(true));
-        User result = validator.findById(id);
-        User expected = new User(id, old.getName(), old.getLogin(), old.getPassword(),
-                old.getEmail(), old.getCreated(), upd.getRole(), old.getCountry(), old.getCity());
-        assertThat(result, is(expected));
+        boolean updateResult = this.validator.update(id, upd);
+        User expected = new User(
+                id, this.userOne.getName(), this.userOne.getLogin(), this.userOne.getPassword(),
+                this.userOne.getEmail(), this.userOne.getCreated(),
+                upd.getRole(), // changed
+                this.userOne.getCountry(), this.userOne.getCity()
+        );
+        assertThat(updateResult, is(true));
+        assertThat(this.validator.findById(id), is(expected));
     }
 
     @Test
     public void whenUpdateUserWithAllFieldsNullThenNothingChanged() {
-        DatabaseValidator validator = DatabaseValidator.getInstance();
-        validator.clear();
-        User old = new User("old_name", "old_login", "old_password", "old@email.com", 123, ADMIN, "oldCountry", "oldCity");
-        int id = validator.add(old);
+        int id = this.validator.add(this.userOne);
         User upd = new User(null, null, null, null, 456, null, null, null);
-        assertThat(validator.update(id, upd), is(true));
-        User result = validator.findById(id);
-        User expected = new User(id, old.getName(), old.getLogin(), old.getPassword(),
-                old.getEmail(), old.getCreated(), old.getRole(), old.getCountry(), old.getCity());
-        assertThat(result, is(expected));
+        boolean updateResult = this.validator.update(id, upd);
+        User expected = new User(
+                id, this.userOne.getName(), this.userOne.getLogin(), this.userOne.getPassword(), this.userOne.getEmail(),
+                this.userOne.getCreated(), this.userOne.getRole(), this.userOne.getCountry(), this.userOne.getCity()
+        );
+        assertThat(updateResult, is(true));
+        assertThat(this.validator.findById(id), is(expected));
     }
 
     /**

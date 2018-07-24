@@ -2,8 +2,8 @@ package ru.job4j.crud.filters;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.Role;
-import ru.job4j.crud.User;
+import ru.job4j.crud.model.Role;
+import ru.job4j.crud.model.User;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;

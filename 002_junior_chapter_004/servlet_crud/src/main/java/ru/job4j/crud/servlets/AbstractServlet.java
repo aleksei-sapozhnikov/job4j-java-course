@@ -2,9 +2,9 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.User;
 import ru.job4j.crud.logic.DatabaseValidator;
 import ru.job4j.crud.logic.Validator;
+import ru.job4j.crud.model.User;
 
 import javax.servlet.http.HttpServlet;
 

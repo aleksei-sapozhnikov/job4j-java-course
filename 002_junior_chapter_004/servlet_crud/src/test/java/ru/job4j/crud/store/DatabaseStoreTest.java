@@ -1,7 +1,8 @@
 package ru.job4j.crud.store;
 
+import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.crud.User;
+import ru.job4j.crud.model.User;
 
 import java.util.Collections;
 
@@ -9,10 +10,21 @@ import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static ru.job4j.crud.Role.ADMIN;
-import static ru.job4j.crud.Role.USER;
+import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Role.USER;
 
 public class DatabaseStoreTest {
+
+    private final DatabaseStore store = DatabaseStore.getInstance();
+
+    private final User userOne = new User("name_1", "login_1", "password_1", "email@mail.com_1", 123, ADMIN, "country_1", "city_1");
+    private final User userTwo = new User("name_2", "login_2", "password_2", "email@mail.com_2", 123, USER, "country_2", "city_2");
+    private final User userThree = new User("name_3", "login_3", "password_3", "email@mail.com_3", 123, ADMIN, "country_3", "city_3");
+
+    @Before
+    public void clearStore() {
+        this.store.clear();
+    }
 
     /**
      * Test Singleton and getInstance()
@@ -31,12 +43,10 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenAddUserThenHeIsInStoreAndCanFindHimById() {
-        DatabaseStore store = DatabaseStore.getInstance();
-        store.clear();
-        User added = new User("nameOne", "loginOne", "passwordOne", "email@one.com", 123, ADMIN, "country", "city");
-        int id = store.add(added);
-        assertThat(store.findById(id), is(added));
-        assertThat(store.findAll().get(0), is(added));
+        User added = this.userOne;
+        int id = this.store.add(added);
+        assertThat(this.store.findById(id), is(added));
+        assertThat(this.store.findAll().get(0), is(added));
     }
 
     /**
@@ -44,31 +54,18 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenUpdateUserWithTheSameIdThenFieldsChange() {
-        DatabaseStore store = DatabaseStore.getInstance();
-        store.clear();
-        User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN, "old_country", "old_city");
-        int id = store.add(add);
-        User upd = new User(id, "new_name", "new_login", "new_password", "new_email", 456, USER, "new_country", "new_city");
-        assertThat(store.update(upd), is(true));
-        User result = store.findById(id);
-        User expected = new User(id, upd.getName(), upd.getLogin(), upd.getPassword(), upd.getEmail(),
-                add.getCreated(), upd.getRole(), upd.getCountry(), upd.getCity());
-        assertThat(result, is(expected));
+        int databaseId = this.store.add(this.userOne);
+        boolean updateResult = this.store.update(this.userTwo.changeId(databaseId));
+        assertThat(updateResult, is(true));
+        assertThat(this.store.findById(databaseId), is(this.userTwo));
     }
 
     @Test
     public void whenUpdateUserWithWrongIdThenUpdateFalseAndUserNotChanging() {
-        DatabaseStore store = DatabaseStore.getInstance();
-        store.clear();
-        User add = new User("old_name", "old_login", "old_password", "old_email", 123, ADMIN, "country", "city");
-        int id = store.add(add);
-        int badId = id + 2134;
-        User update = new User(badId, "new_name", "new_login", "new_password", "new_email", 456, USER, "country", "city");
-        assertThat(store.update(update), is(false));
-        User result = store.findById(id);
-        User expected = new User(id, add.getName(), add.getLogin(), add.getPassword(), add.getEmail(),
-                add.getCreated(), add.getRole(), add.getCountry(), add.getCity());
-        assertThat(result, is(expected));
+        int rightId = this.store.add(this.userOne);
+        int wrongId = rightId + 2134;
+        assertThat(this.store.update(this.userTwo.changeId(wrongId)), is(false));
+        assertThat(this.store.findById(rightId), is(this.userOne));
     }
 
     /**
@@ -76,27 +73,19 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenDeleteUserThenHeIsReturnedAndNotFoundInStore() {
-        DatabaseStore store = DatabaseStore.getInstance();
-        store.clear();
-        User add = new User("name", "login", "password", "email", 123, ADMIN, "country", "city");
-        int id = store.add(add);
-        User deleted = store.delete(id);
-        assertThat(deleted, is(add));
+        int id = store.add(this.userOne);
+        assertThat(store.delete(id), is(this.userOne));
         assertThat(store.findById(id), nullValue());
         assertThat(store.findAll(), is(Collections.EMPTY_LIST));
     }
 
     @Test
     public void whenDeleteUserWithWrongIdThenFalseAndUserStays() {
-        DatabaseStore store = DatabaseStore.getInstance();
-        store.clear();
-        User add = new User("name", "login", "password", "email", 123, USER, "country", "city");
-        int id = store.add(add);
-        int badId = id + 123;
-        User deleted = store.delete(badId);
-        assertThat(deleted, nullValue());
-        assertThat(store.findById(id), is(add));
-        assertThat(store.findAll(), is(Collections.singletonList(add)));
+        int rightId = store.add(this.userOne);
+        int wrongId = rightId + 123;
+        assertThat(store.delete(wrongId), nullValue());
+        assertThat(store.findById(rightId), is(this.userOne));
+        assertThat(store.findAll(), is(Collections.singletonList(this.userOne)));
     }
 
     /**
@@ -104,17 +93,12 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenAddedUsersCanFindThemById() {
-        DatabaseStore store = DatabaseStore.getInstance();
-        store.clear();
-        User one = new User("name_1", "login_1", "password_1", "email_1", 123, ADMIN, "country_1", "city_1");
-        User two = new User("name_2", "login_2", "password_2", "email_2", 456, USER, "country_2", "city_2");
-        User three = new User("name_3", "login_3", "password_3", "email_3", 789, ADMIN, "country_3", "city_3");
-        int idOne = store.add(one);
-        int idTwo = store.add(two);
-        int idThree = store.add(three);
-        assertThat(store.findById(idTwo), is(two));
-        assertThat(store.findById(idThree), is(three));
-        assertThat(store.findById(idOne), is(one));
+        int idOne = store.add(this.userOne);
+        int idTwo = store.add(this.userTwo);
+        int idThree = store.add(this.userThree);
+        assertThat(store.findById(idTwo), is(this.userTwo));
+        assertThat(store.findById(idThree), is(this.userThree));
+        assertThat(store.findById(idOne), is(this.userOne));
     }
 
     /**
@@ -122,16 +106,11 @@ public class DatabaseStoreTest {
      */
     @Test
     public void whenAddedUsersThenFindAllReturnsThemAll() {
-        DatabaseStore store = DatabaseStore.getInstance();
-        store.clear();
-        User one = new User("name_1", "login_1", "password_1", "email_1", 123, USER, "country_1", "city_1");
-        User two = new User("name_2", "login_2", "password_2", "email_2", 456, ADMIN, "country_2", "city");
-        User three = new User("name_3", "login_3", "password_3", "email_3", 789, USER, "country_3", "city");
-        store.add(one);
-        store.add(two);
-        store.add(three);
+        store.add(this.userOne);
+        store.add(this.userTwo);
+        store.add(this.userThree);
         User[] result = store.findAll().toArray(new User[0]);
-        User[] expected = {two, one, three};    // order shouldn't matter in assert
+        User[] expected = {this.userTwo, this.userOne, this.userThree};    // order shouldn't matter in assert
         assertThat(result, arrayContainingInAnyOrder(expected));
     }
 }

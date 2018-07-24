@@ -34,7 +34,7 @@
         <form class="navbar-form navbar-left" action="${context}${create}" method="GET">
             <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
         </form>
-        <%--@elvariable id="loggedUser" type="ru.job4j.crud.User"--%>
+        <%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
         <c:if test="${loggedUser != null}">
             <div class="nav navbar-nav navbar-right">
                 <div class="row">

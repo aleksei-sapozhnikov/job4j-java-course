@@ -1,4 +1,4 @@
-package ru.job4j.crud;
+package ru.job4j.crud.model;
 
 import java.time.Instant;
 import java.time.ZoneId;
@@ -218,5 +218,17 @@ public class User {
     public int hashCode() {
         return Objects.hash(this.name, this.login, this.password, this.email, this.created,
                 this.role, this.country, this.city);
+    }
+
+    /**
+     * Returns new user object with all fields the same as of this
+     * but with given id.
+     *
+     * @param newId New id.
+     * @return New user object same as given but with new id.
+     */
+    public User changeId(int newId) {
+        return new User(newId, this.name, this.login, this.password,
+                this.email, this.created, this.role, this.country, this.city);
     }
 }

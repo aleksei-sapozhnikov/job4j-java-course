@@ -1,9 +1,10 @@
 package ru.job4j.crud.filters;
 
 
+import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.crud.Role;
-import ru.job4j.crud.User;
+import ru.job4j.crud.model.Role;
+import ru.job4j.crud.model.User;
 
 import javax.servlet.FilterChain;
 import javax.servlet.RequestDispatcher;
@@ -20,40 +21,57 @@ public class LoginFilterTest {
 
     private LoginFilter filter = new LoginFilter();
 
-    private HttpServletRequest request = mock(HttpServletRequest.class);
-    private HttpServletResponse response = mock(HttpServletResponse.class);
-    private FilterChain chain = mock(FilterChain.class);
-    private RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
-    private HttpSession httpSession = mock(HttpSession.class);
+    private final HttpServletRequest request = mock(HttpServletRequest.class);
+    private final HttpServletResponse response = mock(HttpServletResponse.class);
+    private final FilterChain chain = mock(FilterChain.class);
+    private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
+    private final HttpSession httpSession = mock(HttpSession.class);
+
+    private final User userRoleAdmin = new User(1, "aName", "aLogin", "aPassword", "aEmail@mail.com", 123, Role.ADMIN, "aCountry", "aCity");
+    private final User userRoleUser = new User(2, "uName", "uLogin", "uPassword", "uEmail@mail.com", 456, Role.USER, "uCountry", "uCity");
+
+    @Before
+    public void setCommonMocks() {
+        when(this.request.getContextPath()).thenReturn("contextPath");
+        when(this.request.getSession()).thenReturn(this.httpSession);
+        when(this.request.getSession()).thenReturn(this.httpSession);
+        when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
+    }
 
     /**
      * Test doFilter()
      */
     @Test
     public void whenOnLoginPageThenPass() throws IOException, ServletException {
-        when(this.request.getRequestURI()).thenReturn("root/login");
+        when(this.request.getRequestURI()).thenReturn("contextPath/login");
         this.filter.doFilter(this.request, this.response, this.chain);
         verify(this.chain).doFilter(this.request, this.response);
     }
 
     @Test
-    public void whenHaveUserInSessionThenPass() throws IOException, ServletException {
-        User user = new User("stub", "stub", "stub", "stub@email.com", 123, Role.USER, "stub", "stub");
-        when(this.request.getRequestURI()).thenReturn("root/some_address");
+    public void whenHaveUserWithRoleUserInSessionThenPass() throws IOException, ServletException {
+        when(this.request.getRequestURI()).thenReturn("contextPath/some_address");
         when(this.request.getSession()).thenReturn(this.httpSession);
-        when(this.httpSession.getAttribute("loggedUser")).thenReturn(user);
+        when(this.httpSession.getAttribute("loggedUser")).thenReturn(this.userRoleUser);
         this.filter.doFilter(this.request, this.response, this.chain);
         verify(this.chain).doFilter(this.request, this.response);
     }
 
     @Test
-    public void whenNoUserInSessionThenRedirectToLogin() throws IOException, ServletException {
-        when(this.request.getContextPath()).thenReturn("root");
-        when(this.request.getRequestURI()).thenReturn("root/some_address");
+    public void whenHaveUserWithRoleAdminInSessionThenPass() throws IOException, ServletException {
+        when(this.request.getRequestURI()).thenReturn("contextPath/some_address");
         when(this.request.getSession()).thenReturn(this.httpSession);
+        when(this.httpSession.getAttribute("loggedUser")).thenReturn(this.userRoleAdmin);
+        this.filter.doFilter(this.request, this.response, this.chain);
+        verify(this.chain).doFilter(this.request, this.response);
+    }
+
+    @Test
+    public void whenNullUserInSessionThenRedirectToLogin() throws IOException, ServletException {
+        when(this.request.getRequestURI()).thenReturn("contextPath/some_address");
         when(this.httpSession.getAttribute("user")).thenReturn(null);
         this.filter.doFilter(this.request, this.response, this.chain);
-        verify(this.response).sendRedirect("root/login");
+        verify(this.response).sendRedirect("contextPath/login");
     }
 
 }

@@ -1,4 +1,4 @@
-package ru.job4j.crud;
+package ru.job4j.crud.model;
 
 public enum Role {
     ADMIN,

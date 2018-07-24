@@ -1,4 +1,4 @@
-package ru.job4j.crud;
+package ru.job4j.crud.model;
 
 import org.junit.Test;
 
@@ -7,10 +7,13 @@ import java.time.ZoneId;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static ru.job4j.crud.Role.ADMIN;
-import static ru.job4j.crud.Role.USER;
+import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Role.USER;
 
 public class UserTest {
+
+    private final User givenId = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
+    private final User defaultId = new User("name", "login", "password", "e@mail.com", 123L, USER, "country", "city");
 
     /**
      * Test constructors and getters.
@@ -18,19 +21,17 @@ public class UserTest {
     @Test
     public void whenGetterThenValue() {
         // with given id
-        User givenId = new User(32, "name", "login", "password", "e@mail.com", 123L, ADMIN, "country", "city");
-        assertThat(givenId.getId(), is(32));
-        assertThat(givenId.getName(), is("name"));
-        assertThat(givenId.getLogin(), is("login"));
-        assertThat(givenId.getEmail(), is("e@mail.com"));
-        assertThat(givenId.getCreated(), is(123L));
-        // with default id = -1
-        User defaultId = new User("name", "login", "password", "e@mail.com", 123L, USER, "country", "city");
-        assertThat(defaultId.getId(), is(-1));
-        assertThat(defaultId.getName(), is("name"));
-        assertThat(defaultId.getLogin(), is("login"));
-        assertThat(defaultId.getEmail(), is("e@mail.com"));
-        assertThat(defaultId.getCreated(), is(123L));
+        assertThat(this.givenId.getId(), is(32));
+        assertThat(this.givenId.getName(), is("name"));
+        assertThat(this.givenId.getLogin(), is("login"));
+        assertThat(this.givenId.getEmail(), is("e@mail.com"));
+        assertThat(this.givenId.getCreated(), is(123L));
+        // with default id
+        assertThat(this.defaultId.getId(), is(-1));
+        assertThat(this.defaultId.getName(), is("name"));
+        assertThat(this.defaultId.getLogin(), is("login"));
+        assertThat(this.defaultId.getEmail(), is("e@mail.com"));
+        assertThat(this.defaultId.getCreated(), is(123L));
     }
 
     /**
@@ -38,15 +39,18 @@ public class UserTest {
      */
     @Test
     public void whenToStringThenStringAsNeeded() {
-        User user = new User(32, "name", "login", "password", "e@mail.com", 123L, USER, "country", "city");
-        String result = user.toString();
         String expected = String.format(
                 "[user id=%s, name=%s, login=%s, password=%s, email=%s, created=%s, country=%s, city=%s]",
-                32, "name", "login", "password", "e@mail.com",
-                Instant.ofEpochMilli(123L).atZone(ZoneId.systemDefault()),
-                "country", "city"
+                this.givenId.getId(),
+                this.givenId.getName(),
+                this.givenId.getLogin(),
+                this.givenId.getPassword(),
+                this.givenId.getEmail(),
+                Instant.ofEpochMilli(this.givenId.getCreated()).atZone(ZoneId.systemDefault()),
+                this.givenId.getCountry(),
+                this.givenId.getCity()
         );
-        assertThat(result, is(expected));
+        assertThat(this.givenId.toString(), is(expected));
     }
 
     /**
@@ -80,12 +84,24 @@ public class UserTest {
         assertThat(main.equals(emailOther), is(false));
         assertThat(main.equals(createdOther), is(false));
         assertThat(main.equals(roleOther), is(false));
+        assertThat(main.equals(countryOther), is(false));
+        assertThat(main.equals(cityOther), is(false));
         assertThat(main.equals(classOther), is(false));
         assertThat(main.equals(nullUser), is(false));
         // hashcode of equal
         assertThat(main.hashCode() == itself.hashCode(), is(true));
         assertThat(main.hashCode() == same.hashCode(), is(true));
         assertThat(main.hashCode() == idOther.hashCode(), is(true));
+    }
+
+    /**
+     * Test changeId()
+     */
+    @Test
+    public void whenChangeIdThenUsersEqualButOtherId() {
+        User changed = this.givenId.changeId(512);
+        assertThat(changed, is(this.givenId));
+        assertThat(changed.getId(), is(512));
     }
 
 }
