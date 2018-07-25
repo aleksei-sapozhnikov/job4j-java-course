@@ -169,7 +169,8 @@ public class DatabaseStore implements Store<User> {
              PreparedStatement create = connection.prepareStatement(queries.get("functionInsertUser"));
              PreparedStatement update = connection.prepareStatement(queries.get("functionUpdateUser"))
         ) {
-            this.queryAsOneTransaction(connection, create, update);
+            create.execute();
+            update.execute();
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
@@ -185,28 +186,6 @@ public class DatabaseStore implements Store<User> {
             drop.execute();
         } catch (SQLException e) {
             LOG.error(String.format("SQL exception: %s", e.getMessage()));
-        }
-    }
-
-    /**
-     * Performs sql queries as one transaction, by settin autocommit to "off".
-     *
-     * @param connection Connection to database.
-     * @param statements Statements to perform.
-     * @throws SQLException Provides information on a database access error or other errors
-     */
-    private void queryAsOneTransaction(Connection connection, PreparedStatement... statements) throws SQLException {
-        connection.setAutoCommit(false);
-        try {
-            for (PreparedStatement statement : statements) {
-                statement.execute();
-            }
-            connection.commit();
-        } catch (Exception e) {
-            LOG.error(String.format("Exception: %s", e.getMessage()));
-            connection.rollback();
-        } finally {
-            connection.setAutoCommit(true);
         }
     }
 
