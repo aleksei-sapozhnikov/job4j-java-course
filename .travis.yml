@@ -6,7 +6,7 @@ sudo: false
 
 # Add PostgreSQL database
 services:
-  - postgresql: "9.6"
+  - postgresql: "10"
 
 # Create testing database
 before_script:
