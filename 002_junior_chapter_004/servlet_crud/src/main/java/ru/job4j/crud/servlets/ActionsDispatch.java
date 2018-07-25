@@ -3,6 +3,8 @@ package ru.job4j.crud.servlets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.logic.Validator;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 
@@ -143,14 +145,17 @@ public class ActionsDispatch {
      */
     private User formUser(HttpServletRequest req) {
         return new User(
-                req.getParameter("name"),
-                req.getParameter("login"),
-                req.getParameter("password"),
-                req.getParameter("email"),
-                System.currentTimeMillis(),
-                Role.valueOf(req.getParameter("role")),
-                req.getParameter("country"),
-                req.getParameter("city")
+                new Credentials(
+                        req.getParameter("login"),
+                        req.getParameter("password"),
+                        Role.valueOf(req.getParameter("role"))
+                ),
+                new Info(
+                        req.getParameter("name"),
+                        req.getParameter("email"),
+                        req.getParameter("country"),
+                        req.getParameter("city")
+                )
         );
     }
 

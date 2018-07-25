@@ -12,6 +12,7 @@ import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static ru.job4j.crud.model.Info.Fields.*;
 import static ru.job4j.crud.model.Role.ADMIN;
 import static ru.job4j.crud.model.Role.USER;
 
@@ -180,10 +181,10 @@ public class DatabaseValidatorTest {
         User expected = new User(
                 this.userOneRoleAdmin.getCredentials(),
                 new Info(
-                        upd.getInfo().getName(),
-                        this.userOneRoleAdmin.getInfo().getEmail(),
-                        this.userOneRoleAdmin.getInfo().getCountry(),
-                        this.userOneRoleAdmin.getInfo().getCity()
+                        upd.getInfo().getField(NAME),
+                        this.userOneRoleAdmin.getInfo().getField(EMAIL),
+                        this.userOneRoleAdmin.getInfo().getField(COUNTRY),
+                        this.userOneRoleAdmin.getInfo().getField(CITY)
                 )
         );
         assertThat(updateResult, is(true));
@@ -198,10 +199,10 @@ public class DatabaseValidatorTest {
         User expected = new User(
                 this.userOneRoleAdmin.getCredentials(),
                 new Info(
-                        this.userOneRoleAdmin.getInfo().getName(),
-                        upd.getInfo().getEmail(),
-                        this.userOneRoleAdmin.getInfo().getCountry(),
-                        this.userOneRoleAdmin.getInfo().getCity()
+                        this.userOneRoleAdmin.getInfo().getField(NAME),
+                        upd.getInfo().getField(EMAIL),
+                        this.userOneRoleAdmin.getInfo().getField(COUNTRY),
+                        this.userOneRoleAdmin.getInfo().getField(CITY)
                 )
         );
         assertThat(updateResult, is(true));

@@ -27,7 +27,6 @@ public class UserTest {
         assertThat(this.givenId.getInfo(), is(new Info("name", "e@mail.com", "country", "city")));
         // with default id and create date
         assertThat(this.defaultId.getId(), is(-1));
-        assertThat(this.defaultId.getCreated(), is(0));
         assertThat(this.defaultId.getCredentials(), is(new Credentials("login", "password", ADMIN)));
         assertThat(this.defaultId.getInfo(), is(new Info("name", "e@mail.com", "country", "city")));
     }

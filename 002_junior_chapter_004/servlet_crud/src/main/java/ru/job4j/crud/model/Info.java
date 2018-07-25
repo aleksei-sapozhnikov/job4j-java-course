@@ -3,47 +3,64 @@ package ru.job4j.crud.model;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.util.Objects;
+import java.util.*;
+
+import static ru.job4j.crud.model.Info.Fields.*;
 
 public class Info {
+
+    private final Map<Fields, String> infoValues;
+
     private static final Logger LOG = LogManager.getLogger(Info.class);
 
-    private final String name;
-
-    private final String email;
-
-    private final String country;
-
-    private final String city;
-
-    public Info(String name, String email, String country, String city) {
-        this.name = name;
-        this.email = email;
-        this.country = country;
-        this.city = city;
+    public Info(String... values) {
+        if (values.length < Fields.values().length) {
+            LOG.error("Given array of values has less length then needed");
+        }
+        this.infoValues = this.fillFields(Arrays.asList(values));
     }
 
-    public String getName() {
-        return this.name;
+    public Info(Map<Fields, String> valuesMap) {
+        if (valuesMap.values().size() < Fields.values().length) {
+            LOG.error("Given map of values has less values then needed");
+        }
+        this.infoValues = Collections.unmodifiableMap(valuesMap);
     }
 
-    public String getEmail() {
-        return this.email;
+    private Map<Fields, String> fillFields(List<String> values) {
+        Iterator<String> valuesIt = values.iterator();
+        Map<Fields, String> result = new HashMap<>();
+        result.put(NAME, valuesIt.next());
+        result.put(EMAIL, valuesIt.next());
+        result.put(COUNTRY, valuesIt.next());
+        result.put(CITY, valuesIt.next());
+        return Collections.unmodifiableMap(result);
     }
 
-    public String getCountry() {
-        return this.country;
+    public String getField(Fields name) {
+        return this.infoValues.get(name);
     }
 
-    public String getCity() {
-        return this.city;
+    public Info mergeWith(Info newer) {
+        Map<Fields, String> result = new HashMap<>();
+        for (Fields field : Fields.values()) {
+            result.put(field,
+                    newer.getField(field) != null
+                            ? newer.getField(field)
+                            : this.infoValues.get(field)
+            );
+        }
+        return new Info(result);
     }
 
     @Override
     public String toString() {
         return String.format(
                 "[info name=%s, email=%s, country=%s, city=%s]",
-                this.name, this.email, this.country, this.city
+                this.infoValues.get(NAME),
+                this.infoValues.get(EMAIL),
+                this.infoValues.get(COUNTRY),
+                this.infoValues.get(CITY)
         );
     }
 
@@ -56,15 +73,19 @@ public class Info {
             return false;
         }
         Info that = (Info) o;
-        return Objects.equals(this.name, that.name) &&
-                Objects.equals(this.email, that.email) &&
-                Objects.equals(this.country, that.country) &&
-                Objects.equals(this.city, that.city);
+        return Objects.equals(this.infoValues, that.infoValues);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.name, this.email, this.country, this.city);
+        return Objects.hash(this.infoValues);
+    }
+
+    public enum Fields {
+        NAME,
+        EMAIL,
+        COUNTRY,
+        CITY
     }
 }
     

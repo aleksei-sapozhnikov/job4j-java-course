@@ -32,6 +32,13 @@ public class Credentials {
         return this.role;
     }
 
+    public Credentials mergeWith(Credentials newer) {
+        String login = newer.getLogin() != null ? newer.getLogin() : this.getLogin();
+        String password = newer.getPassword() != null ? newer.getPassword() : this.getPassword();
+        Role role = newer.getRole() != null ? newer.getRole() : this.getRole();
+        return new Credentials(login, password, role);
+    }
+
     @Override
     public String toString() {
         return String.format(

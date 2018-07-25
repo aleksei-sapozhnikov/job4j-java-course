@@ -3,6 +3,8 @@ package ru.job4j.crud.store;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 
@@ -11,6 +13,8 @@ import java.io.InputStream;
 import java.sql.*;
 import java.time.Instant;
 import java.util.*;
+
+import static ru.job4j.crud.model.Info.Fields.*;
 
 /**
  * Storage for Users. Uses database.
@@ -261,14 +265,15 @@ public class DatabaseStore implements Store<User> {
      */
     private int dbInsertUser(PreparedStatement statement, User user, int prevId) throws SQLException {
         int result = prevId;
-        statement.setString(1, user.getName());
-        statement.setString(2, user.getLogin());
-        statement.setString(3, user.getPassword());
-        statement.setString(4, user.getEmail());
-        statement.setTimestamp(5, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
-        statement.setString(6, user.getRole().toString());
-        statement.setString(7, user.getCountry());
-        statement.setString(8, user.getCity());
+        int index = 0;
+        statement.setTimestamp(++index, Timestamp.from(Instant.ofEpochMilli(user.getCreated())));
+        statement.setString(++index, user.getCredentials().getLogin());
+        statement.setString(++index, user.getCredentials().getPassword());
+        statement.setString(++index, user.getCredentials().getRole().toString());
+        statement.setString(++index, user.getInfo().getField(NAME));
+        statement.setString(++index, user.getInfo().getField(EMAIL));
+        statement.setString(++index, user.getInfo().getField(COUNTRY));
+        statement.setString(++index, user.getInfo().getField(CITY));
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
                 result = res.getInt(1);
@@ -314,14 +319,15 @@ public class DatabaseStore implements Store<User> {
      */
     private boolean updateUserAndCheckRowsChanged(PreparedStatement statement, User upd) throws SQLException {
         int changedRowsNeeded = 1;
-        statement.setInt(1, upd.getId());
-        statement.setString(2, upd.getName());
-        statement.setString(3, upd.getLogin());
-        statement.setString(4, upd.getPassword());
-        statement.setString(5, upd.getEmail());
-        statement.setString(6, upd.getRole().toString());
-        statement.setString(7, upd.getCountry());
-        statement.setString(8, upd.getCity());
+        int index = 0;
+        statement.setInt(++index, upd.getId());
+        statement.setString(++index, upd.getCredentials().getLogin());
+        statement.setString(++index, upd.getCredentials().getPassword());
+        statement.setString(++index, upd.getCredentials().getRole().toString());
+        statement.setString(++index, upd.getInfo().getField(NAME));
+        statement.setString(++index, upd.getInfo().getField(EMAIL));
+        statement.setString(++index, upd.getInfo().getField(COUNTRY));
+        statement.setString(++index, upd.getInfo().getField(CITY));
         int rowsChanged;
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
@@ -450,16 +456,21 @@ public class DatabaseStore implements Store<User> {
      * @throws SQLException Provides information on a database access error or other errors.
      */
     private User formUser(ResultSet res) throws SQLException {
+        int index = 0;
         return new User(
-                res.getInt(1),                              // id
-                res.getString(2),                           // name
-                res.getString(3),                           // login
-                res.getString(4),                           // password
-                res.getString(5),                           // email
-                res.getTimestamp(6).getTime(),              // created
-                Role.valueOf(res.getString(7)),             // role
-                res.getString(8),                           // country
-                res.getString(9)                            // city
+                res.getInt(++index),                                        // id
+                res.getTimestamp(++index).getTime(),                        // created
+                new Credentials(
+                        res.getString(++index),                             // login
+                        res.getString(++index),                             // password
+                        Role.valueOf(res.getString(++index))                // role        
+                ),
+                new Info(
+                        res.getString(++index),                             // name
+                        res.getString(++index),                             // email
+                        res.getString(++index),                             // country
+                        res.getString(++index)                              // city        
+                )
         );
     }
 

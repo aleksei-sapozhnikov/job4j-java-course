@@ -31,7 +31,7 @@ public class User {
     }
 
     public User(Credentials credentials, Info info) {
-        this(-1, 0, credentials, info);
+        this(-1, System.currentTimeMillis(), credentials, info);
     }
 
     /**

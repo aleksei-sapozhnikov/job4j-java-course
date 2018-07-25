@@ -66,7 +66,7 @@ public class UpdateDeleteFilter implements Filter {
      */
     private void filterIfCanModify(User user, HttpServletRequest req, HttpServletResponse resp,
                                    FilterChain chain) throws IOException, ServletException {
-        if (user.getRole() == Role.ADMIN) {
+        if (user.getCredentials().getRole() == Role.ADMIN) {
             chain.doFilter(req, resp);
         } else {
             this.filterIdTheSame(user, req, resp, chain);

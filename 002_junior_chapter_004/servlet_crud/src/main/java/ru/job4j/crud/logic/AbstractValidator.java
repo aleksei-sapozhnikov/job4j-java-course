@@ -2,11 +2,17 @@ package ru.job4j.crud.logic;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 import ru.job4j.crud.store.Store;
 
 import java.util.List;
+
+import static ru.job4j.crud.model.Info.Fields.EMAIL;
+import static ru.job4j.crud.model.Info.Fields.NAME;
+import static ru.job4j.crud.model.Role.ADMIN;
 
 /**
  * General class for a logic layer.
@@ -36,8 +42,8 @@ public abstract class AbstractValidator implements Validator<User> {
      */
     protected AbstractValidator(Store<User> store) {
         this.store = store;
-        this.store.add(new User("Administrator", "root", "root", "root@root.ru", System.currentTimeMillis(),
-                Role.ADMIN, "root_country", "root_city"));
+        User root = new User(new Credentials("root", "root", ADMIN), new Info("root_name", "root@email.com", "root_country", "root_city"));
+        this.store.add(root);
     }
 
     /**
@@ -68,7 +74,9 @@ public abstract class AbstractValidator implements Validator<User> {
         boolean result = false;
         User old = this.findById(id);
         User temp = old != null ? this.updateFields(old, upd) : null;
-        if (this.validateUser(temp) && this.validateRoleUpdate(old.getRole(), temp.getRole())) {
+        if (this.validateUser(temp)
+                && this.validateRoleUpdate(old.getCredentials().getRole(), temp.getCredentials().getRole())
+                ) {
             result = this.store.update(temp);
         }
         return result;
@@ -82,7 +90,7 @@ public abstract class AbstractValidator implements Validator<User> {
      * @return <tt>true</tt> if valid, <tt>false</tt> if not.
      */
     private boolean validateRoleUpdate(Role old, Role upd) {
-        return old == Role.ADMIN || old == upd;
+        return old == ADMIN || old == upd;
     }
 
     /**
@@ -95,14 +103,9 @@ public abstract class AbstractValidator implements Validator<User> {
      * @return User object with updated fields.
      */
     private User updateFields(User old, User upd) {
-        String name = upd.getName() != null ? upd.getName() : old.getName();
-        String login = upd.getLogin() != null ? upd.getLogin() : old.getLogin();
-        String password = upd.getPassword() != null ? upd.getPassword() : old.getPassword();
-        String email = upd.getEmail() != null ? upd.getEmail() : old.getEmail();
-        Role role = upd.getRole() != null ? upd.getRole() : old.getRole();
-        String country = upd.getCountry() != null ? upd.getCountry() : old.getCountry();
-        String city = upd.getCity() != null ? upd.getCity() : old.getCity();
-        return new User(old.getId(), name, login, password, email, old.getCreated(), role, country, city);
+        Credentials credentials = old.getCredentials().mergeWith(upd.getCredentials());
+        Info info = old.getInfo().mergeWith(upd.getInfo());
+        return new User(old.getId(), old.getCreated(), credentials, info);
     }
 
     /**
@@ -145,11 +148,12 @@ public abstract class AbstractValidator implements Validator<User> {
      */
     private boolean validateUser(User user) {
         return user != null
-                && this.validateName(user.getName())
-                && this.validateLogin(user.getLogin())
-                && this.validatePassword(user.getPassword())
-                && this.validateEmail(user.getEmail())
-                && this.validateRole(user.getRole());
+                && this.validateLogin(user.getCredentials().getLogin())
+                && this.validatePassword(user.getCredentials().getPassword())
+                && this.validateRole(user.getCredentials().getRole())
+                && this.validateName(user.getInfo().getField(NAME))
+                && this.validateEmail(user.getInfo().getField(EMAIL));
+
     }
 
     /**
@@ -236,7 +240,9 @@ public abstract class AbstractValidator implements Validator<User> {
     public User findByCredentials(String login, String password) {
         User result = null;
         for (User user : this.findAll()) {
-            if (login.equals(user.getLogin()) && password.equals(user.getPassword())) {
+            if (login.equals(user.getCredentials().getLogin())
+                    && password.equals(user.getCredentials().getPassword())
+                    ) {
                 result = user;
                 break;
             }

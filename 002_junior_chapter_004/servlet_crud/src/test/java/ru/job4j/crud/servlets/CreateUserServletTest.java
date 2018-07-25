@@ -18,6 +18,7 @@ import java.io.IOException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
+import static ru.job4j.crud.model.Info.Fields.*;
 import static ru.job4j.crud.model.Role.ADMIN;
 
 public class CreateUserServletTest {
@@ -29,9 +30,9 @@ public class CreateUserServletTest {
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
 
-    private final User userRoleAdmin = new User(123L, new Credentials("aLogin", "aPassword", ADMIN), new Info("aName", "aEmail@mail.com", "aCountry", "aCity"));
-    private final User userRoleUser = new User(456L, new Credentials("uLogin", "uPassword", ADMIN), new Info("uName", "uEmail@mail.com", "uCountry", "uCity"));
-    private final User userEmailWrongFormat = new User(123L, new Credentials("login", "password", ADMIN), new Info("name", "email", "country", "city"));
+    private final User userRoleAdmin = new User(new Credentials("aLogin", "aPassword", ADMIN), new Info("aName", "aEmail@mail.com", "aCountry", "aCity"));
+    private final User userRoleUser = new User(new Credentials("uLogin", "uPassword", ADMIN), new Info("uName", "uEmail@mail.com", "uCountry", "uCity"));
+    private final User userEmailWrongFormat = new User(new Credentials("login", "password", ADMIN), new Info("name", "email", "country", "city"));
 
     private CreateUserServlet servlet = new CreateUserServlet();
 
@@ -48,10 +49,10 @@ public class CreateUserServletTest {
         when(this.request.getParameter("login")).thenReturn(user.getCredentials().getLogin());
         when(this.request.getParameter("password")).thenReturn(user.getCredentials().getPassword());
         when(this.request.getParameter("role")).thenReturn(user.getCredentials().getRole().toString());
-        when(this.request.getParameter("name")).thenReturn(user.getInfo().getName());
-        when(this.request.getParameter("email")).thenReturn(user.getInfo().getEmail());
-        when(this.request.getParameter("country")).thenReturn(user.getInfo().getCountry());
-        when(this.request.getParameter("city")).thenReturn(user.getInfo().getCity());
+        when(this.request.getParameter("name")).thenReturn(user.getInfo().getField(NAME));
+        when(this.request.getParameter("email")).thenReturn(user.getInfo().getField(EMAIL));
+        when(this.request.getParameter("country")).thenReturn(user.getInfo().getField(COUNTRY));
+        when(this.request.getParameter("city")).thenReturn(user.getInfo().getField(CITY));
     }
 
     /**
