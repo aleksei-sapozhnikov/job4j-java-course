@@ -16,6 +16,7 @@
 <!-- Objects -->
 <jsp:useBean id="users" scope="request" type="java.util.List"/>
 <jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
+<%--@elvariable id="usersInfo" type="java.util.List"--%>
 
 
 <html>
@@ -35,12 +36,13 @@
             <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
         </form>
         <%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
+        <%--@elvariable id="loggedUserInfo" type="java.util.List"--%>
         <c:if test="${loggedUser != null}">
             <div class="nav navbar-nav navbar-right">
                 <div class="row">
                     <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUser.name} (id: ${loggedUser.id},
-                            role: ${loggedUser.role})</p>
+                        <p class="navbar-text">Logged: ${loggedUserInfo[0]} (id: ${loggedUser.id},
+                            role: ${loggedUser.credentials.role})</p>
                     </div>
                     <div class="col-sm-4">
                         <form class="navbar-form" action="${context}${logout}" method="POST">
@@ -78,30 +80,37 @@
         <thead>
         <tr>
             <th>Id</th>
-            <th>Name</th>
-            <th>Login</th>
-            <th>Email</th>
-            <th>Role</th>
             <th>Created</th>
+            <th>Login</th>
+            <th>Role</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Country</th>
+            <th>City</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${users}" var="user">
+        <c:forEach items="${users}" var="user" varStatus="ind">
             <tr>
                 <td><c:out value="${user.id}"/>
-                </td>
-                <td><c:out value="${user.name}"/>
-                </td>
-                <td><c:out value="${user.login}"/>
-                </td>
-                <td><c:out value="${user.email}"/>
-                </td>
-                <td><c:out value="${user.role}"/>
                 </td>
                 <td>
                     <jsp:setProperty name="dateTime" property="time" value="${user.created}"/>
                     <fmt:formatDate value="${dateTime}" pattern="dd.MM.yyyy HH:mm:ss"/>
+                </td>
+                <td><c:out value="${user.credentials.login}"/>
+                </td>
+                <td><c:out value="${user.credentials.role}"/>
+                </td>
+                <td>
+                    <c:out value="${usersInfo[ind.index][0]}"/>
+                </td>
+                <td><c:out value="${usersInfo[ind.index][1]}"/>
+                </td>
+                <td><c:out value="${usersInfo[ind.index][2]}"/>
+                </td>
+                <td><c:out value="${usersInfo[ind.index][3]}"/>
                 </td>
                 <td>
                     <div class="row">

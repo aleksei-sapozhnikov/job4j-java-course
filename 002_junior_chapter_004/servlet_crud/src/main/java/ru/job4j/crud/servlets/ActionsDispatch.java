@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+import static ru.job4j.crud.model.Role.ADMIN;
+
 /**
  * Class dispatching and performing all operations in logic layer.
  * <p>
@@ -99,13 +101,23 @@ public class ActionsDispatch {
     private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toUpdate() {
         return (req, resp) -> {
             boolean result = false;
-            int id = this.getId(req);
-            if (id != -1) {
-                User updater = this.formUser(req);
-                result = logic.update(id, updater);
+            int loggedId = this.getInt("loggedUserId", req);
+            int id = this.getInt("id", req);
+            if (loggedId != -1 && id != -1) {
+                User logged = this.logic.findById(loggedId);
+                User old = this.logic.findById(id);
+                User upd = this.formUser(req);
+                result = isRoleUpdatePossible(logged, old, upd) && this.logic.update(id, upd);
             }
             return result;
         };
+    }
+
+    private boolean isRoleUpdatePossible(User loggedUser, User oldUser, User updateUser) {
+        Role logged = loggedUser.getCredentials().getRole();
+        Role old = oldUser.getCredentials().getRole();
+        Role update = updateUser.getCredentials().getRole();
+        return logged == ADMIN || old == update;
     }
 
     /**
@@ -116,7 +128,7 @@ public class ActionsDispatch {
     private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toDelete() {
         return (req, resp) -> {
             boolean result = false;
-            int id = this.getId(req);
+            int id = this.getInt("id", req);
             if (id != -1) {
                 result = logic.delete(id) != null;
             }
@@ -165,9 +177,9 @@ public class ActionsDispatch {
      * @param req Object that contains the request the client has made of the servlet.
      * @return Id parsed from the request or <tt>-1</tt> if couldn't.
      */
-    private int getId(HttpServletRequest req) {
+    private int getInt(String paramName, HttpServletRequest req) {
         int result = -1;
-        String idString = req.getParameter("id");
+        String idString = req.getParameter(paramName);
         if (idString != null) {
             try {
                 result = Integer.valueOf(idString);

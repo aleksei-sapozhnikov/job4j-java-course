@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * General class for a presentation layer "update" servlet.
@@ -37,7 +38,9 @@ public class UpdateUserServlet extends AbstractServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         Integer id = Integer.valueOf(req.getParameter("id"));
         User user = VALIDATOR.findById(id);
+        List<String> userInfo = user.getInfo().asList();
         req.setAttribute("user", user);
+        req.setAttribute("userInfo", userInfo);
         req.setAttribute("roles", Arrays.asList(Role.values()));
         req.getRequestDispatcher(String.join("/", this.getViewsDir(), "update.jsp")).forward(req, resp);
     }

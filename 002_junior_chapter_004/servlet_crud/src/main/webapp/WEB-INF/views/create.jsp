@@ -80,12 +80,13 @@
             <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
         </form>
         <%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
+        <%--@elvariable id="loggedUserInfo" type="java.util.List"--%>
         <c:if test="${loggedUser != null}">
             <div class="nav navbar-nav navbar-right">
                 <div class="row">
                     <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUser.name} (id: ${loggedUser.id},
-                            role: ${loggedUser.role})</p>
+                        <p class="navbar-text">Logged: ${loggedUserInfo[0]} (id: ${loggedUser.id},
+                            role: ${loggedUser.credentials.role})</p>
                     </div>
                     <div class="col-sm-4">
                         <form class="navbar-form" action="${context}${logout}" method="POST">
@@ -121,14 +122,6 @@
     <p>Fill the form and click "Submit" button to create a new user</p>
     <form id="create_user_form" class="form-horizontal"
           action="${context}${create}" method="POST">
-        <!-- Name -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="name">Name:</label>
-            <div class="col-sm-10">
-                <input name="name" type="text" class="form-control" id="name"
-                       placeholder="Enter name (e.g. John Sullivan)">
-            </div>
-        </div>
         <!-- Login -->
         <div class="form-group">
             <label class="control-label col-sm-2" for="login">Login:</label>
@@ -145,14 +138,6 @@
                        placeholder="Enter password (e.g. qwerty123)">
             </div>
         </div>
-        <!-- Email -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="email">Email:</label>
-            <div class="col-sm-10">
-                <input name="email" type="email" class="form-control" id="email"
-                       placeholder="Enter email (e.g. sullivan@netmail.com)">
-            </div>
-        </div>
         <!-- Role -->
         <div class="form-group">
             <label class="control-label col-sm-2" for="role">Role:</label>
@@ -165,6 +150,38 @@
                         </option>
                     </c:forEach>
                 </select>
+            </div>
+        </div>
+        <!-- Name -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="city">Name:</label>
+            <div class="col-sm-10">
+                <input name="name" type="text" class="form-control" id="name"
+                       placeholder="Enter name (e.g. John Sullivan)">
+            </div>
+        </div>
+        <!-- Email -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email:</label>
+            <div class="col-sm-10">
+                <input name="email" type="email" class="form-control" id="email"
+                       placeholder="Enter email (e.g. sullivan@netmail.com)">
+            </div>
+        </div>
+        <!-- Country -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="country">Country:</label>
+            <div class="col-sm-10">
+                <input name="country" type="text" class="form-control" id="country"
+                       placeholder="Enter country (e.g. Russia)">
+            </div>
+        </div>
+        <!-- City -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="city">Name:</label>
+            <div class="col-sm-10">
+                <input name="city" type="text" class="form-control" id="city"
+                       placeholder="Enter city (e.g. Moscow)">
             </div>
         </div>
         <!-- Submit button -->

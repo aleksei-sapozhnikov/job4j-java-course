@@ -40,12 +40,13 @@
             <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
         </form>
         <%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
+        <%--@elvariable id="loggedUserInfo" type="java.util.List"--%>
         <c:if test="${loggedUser != null}">
             <div class="nav navbar-nav navbar-right">
                 <div class="row">
                     <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUser.name} (id: ${loggedUser.id},
-                            role: ${loggedUser.role})</p>
+                        <p class="navbar-text">Logged: ${loggedUserInfo[0]} (id: ${loggedUser.id},
+                            role: ${loggedUser.credentials.role})</p>
                     </div>
                     <div class="col-sm-4">
                         <form class="navbar-form" action="${context}${logout}" method="POST">

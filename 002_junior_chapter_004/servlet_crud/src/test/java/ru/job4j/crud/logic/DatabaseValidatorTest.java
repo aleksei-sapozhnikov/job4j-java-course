@@ -223,46 +223,6 @@ public class DatabaseValidatorTest {
     }
 
     /**
-     * Test changing roles in update()
-     */
-
-    @Test
-    public void whenAdminChangesHisRoleThenTrue() {
-        int id = this.validator.add(this.userOneRoleAdmin);
-        boolean updateResult = this.validator.update(id, this.userTwoRoleUser);
-        User expected = new User(
-                this.userTwoRoleUser.getCredentials(),
-                this.userTwoRoleUser.getInfo()
-        );
-        assertThat(updateResult, is(true));
-        assertThat(this.validator.findById(id), is(expected));
-    }
-
-    @Test
-    public void whenUserDoesNotChangeHisRoleThenTrue() {
-        int id = this.validator.add(this.userTwoRoleUser);
-        boolean updateResult = this.validator.update(id, this.userThreeRoleUser);
-        User expected = new User(
-                this.userThreeRoleUser.getCredentials(),
-                this.userThreeRoleUser.getInfo()
-        );
-        assertThat(updateResult, is(true));
-        assertThat(this.validator.findById(id), is(expected));
-    }
-
-    @Test
-    public void whenUserTriesToChangeHisRoleThenFalse() {
-        int id = this.validator.add(this.userTwoRoleUser);
-        boolean updateResult = this.validator.update(id, this.userOneRoleAdmin);
-        User expected = new User(
-                this.userTwoRoleUser.getCredentials(),
-                this.userTwoRoleUser.getInfo()
-        );
-        assertThat(updateResult, is(false));
-        assertThat(this.validator.findById(id), is(expected));
-    }
-
-    /**
      * Test delete()
      */
     @Test

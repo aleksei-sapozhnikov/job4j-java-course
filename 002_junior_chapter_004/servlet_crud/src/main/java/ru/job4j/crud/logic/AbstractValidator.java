@@ -74,23 +74,10 @@ public abstract class AbstractValidator implements Validator<User> {
         boolean result = false;
         User old = this.findById(id);
         User temp = old != null ? this.updateFields(old, upd) : null;
-        if (this.validateUser(temp)
-                && this.validateRoleUpdate(old.getCredentials().getRole(), temp.getCredentials().getRole())
-                ) {
+        if (this.validateUser(temp)) {
             result = this.store.update(temp);
         }
         return result;
-    }
-
-    /**
-     * Validates if it is valid to change old role to new one.
-     *
-     * @param old Old role.
-     * @param upd New role.
-     * @return <tt>true</tt> if valid, <tt>false</tt> if not.
-     */
-    private boolean validateRoleUpdate(Role old, Role upd) {
-        return old == ADMIN || old == upd;
     }
 
     /**

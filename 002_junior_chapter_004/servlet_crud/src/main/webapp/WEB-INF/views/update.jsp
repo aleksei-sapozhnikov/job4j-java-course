@@ -14,6 +14,9 @@
 
 <!-- Objects -->
 <jsp:useBean id="user" scope="request" type="ru.job4j.crud.model.User"/>
+<%--@elvariable id="userInfo" type="java.util.List"--%>
+<%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
+<%--@elvariable id="loggedUserInfo" type="java.util.List"--%>
 
 <html>
 <head>
@@ -41,13 +44,12 @@
         <form class="navbar-form navbar-left" action="${context}${create}" method="GET">
             <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
         </form>
-        <%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
         <c:if test="${loggedUser != null}">
             <div class="nav navbar-nav navbar-right">
                 <div class="row">
                     <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUser.name} (id: ${loggedUser.id},
-                            role: ${loggedUser.role})</p>
+                        <p class="navbar-text">Logged: ${loggedUserInfo[0]} (id: ${loggedUser.id},
+                            role: ${loggedUser.credentials.role})</p>
                     </div>
                     <div class="col-sm-4">
                         <form class="navbar-form" action="${context}${logout}" method="POST">
@@ -82,19 +84,11 @@
     <h2>Update user</h2>
     <p>Fill the form and click "Submit" button to update user values</p>
     <form class="form-horizontal" action="${context}${update}" method="POST">
-        <!-- Name -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="name">Name:</label>
-            <div class="col-sm-10">
-                <input name="name" type="text" class="form-control" id="name" value="${user.name}"
-                       placeholder="Enter name (e.g. John Sullivan)">
-            </div>
-        </div>
         <!-- Login -->
         <div class="form-group">
             <label class="control-label col-sm-2" for="login">Login:</label>
             <div class="col-sm-10">
-                <input name="login" type="text" class="form-control" id="login" value="${user.login}"
+                <input name="login" type="text" class="form-control" id="login" value="${user.credentials.login}"
                        placeholder="Enter login (e.g. nagibator2000)">
             </div>
         </div>
@@ -102,16 +96,9 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="login">Password:</label>
             <div class="col-sm-10">
-                <input name="password" type="password" class="form-control" id="password" value="${user.password}"
+                <input name="password" type="password" class="form-control" id="password"
+                       value="${user.credentials.password}"
                        placeholder="Enter password (e.g. qwerty123)">
-            </div>
-        </div>
-        <!-- Email -->
-        <div class="form-group">
-            <label class="control-label col-sm-2" for="email">Email:</label>
-            <div class="col-sm-10">
-                <input name="email" type="email" class="form-control" id="email" value="${user.email}"
-                       placeholder="Enter email (e.g. sullivan@netmail.com)">
             </div>
         </div>
         <!-- Role -->
@@ -122,7 +109,7 @@
                     <%--@elvariable id="roles" type="java.util.Collection"--%>
                     <c:forEach items="${roles}" var="role">
                         <c:choose>
-                            <c:when test="${role == user.role}">
+                            <c:when test="${role == user.credentials.role}">
                                 <option value="${role}" selected="selected">${role}</option>
                             </c:when>
                             <c:otherwise>
@@ -133,6 +120,40 @@
                 </select>
             </div>
         </div>
+        <!-- Name -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="name">Name:</label>
+            <div class="col-sm-10">
+                <input name="name" type="text" class="form-control" id="name" value="${userInfo[0]}"
+                       placeholder="Enter name (e.g. John Sullivan)">
+            </div>
+        </div>
+        <!-- Email -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="email">Email:</label>
+            <div class="col-sm-10">
+                <input name="email" type="email" class="form-control" id="email" value="${userInfo[1]}"
+                       placeholder="Enter email (e.g. sullivan@netmail.com)">
+            </div>
+        </div>
+        <!-- Country -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="country">Country:</label>
+            <div class="col-sm-10">
+                <input name="country" type="text" class="form-control" id="country" value="${userInfo[2]}"
+                       placeholder="Enter country (e.g. Russia)">
+            </div>
+        </div>
+        <!-- City -->
+        <div class="form-group">
+            <label class="control-label col-sm-2" for="city">City:</label>
+            <div class="col-sm-10">
+                <input name="city" type="text" class="form-control" id="city" value="${userInfo[3]}"
+                       placeholder="Enter city (e.g. Moscow)">
+            </div>
+        </div>
+        <!-- Logged user id: to check permissions -->
+        <input type="hidden" name="loggedUserId" value="${loggedUser.id}">
         <!-- Submit button -->
         <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" name="id" value="${user.id}">

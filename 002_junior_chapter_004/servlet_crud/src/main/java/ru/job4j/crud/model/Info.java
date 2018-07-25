@@ -53,6 +53,16 @@ public class Info {
         return new Info(result);
     }
 
+    public List<String> asList() {
+        List<String> list = new ArrayList<>(Arrays.asList(
+                this.infoValues.get(NAME),
+                this.infoValues.get(EMAIL),
+                this.infoValues.get(COUNTRY),
+                this.infoValues.get(CITY)
+        ));
+        return Collections.unmodifiableList(list);
+    }
+
     @Override
     public String toString() {
         return String.format(
