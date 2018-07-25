@@ -13,7 +13,7 @@ import static ru.job4j.crud.model.Role.USER;
 public class UserTest {
 
     private final User givenId = new User(32, 123L, new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
-    private final User defaultId = new User(123L, new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
+    private final User defaultId = new User(new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
 
     /**
      * Test constructors and getters.
@@ -25,9 +25,9 @@ public class UserTest {
         assertThat(this.givenId.getCreated(), is(123L));
         assertThat(this.givenId.getCredentials(), is(new Credentials("login", "password", ADMIN)));
         assertThat(this.givenId.getInfo(), is(new Info("name", "e@mail.com", "country", "city")));
-        // with default id
-        assertThat(this.defaultId.getId(), is(32));
-        assertThat(this.defaultId.getCreated(), is(123L));
+        // with default id and create date
+        assertThat(this.defaultId.getId(), is(-1));
+        assertThat(this.defaultId.getCreated(), is(0));
         assertThat(this.defaultId.getCredentials(), is(new Credentials("login", "password", ADMIN)));
         assertThat(this.defaultId.getInfo(), is(new Info("name", "e@mail.com", "country", "city")));
     }

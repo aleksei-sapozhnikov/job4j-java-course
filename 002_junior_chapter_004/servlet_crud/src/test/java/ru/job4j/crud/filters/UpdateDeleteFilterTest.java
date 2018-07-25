@@ -2,7 +2,8 @@ package ru.job4j.crud.filters;
 
 import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.crud.model.Role;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.FilterChain;
@@ -14,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
+import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Role.USER;
 
 public class UpdateDeleteFilterTest {
 
@@ -25,8 +28,8 @@ public class UpdateDeleteFilterTest {
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
 
-    private final User userRoleAdmin = new User(1, "aName", "aLogin", "aPassword", "aEmail@mail.com", 123, Role.ADMIN, "aCountry", "aCity");
-    private final User userRoleUser = new User(2, "uName", "uLogin", "uPassword", "uEmail@mail.com", 456, Role.USER, "uCountry", "uCity");
+    private final User userRoleAdmin = new User(new Credentials("login_1", "password_1", ADMIN), new Info("name_1", "e@mail.com_1", "country_1", "city_1"));
+    private final User userRoleUser = new User(new Credentials("login_2", "password_2", USER), new Info("name_2", "e@mail.com_2", "country_2", "city_2"));
 
     @Before
     public void setCommonMocks() {

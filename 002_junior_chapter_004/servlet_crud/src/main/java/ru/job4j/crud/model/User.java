@@ -30,8 +30,8 @@ public class User {
         this.info = info;
     }
 
-    public User(long created, Credentials credentials, Info info) {
-        this(-1, created, credentials, info);
+    public User(Credentials credentials, Info info) {
+        this(-1, 0, credentials, info);
     }
 
     /**
