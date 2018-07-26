@@ -5,7 +5,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.model.Credentials;
 import ru.job4j.crud.model.Info;
-import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 
 import java.io.IOException;
@@ -440,7 +439,7 @@ public class DatabaseStore implements Store<User> {
                 new Credentials(
                         res.getString(++index),                             // login
                         res.getString(++index),                             // password
-                        Role.valueOf(res.getString(++index))                // role        
+                        Credentials.Role.valueOf(res.getString(++index))                // role
                 ),
                 new Info(
                         res.getString(++index),                             // name

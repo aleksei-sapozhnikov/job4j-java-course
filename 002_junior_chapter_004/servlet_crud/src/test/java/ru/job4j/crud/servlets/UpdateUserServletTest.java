@@ -6,7 +6,6 @@ import ru.job4j.crud.logic.DatabaseValidator;
 import ru.job4j.crud.logic.Validator;
 import ru.job4j.crud.model.Credentials;
 import ru.job4j.crud.model.Info;
-import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.RequestDispatcher;
@@ -20,8 +19,8 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static ru.job4j.crud.model.Role.ADMIN;
-import static ru.job4j.crud.model.Role.USER;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
+import static ru.job4j.crud.model.Credentials.Role.USER;
 
 public class UpdateUserServletTest {
 
@@ -96,7 +95,7 @@ public class UpdateUserServletTest {
         //
         this.servlet.doGet(this.request, this.response);
         verify(this.request).setAttribute("user", this.oldUser);
-        verify(this.request).setAttribute("roles", Arrays.asList(Role.values()));
+        verify(this.request).setAttribute("roles", Arrays.asList(Credentials.Role.values()));
         verify(this.requestDispatcher).forward(this.request, this.response);
     }
 

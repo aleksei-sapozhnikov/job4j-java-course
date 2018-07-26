@@ -7,8 +7,8 @@ import java.time.ZoneId;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static ru.job4j.crud.model.Role.ADMIN;
-import static ru.job4j.crud.model.Role.USER;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
+import static ru.job4j.crud.model.Credentials.Role.USER;
 
 public class UserTest {
 

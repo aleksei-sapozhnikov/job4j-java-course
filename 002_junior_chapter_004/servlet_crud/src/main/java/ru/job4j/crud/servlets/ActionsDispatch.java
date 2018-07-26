@@ -5,7 +5,6 @@ import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.logic.Validator;
 import ru.job4j.crud.model.Credentials;
 import ru.job4j.crud.model.Info;
-import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
-import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 
 /**
  * Class dispatching and performing all operations in logic layer.
@@ -114,9 +113,9 @@ public class ActionsDispatch {
     }
 
     private boolean isRoleUpdatePossible(User loggedUser, User oldUser, User updateUser) {
-        Role logged = loggedUser.getCredentials().getRole();
-        Role old = oldUser.getCredentials().getRole();
-        Role update = updateUser.getCredentials().getRole();
+        Credentials.Role logged = loggedUser.getCredentials().getRole();
+        Credentials.Role old = oldUser.getCredentials().getRole();
+        Credentials.Role update = updateUser.getCredentials().getRole();
         return logged == ADMIN || old == update;
     }
 
@@ -160,7 +159,7 @@ public class ActionsDispatch {
                 new Credentials(
                         req.getParameter("login"),
                         req.getParameter("password"),
-                        Role.valueOf(req.getParameter("role"))
+                        Credentials.Role.valueOf(req.getParameter("role"))
                 ),
                 new Info(
                         req.getParameter("name"),

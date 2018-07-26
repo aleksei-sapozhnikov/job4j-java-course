@@ -4,13 +4,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.model.Credentials;
 import ru.job4j.crud.model.Info;
-import ru.job4j.crud.model.Role;
 import ru.job4j.crud.model.User;
 import ru.job4j.crud.store.Store;
 
 import java.util.List;
 
-import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 
 /**
  * General class for a logic layer.
@@ -192,7 +191,7 @@ public abstract class AbstractValidator implements Validator<User> {
      * @param role User role/
      * @return <tt>true</tt> if role is valid, <tt>false</tt> if not.
      */
-    private boolean validateRole(Role role) {
+    private boolean validateRole(Credentials.Role role) {
         return role != null;
     }
 

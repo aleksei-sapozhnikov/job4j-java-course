@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 
 public class ShowUsersServletTest {
 

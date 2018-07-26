@@ -18,7 +18,7 @@ import java.io.IOException;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static ru.job4j.crud.model.Role.ADMIN;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 
 public class CreateUserServletTest {
 

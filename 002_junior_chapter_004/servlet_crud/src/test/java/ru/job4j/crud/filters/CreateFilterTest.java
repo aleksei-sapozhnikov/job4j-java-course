@@ -15,8 +15,8 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
-import static ru.job4j.crud.model.Role.ADMIN;
-import static ru.job4j.crud.model.Role.USER;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
+import static ru.job4j.crud.model.Credentials.Role.USER;
 
 public class CreateFilterTest {
 

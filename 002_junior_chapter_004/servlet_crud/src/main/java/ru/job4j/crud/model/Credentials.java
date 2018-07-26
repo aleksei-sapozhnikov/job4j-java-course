@@ -65,5 +65,10 @@ public class Credentials {
     public int hashCode() {
         return Objects.hash(this.login, this.password, this.role);
     }
+
+    public enum Role {
+        ADMIN,
+        USER
+    }
 }
     
