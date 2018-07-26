@@ -10,8 +10,6 @@ import ru.job4j.crud.store.Store;
 
 import java.util.List;
 
-import static ru.job4j.crud.model.Info.Fields.EMAIL;
-import static ru.job4j.crud.model.Info.Fields.NAME;
 import static ru.job4j.crud.model.Role.ADMIN;
 
 /**
@@ -138,8 +136,8 @@ public abstract class AbstractValidator implements Validator<User> {
                 && this.validateLogin(user.getCredentials().getLogin())
                 && this.validatePassword(user.getCredentials().getPassword())
                 && this.validateRole(user.getCredentials().getRole())
-                && this.validateName(user.getInfo().getField(NAME))
-                && this.validateEmail(user.getInfo().getField(EMAIL));
+                && this.validateName(user.getInfo().getName())
+                && this.validateEmail(user.getInfo().getEmail());
 
     }
 

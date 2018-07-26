@@ -13,10 +13,8 @@
 <c:set var="login" value="/login"/>
 
 <!-- Objects -->
+<jsp:useBean id="loggedUser" scope="request" type="ru.job4j.crud.model.User"/>
 <jsp:useBean id="user" scope="request" type="ru.job4j.crud.model.User"/>
-<%--@elvariable id="userInfo" type="java.util.List"--%>
-<%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
-<%--@elvariable id="loggedUserInfo" type="java.util.List"--%>
 
 <html>
 <head>
@@ -48,7 +46,7 @@
             <div class="nav navbar-nav navbar-right">
                 <div class="row">
                     <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUserInfo[0]} (id: ${loggedUser.id},
+                        <p class="navbar-text">Logged: ${loggedUser.info.name} (id: ${loggedUser.id},
                             role: ${loggedUser.credentials.role})</p>
                     </div>
                     <div class="col-sm-4">

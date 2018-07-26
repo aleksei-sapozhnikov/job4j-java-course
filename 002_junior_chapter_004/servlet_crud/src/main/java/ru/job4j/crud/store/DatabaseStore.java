@@ -14,8 +14,6 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.*;
 
-import static ru.job4j.crud.model.Info.Fields.*;
-
 /**
  * Storage for Users. Uses database.
  * <p>
@@ -249,10 +247,10 @@ public class DatabaseStore implements Store<User> {
         statement.setString(++index, user.getCredentials().getLogin());
         statement.setString(++index, user.getCredentials().getPassword());
         statement.setString(++index, user.getCredentials().getRole().toString());
-        statement.setString(++index, user.getInfo().getField(NAME));
-        statement.setString(++index, user.getInfo().getField(EMAIL));
-        statement.setString(++index, user.getInfo().getField(COUNTRY));
-        statement.setString(++index, user.getInfo().getField(CITY));
+        statement.setString(++index, user.getInfo().getName());
+        statement.setString(++index, user.getInfo().getEmail());
+        statement.setString(++index, user.getInfo().getCountry());
+        statement.setString(++index, user.getInfo().getCity());
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {
                 result = res.getInt(1);
@@ -303,10 +301,10 @@ public class DatabaseStore implements Store<User> {
         statement.setString(++index, upd.getCredentials().getLogin());
         statement.setString(++index, upd.getCredentials().getPassword());
         statement.setString(++index, upd.getCredentials().getRole().toString());
-        statement.setString(++index, upd.getInfo().getField(NAME));
-        statement.setString(++index, upd.getInfo().getField(EMAIL));
-        statement.setString(++index, upd.getInfo().getField(COUNTRY));
-        statement.setString(++index, upd.getInfo().getField(CITY));
+        statement.setString(++index, upd.getInfo().getName());
+        statement.setString(++index, upd.getInfo().getEmail());
+        statement.setString(++index, upd.getInfo().getCountry());
+        statement.setString(++index, upd.getInfo().getCity());
         int rowsChanged;
         try (ResultSet res = statement.executeQuery()) {
             if (res.next()) {

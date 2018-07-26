@@ -20,25 +20,21 @@ import java.util.Arrays;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
-import static ru.job4j.crud.model.Info.Fields.*;
 import static ru.job4j.crud.model.Role.ADMIN;
 import static ru.job4j.crud.model.Role.USER;
 
 public class UpdateUserServletTest {
 
-    private UpdateUserServlet servlet = new UpdateUserServlet();
-
-    private Validator<User> validator = DatabaseValidator.getInstance();
-
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
-
     private final User loggedUser = new User(new Credentials("logged_uLogin", "logged_uPassword", USER), new Info("logged_uName", "logged_uEmail@mail.com", "logged_uCountry", "logged_uCity"));
     private final User oldUser = new User(new Credentials("old_uLogin", "old_uPassword", USER), new Info("old_uName", "old_uEmail@mail.com", "old_uCountry", "old_uCity"));
     private final User newUser = new User(new Credentials("new_uLogin", "new_uPassword", USER), new Info("new_uName", "new_uEmail@mail.com", "new_uCountry", "new_uCity"));
     private final User userEmailWrongFormat = new User(new Credentials("login", "password", ADMIN), new Info("name", "email", "country", "city"));
+    private UpdateUserServlet servlet = new UpdateUserServlet();
+    private Validator<User> validator = DatabaseValidator.getInstance();
 
     @Before
     public void initValidatorAndSetCommonMocks() {
@@ -55,10 +51,10 @@ public class UpdateUserServletTest {
         when(this.request.getParameter("login")).thenReturn(user.getCredentials().getLogin());
         when(this.request.getParameter("password")).thenReturn(user.getCredentials().getPassword());
         when(this.request.getParameter("role")).thenReturn(user.getCredentials().getRole().toString());
-        when(this.request.getParameter("name")).thenReturn(user.getInfo().getField(NAME));
-        when(this.request.getParameter("email")).thenReturn(user.getInfo().getField(EMAIL));
-        when(this.request.getParameter("country")).thenReturn(user.getInfo().getField(COUNTRY));
-        when(this.request.getParameter("city")).thenReturn(user.getInfo().getField(CITY));
+        when(this.request.getParameter("name")).thenReturn(user.getInfo().getName());
+        when(this.request.getParameter("email")).thenReturn(user.getInfo().getEmail());
+        when(this.request.getParameter("country")).thenReturn(user.getInfo().getCountry());
+        when(this.request.getParameter("city")).thenReturn(user.getInfo().getCity());
     }
 
     /**

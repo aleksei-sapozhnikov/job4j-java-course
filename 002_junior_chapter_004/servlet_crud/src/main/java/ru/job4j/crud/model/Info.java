@@ -9,15 +9,14 @@ import static ru.job4j.crud.model.Info.Fields.*;
 
 public class Info {
 
-    private final Map<Fields, String> infoValues;
-
     private static final Logger LOG = LogManager.getLogger(Info.class);
+    private final Map<Fields, String> infoValues;
 
     public Info(String... values) {
         if (values.length < Fields.values().length) {
             LOG.error("Given array of values has less length then needed");
         }
-        this.infoValues = this.fillFields(Arrays.asList(values));
+        this.infoValues = this.fillValues(Arrays.asList(values));
     }
 
     public Info(Map<Fields, String> valuesMap) {
@@ -27,7 +26,23 @@ public class Info {
         this.infoValues = Collections.unmodifiableMap(valuesMap);
     }
 
-    private Map<Fields, String> fillFields(List<String> values) {
+    public String getName() {
+        return this.infoValues.get(NAME);
+    }
+
+    public String getEmail() {
+        return this.infoValues.get(EMAIL);
+    }
+
+    public String getCountry() {
+        return this.infoValues.get(COUNTRY);
+    }
+
+    public String getCity() {
+        return this.infoValues.get(CITY);
+    }
+
+    private Map<Fields, String> fillValues(List<String> values) {
         Iterator<String> valuesIt = values.iterator();
         Map<Fields, String> result = new HashMap<>();
         result.put(NAME, valuesIt.next());
@@ -37,30 +52,16 @@ public class Info {
         return Collections.unmodifiableMap(result);
     }
 
-    public String getField(Fields name) {
-        return this.infoValues.get(name);
-    }
-
     public Info mergeWith(Info newer) {
         Map<Fields, String> result = new HashMap<>();
         for (Fields field : Fields.values()) {
             result.put(field,
-                    newer.getField(field) != null
-                            ? newer.getField(field)
+                    newer.infoValues.get(field) != null
+                            ? newer.infoValues.get(field)
                             : this.infoValues.get(field)
             );
         }
         return new Info(result);
-    }
-
-    public List<String> asList() {
-        List<String> list = new ArrayList<>(Arrays.asList(
-                this.infoValues.get(NAME),
-                this.infoValues.get(EMAIL),
-                this.infoValues.get(COUNTRY),
-                this.infoValues.get(CITY)
-        ));
-        return Collections.unmodifiableList(list);
     }
 
     @Override

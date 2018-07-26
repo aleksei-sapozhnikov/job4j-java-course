@@ -40,7 +40,8 @@ public abstract class AbstractServlet extends HttpServlet {
     /**
      * String to name logged user in session.
      */
-    protected static final String USER_LOGGED_IN_SESSION_INFO = "loggedUserInfo";
+    protected static final String ALL_USERS_IN_SYSTEM = "users";
+
 
     /**
      * Returns views directory path.
