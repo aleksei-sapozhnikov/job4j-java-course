@@ -39,7 +39,7 @@ public class UpdateUserServlet extends AbstractServlet {
         Integer id = Integer.valueOf(req.getParameter("id"));
         req.setAttribute(PARAM_USER, VALIDATOR.findById(id));
         req.setAttribute(PARAM_ALL_ROLES, Arrays.asList(Credentials.Role.values()));
-        req.getRequestDispatcher(String.join("/", this.getViewsDir(), JSP_UPDATE_USER)).forward(req, resp);
+        req.getRequestDispatcher(VIEWS_DIR.concat(JSP_UPDATE_USER)).forward(req, resp);
     }
 
     /**
