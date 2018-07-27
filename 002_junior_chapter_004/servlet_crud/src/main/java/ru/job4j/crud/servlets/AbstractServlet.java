@@ -18,9 +18,13 @@ import javax.servlet.http.HttpServlet;
  */
 public abstract class AbstractServlet extends HttpServlet {
     /**
-     * Main directory where views are stored.
+     * Directory where views are stored.
      */
     protected static final String VIEWS_DIR = "/WEB-INF/views";
+    /**
+     * String parameter name to get/set context path.
+     */
+    protected static final String PARAM_URI_CONTEXT_PATH = "context";
     /**
      * Logic layer object - validator.
      */
@@ -29,101 +33,49 @@ public abstract class AbstractServlet extends HttpServlet {
      * Logic layer object - servlet actions dispatch.
      */
     protected static final ActionsDispatch DISPATCH = new ActionsDispatch(VALIDATOR).initialize();
-
     /**
-     * Parameter of context path.
+     * String  parameter for an error message object.
      */
-    protected static final String PARAM_URI_CONTEXT_PATH = "context";
+    protected static final String PARAM_ERROR = "error";
     /**
-     * Request parameter for a current user in system (e.g. user we are going to update)
+     * String parameters names for user and user attributes.
      */
     protected static final String PARAM_USER = "user";
-    /**
-     * Request parameter for a user login.
-     */
+    protected static final String PARAM_USER_ID = "id";
     protected static final String PARAM_USER_LOGIN = "login";
-    /**
-     * Request parameter for a user login.
-     */
     protected static final String PARAM_USER_PASSWORD = "password";
     /**
-     * Request parameter for all users in system.
+     * String parameter name for a user logged in current session.
+     */
+    protected static final String PARAM_LOGGED_USER = "loggedUser";
+    /**
+     * String parameters names for objects stored in system.
      */
     protected static final String PARAM_ALL_USERS = "users";
     /**
-     * Request parameter for all roles existing in the system.
-     */
-    protected static final String PARAM_ALL_ROLES = "roles";
-    /**
-     * Request parameter for an error.
-     */
-    protected static final String PARAM_ERROR = "error";
-
-    /**
-     * Parameter for a logged user in session.
-     */
-    protected static final String PARAM_LOGGED_USER = "loggedUser";
-
-    /**
-     * Parameter name for create user uri.
+     * String parameters names for URI leading to servlets.
      */
     protected static final String PARAM_URI_CREATE_USER = "create";
+    protected static final String PARAM_ALL_ROLES = "roles";
     /**
-     * Parameter name for create user uri.
-     */
-    protected static final String PARAM_URI_UPDATE_USER = "update";
-    /**
-     * Parameter name for create user uri.
-     */
-    protected static final String PARAM_URI_DELETE_USER = "delete";
-    /**
-     * Parameter name for create user uri.
-     */
-    protected static final String PARAM_URI_LOGIN = "login";
-    /**
-     * Parameter name for create user uri.
-     */
-    protected static final String PARAM_URI_LOGOUT = "logout";
-
-
-    /**
-     * Name of jsp page to CREATE user.
-     */
-    protected static final String JSP_CREATE_USER = "/create.jsp";
-    /**
-     * Name of jsp page to UPDATE user.
-     */
-    protected static final String JSP_UPDATE_USER = "/update.jsp";
-    /**
-     * Name of jsp page to LIST ALL users.
-     */
-    protected static final String JSP_LIST_USERS = "/list.jsp";
-    /**
-     * Name of jsp page to show LOGIN page.
-     */
-    protected static final String JSP_LOGIN_PAGE = "/login.jsp";
-
-    /**
-     * URI to CREATE user.
+     * String attributes with URI's leading to servlets.
      */
     protected static final String URI_CREATE_USER = "/create";
+    protected static final String PARAM_URI_UPDATE_USER = "update";
+    protected static final String PARAM_URI_DELETE_USER = "delete";
+    protected static final String PARAM_URI_LOGIN = "login";
+    protected static final String PARAM_URI_LOGOUT = "logout";
     /**
-     * URI to UPDATE user.
+     * String attributes with JSP pages.
      */
+    protected static final String JSP_CREATE_USER = "/create.jsp";
     protected static final String URI_UPDATE_USER = "/update";
-    /**
-     * URI to DELETE user.
-     */
     protected static final String URI_DELETE_USER = "/delete";
-    /**
-     * URI to get LOGIN page.
-     */
     protected static final String URI_LOGIN = "/login";
-    /**
-     * URI to get LOGOUT page.
-     */
     protected static final String URI_LOGOUT = "/logout";
-
+    protected static final String JSP_UPDATE_USER = "/update.jsp";
+    protected static final String JSP_LIST_USERS = "/list.jsp";
+    protected static final String JSP_LOGIN_PAGE = "/login.jsp";
     /**
      * Logger.
      */

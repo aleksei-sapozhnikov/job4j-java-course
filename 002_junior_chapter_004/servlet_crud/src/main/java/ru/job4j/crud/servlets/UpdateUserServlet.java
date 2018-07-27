@@ -36,7 +36,7 @@ public class UpdateUserServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Integer id = Integer.valueOf(req.getParameter("id"));
+        Integer id = Integer.valueOf(req.getParameter(PARAM_USER_ID));
         req.setAttribute(PARAM_USER, VALIDATOR.findById(id));
         req.setAttribute(PARAM_ALL_ROLES, Arrays.asList(Credentials.Role.values()));
         req.getRequestDispatcher(VIEWS_DIR.concat(JSP_UPDATE_USER)).forward(req, resp);
