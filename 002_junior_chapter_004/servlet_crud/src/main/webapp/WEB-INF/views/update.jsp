@@ -1,81 +1,30 @@
+<%--@elvariable id="context" type="java.lang.String"--%>
+<%--@elvariable id="create" type="java.lang.String"--%>
+<%--@elvariable id="update" type="java.lang.String"--%>
+<%--@elvariable id="delete" type="java.lang.String"--%>
+<%--@elvariable id="logout" type="java.lang.String"--%>
+<%--@elvariable id="error" type="java.lang.String"--%>
+<%--@elvariable id="roles" type="java.util.Collection"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
-
-<!-- JSP libraries -->
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
-<!-- Paths -->
-<c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="create" value="/create"/>
-<c:set var="update" value="/update"/>
-<c:set var="delete" value="/delete"/>
-<c:set var="logout" value="/logout"/>
-<c:set var="create" value="/create"/>
-<c:set var="login" value="/login"/>
-
-<!-- Objects -->
-<jsp:useBean id="loggedUser" scope="request" type="ru.job4j.crud.model.User"/>
+<jsp:useBean id="loggedUser" scope="session" type="ru.job4j.crud.model.User"/>
 <jsp:useBean id="user" scope="request" type="ru.job4j.crud.model.User"/>
 
 <html>
 <head>
-    <title>Update user</title>
-    <c:import url="imports/i_headLibraries.jsp"/>
+    <jsp:include page="imports/head.jsp">
+        <jsp:param name="title" value="Update user"/>
+    </jsp:include>
 </head>
 <body>
 
-<!-- Paths -->
-<c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="create" value="/create"/>
-<c:set var="update" value="/update"/>
-<c:set var="delete" value="/delete"/>
-<c:set var="logout" value="/logout"/>
-<c:set var="create" value="/create"/>
-<c:set var="login" value="/login"/>
-
-
 <!-- Navigation bar -->
-<nav class="navbar navbar-default">
-    <div class="container-fluid">
-        <form class="navbar-form navbar-left" action="${context}" method="GET">
-            <button type="submit" class="btn btn-primary navbar-btn">Home</button>
-        </form>
-        <form class="navbar-form navbar-left" action="${context}${create}" method="GET">
-            <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
-        </form>
-        <c:if test="${loggedUser != null}">
-            <div class="nav navbar-nav navbar-right">
-                <div class="row">
-                    <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUser.info.name} (id: ${loggedUser.id},
-                            role: ${loggedUser.credentials.role})</p>
-                    </div>
-                    <div class="col-sm-4">
-                        <form class="navbar-form" action="${context}${logout}" method="POST">
-                            <button type="submit" class="btn btn-primary navbar-btn">Logout</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </c:if>
-    </div>
-</nav>
+<jsp:include page="imports/navbar.jsp"/>
 
 <!-- Error messages show -->
-<%--@elvariable id="error" type="java.lang.String"--%>
-<c:if test="${error != null}">
-    <div class="text-center">
-        <div class="alert alert-danger">
-            <strong>Error!</strong> ${error}
-        </div>
-    </div>
-</c:if>
-<c:if test="${param.error != null}">
-    <div class="text-center">
-        <div class="alert alert-danger">
-            <strong>Error!</strong> ${param.error}
-        </div>
-    </div>
-</c:if>
+<jsp:include page="imports/errorShow.jsp">
+    <jsp:param name="error" value="${error}"/>
+</jsp:include>
 
 <!-- User update form -->
 <div class="container col-sm-offset-2 col-sm-8">
@@ -104,7 +53,6 @@
             <label class="control-label col-sm-2" for="role">Role:</label>
             <div class="col-sm-10">
                 <select name="role" class="form-control" id="role">
-                    <%--@elvariable id="roles" type="java.util.Collection"--%>
                     <c:forEach items="${roles}" var="role">
                         <c:choose>
                             <c:when test="${role == user.credentials.role}">
@@ -122,7 +70,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="name">Name:</label>
             <div class="col-sm-10">
-                <input name="name" type="text" class="form-control" id="name" value="${userInfo[0]}"
+                <input name="name" type="text" class="form-control" id="name" value="${user.info.name}"
                        placeholder="Enter name (e.g. John Sullivan)">
             </div>
         </div>
@@ -130,7 +78,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="email">Email:</label>
             <div class="col-sm-10">
-                <input name="email" type="email" class="form-control" id="email" value="${userInfo[1]}"
+                <input name="email" type="email" class="form-control" id="email" value="${user.info.email}"
                        placeholder="Enter email (e.g. sullivan@netmail.com)">
             </div>
         </div>
@@ -138,7 +86,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="country">Country:</label>
             <div class="col-sm-10">
-                <input name="country" type="text" class="form-control" id="country" value="${userInfo[2]}"
+                <input name="country" type="text" class="form-control" id="country" value="${user.info.country}"
                        placeholder="Enter country (e.g. Russia)">
             </div>
         </div>
@@ -146,7 +94,7 @@
         <div class="form-group">
             <label class="control-label col-sm-2" for="city">City:</label>
             <div class="col-sm-10">
-                <input name="city" type="text" class="form-control" id="city" value="${userInfo[3]}"
+                <input name="city" type="text" class="form-control" id="city" value="${user.info.city}"
                        placeholder="Enter city (e.g. Moscow)">
             </div>
         </div>

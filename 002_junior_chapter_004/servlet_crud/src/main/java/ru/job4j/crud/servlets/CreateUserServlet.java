@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static ru.job4j.crud.servlets.ActionsDispatch.Action.CREATE;
+
 /**
  * Presentation layer "create" servlet.
  * Shows form to add user and creates new user in store.
@@ -34,9 +36,8 @@ public class CreateUserServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setAttribute("roles", Arrays.asList(Credentials.Role.values()));
-        req.setAttribute(USER_LOGGED_IN_SESSION, req.getSession().getAttribute("loggedUser"));
-        req.getRequestDispatcher(String.join("/", this.getViewsDir(), "create.jsp")).forward(req, resp);
+        req.setAttribute(PARAM_ALL_ROLES, Arrays.asList(Credentials.Role.values()));
+        req.getRequestDispatcher(VIEWS_DIR.concat(JSP_CREATE_USER)).forward(req, resp);
     }
 
     /**
@@ -48,11 +49,11 @@ public class CreateUserServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        boolean success = DISPATCH.handle("create", req, resp);
+        boolean success = DISPATCH.handle(CREATE, req, resp);
         if (success) {
             resp.sendRedirect(req.getContextPath());
         } else {
-            req.setAttribute("error", "Message from server: user CREATE failed");
+            req.setAttribute(PARAM_ERROR, "Message from server: user CREATE failed");
             this.doGet(req, resp);
         }
     }

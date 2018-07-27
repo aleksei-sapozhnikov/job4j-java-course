@@ -33,7 +33,7 @@ public class LogOutServlet extends AbstractServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
         session.invalidate();
-        resp.sendRedirect(String.join("/", req.getContextPath(), "login"));
+        resp.sendRedirect(req.getContextPath().concat(URI_LOGIN));
     }
 }
     

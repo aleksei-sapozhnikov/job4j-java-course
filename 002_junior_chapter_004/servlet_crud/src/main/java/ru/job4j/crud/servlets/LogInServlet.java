@@ -35,8 +35,7 @@ public class LogInServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(String.join("/", this.getViewsDir(), "login.jsp"))
-                .forward(req, resp);
+        req.getRequestDispatcher(VIEWS_DIR.concat(JSP_LOGIN_PAGE)).forward(req, resp);
     }
 
     /**
@@ -49,15 +48,21 @@ public class LogInServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter("login");
-        String password = req.getParameter("password");
+        String login = req.getParameter(PARAM_USER_LOGIN);
+        String password = req.getParameter(PARAM_USER_PASSWORD);
         User user = VALIDATOR.findByCredentials(login, password);
         if (user != null) {
             HttpSession session = req.getSession();
-            session.setAttribute(USER_LOGGED_IN_SESSION, user);
+            session.setAttribute(PARAM_URI_CONTEXT_PATH, req.getContextPath());
+            session.setAttribute(PARAM_LOGGED_USER, user);
+            session.setAttribute(PARAM_URI_CREATE_USER, URI_CREATE_USER);
+            session.setAttribute(PARAM_URI_UPDATE_USER, URI_UPDATE_USER);
+            session.setAttribute(PARAM_URI_DELETE_USER, URI_DELETE_USER);
+            session.setAttribute(PARAM_URI_LOGIN, URI_LOGIN);
+            session.setAttribute(PARAM_URI_LOGOUT, URI_LOGOUT);
             resp.sendRedirect(req.getContextPath());
         } else {
-            req.setAttribute("error", "Invalid credentials");
+            req.setAttribute(PARAM_ERROR, "Invalid credentials");
             this.doGet(req, resp);
         }
     }

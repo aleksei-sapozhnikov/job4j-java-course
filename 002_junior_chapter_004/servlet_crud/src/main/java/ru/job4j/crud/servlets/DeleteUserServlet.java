@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static ru.job4j.crud.servlets.ActionsDispatch.Action.DELETE;
+
 public class DeleteUserServlet extends AbstractServlet {
     /**
      * Logger.
@@ -34,7 +36,7 @@ public class DeleteUserServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        DISPATCH.handle("delete", req, resp);
+        DISPATCH.handle(DELETE, req, resp);
         resp.sendRedirect(req.getContextPath());
     }
 }

@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
+import static ru.job4j.crud.servlets.ActionsDispatch.Action.*;
 
 /**
  * Class dispatching and performing all operations in logic layer.
@@ -22,6 +23,12 @@ import static ru.job4j.crud.model.Credentials.Role.ADMIN;
  * html page going to user.
  */
 public class ActionsDispatch {
+
+    /**
+     * Map of possible actions.
+     */
+    private final Map<Action, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
+
     /**
      * Logger.
      */
@@ -30,10 +37,6 @@ public class ActionsDispatch {
      * Logic layer class validating and adding/updating/deleting users.
      */
     private final Validator<User> logic;
-    /**
-     * Map of possible actions.
-     */
-    private final Map<String, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
 
     /**
      * Constructs new instance.
@@ -53,7 +56,7 @@ public class ActionsDispatch {
      * @param resp   Object that contains the response the servlet sends to the client.
      * @return String with action result.
      */
-    public Boolean handle(final String action, final HttpServletRequest req, final HttpServletResponse resp) {
+    public Boolean handle(final Action action, final HttpServletRequest req, final HttpServletResponse resp) {
         return this.dispatch.getOrDefault(action, this.toUnknown()).apply(req, resp);
     }
 
@@ -62,10 +65,10 @@ public class ActionsDispatch {
      *
      * @return Initiated dispatch object.
      */
-    public ActionsDispatch init() {
-        this.load("create", this.toCreate());
-        this.load("update", this.toUpdate());
-        this.load("delete", this.toDelete());
+    public ActionsDispatch initialize() {
+        this.load(CREATE, this.toCreate());
+        this.load(UPDATE, this.toUpdate());
+        this.load(DELETE, this.toDelete());
         return this;
     }
 
@@ -75,8 +78,14 @@ public class ActionsDispatch {
      * @param action  Given action.
      * @param handler Action handler.
      */
-    private void load(String action, BiFunction<HttpServletRequest, HttpServletResponse, Boolean> handler) {
+    private void load(Action action, BiFunction<HttpServletRequest, HttpServletResponse, Boolean> handler) {
         this.dispatch.put(action, handler);
+    }
+
+    public enum Action {
+        CREATE,
+        UPDATE,
+        DELETE
     }
 
     /**
