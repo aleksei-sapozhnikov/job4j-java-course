@@ -8,8 +8,6 @@ import ru.job4j.crud.model.User;
 
 import javax.servlet.http.HttpServlet;
 
-import static ru.job4j.crud.Constants.JSP_VIEWS_DIR;
-
 /**
  * General User HttpServlet class. Holds methods and fields needed
  * for every servlet to make interaction with user through html.
@@ -31,15 +29,6 @@ public abstract class AbstractServlet extends HttpServlet {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(AbstractServlet.class);
-
-    /**
-     * Returns views directory path.
-     *
-     * @return Views directory path.
-     */
-    protected String getViewsDir() {
-        return JSP_VIEWS_DIR.v();
-    }
 
     /**
      * Is called when servlet stops working.

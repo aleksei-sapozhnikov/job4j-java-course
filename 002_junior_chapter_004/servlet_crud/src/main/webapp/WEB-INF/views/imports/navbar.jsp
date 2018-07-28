@@ -1,3 +1,4 @@
+<%--@elvariable id="const" type="ru.job4j.crud.Constants.GetterConstants"--%>
 <%--@elvariable id="context" type="java.lang.String"--%>
 <%--@elvariable id="create" type="java.lang.String"--%>
 <%--@elvariable id="delete" type="java.lang.String"--%>

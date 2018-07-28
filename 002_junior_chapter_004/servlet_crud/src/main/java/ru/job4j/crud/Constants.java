@@ -12,6 +12,10 @@ import org.apache.logging.log4j.Logger;
  */
 public enum Constants {
     /**
+     * Attribute: class with constants for frontend with getters.
+     */
+    PARAM_CONSTANTS_WITH_GETTERS("const"),
+    /**
      * Attribute: error message.
      */
     PARAM_ERROR("error"),
@@ -81,4 +85,54 @@ public enum Constants {
         return this.value;
     }
 
+    /**
+     * Class which gives getters to constants (for JavaBean in frontend html).
+     *
+     * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+     * @version 0.1
+     * @since 0.1
+     */
+    public static class GetterConstants {
+        /**
+         * Logger.
+         */
+        private static final Logger LOG = LogManager.getLogger(GetterConstants.class);
+
+        public String getParamUriContextPath() {
+            return PARAM_URI_CONTEXT_PATH.value;
+        }
+
+        public String getParamUriCreateUser() {
+            return PARAM_URI_CREATE_USER.value;
+        }
+
+        public String getParamUriUpdateUser() {
+            return PARAM_URI_UPDATE_USER.value;
+        }
+
+        public String getParamUriDeleteUser() {
+            return PARAM_URI_DELETE_USER.value;
+        }
+
+        public String getUriCreateUser() {
+            return URI_CREATE_USER.value;
+        }
+
+        public String getUriUpdateUser() {
+            return URI_UPDATE_USER.value;
+        }
+
+        public String getUriDeleteUser() {
+            return URI_DELETE_USER.value;
+        }
+
+        public String getParamUser() {
+            return PARAM_USER.value;
+        }
+
+        public String getParamUserName() {
+            return PARAM_USER_NAME.value;
+        }
+
+    }
 }
