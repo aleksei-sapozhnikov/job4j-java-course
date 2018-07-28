@@ -1,12 +1,7 @@
-<%--@elvariable id="context" type="java.lang.String"--%>
-<%--@elvariable id="create" type="java.lang.String"--%>
-<%--@elvariable id="update" type="java.lang.String"--%>
-<%--@elvariable id="delete" type="java.lang.String"--%>
-<%--@elvariable id="logout" type="java.lang.String"--%>
-<%--@elvariable id="error" type="java.lang.String"--%>
-<%--@elvariable id="login" type="java.lang.String"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="context" scope="request" value="${pageContext.request.contextPath}"/>
+<%--@elvariable id="error" type="java.lang.String"--%>
 
 <html>
 <head>
@@ -28,7 +23,7 @@
 <div class="container col-sm-offset-2 col-sm-8">
     <h2>Login</h2>
     <p>Enter user login and password</p>
-    <form class="form-horizontal" action="${context}${login}" method="POST">
+    <form class="form-horizontal" action="${context}${initParam.login}" method="POST">
         <!-- Login -->
         <div class="form-group">
             <label class="control-label col-sm-2" for="login">Login:</label>

@@ -57,11 +57,6 @@ public class LogInServlet extends AbstractServlet {
             HttpSession session = req.getSession();
             session.setAttribute(PARAM_URI_CONTEXT_PATH.v(), req.getContextPath());
             session.setAttribute(PARAM_LOGGED_USER.v(), user);
-            session.setAttribute(PARAM_URI_CREATE_USER.v(), URI_CREATE_USER.v());
-            session.setAttribute(PARAM_URI_UPDATE_USER.v(), URI_UPDATE_USER.v());
-            session.setAttribute(PARAM_URI_DELETE_USER.v(), URI_DELETE_USER.v());
-            session.setAttribute(PARAM_URI_LOGIN.v(), URI_LOGIN.v());
-            session.setAttribute(PARAM_URI_LOGOUT.v(), URI_LOGOUT.v());
             resp.sendRedirect(req.getContextPath());
         } else {
             req.setAttribute(PARAM_ERROR.v(), "Invalid credentials");

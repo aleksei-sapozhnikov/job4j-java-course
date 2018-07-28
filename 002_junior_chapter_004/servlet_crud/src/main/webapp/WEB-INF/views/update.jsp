@@ -1,14 +1,10 @@
-<%--@elvariable id="context" type="java.lang.String"--%>
-<%--@elvariable id="create" type="java.lang.String"--%>
-<%--@elvariable id="update" type="java.lang.String"--%>
-<%--@elvariable id="delete" type="java.lang.String"--%>
-<%--@elvariable id="logout" type="java.lang.String"--%>
-<%--@elvariable id="error" type="java.lang.String"--%>
-<%--@elvariable id="roles" type="java.util.Collection"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<jsp:useBean id="loggedUser" scope="session" type="ru.job4j.crud.model.User"/>
-<jsp:useBean id="user" scope="request" type="ru.job4j.crud.model.User"/>
+<c:set var="context" scope="request" value="${pageContext.request.contextPath}"/>
+<%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
+<%--@elvariable id="user" type="ru.job4j.crud.model.User"--%>
+<%--@elvariable id="roles" type="java.util.Collection<ru.job4j.crud.model.Credentials.Role>"--%>
+<%--@elvariable id="error" type="java.lang.String"--%>
 
 <html>
 <head>
@@ -30,7 +26,7 @@
 <div class="container col-sm-offset-2 col-sm-8">
     <h2>Update user</h2>
     <p>Fill the form and click "Submit" button to update user values</p>
-    <form class="form-horizontal" action="${context}${update}" method="POST">
+    <form class="form-horizontal" action="${context}${initParam.update}" method="POST">
         <!-- Login -->
         <div class="form-group">
             <label class="control-label col-sm-2" for="login">Login:</label>

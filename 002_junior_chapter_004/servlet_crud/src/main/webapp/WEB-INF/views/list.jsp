@@ -1,17 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-
-<!-- JSP libraries -->
-<%--@elvariable id="context" type="java.lang.String"--%>
-<%--@elvariable id="create" type="java.lang.String"--%>
-<%--@elvariable id="update" type="java.lang.String"--%>
-<%--@elvariable id="delete" type="java.lang.String"--%>
-<%--@elvariable id="logout" type="java.lang.String"--%>
-<%--@elvariable id="error" type="java.lang.String"--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-<jsp:useBean id="loggedUser" scope="session" type="ru.job4j.crud.model.User"/>
-<jsp:useBean id="users" scope="request" type="java.util.List<ru.job4j.crud.model.User>"/>
+<c:set var="context" scope="request" value="${pageContext.request.contextPath}"/>
 <jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
+<%--@elvariable id="users" type="java.util.List<ru.job4j.crud.model.User>"--%>
+<%--@elvariable id="error" type="java.lang.String"--%>
 
 <html>
 <head>
@@ -65,13 +58,13 @@
                 <td>
                     <div class="row">
                         <div class="col-sm-6">
-                            <form action="${context}${update}" method="get">
+                            <form action="${context}${initParam.update}" method="get">
                                 <input type="hidden" name="id" value="${user.id}">
                                 <button type="submit" class="btn btn-default">Update</button>
                             </form>
                         </div>
                         <div class="col-sm-6">
-                            <form action="${context}${delete}" method="get">
+                            <form action="${context}${initParam.delete}" method="get">
                                 <input type="hidden" name="id" value="${user.id}">
                                 <button type="submit" class="btn btn-default">Delete</button>
                             </form>

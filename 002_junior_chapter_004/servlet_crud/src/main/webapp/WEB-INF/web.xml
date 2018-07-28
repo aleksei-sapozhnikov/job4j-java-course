@@ -91,5 +91,27 @@
         <url-pattern>/create</url-pattern>
     </filter-mapping>
 
+    <context-param>
+        <param-name>create</param-name>
+        <param-value>/create</param-value>
+    </context-param>
+    <context-param>
+        <param-name>update</param-name>
+        <param-value>/update</param-value>
+    </context-param>
+    <context-param>
+        <param-name>delete</param-name>
+        <param-value>/delete</param-value>
+    </context-param>
+    <context-param>
+        <param-name>login</param-name>
+        <param-value>/login</param-value>
+    </context-param>
+    <context-param>
+        <param-name>logout</param-name>
+        <param-value>/logout</param-value>
+    </context-param>
+
+
 </web-app>
 
