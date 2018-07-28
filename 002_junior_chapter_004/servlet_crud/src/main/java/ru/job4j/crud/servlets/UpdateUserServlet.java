@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static ru.job4j.crud.Constants.*;
 import static ru.job4j.crud.servlets.ActionsDispatch.Action.UPDATE;
 
 /**
@@ -36,10 +37,10 @@ public class UpdateUserServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        Integer id = Integer.valueOf(req.getParameter(PARAM_USER_ID));
-        req.setAttribute(PARAM_USER, VALIDATOR.findById(id));
-        req.setAttribute(PARAM_ALL_ROLES, Arrays.asList(Credentials.Role.values()));
-        req.getRequestDispatcher(VIEWS_DIR.concat(JSP_UPDATE_USER)).forward(req, resp);
+        Integer id = Integer.valueOf(req.getParameter(PARAM_USER_ID.v()));
+        req.setAttribute(PARAM_USER.v(), VALIDATOR.findById(id));
+        req.setAttribute(PARAM_ALL_ROLES.v(), Arrays.asList(Credentials.Role.values()));
+        req.getRequestDispatcher(JSP_VIEWS_DIR.v().concat(JSP_UPDATE_USER.v())).forward(req, resp);
     }
 
     /**
@@ -55,7 +56,7 @@ public class UpdateUserServlet extends AbstractServlet {
         if (success) {
             resp.sendRedirect(req.getContextPath());
         } else {
-            req.setAttribute(PARAM_ERROR, "Message from server: user UPDATE failed");
+            req.setAttribute(PARAM_ERROR.v(), "Message from server: user UPDATE failed");
             this.doGet(req, resp);
         }
     }

@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static ru.job4j.crud.Constants.*;
+
 /**
  * Presentation layer "login" servlet.
  * Shows form for user to enter his login/password and
@@ -35,7 +37,7 @@ public class LogInServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(VIEWS_DIR.concat(JSP_LOGIN_PAGE)).forward(req, resp);
+        req.getRequestDispatcher(JSP_VIEWS_DIR.v().concat(JSP_LOGIN_PAGE.v())).forward(req, resp);
     }
 
     /**
@@ -48,21 +50,21 @@ public class LogInServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String login = req.getParameter(PARAM_USER_LOGIN);
-        String password = req.getParameter(PARAM_USER_PASSWORD);
+        String login = req.getParameter(PARAM_USER_LOGIN.v());
+        String password = req.getParameter(PARAM_USER_PASSWORD.v());
         User user = VALIDATOR.findByCredentials(login, password);
         if (user != null) {
             HttpSession session = req.getSession();
-            session.setAttribute(PARAM_URI_CONTEXT_PATH, req.getContextPath());
-            session.setAttribute(PARAM_LOGGED_USER, user);
-            session.setAttribute(PARAM_URI_CREATE_USER, URI_CREATE_USER);
-            session.setAttribute(PARAM_URI_UPDATE_USER, URI_UPDATE_USER);
-            session.setAttribute(PARAM_URI_DELETE_USER, URI_DELETE_USER);
-            session.setAttribute(PARAM_URI_LOGIN, URI_LOGIN);
-            session.setAttribute(PARAM_URI_LOGOUT, URI_LOGOUT);
+            session.setAttribute(PARAM_URI_CONTEXT_PATH.v(), req.getContextPath());
+            session.setAttribute(PARAM_LOGGED_USER.v(), user);
+            session.setAttribute(PARAM_URI_CREATE_USER.v(), URI_CREATE_USER.v());
+            session.setAttribute(PARAM_URI_UPDATE_USER.v(), URI_UPDATE_USER.v());
+            session.setAttribute(PARAM_URI_DELETE_USER.v(), URI_DELETE_USER.v());
+            session.setAttribute(PARAM_URI_LOGIN.v(), URI_LOGIN.v());
+            session.setAttribute(PARAM_URI_LOGOUT.v(), URI_LOGOUT.v());
             resp.sendRedirect(req.getContextPath());
         } else {
-            req.setAttribute(PARAM_ERROR, "Invalid credentials");
+            req.setAttribute(PARAM_ERROR.v(), "Invalid credentials");
             this.doGet(req, resp);
         }
     }

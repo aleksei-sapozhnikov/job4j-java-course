@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static ru.job4j.crud.Constants.URI_LOGIN;
+
 /**
  * Presentation layer "log out" servlet.
  * Invalidates user in the given session.
@@ -33,7 +35,7 @@ public class LogOutServlet extends AbstractServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         HttpSession session = req.getSession();
         session.invalidate();
-        resp.sendRedirect(req.getContextPath().concat(URI_LOGIN));
+        resp.sendRedirect(req.getContextPath().concat(URI_LOGIN.v()));
     }
 }
     

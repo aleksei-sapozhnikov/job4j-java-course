@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 
+import static ru.job4j.crud.Constants.*;
 import static ru.job4j.crud.servlets.ActionsDispatch.Action.CREATE;
 
 /**
@@ -36,8 +37,8 @@ public class CreateUserServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setAttribute(PARAM_ALL_ROLES, Arrays.asList(Credentials.Role.values()));
-        req.getRequestDispatcher(VIEWS_DIR.concat(JSP_CREATE_USER)).forward(req, resp);
+        req.setAttribute(PARAM_ALL_ROLES.v(), Arrays.asList(Credentials.Role.values()));
+        req.getRequestDispatcher(JSP_VIEWS_DIR.v().concat(JSP_CREATE_USER.v())).forward(req, resp);
     }
 
     /**
@@ -53,7 +54,7 @@ public class CreateUserServlet extends AbstractServlet {
         if (success) {
             resp.sendRedirect(req.getContextPath());
         } else {
-            req.setAttribute(PARAM_ERROR, "Message from server: user CREATE failed");
+            req.setAttribute(PARAM_ERROR.v(), "Message from server: user CREATE failed");
             this.doGet(req, resp);
         }
     }

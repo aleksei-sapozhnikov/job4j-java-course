@@ -16,17 +16,25 @@ import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 import static ru.job4j.crud.model.Credentials.Role.USER;
 
 public class DatabaseValidatorTest {
-
+    /**
+     * Validator to test.
+     */
     private final DatabaseValidator validator = DatabaseValidator.getInstance();
-
+    /**
+     * Users to use.
+     */
     private final User userOneRoleAdmin = new User(new Credentials("login_1", "password_1", ADMIN), new Info("name_1", "e@mail.com_1", "country_1", "city_1"));
     private final User userTwoRoleUser = new User(new Credentials("login_2", "password_2", USER), new Info("name_2", "e@mail.com_2", "country_2", "city_2"));
     private final User userThreeRoleUser = new User(new Credentials("login_3", "password_3", USER), new Info("name_3", "e@mail.com_3", "country_3", "city_3"));
-
+    /**
+     * Users with wrong Credentials values.
+     */
     private final User userLoginNull = new User(new Credentials(null, "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
     private final User userPasswordNull = new User(new Credentials("login", null, ADMIN), new Info("name", "e@mail.com", "country", "city"));
     private final User userRoleNull = new User(new Credentials("login", "password", null), new Info("name", "e@mail.com", "country", "city"));
-
+    /**
+     * Users with wrong Info values.
+     */
     private final User userNameNull = new User(new Credentials("login", "password", ADMIN), new Info(null, "e@mail.com", "country", "city"));
     private final User userEmailNull = new User(new Credentials("login", "password", ADMIN), new Info("name", null, "country", "city"));
     private final User userEmailWrongFormat = new User(new Credentials("login", "password", ADMIN), new Info("name", "email", "country", "city"));

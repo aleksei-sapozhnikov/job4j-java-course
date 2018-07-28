@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static ru.job4j.crud.Constants.*;
+
 /**
  * General class for a presentation layer "show and delete" servlet.
  * Shows all users currently in store and deletes them.
@@ -32,7 +34,7 @@ public class ShowUsersServlet extends AbstractServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        req.setAttribute(PARAM_ALL_USERS, VALIDATOR.findAll());
-        req.getRequestDispatcher(VIEWS_DIR.concat(JSP_LIST_USERS)).forward(req, resp);
+        req.setAttribute(PARAM_ALL_USERS.v(), VALIDATOR.findAll());
+        req.getRequestDispatcher(JSP_VIEWS_DIR.v().concat(JSP_LIST_USERS.v())).forward(req, resp);
     }
 }

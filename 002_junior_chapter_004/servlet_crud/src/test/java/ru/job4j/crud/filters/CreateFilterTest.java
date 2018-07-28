@@ -15,25 +15,37 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static org.mockito.Mockito.*;
+import static ru.job4j.crud.Constants.PARAM_ERROR;
+import static ru.job4j.crud.Constants.PARAM_LOGGED_USER;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 import static ru.job4j.crud.model.Credentials.Role.USER;
 
 public class CreateFilterTest {
-
+    /**
+     * Context path for tests.
+     */
+    private static String CONTEXT = "context";
+    /**
+     * Filter to test.
+     */
     private final CreateFilter filter = new CreateFilter();
-
+    /**
+     * Mocks.
+     */
     private final HttpServletRequest request = mock(HttpServletRequest.class);
     private final HttpServletResponse response = mock(HttpServletResponse.class);
     private final FilterChain chain = mock(FilterChain.class);
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
-
+    /**
+     * Users to use.
+     */
     private final User userRoleAdmin = new User(new Credentials("login_1", "password_1", ADMIN), new Info("name_1", "e@mail.com_1", "country_1", "city_1"));
     private final User userRoleUser = new User(new Credentials("login_2", "password_2", USER), new Info("name_2", "e@mail.com_2", "country_2", "city_2"));
 
     @Before
     public void setCommonMocks() {
-        when(this.request.getContextPath()).thenReturn("contextPath");
+        when(this.request.getContextPath()).thenReturn(CONTEXT);
         when(this.request.getSession()).thenReturn(this.httpSession);
         when(this.request.getSession()).thenReturn(this.httpSession);
         when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
@@ -44,16 +56,16 @@ public class CreateFilterTest {
      */
     @Test
     public void whenAdminThenPass() throws IOException, ServletException {
-        when(this.httpSession.getAttribute("loggedUser")).thenReturn(this.userRoleAdmin);
+        when(this.httpSession.getAttribute(PARAM_LOGGED_USER.v())).thenReturn(this.userRoleAdmin);
         this.filter.doFilter(this.request, this.response, this.chain);
         verify(this.chain).doFilter(this.request, this.response);
     }
 
     @Test
     public void whenAUserThenRedirectToMainPageWithForbiddenError() throws IOException, ServletException {
-        when(this.httpSession.getAttribute("loggedUser")).thenReturn(this.userRoleUser);
+        when(this.httpSession.getAttribute(PARAM_LOGGED_USER.v())).thenReturn(this.userRoleUser);
         this.filter.doFilter(this.request, this.response, this.chain);
-        verify(this.request).setAttribute(eq("error"), anyString());
+        verify(this.request).setAttribute(eq(PARAM_ERROR.v()), anyString());
         verify(this.requestDispatcher).forward(this.request, this.response);
     }
 

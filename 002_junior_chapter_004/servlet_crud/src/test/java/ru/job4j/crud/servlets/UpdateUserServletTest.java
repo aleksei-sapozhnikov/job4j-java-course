@@ -21,7 +21,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 import static ru.job4j.crud.model.Credentials.Role.USER;
-
 public class UpdateUserServletTest {
 
     private final HttpServletRequest request = mock(HttpServletRequest.class);
