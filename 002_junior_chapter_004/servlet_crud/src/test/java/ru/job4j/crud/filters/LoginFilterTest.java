@@ -25,7 +25,7 @@ public class LoginFilterTest {
     /**
      * Context path for tests.
      */
-    private static String CONTEXT = "context";
+    private static final String CONTEXT = "context";
     /**
      * Mocks.
      */
