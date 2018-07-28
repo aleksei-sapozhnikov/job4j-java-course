@@ -25,7 +25,7 @@ public class CreateUserServletTest {
     /**
      * Context path for tests.
      */
-    private static String CONTEXT = "context";
+    private static final String CONTEXT = "context";
     /**
      * Mocks.
      */
@@ -58,7 +58,7 @@ public class CreateUserServletTest {
     }
 
     private void setMockForUserFields(User user) {
-        when(this.request.getParameter(PARAM_USER_ID.v())).thenReturn(user.getCredentials().getLogin());
+        when(this.request.getParameter(PARAM_USER_LOGIN.v())).thenReturn(user.getCredentials().getLogin());
         when(this.request.getParameter(PARAM_USER_PASSWORD.v())).thenReturn(user.getCredentials().getPassword());
         when(this.request.getParameter(PARAM_USER_ROLE.v())).thenReturn(user.getCredentials().getRole().toString());
         when(this.request.getParameter(PARAM_USER_NAME.v())).thenReturn(user.getInfo().getName());

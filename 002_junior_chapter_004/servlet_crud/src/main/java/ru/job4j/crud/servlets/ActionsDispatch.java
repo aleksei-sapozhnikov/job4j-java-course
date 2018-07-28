@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.BiFunction;
 
+import static ru.job4j.crud.Constants.*;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 import static ru.job4j.crud.servlets.ActionsDispatch.Action.*;
 
@@ -25,14 +26,13 @@ import static ru.job4j.crud.servlets.ActionsDispatch.Action.*;
 public class ActionsDispatch {
 
     /**
-     * Map of possible actions.
-     */
-    private final Map<Action, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
-
-    /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(ActionsDispatch.class);
+    /**
+     * Map of possible actions.
+     */
+    private final Map<Action, BiFunction<HttpServletRequest, HttpServletResponse, Boolean>> dispatch = new HashMap<>();
     /**
      * Logic layer class validating and adding/updating/deleting users.
      */
@@ -82,12 +82,6 @@ public class ActionsDispatch {
         this.dispatch.put(action, handler);
     }
 
-    public enum Action {
-        CREATE,
-        UPDATE,
-        DELETE
-    }
-
     /**
      * Returns handler for the "create" action.
      *
@@ -109,8 +103,8 @@ public class ActionsDispatch {
     private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toUpdate() {
         return (req, resp) -> {
             boolean result = false;
-            int loggedId = this.getInt("loggedUserId", req);
-            int id = this.getInt("id", req);
+            int loggedId = this.getInt(PARAM_LOGGED_USER_ID.v(), req);
+            int id = this.getInt(PARAM_USER_ID.v(), req);
             if (loggedId != -1 && id != -1) {
                 User logged = this.logic.findById(loggedId);
                 User old = this.logic.findById(id);
@@ -136,7 +130,7 @@ public class ActionsDispatch {
     private BiFunction<HttpServletRequest, HttpServletResponse, Boolean> toDelete() {
         return (req, resp) -> {
             boolean result = false;
-            int id = this.getInt("id", req);
+            int id = this.getInt(PARAM_USER_ID.v(), req);
             if (id != -1) {
                 result = logic.delete(id) != null;
             }
@@ -166,15 +160,15 @@ public class ActionsDispatch {
     private User formUser(HttpServletRequest req) {
         return new User(
                 new Credentials(
-                        req.getParameter("login"),
-                        req.getParameter("password"),
-                        Credentials.Role.valueOf(req.getParameter("role"))
+                        req.getParameter(PARAM_USER_LOGIN.v()),
+                        req.getParameter(PARAM_USER_PASSWORD.v()),
+                        Credentials.Role.valueOf(req.getParameter(PARAM_USER_ROLE.v()))
                 ),
                 new Info(
-                        req.getParameter("name"),
-                        req.getParameter("email"),
-                        req.getParameter("country"),
-                        req.getParameter("city")
+                        req.getParameter(PARAM_USER_NAME.v()),
+                        req.getParameter(PARAM_USER_EMAIL.v()),
+                        req.getParameter(PARAM_USER_COUNTRY.v()),
+                        req.getParameter(PARAM_USER_CITY.v())
                 )
         );
     }
@@ -196,5 +190,11 @@ public class ActionsDispatch {
             }
         }
         return result;
+    }
+
+    public enum Action {
+        CREATE,
+        UPDATE,
+        DELETE
     }
 }

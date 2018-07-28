@@ -53,9 +53,10 @@ public enum Constants {
     PARAM_USER_COUNTRY("country"),
     PARAM_USER_CITY("city"),
     /**
-     * Attribute: user logged in the session.
+     * Attribute: user logged in the session and his values.
      */
     PARAM_LOGGED_USER("loggedUser"),
+    PARAM_LOGGED_USER_ID("loggedUserId"),
     /**
      * Attribute: list of all users stored in the system.
      */
