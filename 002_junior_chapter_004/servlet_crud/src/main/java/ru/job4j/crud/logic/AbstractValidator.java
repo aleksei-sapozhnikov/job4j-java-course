@@ -153,10 +153,10 @@ public abstract class AbstractValidator implements Validator<User> {
     }
 
     /**
-     * Validates user name.
+     * Validates user country.
      *
      * @param country User country.
-     * @return <tt>true</tt> if name is valid, <tt>false</tt> if not.
+     * @return <tt>true</tt> if country is valid, <tt>false</tt> if not.
      */
     private boolean validateCountry(String country) {
         return country != null
@@ -164,10 +164,10 @@ public abstract class AbstractValidator implements Validator<User> {
     }
 
     /**
-     * Validates user name.
+     * Validates user city.
      *
      * @param city User city.
-     * @return <tt>true</tt> if name is valid, <tt>false</tt> if not.
+     * @return <tt>true</tt> if city is valid, <tt>false</tt> if not.
      */
     private boolean validateCity(String city) {
         return city != null

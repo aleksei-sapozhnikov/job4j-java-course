@@ -27,8 +27,8 @@ public interface Validator<T> {
      * values from the given object. If the result is valid,
      * updates object in the storage, otherwise leaves it untouched.
      *
-     * @param id          Id of the object to update.
-     * @param newFields   Object with new fields values.
+     * @param id        Id of the object to update.
+     * @param newFields Object with new fields values.
      * @return <tt>true</tt> if the object was updated, <tt>false</tt> if not.
      */
     boolean update(int id, T newFields);
