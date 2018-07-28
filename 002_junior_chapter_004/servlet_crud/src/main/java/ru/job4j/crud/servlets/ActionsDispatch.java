@@ -22,6 +22,10 @@ import static ru.job4j.crud.servlets.ActionsDispatch.Action.*;
  * <p>
  * Irs functions return String result which is to be included into
  * html page going to user.
+ *
+ * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+ * @version $Id$
+ * @since 0.1
  */
 public class ActionsDispatch {
 
@@ -192,6 +196,13 @@ public class ActionsDispatch {
         return result;
     }
 
+    /**
+     * Enum with possible actions.
+     *
+     * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+     * @version $Id$
+     * @since 0.1
+     */
     public enum Action {
         CREATE,
         UPDATE,

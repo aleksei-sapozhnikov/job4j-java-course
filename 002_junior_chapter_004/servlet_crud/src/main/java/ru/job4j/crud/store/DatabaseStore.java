@@ -13,6 +13,8 @@ import java.sql.*;
 import java.time.Instant;
 import java.util.*;
 
+import static ru.job4j.crud.store.DatabaseStore.SQLQueries.*;
+
 /**
  * Storage for Users. Uses database.
  * <p>
@@ -54,7 +56,7 @@ public class DatabaseStore implements Store<User> {
     /**
      * Map with sql queries.
      */
-    private final Map<String, String> queries;
+    private final Map<SQLQueries, String> queries;
 
     /**
      * Constructs new DatabaseStore object.
@@ -105,21 +107,20 @@ public class DatabaseStore implements Store<User> {
      * @param prop Properties where to load queries from.
      * @return Map with sql queries.
      */
-    private Map<String, String> loadQueries(Properties prop) {
-        Map<String, String> result = new HashMap<>();
-        // structure
-        result.put("structureCreateTables", prop.getProperty("sql.structure.createTables"));
-        result.put("structureDropTables", prop.getProperty("sql.structure.dropTables"));
-        result.put("structureDropFunctions", prop.getProperty("sql.structure.dropFunctions"));
+    private Map<SQLQueries, String> loadQueries(Properties prop) {
+        Map<SQLQueries, String> result = new HashMap<>();
+        result.put(STRUCTURE_CREATE_TABLES, prop.getProperty("sql.structure.createTables"));
+        result.put(STRUCTURE_DROP_TABLES, prop.getProperty("sql.structure.dropTables"));
+        result.put(STRUCTURE_DROP_FUNCTIONS, prop.getProperty("sql.structure.dropFunctions"));
         // functions
-        result.put("functionInsertUser", prop.getProperty("sql.createFunction.insertUser"));
-        result.put("functionUpdateUser", prop.getProperty("sql.createFunction.updateUser"));
+        result.put(FUNCTION_INSERT_USER, prop.getProperty("sql.createFunction.insertUser"));
+        result.put(FUNCTION_UPDATE_USER, prop.getProperty("sql.createFunction.updateUser"));
         // queries
-        result.put("insertUser", prop.getProperty("sql.query.insertUser"));
-        result.put("updateUserById", prop.getProperty("sql.query.updateUser"));
-        result.put("deleteUserById", prop.getProperty("sql.query.deleteUserById"));
-        result.put("findUserById", prop.getProperty("sql.query.findUserById"));
-        result.put("findAllUsers", prop.getProperty("sql.query.findAllUsers"));
+        result.put(QUERY_INSERT_USER, prop.getProperty("sql.query.insertUser"));
+        result.put(QUERY_UPDATE_USER, prop.getProperty("sql.query.updateUser"));
+        result.put(QUERY_DELETE_USER_BY_ID, prop.getProperty("sql.query.deleteUserById"));
+        result.put(QUERY_FIND_USER_BY_ID, prop.getProperty("sql.query.findUserById"));
+        result.put(QUERY_FIND_ALL_USERS, prop.getProperty("sql.query.findAllUsers"));
         return result;
     }
 
@@ -150,7 +151,7 @@ public class DatabaseStore implements Store<User> {
      */
     private void createTables() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement create = connection.prepareStatement(queries.get("structureCreateTables"))
+             PreparedStatement create = connection.prepareStatement(queries.get(STRUCTURE_CREATE_TABLES))
         ) {
             create.execute();
         } catch (SQLException e) {
@@ -163,8 +164,8 @@ public class DatabaseStore implements Store<User> {
      */
     private void createFunctions() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement create = connection.prepareStatement(queries.get("functionInsertUser"));
-             PreparedStatement update = connection.prepareStatement(queries.get("functionUpdateUser"))
+             PreparedStatement create = connection.prepareStatement(queries.get(FUNCTION_INSERT_USER));
+             PreparedStatement update = connection.prepareStatement(queries.get(FUNCTION_UPDATE_USER))
         ) {
             create.execute();
             update.execute();
@@ -178,7 +179,7 @@ public class DatabaseStore implements Store<User> {
      */
     private void dropFunctions() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement drop = connection.prepareStatement(queries.get("structureDropFunctions"))
+             PreparedStatement drop = connection.prepareStatement(queries.get(STRUCTURE_DROP_FUNCTIONS))
         ) {
             drop.execute();
         } catch (SQLException e) {
@@ -191,7 +192,7 @@ public class DatabaseStore implements Store<User> {
      */
     private void dropTables() {
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement drop = connection.prepareStatement(queries.get("structureDropTables"))
+             PreparedStatement drop = connection.prepareStatement(queries.get(STRUCTURE_DROP_TABLES))
         ) {
             drop.execute();
         } catch (SQLException e) {
@@ -221,7 +222,7 @@ public class DatabaseStore implements Store<User> {
     public int add(final User add) {
         int id = -1;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement insert = connection.prepareStatement(queries.get("insertUser"))
+             PreparedStatement insert = connection.prepareStatement(queries.get(QUERY_INSERT_USER))
         ) {
             id = this.dbInsertUser(insert, add, id);
         } catch (SQLException e) {
@@ -270,7 +271,7 @@ public class DatabaseStore implements Store<User> {
     public boolean update(final User upd) {
         boolean result = false;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement update = connection.prepareStatement(queries.get("updateUserById"))
+             PreparedStatement update = connection.prepareStatement(queries.get(QUERY_UPDATE_USER))
         ) {
             result = this.updateUserAndCheckRowsChanged(update, upd);
         } catch (SQLException e) {
@@ -329,7 +330,7 @@ public class DatabaseStore implements Store<User> {
     public User delete(final int id) {
         User result = null;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement delete = connection.prepareStatement(queries.get("deleteUserById"))
+             PreparedStatement delete = connection.prepareStatement(queries.get(QUERY_DELETE_USER_BY_ID))
         ) {
             result = this.findById(id);
             this.dbDeleteUser(delete, id);
@@ -361,7 +362,7 @@ public class DatabaseStore implements Store<User> {
     public User findById(final int id) {
         User result = null;
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement find = connection.prepareStatement(queries.get("findUserById"))
+             PreparedStatement find = connection.prepareStatement(queries.get(QUERY_FIND_USER_BY_ID))
         ) {
             result = this.dbSelectUserById(find, id);
         } catch (SQLException e) {
@@ -397,7 +398,7 @@ public class DatabaseStore implements Store<User> {
     public List<User> findAll() {
         List<User> result = new LinkedList<>();
         try (Connection connection = CONNECTION_POOL.getConnection();
-             PreparedStatement find = connection.prepareStatement(queries.get("findAllUsers"))
+             PreparedStatement find = connection.prepareStatement(queries.get(QUERY_FIND_ALL_USERS))
         ) {
             result = this.dbSelectAllUsers(find);
         } catch (SQLException e) {
@@ -439,7 +440,7 @@ public class DatabaseStore implements Store<User> {
                 new Credentials(
                         res.getString(++index),                             // login
                         res.getString(++index),                             // password
-                        Credentials.Role.valueOf(res.getString(++index))                // role
+                        Credentials.Role.valueOf(res.getString(++index))    // role
                 ),
                 new Info(
                         res.getString(++index),                             // name
@@ -461,4 +462,24 @@ public class DatabaseStore implements Store<User> {
     public void close() throws SQLException {
         CONNECTION_POOL.close();
     }
+
+    /**
+     * Enum with possible sql operations.
+     */
+    enum SQLQueries {
+        // structure
+        STRUCTURE_CREATE_TABLES,
+        STRUCTURE_DROP_TABLES,
+        STRUCTURE_DROP_FUNCTIONS,
+        // functions
+        FUNCTION_INSERT_USER,
+        FUNCTION_UPDATE_USER,
+        // queries
+        QUERY_INSERT_USER,
+        QUERY_UPDATE_USER,
+        QUERY_DELETE_USER_BY_ID,
+        QUERY_FIND_USER_BY_ID,
+        QUERY_FIND_ALL_USERS
+    }
+
 }
