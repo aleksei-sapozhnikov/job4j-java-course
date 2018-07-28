@@ -16,13 +16,27 @@ public class User {
      * Unique id.
      */
     private final int id;
-
+    /**
+     * Time when the user was created.
+     */
     private final long created;
-
+    /**
+     * User credentials for the system.
+     */
     private final Credentials credentials;
-
+    /**
+     * Information about the user.
+     */
     private final Info info;
 
+    /**
+     * Constructs new object with.
+     *
+     * @param id          Unique id of the user.
+     * @param created     Time when the user was created.
+     * @param credentials Credentials of the new user.
+     * @param info        Info of the new user.
+     */
     public User(int id, long created, Credentials credentials, Info info) {
         this.id = id;
         this.created = created;
@@ -30,6 +44,12 @@ public class User {
         this.info = info;
     }
 
+    /**
+     * Constructs new object with default id (-1) and creation time (current time).
+     *
+     * @param credentials Credentials of the new user.
+     * @param info        Info of the new user.
+     */
     public User(Credentials credentials, Info info) {
         this(-1, System.currentTimeMillis(), credentials, info);
     }
@@ -43,16 +63,42 @@ public class User {
         return this.id;
     }
 
+    /**
+     * Returns time when the user was created.
+     *
+     * @return Time of user creation.
+     */
     public long getCreated() {
         return this.created;
     }
 
+    /**
+     * Returns credentials.
+     *
+     * @return Credentials.
+     */
     public Credentials getCredentials() {
         return this.credentials;
     }
 
+    /**
+     * Returns user info.
+     *
+     * @return Info.
+     */
     public Info getInfo() {
         return this.info;
+    }
+
+    /**
+     * Returns new user object with all fields the same as of this
+     * but with given id.
+     *
+     * @param newId New id.
+     * @return New user object same as given but with new id.
+     */
+    public User changeId(int newId) {
+        return new User(newId, this.created, this.credentials, this.info);
     }
 
     /**
@@ -98,16 +144,5 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(this.credentials, this.info);
-    }
-
-    /**
-     * Returns new user object with all fields the same as of this
-     * but with given id.
-     *
-     * @param newId New id.
-     * @return New user object same as given but with new id.
-     */
-    public User changeId(int newId) {
-        return new User(newId, this.created, this.credentials, this.info);
     }
 }
