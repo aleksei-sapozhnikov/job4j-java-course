@@ -11,7 +11,9 @@ import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 import static ru.job4j.crud.model.Credentials.Role.USER;
 
 public class UserTest {
-
+    /**
+     * Users used for tests.
+     */
     private final User givenId = new User(32, 123L, new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
     private final User defaultId = new User(new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", "city"));
 

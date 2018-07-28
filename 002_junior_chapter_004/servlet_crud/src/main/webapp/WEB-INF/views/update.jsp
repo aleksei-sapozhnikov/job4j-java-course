@@ -8,9 +8,13 @@
 
 <html>
 <head>
+    <<!-- Title and libraries -->
     <jsp:include page="imports/head.jsp">
         <jsp:param name="title" value="Update user"/>
     </jsp:include>
+    <<!-- Scripts -->
+    <jsp:include page="scripts/findInvalids.jsp"/>
+    <jsp:include page="scripts/submitUserFormIfFieldsValid.jsp"/>
 </head>
 <body>
 
@@ -26,7 +30,7 @@
 <div class="container col-sm-offset-2 col-sm-8">
     <h2>Update user</h2>
     <p>Fill the form and click "Submit" button to update user values</p>
-    <form class="form-horizontal" action="${context}${initParam.update}" method="POST">
+    <form id="user_form" class="form-horizontal" action="${context}${initParam.update}" method="POST">
         <!-- Login -->
         <div class="form-group">
             <label class="control-label col-sm-2" for="login">Login:</label>
@@ -99,7 +103,10 @@
         <!-- Submit button -->
         <div class="col-sm-offset-2 col-sm-10">
             <input type="hidden" name="id" value="${user.id}">
-            <button type="submit" class="btn btn-default">Submit</button>
+            <button type="submit" class="btn btn-default"
+                    onclick="return submitUserFormIfFieldsValid()">
+                Submit
+            </button>
         </div>
     </form>
 </div>

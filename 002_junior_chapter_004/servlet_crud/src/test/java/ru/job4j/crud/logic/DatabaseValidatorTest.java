@@ -8,8 +8,7 @@ import ru.job4j.crud.model.User;
 
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
@@ -38,6 +37,8 @@ public class DatabaseValidatorTest {
     private final User userNameNull = new User(new Credentials("login", "password", ADMIN), new Info(null, "e@mail.com", "country", "city"));
     private final User userEmailNull = new User(new Credentials("login", "password", ADMIN), new Info("name", null, "country", "city"));
     private final User userEmailWrongFormat = new User(new Credentials("login", "password", ADMIN), new Info("name", "email", "country", "city"));
+    private final User userCountryEmpty = new User(new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "", "city"));
+    private final User userCityEmpty = new User(new Credentials("login", "password", ADMIN), new Info("name", "e@mail.com", "country", ""));
 
     @Before
     public void clearStore() {
@@ -80,6 +81,8 @@ public class DatabaseValidatorTest {
         assertThat(validator.add(this.userEmailNull), is(-1));
         assertThat(validator.add(this.userEmailWrongFormat), is(-1));
         assertThat(validator.add(this.userRoleNull), is(-1));
+        assertThat(validator.add(this.userCountryEmpty), is(-1));
+        assertThat(validator.add(this.userCityEmpty), is(-1));
         assertThat(validator.findAll(), is(Collections.EMPTY_LIST));
     }
 
@@ -273,6 +276,39 @@ public class DatabaseValidatorTest {
         User[] result = validator.findAll().toArray(new User[0]);
         User[] expected = {this.userTwoRoleUser, this.userOneRoleAdmin, this.userThreeRoleUser};    // order shouldn't matter in assert
         assertThat(result, arrayContainingInAnyOrder(expected));
+    }
+
+    /**
+     * Test findByCredentials()
+     */
+    @Test
+    public void whenRightCredentialsThenReturnUser() {
+        this.validator.add(this.userOneRoleAdmin);
+        String login = this.userOneRoleAdmin.getCredentials().getLogin();
+        String password = this.userOneRoleAdmin.getCredentials().getPassword();
+        User found = this.validator.findByCredentials(login, password);
+        assertThat(found, is(this.userOneRoleAdmin));
+    }
+
+    @Test
+    public void whenWrongCredentialsThenUserNotFound() {
+        this.validator.add(this.userOneRoleAdmin);
+        String login = this.userOneRoleAdmin.getCredentials().getLogin();
+        String password = this.userOneRoleAdmin.getCredentials().getPassword();
+        String wrongLogin = "wrongLogin";
+        String wrongPassword = "wrongPassword";
+        // wrong login
+        User fLogin = this.validator.findByCredentials(wrongLogin, password);
+        assertThat(fLogin, not(this.userOneRoleAdmin));
+        assertThat(fLogin, nullValue());
+        // wrong password
+        User fPassword = this.validator.findByCredentials(login, wrongPassword);
+        assertThat(fPassword, not(this.userOneRoleAdmin));
+        assertThat(fPassword, nullValue());
+        // wrong both
+        User fBoth = this.validator.findByCredentials(wrongLogin, wrongPassword);
+        assertThat(fBoth, not(this.userOneRoleAdmin));
+        assertThat(fBoth, nullValue());
     }
 
 }

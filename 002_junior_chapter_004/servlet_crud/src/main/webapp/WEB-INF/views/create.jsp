@@ -6,57 +6,13 @@
 
 <html>
 <head>
+    <!-- Title and libraries -->
     <jsp:include page="imports/head.jsp">
         <jsp:param name="title" value="Create user"/>
     </jsp:include>
-
-    <script>
-        /**
-         * Returns all invalid fields.
-         * @returns {object} true if valid, false if not.
-         */
-        function findInvalids(name, login, password, email) {
-            var invalids = [];
-            // check name
-            if (name === "") {
-                invalids.push("name");
-            }
-            // check login
-            if (login === "") {
-                invalids.push("login");
-            }
-            // check password
-            if (password === "") {
-                invalids.push("password");
-            }
-            // check email
-            if (email === "" || !email.includes("@")) {
-                invalids.push("email");
-            }
-            return invalids;
-        }
-
-        /**
-         * Adds row to users table if user values are valid.
-         * @returns {boolean} true if user was added, false if not.
-         */
-        function createUserIfFieldsValid() {
-            var result;
-            var name = $('#name').val();
-            var login = $('#login').val();
-            var password = $("#password").val();
-            var email = $('#email').val();
-            var invalids = findInvalids(name, login, password, email);
-            if (invalids.length === 0) {
-                $('#create_user_form').submit();
-                result = true;
-            } else {
-                alert("Values are invalid: " + invalids);
-                result = false;
-            }
-            return result;
-        }
-    </script>
+    <!-- Scripts -->
+    <jsp:include page="scripts/findInvalids.jsp"/>
+    <jsp:include page="scripts/submitUserFormIfFieldsValid.jsp"/>
 </head>
 
 <body>
@@ -73,7 +29,7 @@
 <div class="container col-sm-offset-2 col-sm-8">
     <h2>Create user</h2>
     <p>Fill the form and click "Submit" button to create a new user</p>
-    <form id="create_user_form" class="form-horizontal"
+    <form id="user_form" class="form-horizontal"
           action="${context}${initParam.create}" method="POST">
         <!-- Login -->
         <div class="form-group">
@@ -140,7 +96,7 @@
         <!-- Submit button -->
         <div class="col-sm-offset-2 col-sm-10">
             <button type="submit" class="btn btn-default"
-                    onclick="return createUserIfFieldsValid()">
+                    onclick="return submitUserFormIfFieldsValid()">
                 Submit
             </button>
         </div>

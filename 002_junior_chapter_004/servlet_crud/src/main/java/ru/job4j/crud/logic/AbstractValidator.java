@@ -136,8 +136,9 @@ public abstract class AbstractValidator implements Validator<User> {
                 && this.validatePassword(user.getCredentials().getPassword())
                 && this.validateRole(user.getCredentials().getRole())
                 && this.validateName(user.getInfo().getName())
-                && this.validateEmail(user.getInfo().getEmail());
-
+                && this.validateEmail(user.getInfo().getEmail())
+                && this.validateCountry(user.getInfo().getCountry())
+                && this.validateCity(user.getInfo().getCity());
     }
 
     /**
@@ -149,6 +150,28 @@ public abstract class AbstractValidator implements Validator<User> {
     private boolean validateName(String name) {
         return name != null
                 && !name.equals("");
+    }
+
+    /**
+     * Validates user name.
+     *
+     * @param country User country.
+     * @return <tt>true</tt> if name is valid, <tt>false</tt> if not.
+     */
+    private boolean validateCountry(String country) {
+        return country != null
+                && !country.equals("");
+    }
+
+    /**
+     * Validates user name.
+     *
+     * @param city User city.
+     * @return <tt>true</tt> if name is valid, <tt>false</tt> if not.
+     */
+    private boolean validateCity(String city) {
+        return city != null
+                && !city.equals("");
     }
 
     /**
