@@ -256,4 +256,25 @@ public abstract class AbstractValidator implements Validator<User> {
         }
         return result;
     }
+
+    /**
+     * Returns list of all countries in the system.
+     *
+     * @return List of all countries in the system.
+     */
+    @Override
+    public List<String> findAllCountries() {
+        return this.store.findAllCountries();
+    }
+
+    /**
+     * Returns list of all cities in the system.
+     *
+     * @return List of all cities in the system.
+     */
+    @Override
+    public List<String> findAllCities() {
+        return this.store.findAllCities();
+    }
+
 }

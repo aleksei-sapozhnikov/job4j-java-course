@@ -35,6 +35,11 @@
         <servlet-class>ru.job4j.crud.servlets.LogOutServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>AjaxResponse</servlet-name>
+        <servlet-class>ru.job4j.crud.servlets.AjaxResponseServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
     <servlet-mapping>
         <servlet-name>ShowUsers</servlet-name>
@@ -59,6 +64,10 @@
     <servlet-mapping>
         <servlet-name>LogOut</servlet-name>
         <url-pattern>/logout</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AjaxResponse</servlet-name>
+        <url-pattern>/ajax</url-pattern>
     </servlet-mapping>
 
     <filter>

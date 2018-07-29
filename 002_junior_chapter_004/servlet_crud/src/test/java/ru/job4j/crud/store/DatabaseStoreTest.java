@@ -7,9 +7,9 @@ import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import java.util.Collections;
+import java.util.List;
 
-import static org.hamcrest.Matchers.arrayContainingInAnyOrder;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
@@ -113,5 +113,36 @@ public class DatabaseStoreTest {
         User[] result = store.findAll().toArray(new User[0]);
         User[] expected = {this.userTwo, this.userOne, this.userThree};    // order shouldn't matter in assert
         assertThat(result, arrayContainingInAnyOrder(expected));
+    }
+
+    /**
+     * Test findAllCountries()
+     */
+    @Test
+    public void whenFindAllCountriesThenListsOfCountries() {
+        store.add(this.userOne);
+        store.add(this.userTwo);
+        store.add(this.userThree);
+        List<String> countries = store.findAllCountries();
+        assertThat(countries, containsInAnyOrder(
+                this.userTwo.getInfo().getCountry(),
+                this.userOne.getInfo().getCountry(),
+                this.userThree.getInfo().getCountry()
+        ));
+    }
+
+    /**
+     * Test findAllCities()
+     */
+    @Test
+    public void whenFindAllCitiesThenListsOfCities() {
+        store.add(this.userOne);
+        store.add(this.userTwo);
+        store.add(this.userThree);
+        assertThat(store.findAllCities(), containsInAnyOrder(
+                this.userTwo.getInfo().getCity(),
+                this.userOne.getInfo().getCity(),
+                this.userThree.getInfo().getCity()
+        ));
     }
 }

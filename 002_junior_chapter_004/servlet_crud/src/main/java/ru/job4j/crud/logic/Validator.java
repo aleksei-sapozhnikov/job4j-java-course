@@ -73,4 +73,18 @@ public interface Validator<T> {
      * @param password Model password.
      */
     T findByCredentials(String login, String password);
+
+    /**
+     * Returns list of all countries in the system.
+     *
+     * @return List of all countries in the system.
+     */
+    List<String> findAllCountries();
+
+    /**
+     * Returns list of all cities in the system.
+     *
+     * @return List of all cities in the system.
+     */
+    List<String> findAllCities();
 }

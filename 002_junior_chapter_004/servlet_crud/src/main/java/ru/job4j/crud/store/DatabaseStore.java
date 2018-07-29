@@ -121,6 +121,8 @@ public class DatabaseStore implements Store<User> {
         result.put(QUERY_DELETE_USER_BY_ID, prop.getProperty("sql.query.deleteUserById"));
         result.put(QUERY_FIND_USER_BY_ID, prop.getProperty("sql.query.findUserById"));
         result.put(QUERY_FIND_ALL_USERS, prop.getProperty("sql.query.findAllUsers"));
+        result.put(QUERY_FIND_ALL_COUNTRIES, prop.getProperty("sql.query.findAlLCountries"));
+        result.put(QUERY_FIND_ALL_CITIES, prop.getProperty("sql.query.findAlLCities"));
         return result;
     }
 
@@ -396,7 +398,7 @@ public class DatabaseStore implements Store<User> {
      */
     @Override
     public List<User> findAll() {
-        List<User> result = new LinkedList<>();
+        List<User> result = Collections.emptyList();
         try (Connection connection = CONNECTION_POOL.getConnection();
              PreparedStatement find = connection.prepareStatement(queries.get(QUERY_FIND_ALL_USERS))
         ) {
@@ -414,13 +416,66 @@ public class DatabaseStore implements Store<User> {
      * @throws SQLException Provides information on a database access error or other errors.
      */
     private List<User> dbSelectAllUsers(PreparedStatement statement) throws SQLException {
-        List<User> result = new LinkedList<>();
+        List<User> result = new ArrayList<>();
         try (ResultSet res = statement.executeQuery()) {
             while (res.next()) {
                 result.add(
                         this.formUser(res)
                 );
             }
+        }
+        return result;
+    }
+
+    /**
+     * Returns list of all countries in the system.
+     *
+     * @return List of all countries in the system.
+     */
+    @Override
+    public List<String> findAllCountries() {
+        List<String> result = Collections.emptyList();
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement statement = connection.prepareStatement(this.queries.get(QUERY_FIND_ALL_COUNTRIES))
+        ) {
+            result = this.dbSelectListOfStrings(statement);
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
+        }
+        return Collections.unmodifiableList(result);
+    }
+
+    /**
+     * Returns list of all cities in the system.
+     *
+     * @return List of all cities in the system.
+     */
+    @Override
+    public List<String> findAllCities() {
+        List<String> result = Collections.emptyList();
+        try (Connection connection = CONNECTION_POOL.getConnection();
+             PreparedStatement statement = connection.prepareStatement(this.queries.get(QUERY_FIND_ALL_CITIES))
+        ) {
+            result = this.dbSelectListOfStrings(statement);
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
+        }
+        return Collections.unmodifiableList(result);
+    }
+
+    /**
+     * Gets list of all roles in the system from the database.
+     *
+     * @return List of roles.
+     */
+    private List<String> dbSelectListOfStrings(PreparedStatement statement) {
+        List<String> result = new ArrayList<>();
+        try (ResultSet res = statement.executeQuery()) {
+            while (res.next()) {
+                result.add(res.getString(1));
+            }
+        } catch (SQLException e) {
+            LOG.error(String.format("SQL exception: %s", e.getMessage()));
         }
         return result;
     }
@@ -446,7 +501,7 @@ public class DatabaseStore implements Store<User> {
                         res.getString(++index),                             // name
                         res.getString(++index),                             // email
                         res.getString(++index),                             // country
-                        res.getString(++index)                              // city        
+                        res.getString(++index)                              // city
                 )
         );
     }
@@ -479,7 +534,9 @@ public class DatabaseStore implements Store<User> {
         QUERY_UPDATE_USER,
         QUERY_DELETE_USER_BY_ID,
         QUERY_FIND_USER_BY_ID,
-        QUERY_FIND_ALL_USERS
+        QUERY_FIND_ALL_USERS,
+        QUERY_FIND_ALL_COUNTRIES,
+        QUERY_FIND_ALL_CITIES
     }
 
 }

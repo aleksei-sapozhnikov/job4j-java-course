@@ -7,6 +7,7 @@ import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import java.util.Collections;
+import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
@@ -309,6 +310,37 @@ public class DatabaseValidatorTest {
         User fBoth = this.validator.findByCredentials(wrongLogin, wrongPassword);
         assertThat(fBoth, not(this.userOneRoleAdmin));
         assertThat(fBoth, nullValue());
+    }
+
+    /**
+     * Test findAllCountries()
+     */
+    @Test
+    public void whenFindAllCountriesThenListsOfCountries() {
+        this.validator.add(this.userOneRoleAdmin);
+        this.validator.add(this.userTwoRoleUser);
+        this.validator.add(this.userThreeRoleUser);
+        List<String> countries = this.validator.findAllCountries();
+        assertThat(countries, containsInAnyOrder(
+                this.userOneRoleAdmin.getInfo().getCountry(),
+                this.userThreeRoleUser.getInfo().getCountry(),
+                this.userTwoRoleUser.getInfo().getCountry()
+        ));
+    }
+
+    /**
+     * Test findAllCities()
+     */
+    @Test
+    public void whenFindAllCitiesThenListsOfCities() {
+        this.validator.add(this.userOneRoleAdmin);
+        this.validator.add(this.userTwoRoleUser);
+        this.validator.add(this.userThreeRoleUser);
+        assertThat(this.validator.findAllCities(), containsInAnyOrder(
+                this.userTwoRoleUser.getInfo().getCity(),
+                this.userThreeRoleUser.getInfo().getCity(),
+                this.userOneRoleAdmin.getInfo().getCity()
+        ));
     }
 
 }

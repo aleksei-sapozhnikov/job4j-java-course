@@ -65,5 +65,18 @@ public interface Store<T> {
      */
     void close() throws Exception;
 
+    /**
+     * Returns list of all countries in the system.
+     *
+     * @return List of all countries in the system.
+     */
+    List<String> findAllCountries();
+
+    /**
+     * Returns list of all cities in the system.
+     *
+     * @return List of all cities in the system.
+     */
+    List<String> findAllCities();
 
 }

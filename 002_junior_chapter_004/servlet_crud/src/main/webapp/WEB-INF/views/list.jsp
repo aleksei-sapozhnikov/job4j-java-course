@@ -11,6 +11,24 @@
     <jsp:include page="imports/head.jsp">
         <jsp:param name="title" value="User List"/>
     </jsp:include>
+
+    <script>
+        function testAjax() {
+            var sending = {
+                name: $('#ajax_name').val(),
+                email: $('#ajax_email').val()
+            };
+
+            $.ajax({
+                type: "POST",
+                url: location.href + "/ajax",
+                dataType: "json",
+                data: JSON.stringify(sending),
+                success: alert('sent')
+            })
+        }
+    </script>
+
 </head>
 <body>
 
@@ -76,6 +94,14 @@
         </tbody>
     </table>
 </div>
+
+
+<br><br><br>
+<form>
+    <input id="ajax_name" name="ajax_name" type="text" title="name"/>
+    <input id="ajax_email" name="ajax_email" type="text" title="email"/>
+    <input type="submit" onclick="testAjax()"/>
+</form>
 
 </body>
 </html>
