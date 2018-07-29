@@ -13,22 +13,19 @@
     </jsp:include>
 
     <script>
-        function testAjax() {
-            var sending = {
-                name: $('#ajax_name').val(),
-                email: $('#ajax_email').val()
-            };
-
+        function requestList(listName) {
             $.ajax({
                 type: "POST",
                 url: location.href + "/ajax",
-                dataType: "json",
-                data: JSON.stringify(sending),
-                success: alert('sent')
-            })
+                data: listName,
+                success: function (resp) {
+                    $('#ajaxGetUserServletResponse').html(resp);
+                }
+            });
+
+            return false;
         }
     </script>
-
 </head>
 <body>
 
@@ -95,13 +92,20 @@
     </table>
 </div>
 
+<div class="container">
+    <form>
+        <input id="ajax_name" name="ajax_name" type="text" title="name"/>
+        <input type="submit"
+               onclick="return requestList(
+                   $('#ajax_name').val()
+                   )"/>
+    </form>
+    <br>
+    <h3>response: </h3>
+    <div id="ajaxGetUserServletResponse">
+    </div>
+</div>
 
-<br><br><br>
-<form>
-    <input id="ajax_name" name="ajax_name" type="text" title="name"/>
-    <input id="ajax_email" name="ajax_email" type="text" title="email"/>
-    <input type="submit" onclick="testAjax()"/>
-</form>
 
 </body>
 </html>

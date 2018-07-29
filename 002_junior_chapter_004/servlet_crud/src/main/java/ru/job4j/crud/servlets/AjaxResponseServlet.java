@@ -1,6 +1,5 @@
 package ru.job4j.crud.servlets;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,8 +8,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Takes ajax requests and responds to them.
@@ -40,16 +37,10 @@ public class AjaxResponseServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        final String json = this.readerToString(req.getReader());
-
-        final Map<String, String> values = this.mapper.readValue(
-                json,
-                new TypeReference<HashMap<String, String>>() {
-                }
-        );
-
-        LOG.info("JSON parsed: name=" + values.get("name") + ", email=" + values.get("email"));
-
+        final String name = this.readerToString(req.getReader());
+        String s = "Name = " + name;
+        resp.setContentType("text/html");
+        resp.getWriter().write(s);
     }
 
     /**
