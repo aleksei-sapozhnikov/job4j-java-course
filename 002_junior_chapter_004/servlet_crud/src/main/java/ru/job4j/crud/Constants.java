@@ -20,15 +20,6 @@ public enum Constants {
      */
     PARAM_ERROR("error"),
     /**
-     * Attributes: URI paths.
-     */
-    PARAM_URI_CONTEXT_PATH("context"),
-    PARAM_URI_CREATE_USER("create"),
-    PARAM_URI_UPDATE_USER("update"),
-    PARAM_URI_DELETE_USER("delete"),
-    PARAM_URI_LOGIN("login"),
-    PARAM_URI_LOGOUT("logout"),
-    /**
      * URI paths.
      */
     URI_CREATE_USER("/create"),

@@ -55,7 +55,6 @@ public class LogInServlet extends AbstractServlet {
         User user = VALIDATOR.findByCredentials(login, password);
         if (user != null) {
             HttpSession session = req.getSession();
-            session.setAttribute(PARAM_URI_CONTEXT_PATH.v(), req.getContextPath());
             session.setAttribute(PARAM_LOGGED_USER.v(), user);
             resp.sendRedirect(req.getContextPath());
         } else {
