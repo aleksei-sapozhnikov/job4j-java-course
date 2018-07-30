@@ -12,20 +12,6 @@
         <jsp:param name="title" value="User List"/>
     </jsp:include>
 
-    <script>
-        function requestList(listName) {
-            $.ajax({
-                type: "POST",
-                url: location.href + "/ajax",
-                data: listName,
-                success: function (resp) {
-                    $('#ajaxGetUserServletResponse').html(resp);
-                }
-            });
-
-            return false;
-        }
-    </script>
 </head>
 <body>
 
@@ -56,7 +42,7 @@
         </tr>
         </thead>
         <tbody>
-        <c:forEach items="${users}" var="user" varStatus="ind">
+        <c:forEach items="${users}" var="user">
             <tr>
                 <td><c:out value="${user.id}"/>
                 </td>
@@ -91,21 +77,6 @@
         </tbody>
     </table>
 </div>
-
-<div class="container">
-    <form>
-        <input id="ajax_name" name="ajax_name" type="text" title="name"/>
-        <input type="submit"
-               onclick="return requestList(
-                   $('#ajax_name').val()
-                   )"/>
-    </form>
-    <br>
-    <h3>response: </h3>
-    <div id="ajaxGetUserServletResponse">
-    </div>
-</div>
-
 
 </body>
 </html>

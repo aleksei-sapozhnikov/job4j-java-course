@@ -9,8 +9,11 @@
         var login = $('#login').val();
         var password = $("#password").val();
         var email = $('#email').val();
-        var country = $('#country').val();
-        var city = $('#city').val();
+        var countryFromForm = $('#country_form').val();
+        var country = countryFromForm === "" ? $('#country_ajax_list') : countryFromForm;
+        var cityFromForm = $('#city_form').val();
+        var city = cityFromForm === "" ? $('#city_ajax_list') : cityFromForm;
+        alert("country=" + country + " city=" + city);
         var invalids = findInvalids(name, login, password, email, country, city);
         if (invalids.length === 0) {
             $('#user_form').submit();

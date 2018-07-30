@@ -3,7 +3,6 @@
 <%--@elvariable id="context" type="java.lang.String"--%>
 <%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
 
-<!-- Navigation bar -->
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <form class="navbar-form navbar-left" action="${context}" method="GET">

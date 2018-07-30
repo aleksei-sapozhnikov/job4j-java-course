@@ -120,6 +120,10 @@
         <param-name>logout</param-name>
         <param-value>/logout</param-value>
     </context-param>
+    <context-param>
+        <param-name>ajax</param-name>
+        <param-value>/ajax</param-value>
+    </context-param>
 
 
 </web-app>

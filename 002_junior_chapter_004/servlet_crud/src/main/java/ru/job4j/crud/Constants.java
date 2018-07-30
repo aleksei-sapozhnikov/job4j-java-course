@@ -27,6 +27,7 @@ public enum Constants {
     URI_DELETE_USER("/delete"),
     URI_LOGIN("/login"),
     URI_LOGOUT("/logout"),
+    URI_AJAX("/ajax"),
     /**
      * JSP pages.
      */
