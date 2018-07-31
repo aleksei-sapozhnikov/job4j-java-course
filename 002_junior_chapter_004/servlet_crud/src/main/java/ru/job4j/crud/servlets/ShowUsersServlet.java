@@ -2,11 +2,13 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.model.Credentials;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 import static ru.job4j.crud.Constants.*;
 
@@ -35,6 +37,7 @@ public class ShowUsersServlet extends AbstractServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         req.setAttribute(PARAM_ALL_USERS.v(), VALIDATOR.findAll());
+        req.setAttribute(PARAM_ALL_ROLES.v(), Arrays.asList(Credentials.Role.values()));
         req.getRequestDispatcher(JSP_VIEWS_DIR.v().concat(JSP_LIST_USERS.v())).forward(req, resp);
     }
 }

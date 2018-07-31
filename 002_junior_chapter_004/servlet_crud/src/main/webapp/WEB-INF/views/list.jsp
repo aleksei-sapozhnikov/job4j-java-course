@@ -12,8 +12,40 @@
         <jsp:param name="title" value="User List"/>
     </jsp:include>
 
+    <!-- Scripts -->
+    <jsp:include page="scripts/findInvalids.jsp"/>
+    <jsp:include page="scripts/submitUserFormIfFieldsValid.jsp"/>
 </head>
-<body>
+
+<script>
+    $(function () {
+        var availableTags = [
+            "ActionScript", "AppleScript", "Asp", "BASIC", "C", "C++",
+            "Clojure", "COBOL", "ColdFusion", "Erlang", "Fortran",
+            "Groovy", "Haskell", "Java", "JavaScript", "Lisp", "Perl",
+            "PHP", "Python", "Ruby", "Scala", "Scheme"
+        ];
+
+        $(".autocomplete").autocomplete({
+            source: availableTags
+        });
+    });
+</script>
+
+
+<div class="container">
+
+    <div class="form-group">
+        <label>Languages</label>
+        <input class="form-control autocomplete" placeholder="Enter A" />
+    </div>
+
+    <div class="form-group">
+        <label >Another Field</label>
+        <input class="form-control">
+    </div>
+
+</div>
 
 <!-- Navigation bar -->
 <jsp:include page="imports/navbar.jsp"/>
@@ -23,60 +55,16 @@
     <jsp:param name="error" value="${error}"/>
 </jsp:include>
 
-<!-- User list table -->
+<!-- User fill form -->
 <div class="container col-sm-offset-2 col-sm-8">
-    <h2>User list</h2>
-    <p>Users registered in the system</p>
-    <table class="table table-hover">
-        <thead>
-        <tr>
-            <th>Id</th>
-            <th>Created</th>
-            <th>Login</th>
-            <th>Role</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Country</th>
-            <th>City</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        <c:forEach items="${users}" var="user">
-            <tr>
-                <td><c:out value="${user.id}"/>
-                </td>
-                <td>
-                    <jsp:setProperty name="dateTime" property="time" value="${user.created}"/>
-                    <fmt:formatDate value="${dateTime}" pattern="dd.MM.yyyy HH:mm:ss"/>
-                </td>
-                <td><c:out value="${user.credentials.login}"/></td>
-                <td><c:out value="${user.credentials.role}"/></td>
-                <td><c:out value="${user.info.name}"/></td>
-                <td><c:out value="${user.info.email}"/></td>
-                <td><c:out value="${user.info.country}"/></td>
-                <td><c:out value="${user.info.city}"/></td>
-                <td>
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <form action="${context}${initParam.update}" method="get">
-                                <input type="hidden" name="id" value="${user.id}">
-                                <button type="submit" class="btn btn-default">Update</button>
-                            </form>
-                        </div>
-                        <div class="col-sm-6">
-                            <form action="${context}${initParam.delete}" method="get">
-                                <input type="hidden" name="id" value="${user.id}">
-                                <button type="submit" class="btn btn-default">Delete</button>
-                            </form>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </c:forEach>
-        </tbody>
-    </table>
+    <jsp:include page="pages/userForm.jsp"/>
 </div>
 
-</body>
+<!-- List of users -->
+<div class="container col-sm-offset-1 col-sm-10">
+    <jsp:include page="pages/list.jsp"/>
+</div>
+
 </html>
+
+<body>
