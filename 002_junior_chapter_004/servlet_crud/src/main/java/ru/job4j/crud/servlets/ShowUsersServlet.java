@@ -38,6 +38,6 @@ public class ShowUsersServlet extends AbstractServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         req.setAttribute(PARAM_ALL_USERS.v(), VALIDATOR.findAll());
         req.setAttribute(PARAM_ALL_ROLES.v(), Arrays.asList(Credentials.Role.values()));
-        req.getRequestDispatcher(JSP_VIEWS_DIR.v().concat(JSP_LIST_USERS.v())).forward(req, resp);
+        req.getRequestDispatcher(JSP_VIEWS_DIR.v().concat("/index.jsp")).forward(req, resp);
     }
 }

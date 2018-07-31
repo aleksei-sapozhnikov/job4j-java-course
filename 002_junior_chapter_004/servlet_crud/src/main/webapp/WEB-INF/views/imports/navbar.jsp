@@ -8,9 +8,6 @@
         <form class="navbar-form navbar-left" action="${context}" method="GET">
             <button type="submit" class="btn btn-primary navbar-btn">Home</button>
         </form>
-        <form class="navbar-form navbar-left" action="${context}${initParam.create}" method="GET">
-            <button type="submit" class="btn btn-primary navbar-btn">Create user</button>
-        </form>
         <c:if test="${loggedUser != null}">
             <div class="nav navbar-nav navbar-right">
                 <div class="row">
