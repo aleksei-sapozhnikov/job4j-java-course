@@ -5,15 +5,12 @@
      */
     function submitUserFormIfFieldsValid() {
         var result;
-        var name = $('#name').val();
-        var login = $('#login').val();
-        var password = $("#password").val();
-        var email = $('#email').val();
-        var countryFromForm = $('#country_form').val();
-        var country = countryFromForm === "" ? $('#country_ajax_list') : countryFromForm;
-        var cityFromForm = $('#city_form').val();
-        var city = cityFromForm === "" ? $('#city_ajax_list') : cityFromForm;
-        alert("country=" + country + " city=" + city);
+        var name = $('input[name=name]').val();
+        var login = $('input[name=login]').val();
+        var password = $('input[name=password]').val();
+        var email = $('input[name=email]').val();
+        var country = $('input[name=country]').val();
+        var city = $('input[name=city]').val();
         var invalids = findInvalids(name, login, password, email, country, city);
         if (invalids.length === 0) {
             $('#user_form').submit();

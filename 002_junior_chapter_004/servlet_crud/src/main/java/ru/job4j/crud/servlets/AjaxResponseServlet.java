@@ -3,6 +3,7 @@ package ru.job4j.crud.servlets;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -48,6 +49,12 @@ public class AjaxResponseServlet extends AbstractServlet {
         } else if (name.equals("cities")) {
             List<String> countries = VALIDATOR.findAllCities();
             String json = this.mapper.writeValueAsString(countries);
+            resp.setContentType("application/json");
+            resp.getWriter().write(json);
+        } else {
+            int id = Integer.valueOf(name);
+            User user = VALIDATOR.findById(id);
+            String json = this.mapper.writeValueAsString(user);
             resp.setContentType("application/json");
             resp.getWriter().write(json);
         }

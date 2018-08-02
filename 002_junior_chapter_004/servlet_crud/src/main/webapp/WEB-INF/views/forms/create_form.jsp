@@ -4,9 +4,9 @@
 <c:set var="context" scope="request" value="${pageContext.request.contextPath}"/>
 <%--@elvariable id="roles" type="java.util.Collection"--%>
 
-<div class="container-fluid" id="create_form">
+<div class="container-fluid">
     <h2>Create user</h2>
-    <form id="user_form" class="form-horizontal"
+    <form class="form-horizontal" id="user_form"
           action="${context}${initParam.create}" method="POST">
         <!-- Login -->
         <div class="form-group">
