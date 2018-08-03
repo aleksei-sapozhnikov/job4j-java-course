@@ -8,13 +8,13 @@
 
 <html>
 <head>
-    <jsp:include page="imports/head.jsp">
+    <jsp:include page="../imports/head.jsp">
         <jsp:param name="title" value="User List"/>
     </jsp:include>
 
     <!-- Scripts -->
-    <jsp:include page="scripts/findInvalids.jsp"/>
-    <jsp:include page="scripts/submitUserFormIfFieldsValid.jsp"/>
+    <jsp:include page="../scripts/findInvalids.jsp"/>
+    <jsp:include page="../scripts/submitUserFormIfFieldsValid.jsp"/>
 </head>
 
 <script>
@@ -48,21 +48,21 @@
 </div>
 
 <!-- Navigation bar -->
-<jsp:include page="imports/navbar.jsp"/>
+<jsp:include page="../imports/navigationBar.jsp"/>
 
 <!-- Error messages show -->
-<jsp:include page="imports/errorShow.jsp">
+<jsp:include page="../imports/errorShow.jsp">
     <jsp:param name="error" value="${error}"/>
 </jsp:include>
 
 <!-- User fill form -->
 <div class="container col-sm-offset-2 col-sm-8">
-    <jsp:include page="pages/userForm.jsp"/>
+    <jsp:include page="userForm.jsp"/>
 </div>
 
 <!-- List of users -->
 <div class="container col-sm-offset-1 col-sm-10">
-    <jsp:include page="pages/list.jsp"/>
+    <jsp:include page="list.jsp"/>
 </div>
 
 </html>

@@ -12,7 +12,7 @@
 <body>
 
 <!-- Navigation bar -->
-<jsp:include page="imports/navbar.jsp"/>
+<jsp:include page="imports/navigationBar.jsp"/>
 
 <!-- Error messages show -->
 <jsp:include page="imports/errorShow.jsp">

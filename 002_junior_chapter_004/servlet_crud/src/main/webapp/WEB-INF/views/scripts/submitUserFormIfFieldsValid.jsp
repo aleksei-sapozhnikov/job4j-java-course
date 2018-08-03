@@ -3,7 +3,7 @@
      * Adds row to users table if user values are valid.
      * @returns {boolean} true if user was added, false if not.
      */
-    function submitUserFormIfFieldsValid() {
+    function validateAndSubmit() {
         var result;
         var name = $('input[name=name]').val();
         var login = $('input[name=login]').val();

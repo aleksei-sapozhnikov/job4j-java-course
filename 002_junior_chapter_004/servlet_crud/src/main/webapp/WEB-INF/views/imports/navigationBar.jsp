@@ -6,7 +6,10 @@
 <nav class="navbar navbar-default">
     <div class="container-fluid">
         <form class="navbar-form navbar-left" action="${context}" method="GET">
-            <button type="submit" class="btn btn-primary navbar-btn">Home</button>
+            <button class="btn btn-primary navbar-btn">Home</button>
+        </form>
+        <form class="navbar-form navbar-left">
+            <button id="create-user" class="btn btn-primary navbar-btn">Create user</button>
         </form>
         <c:if test="${loggedUser != null}">
             <div class="nav navbar-nav navbar-right">
@@ -25,3 +28,5 @@
         </c:if>
     </div>
 </nav>
+
+

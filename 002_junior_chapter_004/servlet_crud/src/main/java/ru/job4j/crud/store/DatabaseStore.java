@@ -539,4 +539,10 @@ public class DatabaseStore implements Store<User> {
         QUERY_FIND_ALL_CITIES
     }
 
+    public static void main(String[] args) {
+        for (User user : DatabaseStore.getInstance().findAll()) {
+            LOG.info(user);
+        }
+    }
+
 }

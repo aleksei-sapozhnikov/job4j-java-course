@@ -5,19 +5,23 @@
 <jsp:useBean id="dateTime" scope="request" class="java.util.Date"/>
 <%--@elvariable id="users" type="java.util.List<ru.job4j.crud.model.User>"--%>
 
-<!-- User list table -->
-<h2>User list</h2>
-<p>Users registered in the system</p>
+<script>
+    function alertId(id) {
+        alert(id);
+    }
+</script>
+
 <table class="table table-hover">
     <thead>
     <tr>
         <th>Identity</th>
         <th>Credentials</th>
         <th>Info</th>
+        <th align="center">Actions:</th>
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="${users}" var="user" varStatus="ind">
+    <c:forEach items="${users}" var="user">
         <tr>
             <td>
                 <div><b>Id: </b>${user.id}</div>
@@ -36,6 +40,22 @@
                 <div><b>Email: </b>${user.info.email}</div>
                 <div><b>Country: </b>${user.info.country}</div>
                 <div><b>City: </b>${user.info.city}</div>
+            </td>
+            <td>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <form action="${context}${initParam.update}" method="post">
+                            <input name="id" type="hidden" value="${user.id}"/>
+                            <input type="button" id="update_${user.id}" value="Update" onclick="alertId(this.id)"/>
+                        </form>
+                    </div>
+                    <div class="col-sm-6">
+                        <form action="${context}${initParam.update}" method="post">
+                            <input name="id" type="hidden" value="${user.id}"/>
+                            <input type="button" id="delete_${user.id}" value="Delete" onclick="alertId(this.id)"/>
+                        </form>
+                    </div>
+                </div>
             </td>
         </tr>
     </c:forEach>
