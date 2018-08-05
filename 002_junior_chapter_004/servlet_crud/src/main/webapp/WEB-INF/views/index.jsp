@@ -1,6 +1,7 @@
 <%--@elvariable id="roles" type="java.util.List<Role>"--%>
 <%--@elvariable id="loggedUser" type="ru.job4j.crud.model.User"--%>
 <%--@elvariable id="users" type="java.util.List<ru.job4j.crud.model.User>"--%>
+<%--@elvariable id="error" type="java.lang.String"--%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
@@ -25,6 +26,12 @@
     <!-- Bootstrap -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <style>
+        body {
+            padding-top: 70px;
+        }
+    </style>
 
     <script>
         /**
@@ -54,7 +61,7 @@
                 "<tr id=\"users-row-" + user.id + "\">" +
                 "<td>" +
                 "<div><b>Id: </b>" + user.id + "</div>" +
-                "<div><b>Created: </b>" + user.created + "</div>" +
+                "<div><b>Created: </b>" + formatDateTime(user.created) + "</div>" +
                 "</td>" +
                 "<td>" +
                 "<div><b>Login: </b>" + user.credentials.login + "</div>" +
@@ -67,10 +74,36 @@
                 "<div><b>City: </b>" + user.info.city + "</div>" +
                 "</td>" +
                 "<td>" +
-                "actions" +
+                "<div class=\"row\">" +
+                "<div class=\"col-sm-6\">" +
+                "<form method=\"post\">" +
+                "<input name=\"id\" type=\"hidden\" value=\"" + user.id + "\"/>" +
+                "<input type=\"button\" class=\"btn btn-primary\" value=\"Update\"" +
+                "onclick=\"updateUser(" + user.id + ")\"/>" +
+                "</form>" +
+                "</div>" +
+                "<div class=\"col-sm-6\">" +
+                "<form method=\"post\">" +
+                "<input name=\"id\" type=\"hidden\" value=\"" + user.id + "\"/>" +
+                "<input type=\"button\" class=\"btn btn-primary\" value=\"Delete\"" +
+                "onclick=\"beginDeleteUser(" + user.id + ")\"/>" +
+                "</form>" +
+                "</div>" +
+                "</div>" +
                 "</td>" +
                 "</tr>");
             return false;
+        }
+
+        /**
+         * Formats user created time into needed format
+         * and returns that string.
+         */
+        function formatDateTime(milliseconds) {
+            var obj = new Date(milliseconds);
+            var date = $.datepicker.formatDate('dd.mm.yy', obj);
+            var time = obj.getHours() + ':' + obj.getMinutes() + ':' + obj.getSeconds();
+            return date + ' ' + time;
         }
 
         function handleCreateUserResponse(response) {
@@ -114,15 +147,56 @@
             });
         });
 
-        function deleteRow(id) {
+        /**
+         * Подтверждает удаление пользователя и
+         * запускает удаление
+         */
+        function beginDeleteUser(id) {
             bootbox.confirm("Delete user (id=" + id + ")?", function (result) {
                 if (result) {
-                    var rowName = '#users-row-' + id;
-                    $(rowName).remove();
+                    deleteUser(id)
                 }
             });
         }
 
+        /**
+         * Удаляет пользователя по id.
+         */
+        function deleteUser(id) {
+            $.ajax({
+                type: 'POST',
+                url: "${context}${initParam.delete}",
+                data: JSON.stringify(id),
+                success: function (response) {
+                    handleDeleteUserResponse(response);
+                }
+            });
+        }
+
+        function handleDeleteUserResponse(response) {
+            if (response.id !== -1) {
+                deleteRow(response.id);
+            }
+            else {
+                alert('User delete failed');
+            }
+        }
+
+        /**
+         * Удаляет ряд с пользователем по id
+         * из таблицы пользователей.
+         */
+        function deleteRow(id) {
+            var rowName = '#users-row-' + id;
+            $(rowName).remove();
+        }
+
+        /**
+         * Функция для обновления пользователя. Только начинаем делать.
+         */
+        function updateUser(id) {
+            alert(id);
+        }
 
         // $(function () {
         //     /**
@@ -238,7 +312,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <form class="navbar-form navbar-left" action="${context}" method="GET">
             <button class="btn btn-primary navbar-btn">Home</button>
@@ -257,8 +331,8 @@
             <div class="nav navbar-nav navbar-right">
                 <div class="row">
                     <div class="col-sm-8">
-                        <p class="navbar-text">Logged: ${loggedUser.info.name} (id: ${loggedUser.id},
-                            role: ${loggedUser.credentials.role})</p>
+                        <p class="navbar-text">Logged:&nbsp${loggedUser.info.name},
+                            id:&nbsp${loggedUser.id}, role:&nbsp${loggedUser.credentials.role}</p>
                     </div>
                     <div class="col-sm-4">
                         <form class="navbar-form" action="${context}${initParam.logout}" method="POST">
@@ -270,6 +344,15 @@
         </c:if>
     </div>
 </nav>
+
+<!-- Error show -->
+<c:if test="${error != null} || ${error != ''}">
+    <div class="text-center">
+        <div class="alert alert-danger">
+            <strong>Error!</strong> ${error}
+        </div>
+    </div>
+</c:if>
 
 <!-- User create dialog -->
 <div id="user-create-dialog" class="modal fade" tabindex="-1" role="dialog">
@@ -496,15 +579,15 @@
                         <div class="col-sm-6">
                             <form action="${context}${initParam.update}" method="post">
                                 <input name="id" type="hidden" value="${user.id}"/>
-                                <input id="update_${user.id}" type="button" class="btn btn-primary" value="Update"
-                                       onclick="alert(this.id)"/>
+                                <input type="button" class="btn btn-primary" value="Update"
+                                       onclick="updateUser(${user.id})"/>
                             </form>
                         </div>
                         <div class="col-sm-6">
                             <form action="${context}${initParam.update}" method="post">
                                 <input name="id" type="hidden" value="${user.id}"/>
                                 <input id="delete_${user.id}" type="button" class="btn btn-primary" value="Delete"
-                                       onclick="deleteRow(${user.id})"/>
+                                       onclick="beginDeleteUser(${user.id})"/>
                             </form>
                         </div>
                     </div>

@@ -42,7 +42,7 @@ public class CreateUserServlet extends AbstractServlet {
         Info info = this.formInfo(node);
         User user = new User(credentials, info);
         int id = VALIDATOR.add(user);
-        User resultUser = id != -1 ? VALIDATOR.findById(id) : user;
+        User resultUser = id != -1 ? VALIDATOR.findById(id) : this.userBadAnswer;
         resp.setContentType("application/json");
         String jsonResp = mapper.writeValueAsString(resultUser);
         resp.getWriter().write(jsonResp);

@@ -14,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 
 import static ru.job4j.crud.Constants.*;
+import static ru.job4j.crud.model.Credentials.Role.USER;
 
 /**
  * General User HttpServlet class. Holds methods and fields needed
@@ -36,6 +37,15 @@ public abstract class AbstractServlet extends HttpServlet {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(AbstractServlet.class);
+    /**
+     * User object meaning "bad answer".
+     */
+    protected final User userBadAnswer = new User(
+            -1, -1,
+            new Credentials("none", "none", USER),
+            new Info("none", "none", "none", "none")
+    );
+
 
     /**
      * Is called when servlet stops working.
