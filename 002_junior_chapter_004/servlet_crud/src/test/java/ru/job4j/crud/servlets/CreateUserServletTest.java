@@ -88,14 +88,4 @@ public class CreateUserServletTest {
         verify(this.request).setAttribute(eq(PARAM_ERROR.v()), anyString());
         verify(this.requestDispatcher).forward(this.request, this.response);
     }
-
-    /**
-     * Test doGet()
-     */
-    @Test
-    public void whenGetMethodThenRedirectToCreatePage() throws IOException, ServletException {
-        this.servlet.doGet(this.request, this.response);
-        verify(this.request).getRequestDispatcher(JSP_VIEWS_DIR.v().concat(JSP_CREATE_USER.v()));
-
-    }
 }

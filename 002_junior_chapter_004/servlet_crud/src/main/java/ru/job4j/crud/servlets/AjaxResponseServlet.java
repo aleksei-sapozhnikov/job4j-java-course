@@ -7,7 +7,6 @@ import ru.job4j.crud.model.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 
@@ -59,23 +58,5 @@ public class AjaxResponseServlet extends AbstractServlet {
             resp.getWriter().write(json);
         }
 
-    }
-
-    /**
-     * Reads data from reader and returns it as a single object.
-     *
-     * @param reader Reader where to get data from.
-     * @return Data from reader if reader != null, empty data if reader == null.
-     * @throws IOException If an I/O error occurs.
-     */
-    private String readerToString(final BufferedReader reader) throws IOException {
-        final StringBuilder result = new StringBuilder();
-        if (reader != null) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                result.append(line);
-            }
-        }
-        return result.toString();
     }
 }
