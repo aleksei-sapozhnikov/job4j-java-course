@@ -16,7 +16,7 @@
     <title>User list</title>
 
     <!-- Jquery -->
-    <link rel="stylesheet" href="<c:url value="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"/>">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -51,6 +51,9 @@
         $(document).ready(function () {
             $("#user-update-button").button().on("click", function (event) {
                 event.preventDefault();
+                var select = $('#user-update-select-id');
+                getAllIdsAndFillSelect(select);
+                getUserAndChangeInputValues($('#user-update-form'), select.val());
             });
         });
 
@@ -60,7 +63,7 @@
         $(document).ready(function () {
             $('#user-update-select-id').change(function () {
                 var id = $(this).val();
-                getUserAndChangeInputValues(this, id);
+                getUserAndChangeInputValues($('#user-update-form'), id);
             });
         });
 
@@ -77,16 +80,35 @@
             });
         }
 
+        function getAllIdsAndFillSelect(selectObj) {
+            $.ajax({
+                type: 'POST',
+                url: "${context}${initParam.selectors}",
+                data: JSON.stringify({
+                    request: 'ids'
+                }),
+                success: function (response) {
+                    setIdSelector(selectObj, response);
+                }
+            });
+        }
+
+        function setIdSelector(selector, ids) {
+            var selectorHtml = "";
+            for (var i = 0; i < ids.length; i++) {
+                selectorHtml += "<option value=\"" + ids[i] + "\">" + ids[i] + "</option>";
+            }
+            selector.html(selectorHtml);
+        }
+
         function setValues(form, user) {
-            // $(form).find(':input[name=login]').val(user.credentials.login);
-            // $(form).find(':input[name=password]').val(user.credentials.password);
-            // $(form).find(':input[name=role]').val(user.credentials.role);
-            // $(form).find(':input[name=name]').val(user.info.name);
-            // $(form).find(':input[name=email]').val(user.info.email);
-            // $(form).find(':input[name=country]').val(user.info.country);
-            // $(form).find(':input[name=city]').val(user.info.city);
-            alert("setValues");
-            $(form).find(':input[name=login]').val("login");
+            $(form).find(':input[name=login]').val(user.credentials.login);
+            $(form).find(':input[name=password]').val(user.credentials.password);
+            $(form).find(':input[name=role]').val(user.credentials.role);
+            $(form).find(':input[name=name]').val(user.info.name);
+            $(form).find(':input[name=email]').val(user.info.email);
+            $(form).find(':input[name=country]').val(user.info.country);
+            $(form).find(':input[name=city]').val(user.info.city);
         }
 
         /**
@@ -155,14 +177,15 @@
                 "<div class=\"col-sm-6\">" +
                 "<form method=\"post\">" +
                 "<input name=\"id\" type=\"hidden\" value=\"" + user.id + "\"/>" +
-                "<input type=\"button\" class=\"btn btn-primary\" value=\"Update\" " +
+                "<input type=\"button\" class=\"btn btn-primary\" data-toggle=\"modal\" " +
+                "data-target=\"#user-update-dialog\"  value=\"Update\" " +
                 "onclick=\"updateUser(" + user.id + ")\"/>" +
                 "</form>" +
                 "</div>" +
                 "<div class=\"col-sm-6\">" +
                 "<form method=\"post\">" +
                 "<input name=\"id\" type=\"hidden\" value=\"" + user.id + "\"/>" +
-                "<input type=\"button\" class=\"btn btn-primary\" value=\"Delete\" " +
+                "<input type=\"button\" class=\"btn btn-primary\"  value=\"Delete\" " +
                 "onclick=\"beginDeleteUser(" + user.id + ")\"/>" +
                 "</form>" +
                 "</div>" +
@@ -662,8 +685,8 @@
                         <div class="col-sm-6">
                             <form action="${context}${initParam.update}" method="post">
                                 <input name="id" type="hidden" value="${user.id}"/>
-                                <input type="button" class="btn btn-primary" value="Update"
-                                       onclick="updateUser(${user.id})"/>
+                                <input type="button" class="btn btn-primary" data-toggle="modal"
+                                       data-target="#user-update-dialog" value="Update"/>
                             </form>
                         </div>
                         <div class="col-sm-6">
