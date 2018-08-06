@@ -130,6 +130,11 @@
     </context-param>
 
     <context-param>
+        <param-name>users</param-name>
+        <param-value>/</param-value>
+    </context-param>
+
+    <context-param>
         <param-name>ajax</param-name>
         <param-value>/ajax</param-value>
     </context-param>

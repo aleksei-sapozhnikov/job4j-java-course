@@ -58,6 +58,41 @@
          * Событие при сабмите формы CREATE пользователя
          */
         $(document).ready(function () {
+            $('#user-update-select-id').change(function () {
+                var id = $(this).val();
+                getUserAndChangeInputValues(this, id);
+            });
+        });
+
+        function getUserAndChangeInputValues(form, id) {
+            $.ajax({
+                type: 'POST',
+                url: "${context}${initParam.users}",
+                data: JSON.stringify({
+                    id: id
+                }),
+                success: function (response) {
+                    setValues(form, response);
+                }
+            });
+        }
+
+        function setValues(form, user) {
+            // $(form).find(':input[name=login]').val(user.credentials.login);
+            // $(form).find(':input[name=password]').val(user.credentials.password);
+            // $(form).find(':input[name=role]').val(user.credentials.role);
+            // $(form).find(':input[name=name]').val(user.info.name);
+            // $(form).find(':input[name=email]').val(user.info.email);
+            // $(form).find(':input[name=country]').val(user.info.country);
+            // $(form).find(':input[name=city]').val(user.info.city);
+            alert("setValues");
+            $(form).find(':input[name=login]').val("login");
+        }
+
+        /**
+         * Событие при сабмите формы CREATE пользователя
+         */
+        $(document).ready(function () {
             $('#user-create-form').submit(function () {
                 addUser(this);
                 return false;
@@ -234,8 +269,8 @@
             }
         }
 
-        function updateRow(update) {
-            var rowNameRoot = '#users-row-' + update.id;
+        function updateRow(user) {
+            var rowNameRoot = '#users-row-' + user.id;
             var rowNameIdCreated = rowNameRoot + '-id-created';
             var rowNameCredentials = rowNameRoot + '-credentials';
             var rowNameInfo = rowNameRoot + '-info';
@@ -507,7 +542,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2">Choose id:</label>
                         <div class="col-sm-10">
-                            <select name="id" class="form-control">
+                            <select id="user-update-select-id" name="id" class="form-control">
                                 <c:forEach items="${users}" var="user">
                                     <option value="${user.id}">
                                             ${user.id}
