@@ -1,8 +1,12 @@
 package ru.job4j.crud.servlets;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
+import ru.job4j.crud.model.User;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +15,6 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import static ru.job4j.crud.Constants.*;
-import static ru.job4j.crud.servlets.ActionsDispatch.Action.UPDATE;
 
 /**
  * General class for a presentation layer "update" servlet.
@@ -52,13 +55,18 @@ public class UpdateUserServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        boolean success = DISPATCH.handle(UPDATE, req, resp);
-        if (success) {
-            resp.sendRedirect(req.getContextPath());
-        } else {
-            req.setAttribute(PARAM_ERROR.v(), "Message from server: user UPDATE failed");
-            this.doGet(req, resp);
-        }
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = mapper.readTree(req.getReader());
+        int id = Integer.valueOf(node.get("id").asText());
+        JsonNode update = node.get("update");
+        Credentials credentials = this.formCredentials(update);
+        Info info = this.formInfo(update);
+        User updateUser = new User(credentials, info);
+        boolean success = VALIDATOR.update(id, updateUser);
+        User resultUser = success ? VALIDATOR.findById(id) : this.userBadAnswer;
+        resp.setContentType("application/json");
+        String jsonResp = mapper.writeValueAsString(resultUser);
+        resp.getWriter().write(jsonResp);
     }
 
 }

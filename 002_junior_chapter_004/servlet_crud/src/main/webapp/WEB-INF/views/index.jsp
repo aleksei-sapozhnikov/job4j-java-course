@@ -44,6 +44,48 @@
             });
         });
 
+        /**
+         * Запретить дефолтное поведение
+         * при нажатии на кнопку "Update user"
+         */
+        $(document).ready(function () {
+            $("#user-update-button").button().on("click", function (event) {
+                event.preventDefault();
+            });
+        });
+
+        /**
+         * Событие при сабмите формы CREATE пользователя
+         */
+        $(document).ready(function () {
+            $('#user-create-form').submit(function () {
+                addUser(this);
+                return false;
+            });
+        });
+
+        /**
+         * Событие при сабмите формы UPDATE пользователя
+         */
+        $(document).ready(function () {
+            $('#user-update-form').submit(function () {
+                var id = $(this).find(':input[name=id]').val();
+                updateUser(id, this);
+                return false;
+            });
+        });
+
+        /**
+         * Formats user created time into needed format
+         * and returns that string.
+         */
+        function formatDateTime(milliseconds) {
+            var obj = new Date(milliseconds);
+            var date = $.datepicker.formatDate('dd.mm.yy', obj);
+            var time = obj.getHours() + ':' + obj.getMinutes() + ':' + obj.getSeconds();
+            return date + ' ' + time;
+        }
+
         function getValues(form) {
             return {
                 login: $(form).find(':input[name=login]').val(),
@@ -59,15 +101,15 @@
         function addRow(table, user) {
             $(table).find("tbody").append(
                 "<tr id=\"users-row-" + user.id + "\">" +
-                "<td>" +
+                "<td  id=\"users-row-" + user.id + "-id-created\">" +
                 "<div><b>Id: </b>" + user.id + "</div>" +
                 "<div><b>Created: </b>" + formatDateTime(user.created) + "</div>" +
                 "</td>" +
-                "<td>" +
+                "<td  id=\"users-row-" + user.id + "-credentials\">" +
                 "<div><b>Login: </b>" + user.credentials.login + "</div>" +
                 "<div><b>Role: </b>" + user.credentials.role + "</div>" +
                 "</td>" +
-                "<td>" +
+                "<td  id=\"users-row-" + user.id + "-info\">" +
                 "<div><b>Name: </b>" + user.info.name + "</div>" +
                 "<div><b>Email: </b>" + user.info.email + "</div>" +
                 "<div><b>Country: </b>" + user.info.country + "</div>" +
@@ -78,14 +120,14 @@
                 "<div class=\"col-sm-6\">" +
                 "<form method=\"post\">" +
                 "<input name=\"id\" type=\"hidden\" value=\"" + user.id + "\"/>" +
-                "<input type=\"button\" class=\"btn btn-primary\" value=\"Update\"" +
+                "<input type=\"button\" class=\"btn btn-primary\" value=\"Update\" " +
                 "onclick=\"updateUser(" + user.id + ")\"/>" +
                 "</form>" +
                 "</div>" +
                 "<div class=\"col-sm-6\">" +
                 "<form method=\"post\">" +
                 "<input name=\"id\" type=\"hidden\" value=\"" + user.id + "\"/>" +
-                "<input type=\"button\" class=\"btn btn-primary\" value=\"Delete\"" +
+                "<input type=\"button\" class=\"btn btn-primary\" value=\"Delete\" " +
                 "onclick=\"beginDeleteUser(" + user.id + ")\"/>" +
                 "</form>" +
                 "</div>" +
@@ -93,17 +135,6 @@
                 "</td>" +
                 "</tr>");
             return false;
-        }
-
-        /**
-         * Formats user created time into needed format
-         * and returns that string.
-         */
-        function formatDateTime(milliseconds) {
-            var obj = new Date(milliseconds);
-            var date = $.datepicker.formatDate('dd.mm.yy', obj);
-            var time = obj.getHours() + ':' + obj.getMinutes() + ':' + obj.getSeconds();
-            return date + ' ' + time;
         }
 
         function handleCreateUserResponse(response) {
@@ -127,25 +158,6 @@
                 }
             });
         }
-
-        /**
-         * Событие при сабмите формы создания пользователя
-         */
-        $(document).ready(function () {
-            $('#user-create-form').submit(function () {
-                addUser(this);
-                return false;
-            });
-        });
-
-        /**
-         * Событие на кнопку "Update user"
-         */
-        $(document).ready(function () {
-            $("#user-update-button").button().on("click", function (event) {
-                event.preventDefault();
-            });
-        });
 
         /**
          * Подтверждает удаление пользователя и
@@ -173,6 +185,9 @@
             });
         }
 
+        /**
+         * Handles server response to delete user request.
+         */
         function handleDeleteUserResponse(response) {
             if (response.id !== -1) {
                 deleteRow(response.id);
@@ -192,10 +207,51 @@
         }
 
         /**
-         * Функция для обновления пользователя. Только начинаем делать.
+         * Функция для обновления пользователя.
          */
-        function updateUser(id) {
-            alert(id);
+        function updateUser(id, form) {
+            var update = getValues(form);
+            $.ajax({
+                type: 'POST',
+                url: "${context}${initParam.update}",
+                data: JSON.stringify({
+                    id: id,
+                    update: update
+                }),
+                success: function (response) {
+                    handleUpdateUserResponse(response);
+                }
+            });
+        }
+
+        function handleUpdateUserResponse(response) {
+            if (response.id !== -1) {
+                updateRow(response);
+                $('#user-update-dialog').modal('toggle'); // close dialog
+            }
+            else {
+                alert('User update failed');
+            }
+        }
+
+        function updateRow(update) {
+            var rowNameRoot = '#users-row-' + update.id;
+            var rowNameIdCreated = rowNameRoot + '-id-created';
+            var rowNameCredentials = rowNameRoot + '-credentials';
+            var rowNameInfo = rowNameRoot + '-info';
+
+            var rowIdCreated = "<div><b>Id: </b>" + user.id + "</div>" +
+                "<div><b>Created: </b>" + formatDateTime(user.created) + "</div>";
+            var rowCredentials = "<div><b>Login: </b>" + user.credentials.login + "</div>" +
+                "<div><b>Role: </b>" + user.credentials.role + "</div>";
+            var rowInfo = "<div><b>Name: </b>" + user.info.name + "</div>" +
+                "<div><b>Email: </b>" + user.info.email + "</div>" +
+                "<div><b>Country: </b>" + user.info.country + "</div>" +
+                "<div><b>City: </b>" + user.info.city + "</div>";
+
+            $(rowNameIdCreated).html(rowIdCreated);
+            $(rowNameCredentials).html(rowCredentials);
+            $(rowNameInfo).html(rowInfo);
         }
 
         // $(function () {
@@ -333,6 +389,7 @@
                     <div class="col-sm-8">
                         <p class="navbar-text">Logged:&nbsp${loggedUser.info.name},
                             id:&nbsp${loggedUser.id}, role:&nbsp${loggedUser.credentials.role}</p>
+
                     </div>
                     <div class="col-sm-4">
                         <form class="navbar-form" action="${context}${initParam.logout}" method="POST">
@@ -344,15 +401,6 @@
         </c:if>
     </div>
 </nav>
-
-<!-- Error show -->
-<c:if test="${error != null} || ${error != ''}">
-    <div class="text-center">
-        <div class="alert alert-danger">
-            <strong>Error!</strong> ${error}
-        </div>
-    </div>
-</c:if>
 
 <!-- User create dialog -->
 <div id="user-create-dialog" class="modal fade" tabindex="-1" role="dialog">
@@ -556,7 +604,7 @@
         <tbody>
         <c:forEach items="${users}" var="user">
             <tr id="users-row-${user.id}">
-                <td>
+                <td id="users-row-${user.id}-id-created">
                     <div><b>Id: </b>${user.id}</div>
                     <div>
                         <b>Created: </b>
@@ -564,11 +612,11 @@
                         <fmt:formatDate value="${dateTime}" pattern="dd.MM.yyyy HH:mm:ss"/>
                     </div>
                 </td>
-                <td>
+                <td id="users-row-${user.id}-credentials">
                     <div><b>Login: </b>${user.credentials.login}</div>
                     <div><b>Role: </b>${user.credentials.role}</div>
                 </td>
-                <td>
+                <td id="users-row-${user.id}-info">
                     <div><b>Name: </b>${user.info.name}</div>
                     <div><b>Email: </b>${user.info.email}</div>
                     <div><b>Country: </b>${user.info.country}</div>
