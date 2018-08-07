@@ -13,8 +13,8 @@
     </jsp:include>
 
     <!-- Scripts -->
-    <jsp:include page="../scripts/findInvalids.jsp"/>
-    <jsp:include page="../scripts/submitUserFormIfFieldsValid.jsp"/>
+    <jsp:include page="../scripts-old/findInvalids.jsp"/>
+    <jsp:include page="../scripts-old/submitUserFormIfFieldsValid.jsp"/>
 </head>
 
 <script>

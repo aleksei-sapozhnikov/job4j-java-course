@@ -5,19 +5,17 @@
 
 <html>
 <head>
-    <jsp:include page="imports/head.jsp">
-        <jsp:param name="title" value="Login"/>
-    </jsp:include>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>User list</title>
+
+    <!-- Head common attrs -->
+    <c:import url="head/head-common-attrs.jsp"/>
 </head>
 <body>
 
 <!-- Navigation bar -->
-<jsp:include page="imports/navigationBar.jsp"/>
-
-<!-- Error messages show -->
-<jsp:include page="imports/errorShow.jsp">
-    <jsp:param name="error" value="${error}"/>
-</jsp:include>
+<c:import url="page-parts/navbar.jsp"/>
 
 <!-- Login form -->
 <div class="container col-sm-offset-2 col-sm-8">
