@@ -67,7 +67,7 @@
 
     <servlet>
         <servlet-name>FillSelectorsServlet</servlet-name>
-        <servlet-class>ru.job4j.crud.servlets.SelectorsServlet</servlet-class>
+        <servlet-class>ru.job4j.crud.servlets.FillSelectorsServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>

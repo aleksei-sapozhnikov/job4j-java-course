@@ -19,11 +19,11 @@ import java.util.List;
  * @version 0.1
  * @since 0.1
  */
-public class SelectorsServlet extends AbstractServlet {
+public class FillSelectorsServlet extends AbstractServlet {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(SelectorsServlet.class);
+    private static final Logger LOG = LogManager.getLogger(FillSelectorsServlet.class);
     /**
      * JSON mapper to convert objects to json and vice versa.
      */

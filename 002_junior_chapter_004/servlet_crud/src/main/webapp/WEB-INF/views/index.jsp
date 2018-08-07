@@ -51,9 +51,24 @@
         $(document).ready(function () {
             $("#user-update-button").button().on("click", function (event) {
                 event.preventDefault();
+            });
+        });
+
+        $(document).ready(function () {
+            $('#user-update-dialog').on('show.bs.modal', function () {
                 var select = $('#user-update-select-id');
-                getAllIdsAndFillSelect(select);
-                getUserAndChangeInputValues($('#user-update-form'), select.val());
+                getIdsAndWriteHtmlToIdSelect(select);
+                getUserAndSetInputValues($('#user-update-form'), select.val());
+            })
+        });
+
+        $(document).ready(function () {
+            $(".update-specific-user-button").button().on("click", function (event) {
+                event.preventDefault();
+                var updateId = $(this).parent().find(":input[name=id]").val();
+                var select = $('#user-update-select-id');
+                getIdsAndWriteHtmlToIdSelect(select);
+                getUserAndSetInputValues($('#user-update-form'), updateId);
             });
         });
 
@@ -63,11 +78,11 @@
         $(document).ready(function () {
             $('#user-update-select-id').change(function () {
                 var id = $(this).val();
-                getUserAndChangeInputValues($('#user-update-form'), id);
+                getUserAndSetInputValues($('#user-update-form'), id);
             });
         });
 
-        function getUserAndChangeInputValues(form, id) {
+        function getUserAndSetInputValues(form, id) {
             $.ajax({
                 type: 'POST',
                 url: "${context}${initParam.users}",
@@ -75,12 +90,12 @@
                     id: id
                 }),
                 success: function (response) {
-                    setValues(form, response);
+                    setUpdateFormValues(form, response);
                 }
             });
         }
 
-        function getAllIdsAndFillSelect(selectObj) {
+        function getIdsAndWriteHtmlToIdSelect(selectObj) {
             $.ajax({
                 type: 'POST',
                 url: "${context}${initParam.selectors}",
@@ -88,20 +103,21 @@
                     request: 'ids'
                 }),
                 success: function (response) {
-                    setIdSelector(selectObj, response);
+                    writeHtmlToIdSelector(selectObj, response);
                 }
             });
         }
 
-        function setIdSelector(selector, ids) {
-            var selectorHtml = "";
+        function writeHtmlToIdSelector(selector, ids) {
+            var html = "";
             for (var i = 0; i < ids.length; i++) {
-                selectorHtml += "<option value=\"" + ids[i] + "\">" + ids[i] + "</option>";
+                html += "<option value=\"" + ids[i] + "\">" + ids[i] + "</option>";
             }
-            selector.html(selectorHtml);
+            selector.html(html);
         }
 
-        function setValues(form, user) {
+        function setUpdateFormValues(form, user) {
+            $(form).find(':input[name=id]').val(user.id);
             $(form).find(':input[name=login]').val(user.credentials.login);
             $(form).find(':input[name=password]').val(user.credentials.password);
             $(form).find(':input[name=role]').val(user.credentials.role);
@@ -685,8 +701,8 @@
                         <div class="col-sm-6">
                             <form action="${context}${initParam.update}" method="post">
                                 <input name="id" type="hidden" value="${user.id}"/>
-                                <input type="button" class="btn btn-primary" data-toggle="modal"
-                                       data-target="#user-update-dialog" value="Update"/>
+                                <input type="button" class="btn btn-primary update-specific-user-button"
+                                       data-toggle="modal" data-target="#user-update-dialog" value="Update"/>
                             </form>
                         </div>
                         <div class="col-sm-6">
