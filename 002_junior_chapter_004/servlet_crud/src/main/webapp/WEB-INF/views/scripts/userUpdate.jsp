@@ -36,8 +36,11 @@
      * @param updateId Id of the user to update.
      */
     function updateUserFormFill(updateId) {
-        getIdsAndWriteHtmlToIdSelect($('#user-update-select-id'));
+        getOptionsListAndWriteHtmlToSelect($(':input[name=country-select]'), 'countries');
+        getOptionsListAndWriteHtmlToSelect($(':input[name=city-select]'), 'cities');
+        getOptionsListAndWriteHtmlToSelect($('#user-update-select-id'), 'ids');
         getUserAndSetUpdateFormValues($('#user-update-form'), updateId);
+
     }
 
     /**
@@ -59,42 +62,6 @@
                 setUpdateFormValues(form, response);
             }
         });
-    }
-
-    /**
-     * Gets ids of all users in database from server and call to
-     * fill selector html by this ids.
-     *
-     * @param selectObj The "select" tag into where to write "option"
-     * html tags containing ids.
-     */
-    function getIdsAndWriteHtmlToIdSelect(selectObj) {
-        $.ajax({
-            type: 'POST',
-            url: "${context}${initParam.selectors}",
-            async: false,
-            data: JSON.stringify({
-                request: 'ids'
-            }),
-            success: function (response) {
-                writeHtmlToIdSelector(selectObj, response);
-            }
-        });
-    }
-
-    /**
-     * Forms html code of "option" tags with ids and writes it
-     * into the given selector
-     *
-     * @param selector Selector to write html into.
-     * @param ids List of ids to form "options" of.
-     */
-    function writeHtmlToIdSelector(selector, ids) {
-        var html = "";
-        for (var i = 0; i < ids.length; i++) {
-            html += "<option value=\"" + ids[i] + "\">" + ids[i] + "</option>";
-        }
-        selector.html(html);
     }
 
     /**

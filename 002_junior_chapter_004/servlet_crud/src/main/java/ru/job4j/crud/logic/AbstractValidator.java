@@ -9,9 +9,6 @@ import ru.job4j.crud.store.Store;
 
 import java.util.List;
 
-import static ru.job4j.crud.model.Credentials.Role.ADMIN;
-import static ru.job4j.crud.model.Credentials.Role.USER;
-
 /**
  * General class for a logic layer.
  * <p>
@@ -40,20 +37,6 @@ public abstract class AbstractValidator implements Validator<User> {
      */
     protected AbstractValidator(Store<User> store) {
         this.store = store;
-        User root = new User(new Credentials("root", "root", ADMIN), new Info("root_name", "root@email.com", "root_country", "root_city"));
-        User userOneRoleAdmin = new User(new Credentials("login_1", "password_1", ADMIN), new Info("name_1", "e@mail.com_1", "country_1", "city_1"));
-        User userTwoRoleUser = new User(new Credentials("login_2", "password_2", USER), new Info("name_2", "e@mail.com_2", "country_2", "city_2"));
-        User userThreeRoleUser = new User(new Credentials("login_3", "password_3", USER), new Info("name_3", "e@mail.com_3", "country_3", "city_3"));
-        User userFour = new User(new Credentials("login_4", "password_4", USER), new Info("name_4", "e@mail.com_4", "country_4", "city_4"));
-        User userFive = new User(new Credentials("login_5", "password_5", USER), new Info("name_5", "e@mail.com_5", "country_5", "city_5"));
-        User userSix = new User(new Credentials("login_6", "password_6", USER), new Info("name_6", "e@mail.com_6", "country_6", "city_6"));
-        this.store.add(root);
-        this.store.add(userOneRoleAdmin);
-        this.store.add(userTwoRoleUser);
-        this.store.add(userThreeRoleUser);
-        this.store.add(userFour);
-        this.store.add(userFive);
-        this.store.add(userSix);
     }
 
     /**

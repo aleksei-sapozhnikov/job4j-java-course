@@ -55,10 +55,8 @@ public class ShowUsersServlet extends AbstractServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(req.getReader());
-
         int id = node.get("id").asInt();
         User resultUser = VALIDATOR.findById(id);
-
         resp.setContentType("application/json");
         String jsonResp = mapper.writeValueAsString(resultUser);
         resp.getWriter().write(jsonResp);

@@ -1,7 +1,9 @@
 <script>
 
     /**
-     * Validation entry point.
+     * Check if this user object is valid to add it to the database.
+     *
+     * @param user User object for a check.
      */
     function isValidUser(user) {
         var valid = true;
@@ -10,6 +12,11 @@
         return valid;
     }
 
+    /**
+     * Check user fields to fit needed length.
+     *
+     * @param user User object for a check.
+     */
     function checkLengthAll(user) {
         var valid = true;
         valid = valid && checkLength(user.login, "login", 4, 10);
@@ -21,6 +28,11 @@
         return valid;
     }
 
+    /**
+     * Check user fields to fit regular expressions.
+     *
+     * @param user User object for a check.
+     */
     function checkRegexpAll(user) {
         var valid = true;
         valid = valid && checkRegexp(user.login, /^[a-z]([0-9a-z_\s])+$/i, "login");

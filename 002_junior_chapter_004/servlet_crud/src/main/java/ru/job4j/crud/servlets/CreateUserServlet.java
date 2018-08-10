@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.model.Credentials;
-import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.ServletException;
@@ -38,9 +36,7 @@ public class CreateUserServlet extends AbstractServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(req.getReader());
-        Credentials credentials = this.formCredentials(node);
-        Info info = this.formInfo(node);
-        User user = new User(credentials, info);
+        User user = this.formUser(node);
         int id = VALIDATOR.add(user);
         User resultUser = id != -1 ? VALIDATOR.findById(id) : this.userBadAnswer;
         resp.setContentType("application/json");

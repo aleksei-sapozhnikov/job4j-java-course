@@ -1,3 +1,7 @@
+<!-- Meta information -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
     body {
         padding-top: 70px;

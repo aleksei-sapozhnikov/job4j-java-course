@@ -5,9 +5,7 @@
 
 <html>
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>User list</title>
+    <title>Login</title>
 
     <!-- Head common attrs -->
     <c:import url="head/head-common-attrs.jsp"/>

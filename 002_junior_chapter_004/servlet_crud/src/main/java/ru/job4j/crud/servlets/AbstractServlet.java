@@ -107,4 +107,16 @@ public abstract class AbstractServlet extends HttpServlet {
         );
     }
 
+    /**
+     * Returns User object from JsonNode.
+     *
+     * @param node JsonNode.
+     * @return User object.
+     */
+    protected User formUser(JsonNode node) {
+        Credentials credentials = this.formCredentials(node);
+        Info info = this.formInfo(node);
+        return new User(credentials, info);
+    }
+
 }

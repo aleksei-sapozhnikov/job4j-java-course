@@ -1,5 +1,6 @@
 package ru.job4j.crud.servlets;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
@@ -10,7 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Takes ajax requests and responds to them.
@@ -25,9 +29,25 @@ public class FillSelectorsServlet extends AbstractServlet {
      */
     private static final Logger LOG = LogManager.getLogger(FillSelectorsServlet.class);
     /**
-     * JSON mapper to convert objects to json and vice versa.
+     * Map connecting string requests with enums.
      */
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final Map<String, Function<String, String>> dispatch = new HashMap<>();
+
+    /**
+     * Constructor for a new object.
+     */
+    public FillSelectorsServlet() {
+        this.initDispatch();
+    }
+
+    /**
+     * Initiates dispatcher - puts values to dispatch map.
+     */
+    private void initDispatch() {
+        this.dispatch.put("ids", this.toIds());
+        this.dispatch.put("countries", this.toCountries());
+        this.dispatch.put("cities", this.toCities());
+    }
 
     /**
      * Handles "POST" http requests.
@@ -42,36 +62,70 @@ public class FillSelectorsServlet extends AbstractServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode node = mapper.readTree(req.getReader());
-        String request = node.get("request").asText();
-
-        if (request.equals("ids")) {
-            List<User> users = VALIDATOR.findAll();
-            List<Integer> ids = new ArrayList<>();
-            for (User user : users) {
-                ids.add(user.getId());
-            }
-            String json = this.mapper.writeValueAsString(ids);
-            resp.setContentType("application/json");
-            resp.getWriter().write(json);
-        }
-
-//        if (name.equals("countries")) {
-//            List<String> countries = VALIDATOR.findAllCountries();
-//            String json = this.mapper.writeValueAsString(countries);
-//            resp.setContentType("application/json");
-//            resp.getWriter().write(json);
-//        } else if (name.equals("cities")) {
-//            List<String> countries = VALIDATOR.findAllCities();
-//            String json = this.mapper.writeValueAsString(countries);
-//            resp.setContentType("application/json");
-//            resp.getWriter().write(json);
-//        } else {
-//            int id = Integer.valueOf(name);
-//            User user = VALIDATOR.findById(id);
-//            String json = this.mapper.writeValueAsString(user);
-//            resp.setContentType("application/json");
-//            resp.getWriter().write(json);
-//        }
-
+        String actionString = node.get("request").asText();
+        Function<String, String> action = this.dispatch.get(actionString);
+        String result = action != null ? action.apply("") : "";
+        resp.setContentType("application/json");
+        resp.getWriter().write(result);
     }
+
+    /**
+     * Handles request to return list of user id-s.
+     *
+     * @return JSON string with all user id-s.
+     */
+    private Function<String, String> toIds() {
+        return (arg) -> {
+            String result = "";
+            try {
+                List<User> users = VALIDATOR.findAll();
+                List<Integer> ids = new ArrayList<>();
+                for (User user : users) {
+                    ids.add(user.getId());
+                }
+                result = new ObjectMapper().writeValueAsString(ids);
+            } catch (JsonProcessingException e) {
+                LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
+            }
+            return result;
+        };
+    }
+
+    /**
+     * Handles request to return list of countries.
+     *
+     * @return JSON string with all countries.
+     */
+    private Function<String, String> toCountries() {
+        return (arg) -> {
+            String result = "";
+            try {
+                List<String> countries = VALIDATOR.findAllCountries();
+                result = new ObjectMapper().writeValueAsString(countries);
+            } catch (JsonProcessingException e) {
+                LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
+            }
+            return result;
+        };
+    }
+
+    /**
+     * Handles request to return list of cities.
+     *
+     * @return JSON string with all cities.
+     */
+    private Function<String, String> toCities() {
+        return (arg) -> {
+            String result = "";
+            try {
+                List<String> cities = VALIDATOR.findAllCities();
+                result = new ObjectMapper().writeValueAsString(cities);
+            } catch (JsonProcessingException e) {
+                LOG.error(String.format("%s: %s", e.getClass().getName(), e.getMessage()));
+            }
+            return result;
+        };
+    }
+
+
 }

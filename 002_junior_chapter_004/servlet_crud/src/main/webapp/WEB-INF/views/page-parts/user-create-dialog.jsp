@@ -70,16 +70,26 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2">Country:</label>
                         <div class="col-sm-10">
-                            <input name="country" type="text" class="form-control"
-                                   placeholder="Enter country (e.g. Russia)">
+                            <div>
+                                <select name="country-select" class="form-control"></select>
+                            </div>
+                            <div>
+                                <input name="country-form" type="text" class="form-control"
+                                       placeholder="Enter your country if not found in list.">
+                            </div>
                         </div>
                     </div>
                     <!-- City -->
                     <div class="form-group">
                         <label class="control-label col-sm-2">City:</label>
                         <div class="col-sm-10">
-                            <input name="city" type="text" class="form-control"
-                                   placeholder="Enter city (e.g. Moscow)">
+                            <div>
+                                <select name="city-select" class="form-control"></select>
+                            </div>
+                            <div>
+                                <input name="city-form" type="text" class="form-control"
+                                       placeholder="Enter your city if not found in list.">
+                            </div>
                         </div>
                     </div>
                     <!-- Allow form submission with keyboard without duplicating the dialog button -->

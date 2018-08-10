@@ -2,6 +2,8 @@ package ru.job4j.crud.servlets;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Info;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.ServletException;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 import static ru.job4j.crud.Constants.*;
+import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 
 /**
  * Presentation layer "login" servlet.
@@ -26,6 +29,15 @@ public class LogInServlet extends AbstractServlet {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(LogInServlet.class);
+
+    /**
+     * Root user - to guarantee ability to login.
+     */
+    private User root = new User(new Credentials("root", "root", ADMIN), new Info("root_name", "root@email.com", "root_country", "root_city"));
+
+    public LogInServlet() {
+        VALIDATOR.add(root);
+    }
 
     /**
      * Handles GET requests. Shows form for user to log in.

@@ -6,6 +6,8 @@
     $(document).ready(function () {
         $("#user-create-button").button().on("click", function (event) {
             event.preventDefault();
+            getOptionsListAndWriteHtmlToSelect($(':input[name=country-select]'), 'countries');
+            getOptionsListAndWriteHtmlToSelect($(':input[name=city-select]'), 'cities');
         });
     });
 
@@ -19,6 +21,7 @@
         $("#user-update-button").button().on("click", function (event) {
             event.preventDefault();
             updateUserFormFill($('#user-update-select-id').val())
+
         });
     });
 
