@@ -5,17 +5,19 @@
      */
     function updateUser(id, form) {
         var update = getValues(form);
-        $.ajax({
-            type: 'POST',
-            url: "${context}${initParam.update}",
-            data: JSON.stringify({
-                id: id,
-                update: update
-            }),
-            success: function (response) {
-                handleUpdateUserResponse(response);
-            }
-        });
+        if (isValidUser(update)) {
+            $.ajax({
+                type: 'POST',
+                url: "${context}${initParam.update}",
+                data: JSON.stringify({
+                    id: id,
+                    update: update
+                }),
+                success: function (response) {
+                    handleUpdateUserResponse(response);
+                }
+            });
+        }
     }
 
     function handleUpdateUserResponse(response) {

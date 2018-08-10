@@ -20,11 +20,12 @@
 
     <!-- Custom Scripts -->
     <c:import url="scripts/formatDateTime.jsp"/>
-    <c:import url="scripts/user-change/pageActionsListeners.jsp"/>
-    <c:import url="scripts/user-change/userCreateFunctions.jsp"/>
-    <c:import url="scripts/user-change/userUpdateFunctions.jsp"/>
-    <c:import url="scripts/user-change/userDeleteFunctions.jsp"/>
-    <c:import url="scripts/user-change/userActionsCommonFunctions.jsp"/>
+    <c:import url="scripts/pageActionsListeners.jsp"/>
+    <c:import url="scripts/userCreate.jsp"/>
+    <c:import url="scripts/userUpdate.jsp"/>
+    <c:import url="scripts/userDelete.jsp"/>
+    <c:import url="scripts/input.jsp"/>
+    <c:import url="scripts/userValidation.jsp"/>
 
     <script>
 
@@ -59,40 +60,7 @@
         //             tips.removeClass("ui-state-highlight", 1500);
         //         }, 500);
         //     }
-        //
-        //     /**
-        //      * Проверка длины полz
-        //      * o - объект input, n - имя объекта input
-        //      * min/max - минимальная/максимальная допустимая длина
-        //      *
-        //      * Если длина не соответствует - добавляем в update-tips запись, которую
-        //      * покажем пользователю.
-        //      */
-        //     function checkLength(o, n, min, max) {
-        //         if (o.val().length > max || o.val().length < min) {
-        //             o.addClass("ui-state-error");
-        //             updateTips("Length of " + n + " must be between " +
-        //                 min + " and " + max + ".");
-        //             return false;
-        //         } else {
-        //             return true;
-        //         }
-        //     }
-        //
-        //     /**
-        //      * Проверка на соответствие регулярному выражению.
-        //      * o - объект (input), regexp - рег. выражение, имя объекта input.
-        //      */
-        //     function checkRegexp(o, regexp, n) {
-        //         if (!(regexp.test(o.val()))) {
-        //             o.addClass("ui-state-error");
-        //             updateTips(n);
-        //             return false;
-        //         } else {
-        //             return true;
-        //         }
-        //     }
-        //
+        //        //
         //     /**
         //      * Добавление нового пользователя.
         //      */

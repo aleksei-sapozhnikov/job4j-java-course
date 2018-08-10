@@ -1,25 +1,28 @@
 <%--@elvariable id="context" type="java.lang.String"--%>
 <script>
+
+    function addUser(form) {
+        var user = getValues(form);
+        if (isValidUser(user)) {
+            $.ajax({
+                type: 'POST',
+                url: "${context}${initParam.create}",
+                data: JSON.stringify(user),
+                success: function (response) {
+                    handleCreateUserResponse(response);
+                }
+            });
+        }
+    }
+
     function handleCreateUserResponse(response) {
         if (response.id !== -1) {
             addRow($("#users"), response);
             $('#user-create-dialog').modal('toggle'); // close dialog
         }
         else {
-            alert('User create failed');
+            alert('User create failed on server-side');
         }
-    }
-
-    function addUser(form) {
-        var user = getValues(form);
-        $.ajax({
-            type: 'POST',
-            url: "${context}${initParam.create}",
-            data: JSON.stringify(user),
-            success: function (response) {
-                handleCreateUserResponse(response);
-            }
-        });
     }
 
     function addRow(table, user) {
