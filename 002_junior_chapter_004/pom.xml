@@ -5,7 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>servlet_echo</module>
-        <module>servlet_crud</module>
+        <module>servlet_crud_ajax</module>
         <module>html_css_javascript</module>
     </modules>
     <parent>
