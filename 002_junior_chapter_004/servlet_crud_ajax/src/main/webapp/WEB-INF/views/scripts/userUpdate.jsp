@@ -22,7 +22,6 @@
 
     function handleUpdateUserResponse(response) {
         if (response.error != null) {
-            alert('notNull');
             alert(response.error)
         } else {
             updateRow(response);
