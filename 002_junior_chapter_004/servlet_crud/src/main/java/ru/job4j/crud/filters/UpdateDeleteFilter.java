@@ -1,5 +1,7 @@
 package ru.job4j.crud.filters;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.crud.model.Credentials;
@@ -9,7 +11,13 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static ru.job4j.crud.Constants.PARAM_ERROR;
+import static ru.job4j.crud.Constants.PARAM_USER_ID;
 
 /**
  * Filters if "update / delete user" operations are allowed in this session.
@@ -85,12 +93,17 @@ public class UpdateDeleteFilter implements Filter {
      */
     private void filterIdTheSame(User user, HttpServletRequest req, HttpServletResponse resp,
                                  FilterChain chain) throws IOException, ServletException {
-        int modifyId = Integer.valueOf(req.getParameter("id"));
+        ObjectMapper mapper = new ObjectMapper();
+        BufferedReader reqReader = req.getReader();
+        JsonNode node = mapper.readTree(reqReader);
+        int modifyId = node.get(PARAM_USER_ID.v()).asInt();
         if (user.getId() == modifyId) {
             chain.doFilter(req, resp);
         } else {
-            req.setAttribute("error", "Message from server: user may only UPDATE / DELETE himself");
-            req.getRequestDispatcher(req.getContextPath()).forward(req, resp);
+            Map<String, String> error = new HashMap<>();
+            error.put(PARAM_ERROR.v(), "Forbidden by filter: this logged user may only UPDATE / DELETE himself");
+            resp.setContentType("application/json");
+            resp.getWriter().write(mapper.writeValueAsString(error));
         }
     }
 

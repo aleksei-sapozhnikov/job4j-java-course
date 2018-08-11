@@ -12,10 +12,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import static org.mockito.Mockito.*;
-import static ru.job4j.crud.Constants.*;
+import static ru.job4j.crud.Constants.PARAM_LOGGED_USER;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 import static ru.job4j.crud.model.Credentials.Role.USER;
 
@@ -36,6 +38,8 @@ public class UpdateDeleteFilterTest {
     private final FilterChain chain = mock(FilterChain.class);
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
+    private final BufferedReader requestReader = mock(BufferedReader.class);
+    private final PrintWriter responseWriter = mock(PrintWriter.class);
     /**
      * Users to use.
      */
@@ -43,11 +47,13 @@ public class UpdateDeleteFilterTest {
     private final User userRoleUser = new User(new Credentials("login_2", "password_2", USER), new Info("name_2", "e@mail.com_2", "country_2", "city_2"));
 
     @Before
-    public void setCommonMocks() {
+    public void setCommonMocks() throws IOException {
         when(this.request.getContextPath()).thenReturn(CONTEXT);
         when(this.request.getSession()).thenReturn(this.httpSession);
         when(this.request.getSession()).thenReturn(this.httpSession);
         when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
+        when(this.request.getReader()).thenReturn(this.requestReader);
+        when(this.response.getWriter()).thenReturn(this.responseWriter);
     }
 
     /**
@@ -59,24 +65,4 @@ public class UpdateDeleteFilterTest {
         this.filter.doFilter(this.request, this.response, this.chain);
         verify(this.chain).doFilter(this.request, this.response);
     }
-
-    @Test
-    public void whenUserWithIdEqualToUpdateIdThenPass() throws IOException, ServletException {
-        when(this.httpSession.getAttribute(PARAM_LOGGED_USER.v())).thenReturn(this.userRoleUser);
-        when(this.request.getParameter(PARAM_USER_ID.v())).thenReturn(Integer.toString(this.userRoleUser.getId()));
-        this.filter.doFilter(this.request, this.response, this.chain);
-        verify(this.chain).doFilter(this.request, this.response);
-    }
-
-    @Test
-    public void whenUserWithIdNotEqualToUpdateIdThenError() throws IOException, ServletException {
-        when(this.httpSession.getAttribute(PARAM_LOGGED_USER.v())).thenReturn(this.userRoleUser);
-        int anotherId = this.userRoleUser.getId() + 1242;
-        when(this.request.getParameter(PARAM_USER_ID.v())).thenReturn(Integer.toString(anotherId));
-        this.filter.doFilter(this.request, this.response, this.chain);
-        verify(this.request).setAttribute(eq(PARAM_ERROR.v()), anyString());
-        verify(this.requestDispatcher).forward(request, response);
-    }
-
-
 }

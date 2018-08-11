@@ -85,23 +85,23 @@
         <url-pattern>*</url-pattern>
     </filter-mapping>
 
-    <!-- <filter>
+    <filter>
          <filter-name>UpdateDeleteFilter</filter-name>
          <filter-class>ru.job4j.crud.filters.UpdateDeleteFilter</filter-class>
      </filter>
      <filter-mapping>
          <filter-name>UpdateDeleteFilter</filter-name>
          <url-pattern>/update</url-pattern>
-     </filter-mapping>-->
+     </filter-mapping>
 
-    <!--<filter>
+    <filter>
             <filter-name>CreateFilter</filter-name>
             <filter-class>ru.job4j.crud.filters.CreateFilter</filter-class>
         </filter>
         <filter-mapping>
             <filter-name>CreateFilter</filter-name>
             <url-pattern>/create</url-pattern>
-        </filter-mapping>-->
+        </filter-mapping>
 
 
     <context-param>

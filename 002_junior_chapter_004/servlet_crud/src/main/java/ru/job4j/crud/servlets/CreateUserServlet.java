@@ -10,6 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static ru.job4j.crud.Constants.PARAM_ERROR;
 
 /**
  * Presentation layer "create" servlet.
@@ -38,10 +42,17 @@ public class CreateUserServlet extends AbstractServlet {
         JsonNode node = mapper.readTree(req.getReader());
         User user = this.formUser(node);
         int id = VALIDATOR.add(user);
-        User resultUser = id != -1 ? VALIDATOR.findById(id) : this.userBadAnswer;
+        String result;
+        if (id != -1) {
+            User success = VALIDATOR.findById(id);
+            result = mapper.writeValueAsString(success);
+        } else {
+            Map<String, String> error = new HashMap<>();
+            error.put(PARAM_ERROR.v(), "Forbidden by validator: could not add the user to database");
+            result = mapper.writeValueAsString(error);
+        }
         resp.setContentType("application/json");
-        String jsonResp = mapper.writeValueAsString(resultUser);
-        resp.getWriter().write(jsonResp);
+        resp.getWriter().write(result);
     }
 
 

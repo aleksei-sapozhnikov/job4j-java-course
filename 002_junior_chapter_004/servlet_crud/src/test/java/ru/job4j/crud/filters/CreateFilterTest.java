@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import static org.mockito.Mockito.*;
-import static ru.job4j.crud.Constants.PARAM_ERROR;
 import static ru.job4j.crud.Constants.PARAM_LOGGED_USER;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
 import static ru.job4j.crud.model.Credentials.Role.USER;
@@ -37,6 +37,7 @@ public class CreateFilterTest {
     private final FilterChain chain = mock(FilterChain.class);
     private final RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
     private final HttpSession httpSession = mock(HttpSession.class);
+    private final PrintWriter responseWriter = mock(PrintWriter.class);
     /**
      * Users to use.
      */
@@ -44,11 +45,12 @@ public class CreateFilterTest {
     private final User userRoleUser = new User(new Credentials("login_2", "password_2", USER), new Info("name_2", "e@mail.com_2", "country_2", "city_2"));
 
     @Before
-    public void setCommonMocks() {
+    public void setCommonMocks() throws IOException {
         when(this.request.getContextPath()).thenReturn(CONTEXT);
         when(this.request.getSession()).thenReturn(this.httpSession);
         when(this.request.getSession()).thenReturn(this.httpSession);
         when(this.request.getRequestDispatcher(anyString())).thenReturn(this.requestDispatcher);
+        when(this.response.getWriter()).thenReturn(this.responseWriter);
     }
 
     /**
@@ -62,11 +64,10 @@ public class CreateFilterTest {
     }
 
     @Test
-    public void whenAUserThenRedirectToMainPageWithForbiddenError() throws IOException, ServletException {
+    public void whenAUserThenResponseWithError() throws IOException, ServletException {
         when(this.httpSession.getAttribute(PARAM_LOGGED_USER.v())).thenReturn(this.userRoleUser);
         this.filter.doFilter(this.request, this.response, this.chain);
-        verify(this.request).setAttribute(eq(PARAM_ERROR.v()), anyString());
-        verify(this.requestDispatcher).forward(this.request, this.response);
+        verify(this.responseWriter).write(anyString());
     }
 
 }

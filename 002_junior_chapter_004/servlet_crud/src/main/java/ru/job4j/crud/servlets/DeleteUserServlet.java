@@ -8,6 +8,10 @@ import ru.job4j.crud.model.User;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static ru.job4j.crud.Constants.PARAM_ERROR;
 
 public class DeleteUserServlet extends AbstractServlet {
     /**
@@ -24,12 +28,18 @@ public class DeleteUserServlet extends AbstractServlet {
      */
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String id = this.readerToString(req.getReader());
-        User result = VALIDATOR.delete(Integer.valueOf(id));
-        result = result != null ? result : this.userBadAnswer;
         ObjectMapper mapper = new ObjectMapper();
+        String id = this.readerToString(req.getReader());
+        String result;
+        User deleted = VALIDATOR.delete(Integer.valueOf(id));
+        if (deleted != null) {
+            result = mapper.writeValueAsString(deleted);
+        } else {
+            Map<String, String> error = new HashMap<>();
+            error.put(PARAM_ERROR.v(), "Forbidden by validator: could not delete the user from database");
+            result = mapper.writeValueAsString(error);
+        }
         resp.setContentType("application/json");
-        String jsonResp = mapper.writeValueAsString(result);
-        resp.getWriter().write(jsonResp);
+        resp.getWriter().write(result);
     }
 }

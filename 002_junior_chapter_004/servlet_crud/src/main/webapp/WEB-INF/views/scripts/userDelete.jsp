@@ -29,11 +29,10 @@
      * Handles server response to delete user request.
      */
     function handleDeleteUserResponse(response) {
-        if (response.id !== -1) {
+        if (response.error !== null) {
+            alert(response.error);
+        } else {
             deleteRow(response.id);
-        }
-        else {
-            alert('User delete failed');
         }
     }
 

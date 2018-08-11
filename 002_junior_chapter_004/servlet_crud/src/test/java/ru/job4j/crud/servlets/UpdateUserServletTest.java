@@ -16,8 +16,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Arrays;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 import static ru.job4j.crud.Constants.*;
 import static ru.job4j.crud.model.Credentials.Role.ADMIN;
@@ -70,30 +68,6 @@ public class UpdateUserServletTest {
         when(this.request.getParameter(PARAM_USER_EMAIL.v())).thenReturn(user.getInfo().getEmail());
         when(this.request.getParameter(PARAM_USER_COUNTRY.v())).thenReturn(user.getInfo().getCountry());
         when(this.request.getParameter(PARAM_USER_CITY.v())).thenReturn(user.getInfo().getCity());
-    }
-
-    /**
-     * Test doPost()
-     */
-    @Test
-    public void whenUserUpdateSuccessfulThenUpdatedAndNoErrors() throws IOException, ServletException {
-        int loggedId = this.validator.add(this.loggedUser);
-        int id = this.validator.add(this.oldUser);
-        this.setMockForUserFields(loggedId, id, this.newUser);
-        this.servlet.doPost(this.request, this.response);
-        assertThat(this.validator.findById(id), is(this.newUser));
-        verify(this.response).sendRedirect(CONTEXT);
-    }
-
-    @Test
-    public void whenUserUpdateFailedThenRemainsOldAndErrorMessage() throws IOException, ServletException {
-        int loggedId = this.validator.add(this.loggedUser);
-        int id = this.validator.add(this.oldUser);
-        this.setMockForUserFields(loggedId, id, this.userEmailWrongFormat);
-        this.servlet.doPost(this.request, this.response);
-        assertThat(this.validator.findById(id), is(this.oldUser));
-        verify(this.request).setAttribute(eq(PARAM_ERROR.v()), anyString());
-        verify(this.requestDispatcher).forward(request, response);
     }
 
     /**

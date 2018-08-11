@@ -1,8 +1,9 @@
 package ru.job4j.crud.filters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.crud.model.Credentials;
+import ru.job4j.crud.model.Credentials.Role;
 import ru.job4j.crud.model.User;
 
 import javax.servlet.*;
@@ -10,6 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static ru.job4j.crud.Constants.PARAM_ERROR;
 
 /**
  * Filters if "create user" operation is allowed in this session.
@@ -65,11 +70,13 @@ public class CreateFilter implements Filter {
      */
     private void filterHasAccessToCreate(User user, HttpServletRequest req, HttpServletResponse resp,
                                          FilterChain chain) throws IOException, ServletException {
-        if (user.getCredentials().getRole() == Credentials.Role.ADMIN) {
+        if (user.getCredentials().getRole() == Role.ADMIN) {
             chain.doFilter(req, resp);
         } else {
-            req.setAttribute("error", "Message from server: only ADMIN may create users");
-            req.getRequestDispatcher(req.getContextPath()).forward(req, resp);
+            Map<String, String> error = new HashMap<>();
+            error.put(PARAM_ERROR.v(), "Forbidden by filter: logged user is not allowed to create users");
+            resp.setContentType("application/json");
+            resp.getWriter().write(new ObjectMapper().writeValueAsString(error));
         }
     }
 

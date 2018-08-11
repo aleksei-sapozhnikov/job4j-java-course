@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static ru.job4j.crud.Constants.*;
 
@@ -60,10 +62,17 @@ public class UpdateUserServlet extends AbstractServlet {
         JsonNode updNode = node.get("update");
         User updateUser = this.formUser(updNode);
         boolean success = VALIDATOR.update(id, updateUser);
-        User resultUser = success ? VALIDATOR.findById(id) : this.userBadAnswer;
+        String result;
+        if (success) {
+            User resultUser = VALIDATOR.findById(id);
+            result = mapper.writeValueAsString(resultUser);
+        } else {
+            Map<String, String> error = new HashMap<>();
+            error.put(PARAM_ERROR.v(), "Forbidden by validator: could not update the user in database");
+            result = mapper.writeValueAsString(error);
+        }
         resp.setContentType("application/json");
-        String jsonResp = mapper.writeValueAsString(resultUser);
-        resp.getWriter().write(jsonResp);
+        resp.getWriter().write(result);
     }
 
 }

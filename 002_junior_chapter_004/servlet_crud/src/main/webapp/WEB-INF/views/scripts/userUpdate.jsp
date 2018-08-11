@@ -21,12 +21,11 @@
     }
 
     function handleUpdateUserResponse(response) {
-        if (response.id !== -1) {
+        if (response.error !== null) {
+            alert(response.error)
+        } else {
             updateRow(response);
             $('#user-update-dialog').modal('toggle'); // close dialog
-        }
-        else {
-            alert('User update failed');
         }
     }
 
@@ -77,8 +76,8 @@
         $(form).find(':input[name=role]').val(user.credentials.role);
         $(form).find(':input[name=name]').val(user.info.name);
         $(form).find(':input[name=email]').val(user.info.email);
-        $(form).find(':input[name=country]').val(user.info.country);
-        $(form).find(':input[name=city]').val(user.info.city);
+        $(form).find(':input[name=country-select]').val(user.info.country);
+        $(form).find(':input[name=city-select]').val(user.info.city);
     }
 
     function updateRow(user) {
@@ -86,7 +85,6 @@
         var rowNameIdCreated = rowNameRoot + '-id-created';
         var rowNameCredentials = rowNameRoot + '-credentials';
         var rowNameInfo = rowNameRoot + '-info';
-
         var rowIdCreated = "<div><b>Id: </b>" + user.id + "</div>" +
             "<div><b>Created: </b>" + formatDateTime(user.created) + "</div>";
         var rowCredentials = "<div><b>Login: </b>" + user.credentials.login + "</div>" +
@@ -95,7 +93,6 @@
             "<div><b>Email: </b>" + user.info.email + "</div>" +
             "<div><b>Country: </b>" + user.info.country + "</div>" +
             "<div><b>City: </b>" + user.info.city + "</div>";
-
         $(rowNameIdCreated).html(rowIdCreated);
         $(rowNameCredentials).html(rowCredentials);
         $(rowNameInfo).html(rowInfo);
