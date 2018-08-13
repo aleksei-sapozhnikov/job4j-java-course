@@ -3,6 +3,8 @@ package ru.job4j.music;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 /**
  * Class with static commonly used methods.
  *
@@ -22,5 +24,10 @@ public class CommonMethods {
                 e.getClass().getName(),
                 e.getMessage()
         );
+    }
+
+    public static void main(String[] args) throws IOException {
+        DaoFactory factory = new DaoFactory();
+        GenericDao performer = factory.getDaoPerformer(DaoFactory.DaoClass.USER);
     }
 }

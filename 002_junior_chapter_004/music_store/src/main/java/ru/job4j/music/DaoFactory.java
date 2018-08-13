@@ -33,7 +33,7 @@ public class DaoFactory {
      */
     private static final String PROPERTIES_PATH = "ru/job4j/crud/store/database.properties";
 
-    private final Map<DaoClass, DaoPerformer> daoPerformers;
+    private final Map<DaoClass, GenericDao> daoPerformers;
 
     public DaoFactory() throws IOException {
         Properties properties = this.loadProperties(PROPERTIES_PATH);
@@ -42,20 +42,20 @@ public class DaoFactory {
         this.daoPerformers = this.createDaoPerformers(connectionPool, properties);
     }
 
-    public DaoPerformer getDaoPerformer(DaoClass daoClass) {
+    public <E> GenericDao getDaoPerformer(DaoClass daoClass) {
         return this.daoPerformers.get(daoClass);
     }
 
-    private Map<DaoClass, DaoPerformer> createDaoPerformers(BasicDataSource connectionPool, Properties prop) {
-        Map<DaoClass, DaoPerformer> result = new HashMap<>();
-        result.put(USER, new DaoPerformer(connectionPool, this.loadDaoQueries(prop, USER.asString())));
+    private Map<DaoClass, GenericDao> createDaoPerformers(BasicDataSource connectionPool, Properties prop) {
+        Map<DaoClass, GenericDao> result = new HashMap<>();
+        result.put(USER, new UserDao(connectionPool, this.loadDaoQueries(prop, USER.string().toLowerCase())));
         return result;
     }
 
     private Map<DaoOperations, String> loadDaoQueries(Properties prop, String className) {
         Map<DaoOperations, String> result = new HashMap<>();
-        result.put(ADD, prop.getProperty(format("sql.%s.add", className.toLowerCase())));
-        result.put(GET_BY_ID, prop.getProperty("sql.%s.getById", className.toLowerCase()));
+        result.put(ADD, prop.getProperty(format("sql.%s.add", className)));
+        result.put(GET_BY_ID, prop.getProperty("sql.%s.getById", className));
         return result;
     }
 
@@ -151,7 +151,7 @@ public class DaoFactory {
             this.value = value;
         }
 
-        public String asString() {
+        public String string() {
             return this.value;
         }
     }

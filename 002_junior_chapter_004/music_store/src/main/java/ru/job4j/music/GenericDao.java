@@ -9,21 +9,21 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
-public class DaoPerformer<E> {
+public abstract class GenericDao<E> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(DaoPerformer.class);
+    private static final Logger LOG = LogManager.getLogger(GenericDao.class);
     /**
      * Database connection pool.
      */
-    private final BasicDataSource connectionPool;
+    protected final BasicDataSource connectionPool;
     /**
      * private final
      */
-    private final Map<DaoOperations, String> queries;
+    protected Map<DaoOperations, String> queries;
 
-    public DaoPerformer(BasicDataSource connectionPool, Map<DaoOperations, String> queries) {
+    public GenericDao(BasicDataSource connectionPool, Map<DaoOperations, String> queries) {
         this.connectionPool = connectionPool;
         this.queries = queries;
     }
