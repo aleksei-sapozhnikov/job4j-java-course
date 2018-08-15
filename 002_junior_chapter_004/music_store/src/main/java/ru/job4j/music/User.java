@@ -1,8 +1,11 @@
 package ru.job4j.music;
 
+import com.sun.javafx.collections.UnmodifiableObservableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 import static ru.job4j.music.User.UserFields.*;
@@ -16,52 +19,60 @@ import static ru.job4j.music.User.UserFields.*;
  */
 public class User {
     /**
+     * Map with empty values - for empty user.
+     */
+    private static final Map<UserFields, String> EMPTY_VALUES = Collections.unmodifiableMap(
+            new HashMap<UserFields, String>() {
+                {
+                    for (UserFields field : UserFields.values()) {
+                        put(field, "");
+                    }
+                }
+            });
+
+    /**
+     * Empty user - to use instead of "null" object.
+     */
+    public static final User EMPTY_USER = new User(-1, EMPTY_VALUES);
+
+
+    /**
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(User.class);
+    /**
+     * User unique id.
+     */
+    private final int id;
 
-    /**
-     * User login.
-     */
-    private final String login;
-    /**
-     * User password.
-     */
-    private final String password;
-    /**
-     * User role.
-     */
-    private final String role;
-    /**
-     * User address.
-     */
-    private final String address;
-    /**
-     * User music genre.
-     */
-    private final String musicGenre;
+    private final Map<UserFields, String> values;
 
     /**
      * Constructs new object.
      *
      * @param values Map with values of user fields.
      */
-    public User(Map<UserFields, String> values) {
+    public User(int id, Map<UserFields, String> values) {
         if (values.size() < UserFields.values().length) {
             LOG.error("Argument length (%s) is less then needed (%s). Filling fields with empty values.");
-            this.login = "";
-            this.password = "";
-            this.role = "";
-            this.address = "";
-            this.musicGenre = "";
+            this.id = id;
+            this.values = EMPTY_VALUES;
         } else {
-            this.login = values.get(LOGIN);
-            this.password = values.get(PASSWORD);
-            this.role = values.get(ROLE);
-            this.address = values.get(ADDRESS);
-            this.musicGenre = values.get(MUSIC_GENRE);
+            this.id = id;
+            this.values = Collections.unmodifiableMap(values);
         }
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "[user id='%s', login='%s', password='%s', role='%s', address='%s', musicGenre='%s']",
+                this.id,
+                this.values.get(LOGIN), this.values.get(PASSWORD), this.values.get(ROLE),
+                this.values.get(ADDRESS), this.values.get(MUSIC_GENRE)
+        );
+    }
+
 
     /**
      * Returns login.
@@ -69,7 +80,7 @@ public class User {
      * @return Value of login field.
      */
     public String getLogin() {
-        return this.login;
+        return this.values.get(LOGIN);
     }
 
     /**
@@ -78,7 +89,7 @@ public class User {
      * @return Value of password field.
      */
     public String getPassword() {
-        return this.password;
+        return this.values.get(PASSWORD);
     }
 
     /**
@@ -87,7 +98,7 @@ public class User {
      * @return Value of role field.
      */
     public String getRole() {
-        return this.role;
+        return this.values.get(ROLE);
     }
 
     /**
@@ -96,7 +107,7 @@ public class User {
      * @return Value of address field.
      */
     public String getAddress() {
-        return this.address;
+        return this.values.get(ADDRESS);
     }
 
     /**
@@ -105,7 +116,7 @@ public class User {
      * @return Value of musicGenre field.
      */
     public String getMusicGenre() {
-        return this.musicGenre;
+        return this.values.get(MUSIC_GENRE);
     }
 
     /**

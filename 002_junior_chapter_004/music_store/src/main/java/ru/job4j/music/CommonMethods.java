@@ -2,6 +2,7 @@ package ru.job4j.music;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.music.dao.DaoFactory;
 
 import java.io.IOException;
 
@@ -24,10 +25,5 @@ public class CommonMethods {
                 e.getClass().getName(),
                 e.getMessage()
         );
-    }
-
-    public static void main(String[] args) throws IOException {
-        DaoFactory factory = new DaoFactory();
-        GenericDao performer = factory.getDaoPerformer(DaoFactory.DaoClass.USER);
     }
 }

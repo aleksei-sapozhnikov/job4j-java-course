@@ -1,4 +1,4 @@
-package ru.job4j.music;
+package ru.job4j.music.dao;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
@@ -11,10 +11,10 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.lang.String.format;
-import static ru.job4j.music.DaoFactory.ConnectionPoolProperties.*;
-import static ru.job4j.music.DaoFactory.DaoClass.USER;
-import static ru.job4j.music.DaoFactory.DaoOperations.ADD;
-import static ru.job4j.music.DaoFactory.DaoOperations.GET_BY_ID;
+import static ru.job4j.music.dao.DaoFactory.ConnectionPoolProperties.*;
+import static ru.job4j.music.dao.DaoFactory.DaoPerformers.USER;
+import static ru.job4j.music.dao.DaoOperations.ADD;
+import static ru.job4j.music.dao.DaoOperations.GET_BY_ID;
 
 /**
  * Class creating objects implementing DAO for different objects.
@@ -31,9 +31,9 @@ public class DaoFactory {
     /**
      * Properties file loaded as resource.
      */
-    private static final String PROPERTIES_PATH = "ru/job4j/crud/store/database.properties";
+    private static final String PROPERTIES_PATH = "ru/job4j/music/database.properties";
 
-    private final Map<DaoClass, GenericDao> daoPerformers;
+    private final Map<DaoPerformers, DaoPerformer> daoPerformers;
 
     public DaoFactory() throws IOException {
         Properties properties = this.loadProperties(PROPERTIES_PATH);
@@ -42,20 +42,20 @@ public class DaoFactory {
         this.daoPerformers = this.createDaoPerformers(connectionPool, properties);
     }
 
-    public <E> GenericDao getDaoPerformer(DaoClass daoClass) {
-        return this.daoPerformers.get(daoClass);
+    public DaoPerformer getDaoPerformer(DaoPerformers daoPerformers) {
+        return this.daoPerformers.get(daoPerformers);
     }
 
-    private Map<DaoClass, GenericDao> createDaoPerformers(BasicDataSource connectionPool, Properties prop) {
-        Map<DaoClass, GenericDao> result = new HashMap<>();
-        result.put(USER, new UserDao(connectionPool, this.loadDaoQueries(prop, USER.string().toLowerCase())));
+    private Map<DaoPerformers, DaoPerformer> createDaoPerformers(BasicDataSource connectionPool, Properties prop) {
+        Map<DaoPerformers, DaoPerformer> result = new HashMap<>();
+        result.put(USER, new DaoPerformerUser(connectionPool, this.loadDaoQueries(prop, USER.string().toLowerCase())));
         return result;
     }
 
     private Map<DaoOperations, String> loadDaoQueries(Properties prop, String className) {
         Map<DaoOperations, String> result = new HashMap<>();
         result.put(ADD, prop.getProperty(format("sql.%s.add", className)));
-        result.put(GET_BY_ID, prop.getProperty("sql.%s.getById", className));
+        result.put(GET_BY_ID, prop.getProperty(format("sql.%s.get_by_id", className)));
         return result;
     }
 
@@ -127,14 +127,14 @@ public class DaoFactory {
         DB_PASSWORD
     }
 
-    public enum DaoOperations {
-        ADD,
-        UPDATE,
-        DELETE,
-        GET_BY_ID
-    }
-
-    public enum DaoClass {
+    /**
+     * Enumerates all DAO performers produced by this DaoFactory.
+     *
+     * @author Aleksei Sapozhnikov (vermucht@gmail.com)
+     * @version 0.1
+     * @since 0.1
+     */
+    public enum DaoPerformers {
         USER("user"),
         ROLE("role"),
         ADDRESS("address"),
@@ -143,11 +143,11 @@ public class DaoFactory {
         /**
          * Logger.
          */
-        private static final Logger LOG = LogManager.getLogger(DaoClass.class);
+        private static final Logger LOG = LogManager.getLogger(DaoPerformers.class);
 
         private final String value;
 
-        DaoClass(String value) {
+        DaoPerformers(String value) {
             this.value = value;
         }
 
@@ -155,5 +155,4 @@ public class DaoFactory {
             return this.value;
         }
     }
-
 }
