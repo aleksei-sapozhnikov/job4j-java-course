@@ -2,8 +2,8 @@ package ru.job4j.music;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.music.dao.DaoFactory;
-import ru.job4j.music.dao.DaoPerformerUser;
+import ru.job4j.music.dao.DaoPool;
+import ru.job4j.music.dao.specific.RoleDao;
 
 import java.io.IOException;
 
@@ -21,8 +21,8 @@ public class start {
     private static final Logger LOG = LogManager.getLogger(start.class);
 
     public static void main(String[] args) throws IOException {
-        DaoFactory factory = new DaoFactory();
-        DaoPerformerUser userDao = (DaoPerformerUser) factory.getDaoPerformer(DaoFactory.DaoPerformers.USER);
+        DaoPool factory = new DaoPool();
+        RoleDao userDao = (RoleDao) factory.getDao(DaoPool.DaoType.USER);
         User res = userDao.get(4);
         System.out.println(res);
     }

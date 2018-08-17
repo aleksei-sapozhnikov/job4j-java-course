@@ -10,9 +10,10 @@ import org.apache.logging.log4j.Logger;
  * @version 0.1
  * @since 0.1
  */
-public enum DaoOperations {
+public enum DaoPossibleOperations {
     ADD,
     UPDATE,
     DELETE,
-    GET_BY_ID
+    GET_BY_ID,
+    GET_ALL
 }

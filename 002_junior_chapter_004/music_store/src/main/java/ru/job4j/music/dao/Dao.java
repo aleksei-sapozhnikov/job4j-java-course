@@ -1,34 +1,15 @@
 package ru.job4j.music.dao;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 import java.util.List;
 
-/**
- * General class for all DAO performers, for extension.
- *
- * @author Aleksei Sapozhnikov (vermucht@gmail.com)
- * @version 0.1
- * @since 0.1
- */
-public abstract class AbstractDaoPerformer<E> implements DaoPerformer<E> {
-    /**
-     * Logger.
-     */
-    private static final Logger LOG = LogManager.getLogger(AbstractDaoPerformer.class);
-
-
+public interface Dao<E> {
     /**
      * Creates new entity in database.
      *
      * @param entity Entity to add.
      * @return Added entity from database.
      */
-    @Override
-    public E add(E entity) {
-        return null;
-    }
+    E add(E entity);
 
     /**
      * Returns entity from database by key.
@@ -36,10 +17,7 @@ public abstract class AbstractDaoPerformer<E> implements DaoPerformer<E> {
      * @param key Entity identifier.
      * @return Entity from database or empty entity if not found.
      */
-    @Override
-    public E get(int key) {
-        return null;
-    }
+    E get(int key);
 
     /**
      * Updates entity in database.
@@ -48,10 +26,7 @@ public abstract class AbstractDaoPerformer<E> implements DaoPerformer<E> {
      * @param newEntity Entity with updated fields.
      * @return Updated entity from database.
      */
-    @Override
-    public E update(int key, E newEntity) {
-        return null;
-    }
+    E update(int key, E newEntity);
 
     /**
      * Deletes entity from database.
@@ -59,18 +34,13 @@ public abstract class AbstractDaoPerformer<E> implements DaoPerformer<E> {
      * @param key Identifier of the entity to delete.
      * @return Deleted entity as it was found in database.
      */
-    @Override
-    public E delete(int key) {
-        return null;
-    }
+    E delete(int key);
 
     /**
      * Returns list of all entities.
      *
      * @return List with all entity objects found from database.
      */
-    @Override
-    public List<E> getAll() {
-        return null;
-    }
+    List<E> getAll();
+
 }
