@@ -34,6 +34,19 @@ CREATE TABLE IF NOT EXISTS users_music (
   music_id INTEGER REFERENCES music (id)
 );
 
+INSERT INTO roles(name)
+VALUES ('admin'),
+       ('user'),
+       ('mandator');
+INSERT INTO music(genre)
+VALUES ('rap'),
+       ('rock'),
+       ('pop'),
+       ('classic'),
+       ('hip-hop'),
+       ('opera'),
+       ('house');
+
 WITH set_login AS (SELECT ?),
      set_password AS (SELECT ?),
      set_role AS (SELECT ?),
@@ -51,10 +64,10 @@ VALUES ((SELECT * FROM set_login),
         (SELECT id FROM address_got_id));
 
 
-WITH set_user AS (SELECT ?),
-     set_genres AS (SELECT ARRAY [1,2,3])
+WITH set_user AS (SELECT 5),
+     set_music AS (SELECT ARRAY [1,2,3])
 INSERT INTO users_music(user_id, music_id)
-VALUES ((SELECT * FROM set_user), (SELECT unnest(set_genres)))
+VALUES ((SELECT * FROM set_user), (unnest(set_music :: INTEGER [])));
 
 DELETE
 FROM users_music
@@ -69,3 +82,6 @@ SELECT *
 FROM users
        JOIN roles ON users.role_id = roles.id
        JOIN addresses ON users.address_id = addresses.id;
+
+SELECT *
+FROM users_music;
