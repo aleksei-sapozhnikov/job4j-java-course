@@ -5,6 +5,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.music.StaticMethods;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -27,7 +29,7 @@ public class DbConnector {
     /**
      * File with connection pool properties.
      */
-    private static final String CONFIG_FILE = "ru/job4j/music/database.properties";
+    private static final String DEFAULT_CONFIG = "ru/job4j/music/database.properties";
     /**
      * Connection pool to database.
      */
@@ -37,7 +39,7 @@ public class DbConnector {
      * Constructs new object.
      */
     public DbConnector() {
-        Properties properties = StaticMethods.loadProperties(CONFIG_FILE, this.getClass());
+        Properties properties = StaticMethods.loadProperties(DEFAULT_CONFIG, this.getClass());
         BasicDataSource pool = new BasicDataSource();
         this.configureConnectionPool(pool, properties);
     }
@@ -47,8 +49,8 @@ public class DbConnector {
      *
      * @return Connection pool for use.
      */
-    public BasicDataSource getPool() {
-        return this.pool;
+    public Connection getConnection() throws SQLException {
+        return this.pool.getConnection();
     }
 
 
