@@ -1,6 +1,5 @@
-package ru.job4j.music;
+package ru.job4j.music.entities;
 
-import com.sun.javafx.collections.UnmodifiableObservableMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,7 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.job4j.music.User.UserFields.*;
+import static ru.job4j.music.entities.User.UserFields.*;
 
 /**
  * Class for user entity.

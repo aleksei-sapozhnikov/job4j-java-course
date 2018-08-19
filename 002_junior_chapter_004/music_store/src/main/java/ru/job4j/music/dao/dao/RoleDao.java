@@ -1,44 +1,29 @@
-package ru.job4j.music.dao;
+package ru.job4j.music.dao.dao;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.music.dao.general.DaoOperations;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * General class for all DAO performers, for extension.
+ * DAO performer working with User class.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version 0.1
  * @since 0.1
  */
-public abstract class AbstractDao<E> implements Dao<E> {
+public class RoleDao extends AbstractDao<String> {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(AbstractDao.class);
-    /**
-     * Database connection pool.
-     */
-    protected final BasicDataSource connectionPool;
-    /**
-     * Queries map.
-     */
-    protected Map<DaoOperations, String> queries;
+    private static final Logger LOG = LogManager.getLogger(RoleDao.class);
 
-    /**
-     * Constructs new object.
-     *
-     * @param connectionPool Connection pool to the storage used.
-     * @param queries        Map of queries to the storage.
-     */
-    public AbstractDao(BasicDataSource connectionPool, Map<DaoOperations, String> queries) {
-        this.connectionPool = connectionPool;
-        this.queries = queries;
+    public RoleDao(BasicDataSource pool, Map<DaoOperations, String> queries) {
+        super(pool, queries);
     }
-
 
     /**
      * Creates new entity in database.
@@ -47,7 +32,7 @@ public abstract class AbstractDao<E> implements Dao<E> {
      * @return Added entity from database.
      */
     @Override
-    public E add(E entity) {
+    public String add(String entity) {
         return null;
     }
 
@@ -58,7 +43,7 @@ public abstract class AbstractDao<E> implements Dao<E> {
      * @return Entity from database or empty entity if not found.
      */
     @Override
-    public E get(int key) {
+    public String get(int key) {
         return null;
     }
 
@@ -70,7 +55,7 @@ public abstract class AbstractDao<E> implements Dao<E> {
      * @return Updated entity from database.
      */
     @Override
-    public E update(int key, E newEntity) {
+    public String update(int key, String newEntity) {
         return null;
     }
 
@@ -81,7 +66,7 @@ public abstract class AbstractDao<E> implements Dao<E> {
      * @return Deleted entity as it was found in database.
      */
     @Override
-    public E delete(int key) {
+    public String delete(int key) {
         return null;
     }
 
@@ -91,7 +76,7 @@ public abstract class AbstractDao<E> implements Dao<E> {
      * @return List with all entity objects found from database.
      */
     @Override
-    public List<E> getAll() {
+    public List<String> getAll() {
         return null;
     }
 }

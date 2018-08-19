@@ -1,5 +1,6 @@
-package ru.job4j.music.dao;
+package ru.job4j.music.dao.general;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.music.StaticMethods;
@@ -12,7 +13,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.lang.String.format;
-import static ru.job4j.music.dao.DbStructureChanger.Table.*;
+import static ru.job4j.music.dao.general.DbStructureChanger.Table.*;
 
 /**
  * TODO: class description
@@ -43,9 +44,9 @@ public class DbStructureChanger {
      */
     private static final String DEFAULT_CONFIG = "ru/job4j/music/database.properties";
     /**
-     * Database connector.
+     * Database connection pool.
      */
-    private final DbConnector connector;
+    private final BasicDataSource pool;
     /**
      * Map with sql queries.
      */
@@ -62,12 +63,12 @@ public class DbStructureChanger {
     /**
      * Constructs new object.
      *
-     * @param config    File with queries (as resource).
-     * @param connector Database connector object giving connections to db.
+     * @param config File with queries (as resource).
+     * @param pool   Database pool object giving connections to db.
      */
-    public DbStructureChanger(String config, DbConnector connector) {
+    public DbStructureChanger(String config, BasicDataSource pool) {
         Properties prop = StaticMethods.loadProperties(config, this.getClass());
-        this.connector = connector;
+        this.pool = pool;
         this.createTableQueries = this.loadCreateTableQueries(prop);
         this.queryDropAllTables = prop.getProperty(QUERY_DROP_ALL_TABLES_KEY);
         this.queryDropAllFunctions = prop.getProperty(QUERY_DROP_ALL_FUNCTIONS_KEY);
@@ -76,10 +77,10 @@ public class DbStructureChanger {
     /**
      * Constructs new object using default config file.
      *
-     * @param connector Database connector object giving connections to db.
+     * @param pool Database pool object giving connections to db.
      */
-    public DbStructureChanger(DbConnector connector) {
-        this(DEFAULT_CONFIG, connector);
+    public DbStructureChanger(BasicDataSource pool) {
+        this(DEFAULT_CONFIG, pool);
     }
 
     /**
@@ -133,7 +134,7 @@ public class DbStructureChanger {
      * Performs dropping all tables in database.
      */
     private void dbDropAllTables() {
-        try (Connection connection = this.connector.getConnection();
+        try (Connection connection = this.pool.getConnection();
              Statement statement = connection.createStatement()
         ) {
             statement.execute(this.queryDropAllTables);
@@ -146,7 +147,7 @@ public class DbStructureChanger {
      * Performs dropping all functions in database.
      */
     private void dbDropAllFunctions() {
-        try (Connection connection = this.connector.getConnection();
+        try (Connection connection = this.pool.getConnection();
              Statement statement = connection.createStatement()
         ) {
             statement.execute(this.queryDropAllFunctions);
@@ -162,7 +163,7 @@ public class DbStructureChanger {
      *               have references to each other.
      */
     private void dbCreateTables(Table... tables) {
-        try (Connection connection = this.connector.getConnection();
+        try (Connection connection = this.pool.getConnection();
              Statement statement = connection.createStatement()
         ) {
             for (Table table : tables) {

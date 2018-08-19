@@ -1,4 +1,4 @@
-package ru.job4j.music.dao;
+package ru.job4j.music.dao.general;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

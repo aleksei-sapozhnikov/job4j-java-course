@@ -1,18 +1,17 @@
-package ru.job4j.music.dao;
+package ru.job4j.music.dao.general;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.music.StaticMethods;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 import static java.lang.String.format;
-import static ru.job4j.music.dao.DbConnector.ConnectionPoolProperties.*;
+import static ru.job4j.music.dao.general.DbConnector.ConnectionPoolProperties.*;
 
 /**
  * Class to connect to database and give connction pool to others.
@@ -58,8 +57,8 @@ public class DbConnector {
      *
      * @return Connection pool for use.
      */
-    public Connection getConnection() throws SQLException {
-        return this.pool.getConnection();
+    public BasicDataSource getPool() throws SQLException {
+        return this.pool;
     }
 
 

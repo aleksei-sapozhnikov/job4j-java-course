@@ -1,10 +1,13 @@
-package ru.job4j.music.dao;
+package ru.job4j.music.dao.general;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.music.StaticMethods;
-import ru.job4j.music.dao.specific.RoleDao;
+import ru.job4j.music.dao.dao.AddressDao;
+import ru.job4j.music.dao.dao.MusicDao;
+import ru.job4j.music.dao.dao.RoleDao;
+import ru.job4j.music.dao.dao.UserDao;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,8 +15,8 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.lang.String.format;
-import static ru.job4j.music.dao.DaoOperations.*;
-import static ru.job4j.music.dao.DaoPool.DaoType.*;
+import static ru.job4j.music.dao.general.DaoOperations.*;
+import static ru.job4j.music.dao.general.DaoPool.DaoType.*;
 
 /**
  * Class creating objects implementing DAO for different objects.
@@ -72,8 +75,9 @@ public class DaoPool {
      * @param daoType Dao type needed.
      * @return Dao of needed type.
      */
-    public Dao getDao(DaoType daoType) {
-        return this.daoStorage.get(daoType);
+    @SuppressWarnings("unchecked")
+    public <E> Dao<E> getDao(DaoType daoType) {
+        return (Dao<E>) this.daoStorage.get(daoType);
     }
 
     /**
@@ -85,6 +89,9 @@ public class DaoPool {
      */
     private Map<DaoType, Dao> createAllDao(BasicDataSource connectionPool, Properties prop) {
         Map<DaoType, Dao> result = new HashMap<>();
+        result.put(USER, new UserDao(connectionPool, this.loadQueries(prop, USER.toString())));
+        result.put(ADDRESS, new AddressDao(connectionPool, this.loadQueries(prop, ADDRESS.toString())));
+        result.put(MUSIC, new MusicDao(connectionPool, this.loadQueries(prop, MUSIC.toString())));
         result.put(ROLE, new RoleDao(connectionPool, this.loadQueries(prop, ROLE.toString())));
         return result;
     }
@@ -99,12 +106,12 @@ public class DaoPool {
      */
     private Map<DaoOperations, String> loadQueries(Properties prop, String daoKey) {
         Map<DaoOperations, String> result = new HashMap<>();
-        String name = daoKey.toLowerCase();
-        result.put(ADD, prop.getProperty(format(QUERY_PROPERTY_FORMAT_ADD, name)));
-        result.put(GET_BY_ID, prop.getProperty(format(QUERY_PROPERTY_FORMAT_GET_BY_ID, name)));
-        result.put(UPDATE, prop.getProperty(format(QUERY_PROPERTY_FORMAT_UPDATE, name)));
-        result.put(DELETE, prop.getProperty(format(QUERY_PROPERTY_FORMAT_DELETE, name)));
-        result.put(GET_ALL, prop.getProperty(format(QUERY_PROPERTY_FORMAT_GET_ALL, name)));
+        String key = daoKey.toLowerCase();
+        result.put(ADD, prop.getProperty(format(QUERY_PROPERTY_FORMAT_ADD, key)));
+        result.put(GET_BY_ID, prop.getProperty(format(QUERY_PROPERTY_FORMAT_GET_BY_ID, key)));
+        result.put(UPDATE, prop.getProperty(format(QUERY_PROPERTY_FORMAT_UPDATE, key)));
+        result.put(DELETE, prop.getProperty(format(QUERY_PROPERTY_FORMAT_DELETE, key)));
+        result.put(GET_ALL, prop.getProperty(format(QUERY_PROPERTY_FORMAT_GET_ALL, key)));
         return result;
     }
 
@@ -119,7 +126,7 @@ public class DaoPool {
         USER("user"),
         ROLE("role"),
         ADDRESS("address"),
-        MUSIC_GENRE("musicGenre");
+        MUSIC("music");
 
         /**
          * Logger.
