@@ -26,7 +26,7 @@ public abstract class AbstractDao<E> implements Dao<E> {
     /**
      * Queries map.
      */
-    protected Map<DaoPossibleOperations, String> queries;
+    protected Map<DaoOperations, String> queries;
 
     /**
      * Constructs new object.
@@ -34,7 +34,7 @@ public abstract class AbstractDao<E> implements Dao<E> {
      * @param connectionPool Connection pool to the storage used.
      * @param queries        Map of queries to the storage.
      */
-    public AbstractDao(BasicDataSource connectionPool, Map<DaoPossibleOperations, String> queries) {
+    public AbstractDao(BasicDataSource connectionPool, Map<DaoOperations, String> queries) {
         this.connectionPool = connectionPool;
         this.queries = queries;
     }

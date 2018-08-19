@@ -10,7 +10,7 @@ import org.apache.logging.log4j.Logger;
  * @version 0.1
  * @since 0.1
  */
-public enum DaoPossibleOperations {
+public enum DaoOperations {
     ADD,
     UPDATE,
     DELETE,

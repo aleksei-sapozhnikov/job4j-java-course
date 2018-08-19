@@ -29,11 +29,19 @@ public class DbStructureChanger {
     /**
      * Format of the property key for the "add" operation.
      */
-    private static final String FORMAT_CREATE_TABLE = "sql.table.%s";
+    private static final String QUERY_FORMAT_CREATE_TABLE = "sql.table.%s";
+    /**
+     * Property key for "drop all tables" operation.
+     */
+    private static final String QUERY_DROP_ALL_TABLES_KEY = "sql.drop.tables";
+    /**
+     * Property key for "drop all functions" operation.
+     */
+    private static final String QUERY_DROP_ALL_FUNCTIONS_KEY = "sql.drop.functions";
     /**
      * File with connection pool properties.
      */
-    private static final String CONFIG_FILE = "ru/job4j/music/database.properties";
+    private static final String DEFAULT_CONFIG = "ru/job4j/music/database.properties";
     /**
      * Database connector.
      */
@@ -41,39 +49,124 @@ public class DbStructureChanger {
     /**
      * Map with sql queries.
      */
-    private final Map<Table, String> queries;
+    private final Map<Table, String> createTableQueries;
+    /**
+     * Sql query to drop all tables.
+     */
+    private final String queryDropAllTables;
+    /**
+     * Sql query to drop all functions.
+     */
+    private final String queryDropAllFunctions;
 
-    public DbStructureChanger(DbConnector connector) {
-        Properties prop = StaticMethods.loadProperties(CONFIG_FILE, this.getClass());
+    /**
+     * Constructs new object.
+     *
+     * @param config    File with queries (as resource).
+     * @param connector Database connector object giving connections to db.
+     */
+    public DbStructureChanger(String config, DbConnector connector) {
+        Properties prop = StaticMethods.loadProperties(config, this.getClass());
         this.connector = connector;
-        this.queries = this.loadQueries(prop);
+        this.createTableQueries = this.loadCreateTableQueries(prop);
+        this.queryDropAllTables = prop.getProperty(QUERY_DROP_ALL_TABLES_KEY);
+        this.queryDropAllFunctions = prop.getProperty(QUERY_DROP_ALL_FUNCTIONS_KEY);
     }
 
-    private Map<Table, String> loadQueries(Properties prop) {
+    /**
+     * Constructs new object using default config file.
+     *
+     * @param connector Database connector object giving connections to db.
+     */
+    public DbStructureChanger(DbConnector connector) {
+        this(DEFAULT_CONFIG, connector);
+    }
+
+    /**
+     * Returns map with sql queries to create tables.
+     *
+     * @param prop Properties object with queries.
+     * @return Map with queries to create tables.
+     */
+    private Map<Table, String> loadCreateTableQueries(Properties prop) {
         Map<Table, String> result = new HashMap<>();
         for (Table table : Table.values()) {
             result.put(
                     table,
-                    prop.getProperty(format(FORMAT_CREATE_TABLE, table.name()))
+                    prop.getProperty(format(QUERY_FORMAT_CREATE_TABLE, table.getTableName()))
             );
         }
         return result;
     }
 
+    /**
+     * Creates all needed tables.
+     */
     public void createTables() {
-        this.createTables(ROLE, ADDRESS, MUSIC, USER, USER_MUSIC);
+        this.dbCreateTables(ROLES, ADDRESSES, MUSIC, USERS, USERS_MUSIC);
     }
 
+    /**
+     * Drops all tables existing in the database.
+     */
     public void dropAllTables() {
-
+        this.dbDropAllTables();
     }
 
-    private void createTables(Table... tables) {
+    /**
+     * Drops all functions existing in the database.
+     */
+    public void dropAllFunctions() {
+        this.dbDropAllFunctions();
+    }
+
+    /**
+     * Drops all tables and functions, then creates needed tables.
+     */
+    public void clear() {
+        this.dropAllTables();
+        this.dropAllFunctions();
+        this.createTables();
+    }
+
+    /**
+     * Performs dropping all tables in database.
+     */
+    private void dbDropAllTables() {
+        try (Connection connection = this.connector.getConnection();
+             Statement statement = connection.createStatement()
+        ) {
+            statement.execute(this.queryDropAllTables);
+        } catch (SQLException e) {
+            LOG.error(StaticMethods.describeException(e));
+        }
+    }
+
+    /**
+     * Performs dropping all functions in database.
+     */
+    private void dbDropAllFunctions() {
+        try (Connection connection = this.connector.getConnection();
+             Statement statement = connection.createStatement()
+        ) {
+            statement.execute(this.queryDropAllFunctions);
+        } catch (SQLException e) {
+            LOG.error(StaticMethods.describeException(e));
+        }
+    }
+
+    /**
+     * Performs creating needed tables in database.
+     *
+     * @param tables Tables to create - note that order matters if tables
+     *               have references to each other.
+     */
+    private void dbCreateTables(Table... tables) {
         try (Connection connection = this.connector.getConnection();
              Statement statement = connection.createStatement()
         ) {
             for (Table table : tables) {
-                String query = this.queries.get(table);
+                String query = this.createTableQueries.get(table);
                 statement.execute(query);
             }
         } catch (SQLException e) {
@@ -81,12 +174,15 @@ public class DbStructureChanger {
         }
     }
 
+    /**
+     * Enumerates all tables needed.
+     */
     public enum Table {
-        ROLE("roles"),
-        ADDRESS("addresses"),
+        ROLES("roles"),
+        ADDRESSES("addresses"),
         MUSIC("music"),
-        USER("users"),
-        USER_MUSIC("users_music");
+        USERS("users"),
+        USERS_MUSIC("users_music");
 
         /**
          * Name of the table for the entity.

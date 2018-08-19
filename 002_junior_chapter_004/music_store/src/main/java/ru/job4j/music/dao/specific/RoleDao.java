@@ -4,7 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.music.dao.AbstractDao;
-import ru.job4j.music.dao.DaoPossibleOperations;
+import ru.job4j.music.dao.DaoOperations;
 
 import java.util.Map;
 
@@ -21,7 +21,7 @@ public class RoleDao extends AbstractDao<String> {
      */
     private static final Logger LOG = LogManager.getLogger(RoleDao.class);
 
-    public RoleDao(BasicDataSource connectionPool, Map<DaoPossibleOperations, String> queries) {
+    public RoleDao(BasicDataSource connectionPool, Map<DaoOperations, String> queries) {
         super(connectionPool, queries);
     }
 }

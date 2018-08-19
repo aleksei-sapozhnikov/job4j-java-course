@@ -10,6 +10,7 @@ public class DbStructureChangerTest {
     public void createTables() {
         DbConnector connector = new DbConnector();
         DbStructureChanger structure = new DbStructureChanger(connector);
+        structure.clear();
         structure.createTables();
     }
 }

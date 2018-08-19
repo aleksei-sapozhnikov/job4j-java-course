@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import static java.lang.String.format;
-import static ru.job4j.music.dao.DaoPossibleOperations.*;
+import static ru.job4j.music.dao.DaoOperations.*;
 import static ru.job4j.music.dao.DaoPool.DaoType.*;
 
 /**
@@ -97,8 +97,8 @@ public class DaoPool {
      *               The string is used to find needed property key.
      * @return Map with queries for specified dao.
      */
-    private Map<DaoPossibleOperations, String> loadQueries(Properties prop, String daoKey) {
-        Map<DaoPossibleOperations, String> result = new HashMap<>();
+    private Map<DaoOperations, String> loadQueries(Properties prop, String daoKey) {
+        Map<DaoOperations, String> result = new HashMap<>();
         String name = daoKey.toLowerCase();
         result.put(ADD, prop.getProperty(format(QUERY_PROPERTY_FORMAT_ADD, name)));
         result.put(GET_BY_ID, prop.getProperty(format(QUERY_PROPERTY_FORMAT_GET_BY_ID, name)));

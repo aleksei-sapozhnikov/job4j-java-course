@@ -33,15 +33,24 @@ public class DbConnector {
     /**
      * Connection pool to database.
      */
-    private BasicDataSource pool = new BasicDataSource();
+    private final BasicDataSource pool;
 
     /**
      * Constructs new object.
+     *
+     * @param config Way to resource file with connection properties.
+     */
+    public DbConnector(String config) {
+        Properties properties = StaticMethods.loadProperties(config, this.getClass());
+        this.pool = new BasicDataSource();
+        this.configureConnectionPool(this.pool, properties);
+    }
+
+    /**
+     * Constructs new object using default config.
      */
     public DbConnector() {
-        Properties properties = StaticMethods.loadProperties(DEFAULT_CONFIG, this.getClass());
-        BasicDataSource pool = new BasicDataSource();
-        this.configureConnectionPool(pool, properties);
+        this(DEFAULT_CONFIG);
     }
 
     /**
