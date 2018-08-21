@@ -72,7 +72,7 @@ public class DatabaseStore implements Store<User> {
                 prop.getProperty("db.type"), prop.getProperty("db.address"),
                 prop.getProperty("db.name"), prop.getProperty("db.user"), prop.getProperty("db.password"));
         this.createTables();
-        this.createFunctions();
+        // this.createFunctions();
     }
 
     /**
@@ -210,7 +210,7 @@ public class DatabaseStore implements Store<User> {
         this.dropTables();
         this.dropFunctions();
         this.createTables();
-        this.createFunctions();
+        // this.createFunctions();
     }
 
     /**
