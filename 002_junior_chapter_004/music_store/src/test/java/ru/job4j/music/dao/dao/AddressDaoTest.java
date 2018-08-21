@@ -1,5 +1,6 @@
 package ru.job4j.music.dao.dao;
 
+import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Before;
 import org.junit.Test;
 import ru.job4j.music.dao.general.Dao;
@@ -15,18 +16,16 @@ import java.util.List;
 public class AddressDaoTest {
 
     private final Dao<Address> dao;
-
     private final DbStructureChanger structure;
 
     private final Address addressWithId = new Address(34, "Id street, 532");
-
-    private final Address addressNoId = new Address("Main street");
+    private final Address addressWithoutId = new Address("Main street");
 
     public AddressDaoTest() throws IOException, SQLException {
-        DbConnector connector = new DbConnector();
-        this.structure = new DbStructureChanger(connector.getPool());
-        DaoPool pool = new DaoPool(connector.getPool());
-        this.dao = pool.getDao(DaoPool.DaoType.ADDRESS);
+        BasicDataSource connections = new DbConnector().getPool();
+        DaoPool daoPool = new DaoPool(connections);
+        this.structure = new DbStructureChanger(connections);
+        this.dao = daoPool.getDao(DaoPool.DaoType.ADDRESS);
     }
 
     @Before
@@ -37,7 +36,7 @@ public class AddressDaoTest {
     @Test
     public void add() {
         Address added = this.dao.add(this.addressWithId);
-        Address added2 = this.dao.add(this.addressNoId);
+        Address added2 = this.dao.add(this.addressWithoutId);
         Address found = this.dao.get(added.getId());
         Address found2 = this.dao.get(added2.getId());
         List<Address> list = this.dao.getAll();
