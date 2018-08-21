@@ -16,7 +16,7 @@ import static java.lang.String.format;
 import static ru.job4j.music.dao.general.DbStructureChanger.Table.*;
 
 /**
- * TODO: class description
+ * Class to make structural changes in database: create/drop tables, add/drop functions, etc.
  *
  * @author Aleksei Sapozhnikov (vermucht@gmail.com)
  * @version 0.1

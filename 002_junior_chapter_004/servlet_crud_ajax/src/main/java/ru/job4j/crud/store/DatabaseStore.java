@@ -31,7 +31,7 @@ public class DatabaseStore implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
-    private static final String PROPERTIES = "ru/job4j/crud/store/database.properties";
+    private static final String PROPERTIES = "ru/job4j/crud/store/database_no_functions.properties";
     /**
      * Connection pool data source - creates connections to database.
      */
@@ -307,15 +307,7 @@ public class DatabaseStore implements Store<User> {
         statement.setString(++index, upd.getInfo().getEmail());
         statement.setString(++index, upd.getInfo().getCountry());
         statement.setString(++index, upd.getInfo().getCity());
-        int rowsChanged;
-        try (ResultSet res = statement.executeQuery()) {
-            if (res.next()) {
-                rowsChanged = res.getInt(1);
-            } else {
-                LOG.error("Update method did not return number of rows changed");
-                rowsChanged = 0;
-            }
-        }
+        int rowsChanged = statement.executeUpdate();
         if (rowsChanged > 1) {
             LOG.error("Update method changed more than 1 row");
         }
