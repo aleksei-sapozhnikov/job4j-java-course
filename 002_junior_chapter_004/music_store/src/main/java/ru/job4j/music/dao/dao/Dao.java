@@ -1,4 +1,4 @@
-package ru.job4j.music.dao.general;
+package ru.job4j.music.dao.dao;
 
 import java.util.List;
 

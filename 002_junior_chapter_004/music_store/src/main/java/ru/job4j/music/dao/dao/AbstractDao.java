@@ -3,14 +3,8 @@ package ru.job4j.music.dao.dao;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.music.StaticMethods;
-import ru.job4j.music.dao.general.Dao;
 import ru.job4j.music.dao.general.DaoOperations;
-import ru.job4j.music.entities.Address;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 

@@ -78,10 +78,7 @@ public class AddressDao extends AbstractDao<Address> {
             stGet.setInt(1, key);
             try (ResultSet res = stGet.executeQuery()) {
                 if (res.next()) {
-                    result = new Address(
-                            res.getInt(1),
-                            res.getString(2)
-                    );
+                    result = this.formAddress(res);
                 }
             }
         } catch (SQLException e) {
@@ -102,7 +99,7 @@ public class AddressDao extends AbstractDao<Address> {
     @Override
     public Address update(int key, Address newEntity) {
         Address result = Address.EMPTY_ADDRESS;
-        String qUpdate = this.queries.get(DaoOperations.GET_BY_ID);
+        String qUpdate = this.queries.get(DaoOperations.UPDATE);
         try (Connection connection = this.pool.getConnection();
              PreparedStatement stUpdate = connection.prepareStatement(qUpdate)
         ) {
@@ -128,7 +125,7 @@ public class AddressDao extends AbstractDao<Address> {
     public Address delete(int key) {
         Address temp = this.get(key);
         boolean deleted = false;
-        String qDelete = this.queries.get(DaoOperations.GET_BY_ID);
+        String qDelete = this.queries.get(DaoOperations.DELETE);
         try (Connection connection = this.pool.getConnection();
              PreparedStatement stDelete = connection.prepareStatement(qDelete)
         ) {
@@ -159,12 +156,27 @@ public class AddressDao extends AbstractDao<Address> {
              ResultSet res = stGetAll.executeQuery()
         ) {
             while (res.next()) {
-                result.add(
-                        new Address(
-                                res.getInt(1),
-                                res.getString(2))
-                );
+                result.add(this.formAddress(res));
             }
+        } catch (SQLException e) {
+            LOG.error(StaticMethods.describeException(e));
+        }
+        return result;
+    }
+
+    /**
+     * Forms address object from given Result set.
+     *
+     * @param res Result set.
+     * @return Address object formed or empty address if couldn't form.
+     */
+    private Address formAddress(ResultSet res) {
+        Address result = Address.EMPTY_ADDRESS;
+        try {
+            result = new Address(
+                    res.getInt(1),          // id
+                    res.getString(2)        // name
+            );
         } catch (SQLException e) {
             LOG.error(StaticMethods.describeException(e));
         }

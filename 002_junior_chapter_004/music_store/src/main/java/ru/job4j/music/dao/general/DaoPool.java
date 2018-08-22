@@ -4,10 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.music.StaticMethods;
-import ru.job4j.music.dao.dao.AddressDao;
-import ru.job4j.music.dao.dao.MusicDao;
-import ru.job4j.music.dao.dao.RoleDao;
-import ru.job4j.music.dao.dao.UserDao;
+import ru.job4j.music.dao.dao.*;
 
 import java.io.IOException;
 import java.util.HashMap;

@@ -3,6 +3,8 @@ package ru.job4j.music.entities;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 /**
  * Address entity.
  *
@@ -14,7 +16,7 @@ public class Address {
     /**
      * Default id if one was not specified.
      */
-    private static final int DEFAULT_ID = -1;
+    public static final int DEFAULT_ID = -1;
     /**
      * Empty address - to use instead of null object.
      */
@@ -62,17 +64,6 @@ public class Address {
     }
 
     /**
-     * Returns new object with fields same as of this object
-     * but with given id.
-     *
-     * @param id Id to set to the object.
-     * @return New object with given id.
-     */
-    public Address setId(int id) {
-        return new Address(id, this.name);
-    }
-
-    /**
      * Returns name.
      *
      * @return Value of name field.
@@ -93,5 +84,33 @@ public class Address {
                 this.id,
                 this.name
         );
+    }
+
+    /**
+     * Indicates whether some other object is "equal to" this one.
+     *
+     * @param o Other object.
+     * @return <tt>true</tt> if this object is the same as the obj argument; <tt>false</tt> otherwise.
+     */
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Address address = (Address) o;
+        return Objects.equals(name, address.name);
+    }
+
+    /**
+     * Returns a hash code value for the object.
+     *
+     * @return Integer hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

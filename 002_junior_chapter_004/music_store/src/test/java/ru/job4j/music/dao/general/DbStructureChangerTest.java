@@ -1,4 +1,4 @@
-package ru.job4j.music.dao;
+package ru.job4j.music.dao.general;
 
 import org.junit.Test;
 import ru.job4j.music.dao.general.DbConnector;
