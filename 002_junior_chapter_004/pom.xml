@@ -8,6 +8,7 @@
         <module>servlet_crud</module>
         <module>servlet_crud_ajax</module>
         <module>html_css_javascript</module>
+        <module>music_store</module>
     </modules>
     <parent>
         <artifactId>java_az</artifactId>

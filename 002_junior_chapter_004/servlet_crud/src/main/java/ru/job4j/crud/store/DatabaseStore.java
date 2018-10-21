@@ -28,7 +28,7 @@ public class DatabaseStore implements Store<User> {
     /**
      * Properties file loaded as resource.
      */
-    private static final String PROPERTIES = "ru/job4j/crud/database/database.properties";
+    private static final String PROPERTIES = "ru/job4j/crud/database/database_no_functions.properties";
     /**
      * Connection pool data source - creates connections to database.
      */
