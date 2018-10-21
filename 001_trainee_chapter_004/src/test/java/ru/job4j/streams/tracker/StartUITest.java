@@ -1,4 +1,4 @@
-package ru.job4j.tracker;
+package ru.job4j.streams.tracker;
 
 import org.junit.After;
 import org.junit.Before;

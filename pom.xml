@@ -23,6 +23,7 @@
         <module>002_junior_chapter_004</module>
         <module>examples</module>
         <module>common_methods</module>
+        <module>001_trainee_chapter_004</module>
     </modules>
 
     <dependencies>

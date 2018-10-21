@@ -1,4 +1,4 @@
-package ru.job4j.tracker;
+package ru.job4j.functional.tracker;
 
 import org.junit.After;
 import org.junit.Before;
@@ -9,6 +9,7 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringJoiner;
+import java.util.function.Consumer;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -16,6 +17,7 @@ import static org.junit.Assert.assertThat;
 /**
  * Tests for StartUI class.
  */
+
 @SuppressWarnings("Duplicates")
 public class StartUITest {
 
@@ -267,4 +269,65 @@ public class StartUITest {
         assertThat(result, is(expected));
     }
 
+    /**
+     * Test with List<String> consumer.
+     */
+    @Test
+    public void whenConsumerListOfStringsThenShowByIdResultRight() {
+        List<String> result = new ArrayList<>();
+        Consumer<String> consumer = result::add;
+        //add items
+        Tracker tracker = new Tracker();
+        Item item1 = tracker.add(new Item("name1", "desc1", 0L));
+        item1.setId("111");
+        Item item2 = tracker.add(new Item("name2", "desc2", 0L));
+        item2.setId("222");
+        //run program and get result
+        Input input = new StubInput(new String[]{"4", "111", "6"});
+        new StartUI(input, tracker, consumer).init();
+        // create expected
+        List<String> expected = new ArrayList<>();
+        expected.add(new StringJoiner(System.lineSeparator())
+                .add("")
+                .add("============ Action menu ============")
+                .add("0 : Add new Item")
+                .add("1 : Show all items")
+                .add("2 : Edit item")
+                .add("3 : Delete item")
+                .add("4 : Find item by Id")
+                .add("5 : Find items by name")
+                .add("6 : Exit Program")
+                .add("")
+                .toString()
+        );
+        expected.add(new StringJoiner(System.lineSeparator())
+                .add("")
+                .add("------------ Find item by id ------------")
+                .add("=== Item information : ")
+                .add("id : 111")
+                .add("name : name1")
+                .add("description : desc1")
+                .add("")
+                .toString()
+        );
+        expected.add(new StringJoiner(System.lineSeparator())
+                .add("")
+                .add("============ Action menu ============")
+                .add("0 : Add new Item")
+                .add("1 : Show all items")
+                .add("2 : Edit item")
+                .add("3 : Delete item")
+                .add("4 : Find item by Id")
+                .add("5 : Find items by name")
+                .add("6 : Exit Program")
+                .add("")
+                .toString()
+        );
+        expected.add(new StringJoiner(System.lineSeparator())
+                .add("=== Exit program.")
+                .add("")
+                .toString()
+        );
+        assertThat(result, is(expected));
+    }
 }
