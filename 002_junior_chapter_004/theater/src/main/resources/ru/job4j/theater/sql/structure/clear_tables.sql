@@ -1,0 +1,1 @@
+truncate seat, payment, account;
