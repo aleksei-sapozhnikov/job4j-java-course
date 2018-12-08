@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -83,14 +84,12 @@ public class SearchTextTest {
         search.performSearch();
         // result
         List<String> absolute = search.getSearchResult();
-        String[] names = new String[absolute.size()];
-        for (int i = 0; i < names.length; i++) {
-            names[i] = Paths.get(absolute.get(i)).getFileName().toString();
+        List<String> names = new ArrayList<>();
+        for (String abs : absolute) {
+            names.add(Paths.get(abs).getFileName().toString());
         }
-        String[] expected = {
-                "_File1.txt",
-                "_File4.ttt"
-        };
+        names.sort(String::compareTo);
+        List<String> expected = new ArrayList<>(Arrays.asList("_File1.txt", "_File4.ttt"));
         assertThat(names, is(expected));
     }
 
