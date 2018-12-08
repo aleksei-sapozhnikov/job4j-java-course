@@ -71,8 +71,6 @@ public class DatabaseStore implements Store<User> {
         this.configureConnectionPool(CONNECTION_POOL,
                 prop.getProperty("db.type"), prop.getProperty("db.address"),
                 prop.getProperty("db.name"), prop.getProperty("db.user"), prop.getProperty("db.password"));
-        this.dropFunctions();
-        this.dropTables();
         this.createTables();
         // this.createFunctions();
     }
