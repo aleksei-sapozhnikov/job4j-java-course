@@ -1,7 +1,6 @@
 package ru.job4j;
 
-import ru.job4j.util.common.Utils;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -27,6 +26,25 @@ public class CommonMethods {
 
     public static CommonMethods getInstance() {
         return instance;
+    }
+
+    /**
+     * Converts InputStream object to a String object.
+     *
+     * @param in      InputStream to convert.
+     * @param charset Charset used in the stream.
+     * @return Converted string.
+     * @throws IOException If bytes could not be read from the stream
+     *                     for some reason.
+     */
+    public String inputStreamToString(InputStream in, String charset) throws IOException {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int length;
+        while ((length = in.read(buffer)) != -1) {
+            out.write(buffer, 0, length);
+        }
+        return out.toString(charset);
     }
 
     /**
@@ -101,7 +119,7 @@ public class CommonMethods {
         try (InputStream input = loader.getResourceAsStream(
                 String.format("%s/%s", pkg, fileName)
         )) {
-            return Utils.inputStreamToString(input, charset);
+            return this.inputStreamToString(input, charset);
         }
     }
 
