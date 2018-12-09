@@ -1,4 +1,4 @@
-package ru.job4j.util.common;
+package ru.job4j.theater;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

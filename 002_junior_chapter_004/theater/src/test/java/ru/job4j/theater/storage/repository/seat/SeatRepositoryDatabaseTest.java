@@ -4,10 +4,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
+import ru.job4j.theater.Utils;
 import ru.job4j.theater.model.Account;
 import ru.job4j.theater.model.Seat;
 import ru.job4j.theater.storage.database.Database;
-import ru.job4j.util.common.Utils;
 
 import java.sql.SQLException;
 import java.util.Arrays;

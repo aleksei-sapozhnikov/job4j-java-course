@@ -25,15 +25,6 @@
             <version>1.7.1</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- Utils -->
-        <dependency>
-            <groupId>ru.job4j</groupId>
-            <artifactId>utils</artifactId>
-            <version>2.0</version>
-            <scope>compile</scope>
-        </dependency>
-
     </dependencies>
 
 </project>
