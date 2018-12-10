@@ -3,7 +3,7 @@ package ru.job4j.theater.storage.database;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.theater.Utils;
+import ru.job4j.util.common.Utils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

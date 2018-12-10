@@ -2,6 +2,7 @@ package ru.job4j.vacancies;
 
 import org.junit.Test;
 import ru.job4j.CommonMethods;
+import ru.job4j.util.common.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +38,7 @@ public class VacancyParserTest {
         ClassLoader loader = VacancyParserTest.class.getClassLoader();
         String content;
         try (InputStream stream = loader.getResourceAsStream(TEST_1)) {
-            content = METHODS.inputStreamToString(stream, "windows-1251");
+            content = Utils.inputStreamToString(stream, "windows-1251");
         }
         // get vacancies
         List<Vacancy> vacancies = parser.parseString(content);

@@ -11,9 +11,6 @@ services:
 addons:
   postgresql: "9.6"
 
-addons:
-  postgresql: "9.6"
-
 # Create testing database
 before_script:
 - psql -c "CREATE DATABASE test_db;" -U postgres
