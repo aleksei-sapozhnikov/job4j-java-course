@@ -1,7 +1,7 @@
 package ru.job4j.util.function;
 
 /**
- * Funcation interface. It takes param and return data.
+ * Function interface. It takes param and return data.
  *
  * @param <T> input arg.
  * @param <R> return data.

@@ -8,7 +8,7 @@ package ru.job4j.util.function;
  * @param <T> third.
  */
 @FunctionalInterface
-public interface TripleConsumerEx<F, S, T> {
+public interface TriConsumerEx<F, S, T> {
     /**
      * It takes three args.
      *
