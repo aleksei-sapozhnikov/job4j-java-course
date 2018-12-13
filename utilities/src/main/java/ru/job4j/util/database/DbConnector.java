@@ -3,10 +3,7 @@ package ru.job4j.util.database;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
+import java.util.Properties;
 
 /**
  * Connects to database using Connection pool (BasicDataSource)
@@ -16,40 +13,35 @@ import java.util.function.Supplier;
  * @version 0.1
  * @since 0.1
  */
-public class DbConnector implements Supplier<Optional<Connection>> {
+public class DbConnector implements Connector {
     /**
      * Connection pool.
      */
     private final BasicDataSource pool;
-    /**
-     * Handler of throwable objects (exceptions).
-     */
-    private final Consumer<Throwable> throwableHandler;
 
     /**
-     * Constructs instance using given parameters.
+     * Constructor.
      *
-     * @param builder Builder object;
+     * @param pool       Connection pool.
+     * @param properties Database properties.
      */
-    private DbConnector(Builder builder) {
-        this.pool = builder.pool;
-        this.throwableHandler = builder.throwableHandler;
-        this.setRequiredParameters(builder.properties);
-        this.setOptionalParameters(builder.properties);
+    public DbConnector(BasicDataSource pool, Properties properties) {
+        this.pool = pool;
+        this.setRequiredParameters(properties);
+        this.setOptionalParameters(properties);
     }
 
     /**
-     * Returns Connection object to main Database class.
+     * Returns Optional Connection object.
      *
      * @return Connection object.
      */
-    @Override
-    public Optional<Connection> get() {
-        Optional<Connection> result = Optional.empty();
+    public Connection getConnection() {
+        Connection result = null;
         try {
-            result = Optional.of(this.pool.getConnection());
-        } catch (SQLException e) {
-            this.throwableHandler.accept(e);
+            result = this.pool.getConnection();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return result;
     }
@@ -61,10 +53,10 @@ public class DbConnector implements Supplier<Optional<Connection>> {
      * @throws RuntimeException If parameter not found.
      */
     private void setRequiredParameters(Properties properties) {
-        PropertiesHolder holder = new PropertiesHolder.Builder(properties, "db.").build();
-        this.pool.setDriverClassName(this.valueOrException(holder, "db.driver"));
-        this.pool.setUsername(this.valueOrException(holder, "db.user"));
-        this.pool.setPassword(this.valueOrException(holder, "db.password"));
+        CertainPropertiesHolder holder = new CertainPropertiesHolder(properties, "db.", "file:");
+        this.pool.setDriverClassName(holder.get("db.driver"));
+        this.pool.setUsername(holder.get("db.user"));
+        this.pool.setPassword(holder.get("db.password"));
         this.pool.setUrl(this.formJdbcUrl(holder));
     }
 
@@ -75,28 +67,13 @@ public class DbConnector implements Supplier<Optional<Connection>> {
      * @param properties Object holding parameters.
      */
     private void setOptionalParameters(Properties properties) {
-        PropertiesHolder holder = new PropertiesHolder.Builder(properties, "pool.").build();
-        this.pool.setMinIdle(Integer.parseInt(
-                holder.get("pool.minIdle").orElse("5")));
-        this.pool.setMaxIdle(Integer.parseInt(
-                holder.get("pool.maxIdle").orElse("10")));
-        this.pool.setMaxOpenPreparedStatements(Integer.parseInt(
-                holder.get("pool.setMaxOpenPreparedStatements").orElse("100")));
-    }
-
-    /**
-     * Gets value from holder or throws RuntimeException.
-     *
-     * @param holder Holder with values.
-     * @param key    Key to find.
-     * @return Value associated with key.
-     * @throws RuntimeException If parameter not found.
-     */
-    private String valueOrException(PropertiesHolder holder, String key) {
-        String error = "Cannot build object: no needed property: %s";
-        return holder
-                .get(key)
-                .orElseThrow(() -> new RuntimeException(String.format(error, key)));
+        CertainPropertiesHolder holder = new CertainPropertiesHolder(properties, "pool.", "file:");
+        this.pool.setMinIdle(Integer.parseInt(holder
+                .getOrDefault("pool.minIdle", "5")));
+        this.pool.setMaxIdle(Integer.parseInt(holder
+                .getOrDefault("pool.maxIdle", "10")));
+        this.pool.setMaxOpenPreparedStatements(Integer.parseInt(holder
+                .getOrDefault("pool.setMaxOpenPreparedStatements", "100")));
     }
 
     /**
@@ -106,61 +83,22 @@ public class DbConnector implements Supplier<Optional<Connection>> {
      * @return JDBC url.
      * @throws RuntimeException If parameter not found.
      */
-    private String formJdbcUrl(PropertiesHolder holder) {
-        String type = this.valueOrException(holder, "db.type");
-        String address = this.valueOrException(holder, "db.address");
-        String name = this.valueOrException(holder, "db.name");
+    private String formJdbcUrl(CertainPropertiesHolder holder) {
+        String type = holder.get("db.type");
+        String address = holder.get("db.address");
+        String name = holder.get("db.name");
         return String.format("jdbc:%s:%s%s", type, address,
                 "".equals(name) ? "" : "/".concat(name)
         );
     }
 
     /**
-     * Builder class for the DbConnector.
+     * Closes all active database-connection resources.
+     *
+     * @throws Exception Possible exception.
      */
-    public static class Builder {
-        /**
-         * Required fields.
-         */
-        private final BasicDataSource pool;
-        private final Properties properties;
-        /**
-         * Optional fields.
-         */
-        private Consumer<Throwable> throwableHandler = Throwable::printStackTrace;
-
-        /**
-         * Constructor to set required fields.
-         *
-         * @param pool       Connection pool to use.
-         * @param properties Database properties.
-         */
-        public Builder(BasicDataSource pool, Properties properties) {
-            this.pool = pool;
-            this.properties = properties;
-        }
-
-        /**
-         * Sets 'throwableHandler' field value and returns this builder.
-         *
-         * @param value Value to set.
-         */
-        public Builder setThrowableHandler(Consumer<Throwable> value) {
-            this.throwableHandler = value;
-            return this;
-        }
-
-        /**
-         * Creates new DbConnector object using current builder.
-         *
-         * @return The Builder object.
-         */
-        public DbConnector build() {
-            return new DbConnector(this);
-        }
-
-
+    @Override
+    public void close() throws Exception {
+        this.pool.close();
     }
-
-
 }

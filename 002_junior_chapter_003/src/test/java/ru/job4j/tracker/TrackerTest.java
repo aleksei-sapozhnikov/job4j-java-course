@@ -1,34 +1,47 @@
 package ru.job4j.tracker;
 
 import org.junit.Test;
+import ru.job4j.util.common.Utils;
+import ru.job4j.util.database.ConnectionRollback;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class TrackerTest {
-    private Path testConfig = Paths.get("src", "main", "resources", "ru", "job4j", "tracker", "tracker_test.properties").toAbsolutePath();
+    private final Properties properties = Utils.loadProperties(this, "ru/job4j/tracker/test_liquibase.properties");
+
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName(this.properties.getProperty("db.driver"));
+        return ConnectionRollback.create(
+                DriverManager.getConnection(
+                        this.properties.getProperty("db.url"),
+                        this.properties.getProperty("db.user"),
+                        this.properties.getProperty("db.password")
+                ));
+    }
 
     /**
      * Test add() and findAll()
      */
     @Test
-    public void whenAddNewItemThenTrackerHasSameItem() throws IOException, SQLException {
-        Tracker tracker = new Tracker(this.testConfig, true);
-        Item item = tracker.add(new Item("test1", "testDescription", 123L));
-        assertThat(tracker.findAll()[0], is(item));
+    public void whenAddNewItemThenTrackerHasSameItem() throws Exception {
+        try (Tracker tracker = new Tracker(this.getConnection())) {
+            Item item = tracker.add(new Item("test1", "testDescription", 123L));
+            assertThat(tracker.findAll()[0], is(item));
+        }
     }
 
     /**
      * Test add() and findById()
      */
     @Test
-    public void whenAddItemThenCanFindById() throws SQLException, IOException {
-        try (Tracker tracker = new Tracker(this.testConfig, true)) {
+    public void whenAddItemThenCanFindById() throws Exception {
+        try (Tracker tracker = new Tracker(this.getConnection())) {
             Item itemAdded = tracker.add(new Item("name2", "desc2", 4323L, new String[]{"comm1", "comm2"}));
             Item itemFound = tracker.findById(itemAdded.getId());
             assertThat(itemFound, is(itemAdded));
@@ -36,8 +49,8 @@ public class TrackerTest {
     }
 
     @Test(expected = NoSuchIdException.class)
-    public void whenNoItemWithSuchIdStoredThenNoSuchIdException() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.testConfig, true)) {
+    public void whenNoItemWithSuchIdStoredThenNoSuchIdException() throws Exception {
+        try (Tracker tracker = new Tracker(this.getConnection())) {
             Item item = tracker.add(new Item("name2", "desc2", 4323L));
             String notId = item.getId() + "123";
             tracker.findById(notId);
@@ -48,8 +61,8 @@ public class TrackerTest {
      * Test replace() and findById()
      */
     @Test
-    public void whenReplaceNameThenReturnNewItem() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.testConfig, true)) {
+    public void whenReplaceNameThenReturnNewItem() throws Exception {
+        try (Tracker tracker = new Tracker(this.getConnection())) {
             Item oldItem = tracker.add(new Item("name1", "desc1", 123L));
             String id = oldItem.getId();
             Item newItem = new Item("name3", "desc3", 323L, new String[]{"comm1", "comm5"});
@@ -62,8 +75,8 @@ public class TrackerTest {
      * Test findAll() and add()
      */
     @Test
-    public void whenHasItemsReturnAllNotNullItems() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.testConfig, true)) {
+    public void whenHasItemsReturnAllNotNullItems() throws Exception {
+        try (Tracker tracker = new Tracker(this.getConnection())) {
             Item item1 = tracker.add(new Item("name1", "desc1", 324L));
             Item item2 = tracker.add(new Item("name2", "desc2", 756L));
             Item item3 = tracker.add(new Item("name1", "desc3", 743L));
@@ -79,8 +92,8 @@ public class TrackerTest {
      * Test delete() and findAll()
      */
     @Test
-    public void whenDeleteItemThenArrayWithoutThisItem() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.testConfig, true)) {
+    public void whenDeleteItemThenArrayWithoutThisItem() throws Exception {
+        try (Tracker tracker = new Tracker(this.getConnection())) {
             Item item1 = tracker.add(new Item("name1", "desc1", 324L, new String[]{"n1c1", "n1c2"}));
             Item item2 = tracker.add(new Item("name2", "desc2", 756L, new String[]{"n2c1", "n2c2"}));
             Item item3 = tracker.add(new Item("name3", "desc3", 743L, new String[]{"n3c1", "n3c2"}));
@@ -97,8 +110,8 @@ public class TrackerTest {
      * Test findByName()
      */
     @Test
-    public void whenGivenNameThenItemsWithThatName() throws IOException, SQLException {
-        try (Tracker tracker = new Tracker(this.testConfig, true)) {
+    public void whenGivenNameThenItemsWithThatName() throws Exception {
+        try (Tracker tracker = new Tracker(this.getConnection())) {
             Item item1 = tracker.add(new Item("name1", "desc1", 324L));
             Item item2 = tracker.add(new Item("name2", "desc2", 756L));
             Item item3 = tracker.add(new Item("name1", "desc3", 743L));

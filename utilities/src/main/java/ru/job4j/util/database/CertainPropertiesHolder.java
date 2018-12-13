@@ -2,7 +2,10 @@ package ru.job4j.util.database;
 
 import ru.job4j.util.common.Utils;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -15,7 +18,7 @@ import java.util.stream.Collectors;
  * @version 0.1
  * @since 0.1
  */
-public class PropertiesHolder implements Function<String, Optional<String>> {
+public class CertainPropertiesHolder implements Function<String, String> {
     /**
      * Map with taken properties values.
      */
@@ -40,12 +43,24 @@ public class PropertiesHolder implements Function<String, Optional<String>> {
     /**
      * Constructs new instance.
      *
-     * @param builder Builder object for that class.
+     * @param properties Object with parameters.
+     * @param loadKey    Key to load property.
+     * @param fileKey    Key defining file path.
      */
-    private PropertiesHolder(Builder builder) {
-        this.loadKey = builder.loadKey;
-        this.fileKey = builder.fileKey;
-        this.loadQueries(builder.properties);
+    public CertainPropertiesHolder(Properties properties, String loadKey, String fileKey) {
+        this.loadKey = loadKey;
+        this.fileKey = fileKey;
+        this.loadParameters(properties);
+    }
+
+    /**
+     * Constructs new instance.
+     *
+     * @param properties Object with parameters.
+     * @param loadKey    Key to load property.
+     */
+    public CertainPropertiesHolder(Properties properties, String loadKey) {
+        this(properties, loadKey, "file:");
     }
 
     /**
@@ -54,10 +69,26 @@ public class PropertiesHolder implements Function<String, Optional<String>> {
      * @param key Property key.
      * @return Property value.
      */
-    public Optional<String> get(String key) {
-        Optional<String> result = Optional.empty();
+    public String get(String key) {
+        String result = "null";
         if (this.queries.containsKey(key)) {
-            result = Optional.of(this.queries.get(key));
+            result = this.queries.get(key);
+        }
+        return result;
+    }
+
+    /**
+     * Returns property value or default value if property not found.
+     *
+     * @param key          Property key.
+     * @param defaultValue Default value.
+     * @return Property value.
+     * @
+     */
+    public String getOrDefault(String key, String defaultValue) {
+        String result = defaultValue;
+        if (this.queries.containsKey(key)) {
+            result = this.queries.get(key);
         }
         return result;
     }
@@ -70,7 +101,7 @@ public class PropertiesHolder implements Function<String, Optional<String>> {
      * @return Property value.
      */
     @Override
-    public Optional<String> apply(String key) {
+    public String apply(String key) {
         return this.get(key);
     }
 
@@ -79,7 +110,7 @@ public class PropertiesHolder implements Function<String, Optional<String>> {
      *
      * @param properties Properties object.
      */
-    private void loadQueries(Properties properties) {
+    private void loadParameters(Properties properties) {
         Set<String> keys = properties.stringPropertyNames().stream()
                 .filter(s -> s.startsWith(loadKey))
                 .collect(Collectors.toSet());
@@ -90,51 +121,6 @@ public class PropertiesHolder implements Function<String, Optional<String>> {
                     ? Utils.loadFileAsString(this, "UTF-8", value.substring(fileTrim))
                     : value
             );
-        }
-    }
-
-    /**
-     * Builder class for PropertiesHolder.
-     */
-    public static class Builder {
-        /**
-         * Required fields.
-         */
-        private final Properties properties;
-        private final String loadKey;
-        /**
-         * Optional fields.
-         */
-        private String fileKey = "file:";
-
-        /**
-         * Constructs new Builder with required fields and others default.
-         *
-         * @param properties Object where to take queries from.
-         * @param loadKey    Queries starting with that key will be loaded.
-         */
-        public Builder(Properties properties, String loadKey) {
-            this.properties = properties;
-            this.loadKey = loadKey;
-        }
-
-        /**
-         * Sets 'fileKey' field value and returns this builder.
-         *
-         * @param value Value to set.
-         */
-        public Builder setFileKey(String value) {
-            this.fileKey = value;
-            return this;
-        }
-
-        /**
-         * Builds PropertiesHolder object using this Builder object.
-         *
-         * @return new PropertiesHolder object.
-         */
-        public PropertiesHolder build() {
-            return new PropertiesHolder(this);
         }
     }
 }

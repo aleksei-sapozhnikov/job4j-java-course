@@ -4,16 +4,15 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.util.common.Utils;
+import ru.job4j.util.database.CertainPropertiesHolder;
+import ru.job4j.util.database.Connector;
 import ru.job4j.util.database.DbConnector;
-import ru.job4j.util.database.PropertiesHolder;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Database class implementing methods to work with database.
@@ -22,7 +21,7 @@ import java.util.function.Supplier;
  * @version 0.1
  * @since 0.1
  */
-public class Database implements DatabaseApi {
+public class Database implements DatabaseApi, AutoCloseable {
     /**
      * Logger.
      */
@@ -40,21 +39,19 @@ public class Database implements DatabaseApi {
     /**
      * Connector to database.
      */
-    private final Supplier<Optional<Connection>> connector;
+    private final Connector connector;
     /**
      * Database queries holder.
      */
-    private final Function<String, Optional<String>> queries;
+    private final Function<String, String> queries;
 
     /**
      * Constructs Database object and initializes needed sub-classes.
      */
     private Database() {
         Properties properties = Utils.loadProperties(this, PROPERTIES_FILE);
-        this.connector = new DbConnector.Builder(new BasicDataSource(), properties)
-                .setThrowableHandler((e) -> LOG.error(Utils.describeThrowable(e)))
-                .build();
-        this.queries = new PropertiesHolder.Builder(properties, "sql.").build();
+        this.connector = new DbConnector(new BasicDataSource(), properties);
+        this.queries = new CertainPropertiesHolder(properties, "sql.");
     }
 
     /**
@@ -72,11 +69,9 @@ public class Database implements DatabaseApi {
      */
     @Override
     public void clearTables() throws SQLException {
-        try (Connection connection = this.connector.get().orElseThrow(SQLException::new);
-             PreparedStatement dropTables = connection.prepareStatement(
-                     this.queries.apply("sql.structure.tables.clear")
-                             .orElseThrow(SQLException::new))
-        ) {
+        try (Connection connection = this.connector.getConnection();
+             PreparedStatement dropTables = connection
+                     .prepareStatement(this.queries.apply("sql.structure.tables.clear"))) {
             dropTables.execute();
         }
     }
@@ -87,13 +82,13 @@ public class Database implements DatabaseApi {
      */
     @Override
     public void dropAndRecreateStructure() throws SQLException {
-        try (Connection connection = this.connector.get().orElseThrow(SQLException::new);
+        try (Connection connection = this.connector.getConnection();
              PreparedStatement dropTables = connection.prepareStatement(
-                     this.queries.apply("sql.structure.tables.drop").orElseThrow(SQLException::new));
+                     this.queries.apply("sql.structure.tables.drop"));
              PreparedStatement dropFunctions = connection.prepareStatement(
-                     this.queries.apply("sql.structure.functions.drop").orElseThrow(SQLException::new));
+                     this.queries.apply("sql.structure.functions.drop"));
              PreparedStatement createTables = connection.prepareStatement(
-                     this.queries.apply("sql.structure.tables.create").orElseThrow(SQLException::new))
+                     this.queries.apply("sql.structure.tables.create"))
         ) {
             this.executeTransaction(connection, dropFunctions, dropTables, createTables);
         }
@@ -128,7 +123,7 @@ public class Database implements DatabaseApi {
      */
     @Override
     public Connection getConnection() throws SQLException {
-        return this.connector.get().orElseThrow(SQLException::new);
+        return this.connector.getConnection();
     }
 
     /**
@@ -139,7 +134,16 @@ public class Database implements DatabaseApi {
      */
     @Override
     public String getQuery(String key) {
-        return this.queries.apply(key).orElseThrow(RuntimeException::new);
+        return this.queries.apply(key);
     }
 
+    /**
+     * Closes resources.
+     *
+     * @throws Exception Possible Exception.
+     */
+    @Override
+    public void close() throws Exception {
+        this.connector.close();
+    }
 }

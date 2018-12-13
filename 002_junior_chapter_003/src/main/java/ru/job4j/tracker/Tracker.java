@@ -41,6 +41,13 @@ public class Tracker implements AutoCloseable {
     }
 
     /**
+     * Constructs new Tracker object using given database Connection.
+     */
+    public Tracker(Connection connection) {
+        this.connection = connection;
+    }
+
+    /**
      * Intended for testing.
      * <p>
      * Constructs new Tracker object and clears all existing values in tables
@@ -392,7 +399,7 @@ public class Tracker implements AutoCloseable {
      */
     private String[] dbGetItemIdsAll() throws SQLException {
         List<String> result = new ArrayList<>();
-        String query = "SELECT id FROM items ORDER BY id";
+        String query = "select id from items order by id";
         try (ResultSet r = this.connection.createStatement().executeQuery(query)) {
             while (r.next()) {
                 result.add(Integer.toString(
