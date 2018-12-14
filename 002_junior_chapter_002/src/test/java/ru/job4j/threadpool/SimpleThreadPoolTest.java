@@ -1,6 +1,5 @@
 package ru.job4j.threadpool;
 
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import org.junit.Test;
 
 public class SimpleThreadPoolTest {
@@ -11,32 +10,7 @@ public class SimpleThreadPoolTest {
         // setting works
         Work[] works = new Work[1000];
         for (int i = 0; i < works.length; i++) {
-            int finalI = i;
-            works[i] = new Work() {
-                @Override
-                public void doWork() {
-                    long start = System.currentTimeMillis();
-                    int count = 0;
-                    while (System.currentTimeMillis() - start < 1000) {
-                        count++;
-                    }
-                }
-
-                @Override
-                public void setEnqueueTime(long timeInMillis) {
-                    // stub
-                }
-
-                @Override
-                public long getEnqueueTime() {
-                    return 0;
-                }
-
-                @Override
-                public String getName() {
-                    return String.format("work #%s", finalI);
-                }
-            };
+            works[i] = new Work(String.format("work #%s", i));
         }
         // processing
         try {

@@ -1,7 +1,5 @@
 package ru.job4j.threadpool;
 
-import com.sun.corba.se.spi.orbutil.threadpool.Work;
-
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
