@@ -21,7 +21,7 @@ public class ConnectionUtils {
      * @return Connection object.
      * @throws SQLException possible exception.
      */
-    public static Connection rollbackAtClose(Connection connection) throws SQLException {
+    public static Connection rollbackOnClose(Connection connection) throws SQLException {
         connection.setAutoCommit(false);
         return (Connection) Proxy.newProxyInstance(
                 ConnectionUtils.class.getClassLoader(),
@@ -47,7 +47,7 @@ public class ConnectionUtils {
      * @return Connection object.
      * @throws SQLException possible exception.
      */
-    public static Connection commitAtClose(Connection connection) throws SQLException {
+    public static Connection commitOnClose(Connection connection) throws SQLException {
         connection.setAutoCommit(false);
         return (Connection) Proxy.newProxyInstance(
                 ConnectionUtils.class.getClassLoader(),

@@ -1,7 +1,6 @@
 package ru.job4j.util.database;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import ru.job4j.util.methods.ConnectionUtils;
 
 import java.sql.Connection;
 import java.util.Properties;
@@ -38,15 +37,9 @@ public class DbConnector implements Connector {
      * @return Connection object.
      */
     public Connection getConnection() {
-        return this.getConnection(false);
-    }
-
-    public Connection getConnection(boolean commitAtClose) {
         Connection result = null;
         try {
-            result = commitAtClose
-                    ? ConnectionUtils.commitAtClose(this.pool.getConnection())
-                    : this.pool.getConnection();
+            result = this.pool.getConnection();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -18,15 +18,10 @@ public class DbConnectorRollback implements Connector {
 
     @Override
     public Connection getConnection() {
-        return this.getConnection(false);
-    }
-
-    @Override
-    public Connection getConnection(boolean commitAtClose) {
         Connection result = null;
         try {
             // we don't need commit at close, we need rollback always
-            result = ConnectionUtils.rollbackAtClose(this.dbConnector.getConnection());
+            result = ConnectionUtils.rollbackOnClose(this.dbConnector.getConnection());
         } catch (Exception e) {
             e.printStackTrace();
         }

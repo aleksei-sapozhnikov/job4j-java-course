@@ -226,9 +226,11 @@ public class DbExecutor implements AutoCloseable {
      * @throws Exception Possible Exception.
      */
     @Override
-    public void close() throws Exception {
-        if (connection != null) {
+    public void close() {
+        try {
             this.connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

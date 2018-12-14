@@ -17,7 +17,7 @@ public class TrackerTest {
 
     private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName(this.properties.getProperty("db.driver"));
-        return ConnectionUtils.rollbackAtClose(
+        return ConnectionUtils.rollbackOnClose(
                 DriverManager.getConnection(
                         this.properties.getProperty("db.url"),
                         this.properties.getProperty("db.user"),
