@@ -1,6 +1,6 @@
 package ru.job4j.util.database;
 
-import ru.job4j.util.common.Utils;
+import ru.job4j.util.methods.CommonUtils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -118,7 +118,7 @@ public class CertainPropertiesHolder implements Function<String, String> {
             String value = properties.getProperty(key);
             int fileTrim = this.fileKey.length();
             this.queries.put(key, value.startsWith(this.fileKey)
-                    ? Utils.loadFileAsString(this, "UTF-8", value.substring(fileTrim))
+                    ? CommonUtils.loadFileAsString(this, "UTF-8", value.substring(fileTrim))
                     : value
             );
         }

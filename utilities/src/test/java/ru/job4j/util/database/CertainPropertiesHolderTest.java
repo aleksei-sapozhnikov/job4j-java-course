@@ -1,7 +1,7 @@
 package ru.job4j.util.database;
 
 import org.junit.Test;
-import ru.job4j.util.common.Utils;
+import ru.job4j.util.methods.CommonUtils;
 
 import java.util.Properties;
 import java.util.function.Function;
@@ -19,7 +19,7 @@ public class CertainPropertiesHolderTest {
         //
         CertainPropertiesHolder holder = new CertainPropertiesHolder(properties, "sql.", "file:");
         String stringExpected = "select id from user";
-        String fileExpected = Utils.loadFileAsString(this, "UTF-8", "ru/job4j/util/database/sample_query_001.sql");
+        String fileExpected = CommonUtils.loadFileAsString(this, "UTF-8", "ru/job4j/util/database/sample_query_001.sql");
         //
         assertThat(holder.get("sql.stringQuery"), is(stringExpected));
         assertThat(holder.get("sql.fileQuery"), is(fileExpected));
@@ -42,7 +42,7 @@ public class CertainPropertiesHolderTest {
         //
         Function<String, String> function = new CertainPropertiesHolder(properties, "sql.", "file:");
         String stringExpected = "select id from user";
-        String fileExpected = Utils.loadFileAsString(this, "UTF-8", "ru/job4j/util/database/sample_query_001.sql");
+        String fileExpected = CommonUtils.loadFileAsString(this, "UTF-8", "ru/job4j/util/database/sample_query_001.sql");
         //
         assertThat(function.apply("sql.stringQuery"), is(stringExpected));
         assertThat(function.apply("sql.fileQuery"), is(fileExpected));

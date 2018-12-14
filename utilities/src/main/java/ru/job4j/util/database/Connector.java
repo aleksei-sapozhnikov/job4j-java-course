@@ -7,4 +7,6 @@ public interface Connector extends AutoCloseable {
     void close() throws Exception;
 
     Connection getConnection();
+
+    Connection getConnection(boolean commitAtClose);
 }

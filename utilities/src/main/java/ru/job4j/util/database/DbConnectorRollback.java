@@ -1,5 +1,8 @@
 package ru.job4j.util.database;
 
+
+import ru.job4j.util.methods.ConnectionUtils;
+
 import java.sql.Connection;
 
 /**
@@ -15,9 +18,15 @@ public class DbConnectorRollback implements Connector {
 
     @Override
     public Connection getConnection() {
+        return this.getConnection(false);
+    }
+
+    @Override
+    public Connection getConnection(boolean commitAtClose) {
         Connection result = null;
         try {
-            result = ConnectionRollback.create(this.dbConnector.getConnection());
+            // we don't need commit at close, we need rollback always
+            result = ConnectionUtils.rollbackAtClose(this.dbConnector.getConnection());
         } catch (Exception e) {
             e.printStackTrace();
         }

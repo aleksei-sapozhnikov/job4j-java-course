@@ -7,7 +7,7 @@ import org.junit.Test;
 import ru.job4j.theater.model.Account;
 import ru.job4j.theater.model.Payment;
 import ru.job4j.theater.storage.database.Database;
-import ru.job4j.util.common.Utils;
+import ru.job4j.util.methods.CommonUtils;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ public class PaymentRepositoryDatabaseTest {
         try {
             Database.getInstance().dropAndRecreateStructure();
         } catch (SQLException e) {
-            LOG.error(Utils.describeThrowable(e));
+            LOG.error(CommonUtils.describeThrowable(e));
         }
     }
 

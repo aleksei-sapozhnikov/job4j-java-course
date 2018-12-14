@@ -1,4 +1,4 @@
-package ru.job4j.util.common;
+package ru.job4j.util.methods;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,11 +15,11 @@ import java.util.Properties;
  * @version 0.1
  * @since 0.1
  */
-public class Utils {
+public class CommonUtils {
     /**
      * Logger.
      */
-    private static final Logger LOG = LogManager.getLogger(Utils.class);
+    private static final Logger LOG = LogManager.getLogger(CommonUtils.class);
 
     /**
      * Loads properties file using ClassLoader.
@@ -35,7 +35,7 @@ public class Utils {
         try (InputStream input = loader.getResourceAsStream(file)) {
             props.load(input);
         } catch (IOException e) {
-            LOG.error(Utils.describeThrowable(e));
+            LOG.error(CommonUtils.describeThrowable(e));
         }
         return props;
     }
@@ -63,10 +63,10 @@ public class Utils {
         ClassLoader loader = obj.getClass().getClassLoader();
         try (InputStream input = loader.getResourceAsStream(path)) {
             if (input != null) {
-                result = Utils.inputStreamToString(input, charset);
+                result = CommonUtils.inputStreamToString(input, charset);
             }
         } catch (IOException e) {
-            LOG.error(Utils.describeThrowable(e));
+            LOG.error(CommonUtils.describeThrowable(e));
         }
         return result;
     }

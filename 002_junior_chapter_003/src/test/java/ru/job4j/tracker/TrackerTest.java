@@ -1,8 +1,8 @@
 package ru.job4j.tracker;
 
 import org.junit.Test;
-import ru.job4j.util.common.Utils;
-import ru.job4j.util.database.ConnectionRollback;
+import ru.job4j.util.methods.CommonUtils;
+import ru.job4j.util.methods.ConnectionUtils;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,11 +13,11 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 public class TrackerTest {
-    private final Properties properties = Utils.loadProperties(this, "ru/job4j/tracker/test_liquibase.properties");
+    private final Properties properties = CommonUtils.loadProperties(this, "ru/job4j/tracker/test_liquibase.properties");
 
     private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName(this.properties.getProperty("db.driver"));
-        return ConnectionRollback.create(
+        return ConnectionUtils.rollbackAtClose(
                 DriverManager.getConnection(
                         this.properties.getProperty("db.url"),
                         this.properties.getProperty("db.user"),

@@ -1,8 +1,7 @@
 package ru.job4j;
 
-import ru.job4j.util.common.Utils;
+import ru.job4j.util.methods.CommonUtils;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
@@ -102,7 +101,7 @@ public class CommonMethods {
         try (InputStream input = loader.getResourceAsStream(
                 String.format("%s/%s", pkg, fileName)
         )) {
-            return Utils.inputStreamToString(input, charset);
+            return CommonUtils.inputStreamToString(input, charset);
         }
     }
 

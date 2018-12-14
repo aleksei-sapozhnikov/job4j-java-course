@@ -9,7 +9,7 @@ import ru.job4j.theater.storage.complex.ComplexOperations;
 import ru.job4j.theater.storage.complex.ComplexOperationsDatabase;
 import ru.job4j.theater.storage.repository.seat.SeatRepository;
 import ru.job4j.theater.storage.repository.seat.SeatRepositoryDatabase;
-import ru.job4j.util.common.Utils;
+import ru.job4j.util.methods.CommonUtils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -55,7 +55,7 @@ public class SeatLogic extends HttpServlet {
             List<List<Seat>> byRows = this.groupByRows(this.seats.getAll());
             result = this.mapper.writeValueAsString(byRows);
         } catch (SQLException e) {
-            LOG.error(Utils.describeThrowable(e));
+            LOG.error(CommonUtils.describeThrowable(e));
         }
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
@@ -113,7 +113,7 @@ public class SeatLogic extends HttpServlet {
                     ? String.format("{\"%s\":\"%s\"}", "success", "")
                     : String.format("{\"%s\":\"%s\"}", "error", "Не удалось купить место. Возможно, оно уже занято.");
         } catch (SQLException e) {
-            LOG.error(Utils.describeThrowable(e));
+            LOG.error(CommonUtils.describeThrowable(e));
             result = String.format("{\"%s\":\"%s\"}", "error", "Ошибка базы данных (исключение) в ходе выполнения покупки");
         }
         return result;

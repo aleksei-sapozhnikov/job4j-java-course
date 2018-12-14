@@ -25,6 +25,7 @@
                     <username>${db.username}</username>
                     <password>${db.password}</password>
                     <dropFirst>true</dropFirst>
+
                 </configuration>
                 <executions>
                     <execution>

@@ -1,10 +1,14 @@
 package ru.job4j.util.database;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.junit.Test;
 import ru.job4j.util.database.DbExecutor.ObjValue;
+import ru.job4j.util.methods.CommonUtils;
+import ru.job4j.util.methods.ConnectionUtils;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 
 import static org.hamcrest.Matchers.is;
@@ -12,29 +16,24 @@ import static org.junit.Assert.assertThat;
 
 public class DbExecutorTest {
 
-    private final Properties properties = this.createProperties();
+    private final Properties properties =
+            CommonUtils.loadProperties(this, "ru/job4j/util/database/test_liquibase.properties");
 
-    private final Properties createProperties() {
-        Properties properties = new Properties();
-        properties.put("db.driver", "org.postgresql.Driver");
-        properties.put("db.type", "postgresql");
-        properties.put("db.address", "//localhost:5432");
-        properties.put("db.name", "liquid_test");
-        properties.put("db.user", "liquid_tester");
-        properties.put("db.password", "password");
-        return properties;
-    }
-
-    private Connector createDbConnectorRollback(Properties properties) {
-        return new DbConnectorRollback(new DbConnector(new BasicDataSource(), properties));
+    private Connection getConnection() throws ClassNotFoundException, SQLException {
+        Class.forName(this.properties.getProperty("db.driver"));
+        return ConnectionUtils.rollbackAtClose(
+                DriverManager.getConnection(
+                        this.properties.getProperty("db.url"),
+                        this.properties.getProperty("db.user"),
+                        this.properties.getProperty("db.password")
+                ));
     }
 
     @Test
     public void addThenGetAllUsers() throws Exception {
         List<User> input = Arrays.asList(new User("masha", 15), new User("sasha", 40));
         List<User> result = new ArrayList<>();
-        try (Connector connector = this.createDbConnectorRollback(this.properties);
-             DbExecutor executor = new DbExecutor(connector.getConnection())) {
+        try (DbExecutor executor = new DbExecutor(this.getConnection())) {
             for (User user : input) {
                 executor.execute(
                         "insert into users (name, age) values (?, ?)",

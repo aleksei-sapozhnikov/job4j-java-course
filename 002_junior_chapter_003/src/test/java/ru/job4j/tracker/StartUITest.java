@@ -3,8 +3,8 @@ package ru.job4j.tracker;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import ru.job4j.util.common.Utils;
-import ru.job4j.util.database.ConnectionRollback;
+import ru.job4j.util.methods.CommonUtils;
+import ru.job4j.util.methods.ConnectionUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
@@ -25,11 +25,12 @@ import static org.junit.Assert.assertThat;
 public class StartUITest {
     private Path trackerTestConfig = Paths.get("src", "main", "resources", "ru", "job4j", "tracker", "tracker_test.properties").toAbsolutePath();
 
-    private final Properties properties = Utils.loadProperties(this, "ru/job4j/tracker/test_liquibase.properties");
+
+    private final Properties properties = CommonUtils.loadProperties(this, "ru/job4j/tracker/test_liquibase.properties");
 
     private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName(this.properties.getProperty("db.driver"));
-        return ConnectionRollback.create(
+        return ConnectionUtils.rollbackAtClose(
                 DriverManager.getConnection(
                         this.properties.getProperty("db.url"),
                         this.properties.getProperty("db.user"),

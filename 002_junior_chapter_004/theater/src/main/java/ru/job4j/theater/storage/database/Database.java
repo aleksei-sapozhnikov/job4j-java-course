@@ -3,10 +3,10 @@ package ru.job4j.theater.storage.database;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.util.common.Utils;
 import ru.job4j.util.database.CertainPropertiesHolder;
 import ru.job4j.util.database.Connector;
 import ru.job4j.util.database.DbConnector;
+import ru.job4j.util.methods.CommonUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -49,7 +49,7 @@ public class Database implements DatabaseApi, AutoCloseable {
      * Constructs Database object and initializes needed sub-classes.
      */
     private Database() {
-        Properties properties = Utils.loadProperties(this, PROPERTIES_FILE);
+        Properties properties = CommonUtils.loadProperties(this, PROPERTIES_FILE);
         this.connector = new DbConnector(new BasicDataSource(), properties);
         this.queries = new CertainPropertiesHolder(properties, "sql.");
     }

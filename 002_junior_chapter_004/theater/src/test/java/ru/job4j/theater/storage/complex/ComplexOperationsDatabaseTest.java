@@ -16,7 +16,7 @@ import ru.job4j.theater.storage.repository.payment.PaymentRepository;
 import ru.job4j.theater.storage.repository.payment.PaymentRepositoryDatabase;
 import ru.job4j.theater.storage.repository.seat.SeatRepository;
 import ru.job4j.theater.storage.repository.seat.SeatRepositoryDatabase;
-import ru.job4j.util.common.Utils;
+import ru.job4j.util.methods.CommonUtils;
 
 import java.sql.SQLException;
 
@@ -32,7 +32,7 @@ public class ComplexOperationsDatabaseTest {
         try {
             Database.getInstance().dropAndRecreateStructure();
         } catch (SQLException e) {
-            LOG.error(Utils.describeThrowable(e));
+            LOG.error(CommonUtils.describeThrowable(e));
         }
     }
 
