@@ -1,5 +1,6 @@
 package ru.job4j.xml;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import ru.job4j.CommonMethods;
 
@@ -43,6 +44,7 @@ public class TransformXSLTest {
      * Test generate()
      */
     @Test
+    @Ignore
     public void whenTransformXmlFormatReturnRightResult() throws IOException, TransformerException {
         // set data
         Path tempDir = Files.createTempDirectory("temp");
