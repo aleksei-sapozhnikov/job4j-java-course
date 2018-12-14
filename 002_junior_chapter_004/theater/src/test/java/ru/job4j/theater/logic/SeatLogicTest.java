@@ -1,4 +1,3 @@
-/*
 package ru.job4j.theater.logic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +40,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.parsers.*", "javax.management.*"})
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*", "org.w3c.*", "javax.management.*"})
 @PrepareForTest({SeatRepositoryDatabase.class, ComplexOperationsDatabase.class})
 public class SeatLogicTest {
 
@@ -171,4 +170,3 @@ public class SeatLogicTest {
         assertThat(noPayment, is(true));
     }
 }
-*/
