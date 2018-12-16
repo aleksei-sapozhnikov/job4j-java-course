@@ -1,6 +1,7 @@
 package ru.job4j.util.database;
 
 import ru.job4j.util.function.*;
+import ru.job4j.util.methods.ConnectionUtils;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,9 +38,16 @@ public class DbExecutor implements AutoCloseable {
      * @param connection Connector object.
      */
     public DbExecutor(Connection connection) {
-        this.connection = connection;
+        Connection con = null;
+        try {
+            con = ConnectionUtils.rollbackOnClose(connection);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        this.connection = con;
         this.initFillParamsDispatch();
         this.initGetResultDispatch();
+
     }
 
     /**
@@ -220,6 +228,17 @@ public class DbExecutor implements AutoCloseable {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * Commits changes to database.
+     */
+    public void commit() {
+        try {
+            this.connection.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
