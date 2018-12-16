@@ -1,6 +1,7 @@
 package ru.job4j.theater.storage.repository.payment;
 
 import ru.job4j.theater.model.Payment;
+import ru.job4j.util.database.DbExecutor;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -18,17 +19,37 @@ public interface PaymentRepository {
      *
      * @param payment Object to add.
      */
-    void add(Payment payment) throws SQLException;
+    void add(Payment payment);
 
     /**
      * Get list of all payments in the repository.
      *
      * @return List of payments.
      */
-    List<Payment> getAll() throws SQLException;
+    List<Payment> getAll();
 
     /**
      * Clears the repository, removing all objects stored inside.
      */
     void clear() throws SQLException;
+
+    /**
+     * Add object to repository.
+     *
+     * @param payment  Object to add.
+     * @param executor Database executor.
+     */
+    default void add(Payment payment, DbExecutor executor) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    /**
+     * Get list of all payments in the repository.
+     *
+     * @param executor Database executor.
+     * @return List of payments.
+     */
+    default List<Payment> getAll(DbExecutor executor) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
 }

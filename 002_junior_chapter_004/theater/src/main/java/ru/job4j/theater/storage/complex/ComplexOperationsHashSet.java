@@ -21,14 +21,13 @@ import java.sql.SQLException;
  */
 public class ComplexOperationsHashSet implements ComplexOperations {
 
-    private final SeatRepository seatRepository = SeatRepositoryHashSet.getInstance();
-    private final AccountRepository accountRepository = AccountRepositoryHashSet.getInstance();
-    private final PaymentRepository paymentRepository = PaymentRepositoryHashSet.getInstance();
-
     /**
      * Singleton instance
      */
     private static final ComplexOperationsHashSet INSTANCE = new ComplexOperationsHashSet();
+    private final SeatRepository seatRepository = SeatRepositoryHashSet.getInstance();
+    private final AccountRepository accountRepository = AccountRepositoryHashSet.getInstance();
+    private final PaymentRepository paymentRepository = PaymentRepositoryHashSet.getInstance();
 
     /**
      * Constructor.
@@ -72,10 +71,9 @@ public class ComplexOperationsHashSet implements ComplexOperations {
      * @param row    Seat row.
      * @param column Seat column.
      * @param buyer  Account to occupy by.
-     * @return <tt>true</tt> if occupied sucessfully, <tt>false</tt> if not.
-     * @throws SQLException If problems with database occur.
+     * @return <tt>true</tt> if occupied successfully, <tt>false</tt> if not.
      */
-    private boolean occupySeat(int row, int column, Account buyer) throws SQLException {
+    private boolean occupySeat(int row, int column, Account buyer) {
         boolean result = false;
         synchronized (this.seatRepository) {
             Seat seat = this.seatRepository.getByPlace(row, column);
@@ -93,9 +91,8 @@ public class ComplexOperationsHashSet implements ComplexOperations {
      * @param name  Buyer name.
      * @param phone Buyer phone.
      * @return Buyer from storage or added buyer.
-     * @throws SQLException If problems with database occur.
      */
-    private Account getOrAddBuyer(String name, String phone) throws SQLException {
+    private Account getOrAddBuyer(String name, String phone) {
         Account buyer = this.accountRepository.getByNamePhone(name, phone);
         if (buyer == Account.getEmptyAccount()) {
             buyer = new Account.Builder(name, phone).build();

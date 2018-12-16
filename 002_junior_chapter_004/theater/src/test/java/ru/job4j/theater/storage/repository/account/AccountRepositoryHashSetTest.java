@@ -29,7 +29,7 @@ public class AccountRepositoryHashSetTest {
      * Test add() and getAll()
      */
     @Test
-    public void whenAddSeatsThenGetAllReturnsThem() throws SQLException {
+    public void whenAddSeatsThenGetAllReturnsThem() {
         this.repository.add(this.accountOne);
         this.repository.add(this.accountTwo);
         this.repository.add(this.accountThree);
@@ -43,7 +43,7 @@ public class AccountRepositoryHashSetTest {
      * Test getByPlace()
      */
     @Test
-    public void whenGivenRowAndColumnFindSeat() throws SQLException {
+    public void whenGivenRowAndColumnFindSeat() {
         this.repository.add(this.accountOne);
         assertThat(this.repository
                         .getByNamePhone(this.accountOne.getName(), this.accountOne.getPhone()),

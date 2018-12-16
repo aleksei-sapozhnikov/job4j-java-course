@@ -21,13 +21,11 @@ public class SeatRepositoryHashSet implements SeatRepository {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(SeatRepositoryHashSet.class);
-
-    private Set<Seat> store = new HashSet<>();
-
     /**
      * Singleton instance.
      */
     private static final SeatRepository INSTANCE = new SeatRepositoryHashSet();
+    private final Set<Seat> store = new HashSet<>();
 
     /**
      * Constructor.

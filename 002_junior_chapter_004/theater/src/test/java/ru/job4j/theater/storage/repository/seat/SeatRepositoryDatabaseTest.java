@@ -46,7 +46,7 @@ public class SeatRepositoryDatabaseTest {
      * Test add() and getAll()
      */
     @Test
-    public void whenAddSeatsThenGetAllReturnsThem() throws SQLException {
+    public void whenAddSeatsThenGetAllReturnsThem() {
         this.repository.add(this.seatOne);
         this.repository.add(this.seatTwo);
         this.repository.add(this.seatThree);
@@ -57,7 +57,7 @@ public class SeatRepositoryDatabaseTest {
     }
 
     @Test
-    public void whenAddSeatWithEmptyAccountThenGetWithEmptyAccount() throws SQLException {
+    public void whenAddSeatWithEmptyAccountThenGetWithEmptyAccount() {
         this.repository.add(this.seatOne);
         Seat found = this.repository.getAll().get(0);
         assertThat(found, is(this.seatOne));
@@ -65,7 +65,7 @@ public class SeatRepositoryDatabaseTest {
     }
 
     @Test
-    public void whenAddSeatWithOwnerThenGetEqualSeat() throws SQLException {
+    public void whenAddSeatWithOwnerThenGetEqualSeat() {
         this.repository.add(this.seatThree);
         Seat found = this.repository.getAll().get(0);
         assertThat(found == this.seatThree, is(false));
@@ -80,7 +80,7 @@ public class SeatRepositoryDatabaseTest {
      * Test getByPlace()
      */
     @Test
-    public void whenGivenPlaceThenFoundSeatOrEmptySeat() throws SQLException {
+    public void whenGivenPlaceThenFoundSeatOrEmptySeat() {
         this.repository.add(this.seatOne);
         this.repository.add(this.seatThree);
         int[] cOne = {this.seatOne.getRow(), this.seatOne.getColumn()};

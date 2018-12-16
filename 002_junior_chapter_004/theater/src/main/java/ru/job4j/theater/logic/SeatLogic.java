@@ -50,13 +50,8 @@ public class SeatLogic extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        String result = String.format("{\"%s\":\"%s\"}", "error", "Не удалось получить список мест");
-        try {
-            List<List<Seat>> byRows = this.groupByRows(this.seats.getAll());
-            result = this.mapper.writeValueAsString(byRows);
-        } catch (SQLException e) {
-            LOG.error(CommonUtils.describeThrowable(e));
-        }
+        List<List<Seat>> byRows = this.groupByRows(this.seats.getAll());
+        String result = this.mapper.writeValueAsString(byRows);
         resp.setCharacterEncoding("UTF-8");
         resp.setContentType("application/json");
         this.writeResultToResponse(resp, result);

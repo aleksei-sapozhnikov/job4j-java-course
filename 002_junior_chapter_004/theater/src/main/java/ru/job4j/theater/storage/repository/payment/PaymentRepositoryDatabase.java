@@ -2,17 +2,20 @@ package ru.job4j.theater.storage.repository.payment;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import ru.job4j.theater.model.Account;
 import ru.job4j.theater.model.Payment;
-import ru.job4j.theater.storage.DatabaseObjectUtils;
+import ru.job4j.theater.storage.ObjectForm;
 import ru.job4j.theater.storage.database.Database;
 import ru.job4j.theater.storage.database.DatabaseApi;
+import ru.job4j.theater.storage.repository.account.AccountRepository;
+import ru.job4j.theater.storage.repository.account.AccountRepositoryDatabase;
+import ru.job4j.util.database.DbExecutor;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Payment repository based on database.
@@ -35,6 +38,10 @@ public class PaymentRepositoryDatabase implements PaymentRepository {
      * Database API instance.
      */
     private final DatabaseApi database = Database.getInstance();
+    /**
+     * Account repository
+     */
+    private final AccountRepository accountRepository = AccountRepositoryDatabase.getInstance();
 
     /**
      * Constructor.
@@ -57,25 +64,27 @@ public class PaymentRepositoryDatabase implements PaymentRepository {
      * @param payment Object to add.
      */
     @Override
-    public void add(Payment payment) throws SQLException {
-        try (Connection connection = this.database.getConnection();
-             PreparedStatement addAccount = connection.prepareStatement(this.database.getQuery("sql.query.account.add"));
-             PreparedStatement addPayment = connection.prepareStatement(this.database.getQuery("sql.query.payment.add"))
-        ) {
-            DatabaseObjectUtils.FillStatement.AccountStatements.fillAdd(addAccount, payment.getFrom());
-            DatabaseObjectUtils.FillStatement.PaymentStatements.fillAdd(addPayment, payment);
-            connection.setAutoCommit(false);
-            try {
-                addAccount.execute();
-                addPayment.execute();
-                connection.commit();
-            } catch (Throwable e) {
-                connection.rollback();
-                throw e;
-            } finally {
-                connection.setAutoCommit(true);
-            }
+    public void add(Payment payment) {
+        try (DbExecutor executor = this.database.getExecutor()) {
+            this.add(payment, executor);
+            executor.commit();
         }
+    }
+
+    /**
+     * Add object to repository.
+     * Using given executor - no autocommit.
+     *
+     * @param payment Object to add.
+     */
+    @Override
+    public void add(Payment payment, DbExecutor executor) {
+        Account from = payment.getFrom();
+        this.accountRepository.add(from, executor);
+        executor.execute(
+                this.database.getQuery("sql.query.payment.add"),
+                List.of(payment.getAmount(), from.getName(), from.getPhone(), payment.getComment()),
+                PreparedStatement::execute);
     }
 
     /**
@@ -84,17 +93,27 @@ public class PaymentRepositoryDatabase implements PaymentRepository {
      * @return List of payments.
      */
     @Override
-    public List<Payment> getAll() throws SQLException {
-        List<Payment> list = new ArrayList<>();
-        try (Connection connection = this.database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(this.database.getQuery("sql.query.payment.get_all"));
-             ResultSet res = statement.executeQuery()
-        ) {
-            while (res.next()) {
-                list.add(DatabaseObjectUtils.FormObject.formPayment(res));
-            }
+    public List<Payment> getAll() {
+        try (DbExecutor executor = this.database.getExecutor()) {
+            return this.getAll(executor);
         }
-        return list;
+    }
+
+    /**
+     * Get list of all payments in the repository.
+     * * Using given executor - no autocommit.
+     *
+     * @return List of payments.
+     */
+    @Override
+    public List<Payment> getAll(DbExecutor executor) {
+        var values = executor.executeQuery(
+                this.database.getQuery("sql.query.payment.get_all"),
+                List.of(String.class, String.class, Integer.class, String.class)
+        ).orElse(new ArrayList<>());
+        return values.stream()
+                .map(ObjectForm::formPayment)
+                .collect(Collectors.toList());
     }
 
     /**

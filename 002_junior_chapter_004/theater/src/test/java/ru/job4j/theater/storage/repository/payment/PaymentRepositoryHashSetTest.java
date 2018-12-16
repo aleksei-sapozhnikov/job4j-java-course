@@ -33,7 +33,7 @@ public class PaymentRepositoryHashSetTest {
      * Test add() and getAll()
      */
     @Test
-    public void whenAddPaymentsThenGetAllReturnsThem() throws SQLException {
+    public void whenAddPaymentsThenGetAllReturnsThem() {
         this.repository.add(this.paymentOne);
         this.repository.add(this.paymentTwo);
         this.repository.add(this.paymentThree);

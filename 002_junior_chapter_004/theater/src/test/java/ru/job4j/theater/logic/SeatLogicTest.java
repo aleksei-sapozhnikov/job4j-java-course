@@ -2,7 +2,6 @@ package ru.job4j.theater.logic;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -75,8 +74,7 @@ public class SeatLogicTest {
 
 
     @Test
-    @Ignore
-    public void whenDoGetThenSortedListOfAllSeatsFromStorageGroupedByRows() throws SQLException, IOException {
+    public void whenDoGetThenSortedListOfAllSeatsFromStorageGroupedByRows() throws IOException {
         PowerMockito.mockStatic(SeatRepositoryDatabase.class);
         when(SeatRepositoryDatabase.getInstance()).thenReturn(this.seatRepositoryStub);
         this.req = mock(HttpServletRequest.class);
@@ -97,8 +95,7 @@ public class SeatLogicTest {
     }
 
     @Test
-    @Ignore
-    public void whenDoPostAndSeatIsFreeThenBuySeat() throws IOException, SQLException {
+    public void whenDoPostAndSeatIsFreeThenBuySeat() throws IOException {
         Map<String, String> requestObject = new HashMap<>();
         requestObject.put("seat_row", Integer.toString(this.seatFree.getRow()));
         requestObject.put("seat_column", Integer.toString(this.seatFree.getColumn()));
@@ -132,8 +129,7 @@ public class SeatLogicTest {
     }
 
     @Test
-    @Ignore
-    public void whenDoPostAndSeatIsOccupiedThenErrorAndNotBuySeatButAddBuyer() throws IOException, SQLException {
+    public void whenDoPostAndSeatIsOccupiedThenErrorAndNotBuySeatButAddBuyer() throws IOException {
         Map<String, String> requestObject = new HashMap<>();
         requestObject.put("seat_row", Integer.toString(this.seatOccupied.getRow()));
         requestObject.put("seat_column", Integer.toString(this.seatOccupied.getColumn()));

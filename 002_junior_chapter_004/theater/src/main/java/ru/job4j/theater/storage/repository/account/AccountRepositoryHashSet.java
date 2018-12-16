@@ -21,13 +21,11 @@ public class AccountRepositoryHashSet implements AccountRepository {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(AccountRepositoryHashSet.class);
-
-    private Set<Account> store = new HashSet<>();
-
     /**
      * Singleton instance.
      */
     private static final AccountRepository INSTANCE = new AccountRepositoryHashSet();
+    private final Set<Account> store = new HashSet<>();
 
     /**
      * Constructor.

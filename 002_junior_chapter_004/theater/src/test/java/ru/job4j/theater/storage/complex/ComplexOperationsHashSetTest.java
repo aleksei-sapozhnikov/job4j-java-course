@@ -73,7 +73,7 @@ public class ComplexOperationsHashSetTest {
         String phone = this.accountOne.getPhone();
         //
         Seat before = this.seatRepository.getByPlace(row, col);
-       boolean isBought = complex.buySeat(row, col, name, phone);
+        boolean isBought = complex.buySeat(row, col, name, phone);
         Seat after = this.seatRepository.getByPlace(row, col);
         Payment expectedPayment = new Payment
                 .Builder(this.seatOne.getPrice(), this.accountOne)

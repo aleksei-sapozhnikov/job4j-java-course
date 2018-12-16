@@ -6,6 +6,7 @@ import org.apache.logging.log4j.Logger;
 import ru.job4j.util.database.CertainPropertiesHolder;
 import ru.job4j.util.database.Connector;
 import ru.job4j.util.database.DbConnector;
+import ru.job4j.util.database.DbExecutor;
 import ru.job4j.util.methods.CommonUtils;
 
 import java.sql.Connection;
@@ -122,8 +123,8 @@ public class Database implements DatabaseApi, AutoCloseable {
      * @return Connection object.
      */
     @Override
-    public Connection getConnection() throws SQLException {
-        return this.connector.getConnection();
+    public DbExecutor getExecutor() {
+        return new DbExecutor(this.connector.getConnection());
     }
 
     /**
@@ -145,5 +146,10 @@ public class Database implements DatabaseApi, AutoCloseable {
     @Override
     public void close() throws Exception {
         this.connector.close();
+    }
+
+    @Override
+    public Connection getConnection() {
+        return this.connector.getConnection();
     }
 }

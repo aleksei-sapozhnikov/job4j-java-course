@@ -42,10 +42,8 @@ public class ExampleInitializer {
 
     /**
      * Adds empty seats.
-     *
-     * @throws SQLException If problems with database occur.
      */
-    private static void addFreeSeats() throws SQLException {
+    private static void addFreeSeats() {
         int nRows = 6;
         int nCols = 5;
         int[] prices = new int[nRows];

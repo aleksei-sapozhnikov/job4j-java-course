@@ -48,7 +48,7 @@ public class PaymentRepositoryDatabaseTest {
      * Test add() and getAll()
      */
     @Test
-    public void whenAddPaymentsThenGetAllReturnsThem() throws SQLException {
+    public void whenAddPaymentsThenGetAllReturnsThem() {
         this.repository.add(this.paymentOne);
         this.repository.add(this.paymentTwo);
         this.repository.add(this.paymentThree);
@@ -59,7 +59,7 @@ public class PaymentRepositoryDatabaseTest {
     }
 
     @Test
-    public void whenAddPaymentWithOwnerThenGetEqualPayment() throws SQLException {
+    public void whenAddPaymentWithOwnerThenGetEqualPayment() {
         this.repository.add(this.paymentThree);
         Payment found = this.repository.getAll().get(0);
         assertThat(found == this.paymentThree, is(false));

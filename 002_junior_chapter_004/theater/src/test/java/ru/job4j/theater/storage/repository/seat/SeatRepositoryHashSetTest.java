@@ -32,7 +32,7 @@ public class SeatRepositoryHashSetTest {
      * Test add() and getAll()
      */
     @Test
-    public void whenAddSeatsThenGetAllReturnsThem() throws SQLException {
+    public void whenAddSeatsThenGetAllReturnsThem() {
         this.repository.add(this.seatOne);
         this.repository.add(this.seatTwo);
         List<Seat> result = this.repository.getAll();
@@ -45,7 +45,7 @@ public class SeatRepositoryHashSetTest {
      * Test getByPlace()
      */
     @Test
-    public void whenGivenRowAndColumnFindSeat() throws SQLException {
+    public void whenGivenRowAndColumnFindSeat() {
         this.repository.add(this.seatOne);
         this.repository.add(this.seatTwo);
         this.repository.add(this.seatThree);
@@ -55,7 +55,7 @@ public class SeatRepositoryHashSetTest {
     }
 
     @Test
-    public void whenUpdateByRowAndColumnThenNewSeatInRepositoryOne() throws SQLException {
+    public void whenUpdateByRowAndColumnThenNewSeatInRepositoryOne() {
         this.repository.add(this.seatOne);
         int[] placeOne = {this.seatOne.getRow(), this.seatOne.getColumn()};
         Seat newOne = new Seat.Builder(434, 32, 1111).owner(this.accountOne).build();
@@ -68,7 +68,7 @@ public class SeatRepositoryHashSetTest {
     }
 
     @Test
-    public void whenUpdateByRowAndColumnThenNewSeatInRepositoryTwo() throws SQLException {
+    public void whenUpdateByRowAndColumnThenNewSeatInRepositoryTwo() {
         this.repository.add(this.seatTwo);
         int[] placeTwo = {this.seatTwo.getRow(), this.seatTwo.getColumn()};
         Seat newTwo = new Seat.Builder(32, 111, 0).owner(this.accountTwo).build();

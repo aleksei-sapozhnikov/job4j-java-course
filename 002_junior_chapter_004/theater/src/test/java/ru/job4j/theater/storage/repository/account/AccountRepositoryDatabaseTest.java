@@ -44,7 +44,7 @@ public class AccountRepositoryDatabaseTest {
      * Test add() and getAll()
      */
     @Test
-    public void whenAddAccountsThenGetAllReturnsThem() throws SQLException {
+    public void whenAddAccountsThenGetAllReturnsThem() {
         this.repository.add(this.accountOne);
         this.repository.add(this.accountTwo);
         this.repository.add(this.accountThree);
@@ -55,7 +55,7 @@ public class AccountRepositoryDatabaseTest {
     }
 
     @Test
-    public void whenGivenNamePhoneReturnsFoundAccountOrEmptyAccount() throws SQLException {
+    public void whenGivenNamePhoneReturnsFoundAccountOrEmptyAccount() {
         this.repository.add(this.accountOne);
         String name = this.accountOne.getName();
         String phone = this.accountOne.getPhone();
@@ -63,9 +63,5 @@ public class AccountRepositoryDatabaseTest {
         assertThat(this.repository.getByNamePhone(name, "no such phone"), is(Account.getEmptyAccount()));
         assertThat(this.repository.getByNamePhone("no such name", phone), is(Account.getEmptyAccount()));
         assertThat(this.repository.getByNamePhone("no such name", "no such phone"), is(Account.getEmptyAccount()));
-    }
-
-    @Test
-    public void clear() {
     }
 }

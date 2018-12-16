@@ -1,5 +1,7 @@
 package ru.job4j.theater.storage.database;
 
+import ru.job4j.util.database.DbExecutor;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -18,11 +20,11 @@ public interface DatabaseApi {
     void dropAndRecreateStructure() throws SQLException;
 
     /**
-     * Returns database Connection object.
+     * Returns executor of sql queries.
      *
-     * @return Connection object.
+     * @return Database executor.
      */
-    Connection getConnection() throws SQLException;
+    DbExecutor getExecutor();
 
     /**
      * Get SQL query by key.
@@ -40,4 +42,6 @@ public interface DatabaseApi {
      * @throws SQLException If some problems with database happen.
      */
     void executeTransaction(Connection connection, PreparedStatement... statements) throws SQLException;
+
+    Connection getConnection();
 }

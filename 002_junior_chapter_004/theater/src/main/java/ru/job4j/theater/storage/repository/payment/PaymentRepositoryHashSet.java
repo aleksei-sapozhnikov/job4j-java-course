@@ -21,13 +21,11 @@ public class PaymentRepositoryHashSet implements PaymentRepository {
      * Logger.
      */
     private static final Logger LOG = LogManager.getLogger(PaymentRepositoryHashSet.class);
-
-    private Set<Payment> store = new HashSet<>();
-
     /**
      * Singleton instance.
      */
     private static final PaymentRepository INSTANCE = new PaymentRepositoryHashSet();
+    private final Set<Payment> store = new HashSet<>();
 
     /**
      * Constructor.

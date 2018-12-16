@@ -3,16 +3,16 @@ package ru.job4j.theater.storage.repository.account;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.theater.model.Account;
-import ru.job4j.theater.storage.DatabaseObjectUtils;
+import ru.job4j.theater.storage.ObjectForm;
 import ru.job4j.theater.storage.database.Database;
 import ru.job4j.theater.storage.database.DatabaseApi;
+import ru.job4j.util.database.DbExecutor;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Account repository based on database.
@@ -57,15 +57,25 @@ public class AccountRepositoryDatabase implements AccountRepository {
      * @param account Object to add.
      */
     @Override
-    public void add(Account account) throws SQLException {
-        try (Connection connection = this.database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(this.database.getQuery("sql.query.account.add"))
-        ) {
-            DatabaseObjectUtils.FillStatement.AccountStatements.fillAdd(statement, account);
-            statement.execute();
+    public void add(Account account) {
+        try (DbExecutor executor = this.database.getExecutor()) {
+            this.add(account, executor);
+            executor.commit();
         }
     }
 
+    /**
+     * Add object to repository.
+     *
+     * @param account Object to add.
+     */
+    @Override
+    public void add(Account account, DbExecutor executor) {
+        executor.execute(
+                this.database.getQuery("sql.query.account.add"),
+                List.of(account.getName(), account.getPhone()),
+                PreparedStatement::execute);
+    }
 
     /**
      * Get list of all accounts in the repository.
@@ -73,17 +83,26 @@ public class AccountRepositoryDatabase implements AccountRepository {
      * @return List of accounts.
      */
     @Override
-    public List<Account> getAll() throws SQLException {
-        List<Account> list = new ArrayList<>();
-        try (Connection connection = this.database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(this.database.getQuery("sql.query.account.get_all"));
-             ResultSet res = statement.executeQuery()
-        ) {
-            while (res.next()) {
-                list.add(DatabaseObjectUtils.FormObject.formAccount(res));
-            }
+    public List<Account> getAll() {
+        try (DbExecutor executor = this.database.getExecutor()) {
+            return this.getAll(executor);
         }
-        return list;
+    }
+
+    /**
+     * Get list of all accounts in the repository.
+     *
+     * @return List of accounts.
+     */
+    @Override
+    public List<Account> getAll(DbExecutor executor) {
+        var values = executor.executeQuery(
+                this.database.getQuery("sql.query.account.get_all"),
+                List.of(String.class, String.class)
+        ).orElse(new ArrayList<>());
+        return values.stream()
+                .map(ObjectForm::formAccount)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -94,20 +113,29 @@ public class AccountRepositoryDatabase implements AccountRepository {
      * @return Account with needed name and phone or empty Account object.
      */
     @Override
-    public Account getByNamePhone(String name, String phone) throws SQLException {
-        Account result = Account.getEmptyAccount();
-        try (Connection connection = this.database.getConnection();
-             PreparedStatement statement = connection.prepareStatement(
-                     this.database.getQuery("sql.query.account.get_by_name_phone"))
-        ) {
-            DatabaseObjectUtils.FillStatement.AccountStatements.fillGetByNamePhone(statement, name, phone);
-            try (ResultSet res = statement.executeQuery()) {
-                if (res.next()) {
-                    result = DatabaseObjectUtils.FormObject.formAccount(res);
-                }
-            }
+    public Account getByNamePhone(String name, String phone) {
+        try (DbExecutor executor = this.database.getExecutor()) {
+            return this.getByNamePhone(name, phone, executor);
         }
-        return result;
+    }
+
+    /**
+     * Returns account which has given name and phone.
+     *
+     * @param name  Needed name.
+     * @param phone Needed phone.
+     * @return Account with needed name and phone or empty Account object.
+     */
+    @Override
+    public Account getByNamePhone(String name, String phone, DbExecutor executor) {
+        var values = executor.executeQuery(
+                this.database.getQuery("sql.query.account.get_by_name_phone"),
+                List.of(name, phone),
+                List.of(String.class, String.class)
+        ).orElse(new ArrayList<>());
+        return values.size() > 0
+                ? ObjectForm.formAccount(values.get(0))
+                : Account.getEmptyAccount();
     }
 
 

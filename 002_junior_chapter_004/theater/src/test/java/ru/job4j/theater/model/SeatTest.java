@@ -12,7 +12,7 @@ import static org.junit.Assert.assertThat;
 
 public class SeatTest {
 
-    private Account accountOne = new Account.Builder("acc_1", "213-342").build();
+    private final Account accountOne = new Account.Builder("acc_1", "213-342").build();
 
     @Test
     public void testEmptyEntity() {
