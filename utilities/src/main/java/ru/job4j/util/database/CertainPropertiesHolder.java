@@ -114,9 +114,9 @@ public class CertainPropertiesHolder implements Function<String, String> {
         Set<String> keys = properties.stringPropertyNames().stream()
                 .filter(s -> s.startsWith(loadKey))
                 .collect(Collectors.toSet());
+        int fileTrim = this.fileKey.length();
         for (String key : keys) {
             String value = properties.getProperty(key);
-            int fileTrim = this.fileKey.length();
             this.queries.put(key, value.startsWith(this.fileKey)
                     ? CommonUtils.loadFileAsString(this, "UTF-8", value.substring(fileTrim))
                     : value
