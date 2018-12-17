@@ -20,8 +20,8 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <db.url>jdbc:postgresql://127.0.0.1:5432/liquid_test</db.url>
-                <db.username>liquid_tester</db.username>
+                <db.url>jdbc:postgresql://127.0.0.1:5432/test_db</db.url>
+                <db.username>tester</db.username>
                 <db.password>password</db.password>
                 <db.driver>org.postgresql.Driver</db.driver>
             </properties>

@@ -13,16 +13,12 @@ services:
 addons:
   postgresql: "9.6"
 
-# Create testing database
-before_script:
+# Create testing databases
+before_install:
   # Create usual database
   - psql -c "CREATE DATABASE test_db;" -U postgres
   - psql -c "CREATE USER tester WITH PASSWORD 'password';" -U postgres
   - psql -c "GRANT ALL PRIVILEGES ON DATABASE test_db TO tester;" -U postgres
-  # Create liquibase database
-  - psql -c "CREATE DATABASE liquid_test" -U postgres
-  - psql -c "CREATE USER liquid_tester WITH PASSWORD 'password';" -U postgres
-  - psql -c "GRANT ALL PRIVILEGES ON DATABASE liquid_test TO liquid_tester;" -U postgres
 
 # Code coverage count after successful build
 after_success:
