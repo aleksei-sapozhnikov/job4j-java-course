@@ -48,7 +48,6 @@ public class ParseSAXTest {
      */
 
     @Test
-    @Ignore
     public void whenParseXmlThenReturnNeededResult() throws IOException, TransformerException, ParserConfigurationException, SAXException {
         // set data
         Path tempDir = Files.createTempDirectory("temp");

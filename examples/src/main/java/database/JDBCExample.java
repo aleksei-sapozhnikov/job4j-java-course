@@ -24,7 +24,7 @@ public class JDBCExample {
         //main.databaseCreate(DB_NAME);
         //main.databaseDrop(DB_NAME);
         try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-             Statement stmt = conn.createStatement();
+             Statement stmt = conn.createStatement()
         ) {
             main.dbQueryCreateTablesIfNeeded(stmt);
 

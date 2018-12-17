@@ -14,7 +14,6 @@ import static org.junit.Assert.assertThat;
 public class DateParserTest {
 
     @Test
-    @Ignore
     public void whenParseOtherDateThenGetMillisRight() {
         DateParser parser = new DateParser();
         String[] dates = {

@@ -44,7 +44,6 @@ public class TransformXSLTest {
      * Test generate()
      */
     @Test
-    @Ignore
     public void whenTransformXmlFormatReturnRightResult() throws IOException, TransformerException {
         // set data
         Path tempDir = Files.createTempDirectory("temp");

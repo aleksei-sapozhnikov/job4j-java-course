@@ -33,7 +33,6 @@ public class VacancyParserTest {
      * as 'today', 'yesterday' and other days, as in site.
      */
     @Test
-    @Ignore
     public void whenParseSampleFileGetVacanciesRight() throws IOException, ParseException {
         // get sample and parser
         VacancyParser parser = new VacancyParser();

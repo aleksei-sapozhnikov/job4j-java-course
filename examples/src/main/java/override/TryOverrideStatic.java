@@ -9,8 +9,8 @@ public class TryOverrideStatic {
         System.out.println("From instances:");
         Parent parent = new Parent();
         Parent child = new Child();
-        parent.method();
-        child.method();
+        Parent.method();
+        Parent.method();
     }
 }
 
