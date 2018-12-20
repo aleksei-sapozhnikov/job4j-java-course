@@ -3,10 +3,7 @@ package ru.job4j.util.database;
 import ru.job4j.util.function.*;
 import ru.job4j.util.methods.ConnectionUtils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 /**
@@ -47,7 +44,6 @@ public class DbExecutor implements AutoCloseable {
         this.connection = con;
         this.initFillParamsDispatch();
         this.initGetResultDispatch();
-
     }
 
     /**
@@ -68,6 +64,19 @@ public class DbExecutor implements AutoCloseable {
                 ((index, res) -> new ObjValue(res.getString(index + 1))));
         this.dGetValues.put(Integer.class,
                 ((index, res) -> new ObjValue(res.getInt(index + 1))));
+    }
+
+    /**
+     * Sets isolation level for transaction.
+     *
+     * @param level Isolation level (i.e.: Connection.TRANSACTION_REPEATABLE_READ)
+     */
+    public void setTransactionIsolation(int level) {
+        try {
+            this.connection.setTransactionIsolation(level);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

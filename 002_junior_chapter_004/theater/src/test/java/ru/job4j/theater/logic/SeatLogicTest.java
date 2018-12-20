@@ -43,7 +43,6 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({SeatRepositoryDatabase.class, ComplexOperationsDatabase.class})
 public class SeatLogicTest {
 
-
     private final Account buyer = new Account.Builder("acc_1", "123-456").build();
 
     private final Seat seatFree = new Seat.Builder(1, 1, 50).build();

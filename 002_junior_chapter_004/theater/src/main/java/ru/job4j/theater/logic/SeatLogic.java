@@ -2,6 +2,8 @@ package ru.job4j.theater.logic;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.theater.model.Seat;
@@ -52,8 +54,6 @@ public class SeatLogic extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         List<List<Seat>> byRows = this.groupByRows(this.seats.getAll());
         String result = this.mapper.writeValueAsString(byRows);
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json");
         this.writeResultToResponse(resp, result);
     }
 
@@ -71,8 +71,7 @@ public class SeatLogic extends HttpServlet {
         int column = Integer.parseInt(node.get("seat_column").asText());
         String name = node.get("account_name").asText();
         String phone = node.get("account_phone").asText();
-        //
-        String result = buySeat(row, column, name, phone);
+        String result = this.buySeat(row, column, name, phone);
         this.writeResultToResponse(resp, result);
     }
 
@@ -83,8 +82,6 @@ public class SeatLogic extends HttpServlet {
      * @param result Result to write.
      */
     private void writeResultToResponse(HttpServletResponse resp, String result) throws IOException {
-        resp.setCharacterEncoding("UTF-8");
-        resp.setContentType("application/json");
         try (PrintWriter writer = resp.getWriter()) {
             writer.write(result);
             writer.flush();
@@ -101,17 +98,19 @@ public class SeatLogic extends HttpServlet {
      * @return Result as json object string.
      */
     private String buySeat(int row, int column, String name, String phone) {
-        String result;
+        ObjectNode result = JsonNodeFactory.instance.objectNode();
         try {
             boolean bought = this.complexOperations.buySeat(row, column, name, phone);
-            result = bought
-                    ? String.format("{\"%s\":\"%s\"}", "success", "")
-                    : String.format("{\"%s\":\"%s\"}", "error", "Не удалось купить место. Возможно, оно уже занято.");
+            if (bought) {
+                result.put("success", "");
+            } else {
+                result.put("error", "Не удалось купить место. Возможно, оно уже занято.");
+            }
         } catch (SQLException e) {
             LOG.error(CommonUtils.describeThrowable(e));
-            result = String.format("{\"%s\":\"%s\"}", "error", "Ошибка базы данных (исключение) в ходе выполнения покупки");
+            result.put("error", "Ошибка базы данных (исключение) в ходе выполнения покупки");
         }
-        return result;
+        return result.toString();
     }
 
     /**

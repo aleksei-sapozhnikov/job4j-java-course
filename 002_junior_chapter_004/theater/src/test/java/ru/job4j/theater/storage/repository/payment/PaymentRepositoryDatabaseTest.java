@@ -7,7 +7,8 @@ import org.junit.Test;
 import ru.job4j.theater.model.Account;
 import ru.job4j.theater.model.Payment;
 import ru.job4j.theater.storage.database.Database;
-import ru.job4j.util.methods.CommonUtils;
+import ru.job4j.theater.storage.database.DatabaseApi;
+import ru.job4j.util.database.DbExecutor;
 
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -21,14 +22,7 @@ public class PaymentRepositoryDatabaseTest {
     @SuppressWarnings("unused")
     private static final Logger LOG = LogManager.getLogger(PaymentRepositoryDatabaseTest.class);
 
-    static {
-        try {
-            Database.getInstance().dropAndRecreateStructure();
-        } catch (SQLException e) {
-            LOG.error(CommonUtils.describeThrowable(e));
-        }
-    }
-
+    private final DatabaseApi databaseApi = Database.getInstance();
     private final PaymentRepository repository = PaymentRepositoryDatabase.getInstance();
 
     private final Account accountOne = new Account.Builder("acc_1", "123-456").build();
@@ -38,34 +32,34 @@ public class PaymentRepositoryDatabaseTest {
     private final Payment paymentTwo = new Payment.Builder(120, this.accountOne).comment("from account one").build();
     private final Payment paymentThree = new Payment.Builder(1400, this.accountTwo).build();
 
-
-    @Before
-    public void clearRepository() throws SQLException {
-        this.repository.clear();
-    }
-
     /**
      * Test add() and getAll()
      */
     @Test
     public void whenAddPaymentsThenGetAllReturnsThem() {
-        this.repository.add(this.paymentOne);
-        this.repository.add(this.paymentTwo);
-        this.repository.add(this.paymentThree);
-        List<Payment> result = this.repository.getAll();
-        result.sort(Comparator.comparing(Payment::getAmount));
-        List<Payment> expected = Arrays.asList(this.paymentOne, this.paymentTwo, this.paymentThree);
-        assertThat(result, is(expected));
+        try (DbExecutor executor = this.databaseApi.getExecutor()) {
+            this.repository.add(this.paymentOne, executor);
+            this.repository.add(this.paymentTwo, executor);
+            this.repository.add(this.paymentThree, executor);
+            List<Payment> result = this.repository.getAll(executor);
+            result.sort(Comparator.comparing(Payment::getAmount));
+            List<Payment> expected = Arrays.asList(this.paymentOne, this.paymentTwo, this.paymentThree);
+            assertThat(result, is(expected));
+        }
+
+
     }
 
     @Test
     public void whenAddPaymentWithOwnerThenGetEqualPayment() {
-        this.repository.add(this.paymentThree);
-        Payment found = this.repository.getAll().get(0);
-        assertThat(found == this.paymentThree, is(false));
-        assertThat(found.getFrom() == this.accountTwo, is(false));
-        assertThat(found, is(this.paymentThree));
-        assertThat(found.getFrom(), is(this.accountTwo));
+        try (DbExecutor executor = this.databaseApi.getExecutor()) {
+            this.repository.add(this.paymentThree, executor);
+            Payment found = this.repository.getAll(executor).get(0);
+            assertThat(found == this.paymentThree, is(false));
+            assertThat(found.getFrom() == this.accountTwo, is(false));
+            assertThat(found, is(this.paymentThree));
+            assertThat(found.getFrom(), is(this.accountTwo));
+        }
 
 
     }

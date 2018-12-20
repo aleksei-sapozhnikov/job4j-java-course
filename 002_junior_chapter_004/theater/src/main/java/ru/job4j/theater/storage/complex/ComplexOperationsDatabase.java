@@ -15,6 +15,8 @@ import ru.job4j.theater.storage.repository.seat.SeatRepository;
 import ru.job4j.theater.storage.repository.seat.SeatRepositoryDatabase;
 import ru.job4j.util.database.DbExecutor;
 
+import java.sql.Connection;
+
 /**
  * Class making complex operations on objects in database - based repositories.
  *
@@ -74,19 +76,36 @@ public class ComplexOperationsDatabase implements ComplexOperations {
      */
     @Override
     public boolean buySeat(int row, int column, String name, String phone) {
-        boolean result = false;
+        boolean result;
         try (DbExecutor executor = this.database.getExecutor()) {
-            Account buyer = new Account.Builder(name, phone).build();
-            this.accountRepository.add(buyer, executor);
-            Seat seat = this.seatRepository.getByPlace(row, column);
-            if (seat.isFree()) {
-                this.seatRepository.updateByPlace(row, column, seat.occupy(buyer), executor);
-                String payComment = String.format("Payed for seat (%s, %s)", row, column);
-                Payment payment = new Payment.Builder(seat.getPrice(), buyer).comment(payComment).build();
-                this.paymentRepository.add(payment, executor);
-                result = true;
-            }
+            executor.setTransactionIsolation(Connection.TRANSACTION_REPEATABLE_READ);
+            result = this.buySeat(row, column, name, phone, executor);
             executor.commit();
+        }
+        return result;
+    }
+
+    /**
+     * Buy seat operations.
+     * Adds buyer to storage if not present, sets seat occupied by buyer, inserts payment for seat.
+     *
+     * @param row    Seat row.
+     * @param column Seat column.
+     * @param name   Buyer name.
+     * @param phone  Buyer phone.
+     */
+    @Override
+    public boolean buySeat(int row, int column, String name, String phone, DbExecutor executor) {
+        boolean result = false;
+        Account buyer = new Account.Builder(name, phone).build();
+        this.accountRepository.add(buyer, executor);
+        Seat seat = this.seatRepository.getByPlace(row, column, executor);
+        if (seat.isFree()) {
+            this.seatRepository.updateByPlace(row, column, seat.occupy(buyer), executor);
+            String payComment = String.format("Payed for seat (%s, %s)", row, column);
+            Payment payment = new Payment.Builder(seat.getPrice(), buyer).comment(payComment).build();
+            this.paymentRepository.add(payment, executor);
+            result = true;
         }
         return result;
     }
