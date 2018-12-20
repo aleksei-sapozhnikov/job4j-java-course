@@ -55,9 +55,10 @@ public class DbConnector implements Connector {
     private void setRequiredParameters(Properties properties) {
         CertainPropertiesHolder holder = new CertainPropertiesHolder(properties, "db.", "file:");
         this.pool.setDriverClassName(holder.get("db.driver"));
+        this.pool.setUrl(holder.get("db.url"));
         this.pool.setUsername(holder.get("db.user"));
         this.pool.setPassword(holder.get("db.password"));
-        this.pool.setUrl(this.formJdbcUrl(holder));
+
     }
 
     /**
@@ -74,22 +75,6 @@ public class DbConnector implements Connector {
                 .getOrDefault("pool.maxIdle", "10")));
         this.pool.setMaxOpenPreparedStatements(Integer.parseInt(holder
                 .getOrDefault("pool.setMaxOpenPreparedStatements", "100")));
-    }
-
-    /**
-     * Forms JDBC URL to connect to database.
-     *
-     * @param holder Holder with parameters.
-     * @return JDBC url.
-     * @throws RuntimeException If parameter not found.
-     */
-    private String formJdbcUrl(CertainPropertiesHolder holder) {
-        String type = holder.get("db.type");
-        String address = holder.get("db.address");
-        String name = holder.get("db.name");
-        return String.format("jdbc:%s:%s%s", type, address,
-                "".equals(name) ? "" : "/".concat(name)
-        );
     }
 
     /**
