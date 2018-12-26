@@ -38,15 +38,9 @@
     </profiles>
 
     <modules>
-        <module>001_trainee_chapter_001</module>
-        <module>001_trainee_chapter_002</module>
-        <module>001_trainee_chapter_003</module>
-        <module>002_junior_chapter_001</module>
-        <module>002_junior_chapter_002</module>
-        <module>002_junior_chapter_003</module>
-        <module>002_junior_chapter_004</module>
+        <module>001_trainee</module>
+        <module>002_junior</module>
         <module>examples</module>
-        <module>001_trainee_chapter_004</module>
         <module>utilities</module>
     </modules>
 
@@ -150,13 +144,14 @@
             <artifactId>log4j-core</artifactId>
             <version>2.11.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/javax.servlet/servlet-api -->
+        <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>2.5</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
             <scope>provided</scope>
         </dependency>
+
         <!-- Connection pool -->
         <dependency>
             <groupId>org.apache.commons</groupId>

@@ -8,19 +8,25 @@ Java developing course by Petr Arsentjev http://job4j.ru
 
 Modules structure corresponds with the course programme:
 
-- 001_trainee_chapter_001. Basic syntax and structures of Java language.
+- <b>001_trainee.</b> Basics.
 
-- 001_trainee_chapter_002. Basics of object-oriented programming.
+  - <b>001_syntax.</b> Java syntax and structures.
 
-- 001_trainee_chapter_003. Basic use of collections.
+  - <b>002_oop.</b> Basics of object-oriented programming.
 
-- 002_junior_chapter_001. Creation of iterators and main collections.
+  - <b>003_collections.</b> Starting using Java Collections Framework.
+  
+  - <b>004_lambda_stream.</b> Use of lambda expressions and Stream API. 
 
-- 002_junior_chapter_002. Multithreading.
+- <b>002_junior.</b> Road to first web-applications.
 
-- 002_junior_chapter_003. Databases, PostgreSQL, JDBC, XML.
+  - <b>001_ custom_collections.</b> Creating own collection realisations and data structures: List, Map, binary search tree.
 
-- 002_junior_chapter_004. Servlets, JSP, Mockito.
+  - <b>002_multithreading.</b> Making multi-threaded applications.
+
+  - <b>003_sql_jdbc.</b> SQL (subquery, join), JDBC, transactions.
+  
+  - <b>004_servlet.</b> Servlet, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
 
 # Алексей Сапожников (vermucht@gmail.com)
 
@@ -29,16 +35,22 @@ Modules structure corresponds with the course programme:
 
 Структура модулей соответствует программе обучения:
 
-- 001_trainee_chapter_001. Базовый синтаксис и структуры языка Java.
+- <b>001_trainee.</b> Basics.
 
-- 001_trainee_chapter_002. Основы объектно-ориентированного программирования.
+  - <b>001_syntax.</b> Синтаксис и структуры в Java.
 
-- 001_trainee_chapter_003. Основы использования коллекций.
+  - <b>002_oop.</b> Основы объектно-ориентированного программирования.
 
-- 002_junior_chapter_001. Создание итераторов и основных коллекций.
+  - <b>003_collections.</b> Использование коллекций из Java Collections Framework.
+  
+  - <b>004_lambda_stream.</b> Лямбда-выражения и Stream API 
 
-- 002_junior_chapter_002. Мультипоточность.
+- <b>002_junior.</b> Путь к первым веб-приложениям.
 
-- 002_junior_chapter_003. Базы данных, PostgreSQL, JDBC, XML.
+  - <b>001_ custom_collections.</b> Создание собственных реализациий коллекций и структур данных: List, Map, бинарное дерево поиска.
 
-- 002_junior_chapter_004. Сервлеты, JSP, Mockito.
+  - <b>002_multithreading.</b> Создание многопоточных приложений.
+
+  - <b>003_sql_jdbc.</b> SQL (subquery, join), JDBC, transactions.
+  
+  - <b>004_servlet.</b> Сервлеты, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
