@@ -6,51 +6,67 @@
 This repository is intended for tasks from the "From Zero To Job" 
 Java developing course by Petr Arsentjev http://job4j.ru
 
-Modules structure corresponds with the course programme:
+<b>Modules structure corresponds with the course programme:</b>
 
-- <b>001_trainee. Basics.</b>
+<details>
+  <summary><i>001_trainee.</i> Basics.</summary>
 
-  - 001_syntax. Java syntax and structures.
-
-  - 002_oop. Basics of object-oriented programming.
-
-  - 003_collections. Starting using Java Collections Framework.
+- <i>001_syntax.</i> Java syntax and structures.
   
-  - 004_lambda_stream. Use of lambda expressions and Stream API. 
+- <i>002_oop.</i> Basics of object-oriented programming.
 
-- <b>002_junior. Road to first web-applications.</b>
+- <i>003_collections.</i> Starting using Java Collections Framework.
+    
+- <i>004_lambda_stream.</i> Use of lambda expressions and Stream API.
+   
+</details>
 
-  - 001_ custom_collections. Creating own collection realisations and data structures: List, Map, binary search tree.
+<br>
 
-  - 002_multithreading. Making multi-threaded applications.
-
-  - 003_sql_jdbc. SQL (subquery, join), JDBC, transactions.
+<details>
+  <summary><i>002_junior.</i> Road to first web-applications.</summary>
   
-  - 004_servlet. Servlet, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
+- <i>001_ custom_collections.</i> Creating own collection realisations and data structures: List, Map, binary search tree.
+  
+- <i>002_multithreading.</i> Making multi-threaded applications.
+  
+- <i>003_sql_jdbc.</i> SQL (subquery, join), JDBC, transactions.
+    
+- <i>004_servlet.</i> Servlet, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
+    
+</details>
 
 # Алексей Сапожников (vermucht@gmail.com)
 
 В данном репозитории я выполняю задания курса "От нуля до трудоустройства", 
 обучаясь у Петра Арсентьева на сайте http://job4j.ru/
 
-Структура модулей соответствует программе обучения:
+<b>Структура модулей соответствует программе обучения:</b>
 
-- <b>001_trainee. Основы.</b>
+<details>
+  <summary><i>001_trainee.</i> Основы.</summary>
 
-  - 001_syntax. Синтаксис и структуры в Java.
+  - <i>001_syntax.</i>  Синтаксис и структуры в Java.
 
-  - 002_oop.</b> Основы объектно-ориентированного программирования.
+  - <i>002_oop.</i> Основы объектно-ориентированного программирования.
 
-  - 003_collections.</b> Использование коллекций из Java Collections Framework.
+  - <i>003_collections.</i> Использование коллекций из Java Collections Framework.
   
-  - 004_lambda_stream.</b> Лямбда-выражения и Stream API 
+  - <i>004_lambda_stream.</i> Лямбда-выражения и Stream API 
 
-- <b>002_junior. Путь к первым веб-приложениям.</b>
+</details>
 
-  - 001_ custom_collections. Создание собственных реализациий коллекций и структур данных: List, Map, бинарное дерево поиска.
+<br>
 
-  - 002_multithreading. Создание многопоточных приложений.
+<details>
+  <summary><i>002_junior.</i> Путь к первым веб-приложениям.</summary>
 
-  - 003_sql_jdbc. SQL (subquery, join), JDBC, transactions.
+  - <i>001_ custom_collections.</i> Создание собственных реализациий коллекций и структур данных: List, Map, бинарное дерево поиска.
+
+  - <i>002_multithreading.</i>  Создание многопоточных приложений.
+
+  - <i>003_sql_jdbc.</i>  SQL (subquery, join), JDBC, transactions.
   
-  - 004_servlet. Сервлеты, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
+  - <i>004_servlet.</i>  Сервлеты, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
+  
+</details>
