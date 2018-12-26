@@ -8,25 +8,25 @@ Java developing course by Petr Arsentjev http://job4j.ru
 
 Modules structure corresponds with the course programme:
 
-- <b>001_trainee.</b> Basics.
+- <b>001_trainee. Basics.</b>
 
-  - <b>001_syntax.</b> Java syntax and structures.
+  - 001_syntax. Java syntax and structures.
 
-  - <b>002_oop.</b> Basics of object-oriented programming.
+  - 002_oop. Basics of object-oriented programming.
 
-  - <b>003_collections.</b> Starting using Java Collections Framework.
+  - 003_collections. Starting using Java Collections Framework.
   
-  - <b>004_lambda_stream.</b> Use of lambda expressions and Stream API. 
+  - 004_lambda_stream. Use of lambda expressions and Stream API. 
 
-- <b>002_junior.</b> Road to first web-applications.
+- <b>002_junior. Road to first web-applications.</b>
 
-  - <b>001_ custom_collections.</b> Creating own collection realisations and data structures: List, Map, binary search tree.
+  - 001_ custom_collections. Creating own collection realisations and data structures: List, Map, binary search tree.
 
-  - <b>002_multithreading.</b> Making multi-threaded applications.
+  - 002_multithreading. Making multi-threaded applications.
 
-  - <b>003_sql_jdbc.</b> SQL (subquery, join), JDBC, transactions.
+  - 003_sql_jdbc. SQL (subquery, join), JDBC, transactions.
   
-  - <b>004_servlet.</b> Servlet, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
+  - 004_servlet. Servlet, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
 
 # Алексей Сапожников (vermucht@gmail.com)
 
@@ -35,22 +35,22 @@ Modules structure corresponds with the course programme:
 
 Структура модулей соответствует программе обучения:
 
-- <b>001_trainee.</b> Basics.
+- <b>001_trainee. Основы.</b>
 
-  - <b>001_syntax.</b> Синтаксис и структуры в Java.
+  - 001_syntax. Синтаксис и структуры в Java.
 
-  - <b>002_oop.</b> Основы объектно-ориентированного программирования.
+  - 002_oop.</b> Основы объектно-ориентированного программирования.
 
-  - <b>003_collections.</b> Использование коллекций из Java Collections Framework.
+  - 003_collections.</b> Использование коллекций из Java Collections Framework.
   
-  - <b>004_lambda_stream.</b> Лямбда-выражения и Stream API 
+  - 004_lambda_stream.</b> Лямбда-выражения и Stream API 
 
-- <b>002_junior.</b> Путь к первым веб-приложениям.
+- <b>002_junior. Путь к первым веб-приложениям.</b>
 
-  - <b>001_ custom_collections.</b> Создание собственных реализациий коллекций и структур данных: List, Map, бинарное дерево поиска.
+  - 001_ custom_collections. Создание собственных реализациий коллекций и структур данных: List, Map, бинарное дерево поиска.
 
-  - <b>002_multithreading.</b> Создание многопоточных приложений.
+  - 002_multithreading. Создание многопоточных приложений.
 
-  - <b>003_sql_jdbc.</b> SQL (subquery, join), JDBC, transactions.
+  - 003_sql_jdbc. SQL (subquery, join), JDBC, transactions.
   
-  - <b>004_servlet.</b> Сервлеты, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
+  - 004_servlet. Сервлеты, Mockito, JSP, HTML, Bootstrap, Javascript, JQuery.
