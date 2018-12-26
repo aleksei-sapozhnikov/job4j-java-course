@@ -1,0 +1,21 @@
+<html lang="HTML">
+<head>
+    <meta charset="utf-8"/>
+    <title>Загрузка/скачивание файла</title>
+</head>
+<body>
+<h1>Загрузка файла на сервер</h1>
+<form action="upload" method="post" enctype="multipart/form-data">
+    Выберите файл:<input type="file" name="fileName">
+    <br><br>
+    <input type="submit" value="Закачать на сервер">
+</form>
+<br><br>
+<h1>Скачать файл с сервера</h1>
+<form action="upload" method="get">
+    Имя файла:<input type="text" name="fileName">
+    <br><br>
+    <input type="submit" value="Скачать с сервера">
+</form>
+</body>
+</html>
