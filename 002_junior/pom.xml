@@ -16,6 +16,7 @@
         <module>002_multithreading</module>
         <module>003_sql_jdbc</module>
         <module>004_servlet</module>
+        <module>005_io</module>
     </modules>
 
 
