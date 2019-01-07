@@ -11,5 +11,14 @@
 
     <artifactId>005_io</artifactId>
 
+    <dependencies>
+        <!-- Utilities module -->
+        <dependency>
+            <groupId>ru.job4j</groupId>
+            <artifactId>utilities</artifactId>
+            <version>2.0</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 </project>
