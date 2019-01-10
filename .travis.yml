@@ -20,14 +20,17 @@ before_install:
   - psql -c "CREATE USER tester WITH PASSWORD 'password';" -U postgres
   - psql -c "GRANT ALL PRIVILEGES ON DATABASE test_db TO tester;" -U postgres
 
+#script:
+#  mvn -pl :archiver install
+
 # Code coverage count after successful build
 after_success:
   - bash <(curl -s https://codecov.io/bash)
 
 # Notification if build failed.
-notifications:
-  email:
-    recipients:
-      - vermucht@gmail.com
-on_success: never   # default: change
-on_failure: change  # default: always
+#notifications:
+#  email:
+#    recipients:
+#      - vermucht@gmail.com
+#on_success: never  # default: change
+#on_failure: never  # default: always
