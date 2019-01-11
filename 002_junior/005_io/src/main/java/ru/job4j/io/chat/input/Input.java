@@ -1,4 +1,4 @@
-package ru.job4j.chat.input;
+package ru.job4j.io.chat.input;
 
 public interface Input {
     /**

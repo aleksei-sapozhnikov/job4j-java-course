@@ -1,4 +1,4 @@
-package ru.job4j.sort.bigfile;
+package ru.job4j.io.bigfile;
 
 import org.junit.Test;
 import ru.job4j.util.methods.CommonUtils;

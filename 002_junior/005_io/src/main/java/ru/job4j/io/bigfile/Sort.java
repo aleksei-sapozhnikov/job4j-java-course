@@ -1,4 +1,4 @@
-package ru.job4j.sort.bigfile;
+package ru.job4j.io.bigfile;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

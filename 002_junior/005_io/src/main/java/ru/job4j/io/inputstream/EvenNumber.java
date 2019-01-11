@@ -1,4 +1,4 @@
-package ru.job4j.bytearray.even;
+package ru.job4j.io.inputstream;
 
 import java.io.IOException;
 import java.io.InputStream;

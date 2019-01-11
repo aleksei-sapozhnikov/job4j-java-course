@@ -1,4 +1,4 @@
-package ru.job4j.bytearray.even;
+package ru.job4j.io.inputstream;
 
 import org.junit.Test;
 

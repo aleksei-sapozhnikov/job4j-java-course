@@ -1,8 +1,8 @@
-package ru.job4j.chat;
+package ru.job4j.io.chat;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.job4j.chat.input.ConsoleInput;
+import ru.job4j.io.chat.input.ConsoleInput;
 import ru.job4j.util.methods.CommonUtils;
 
 import java.io.IOException;

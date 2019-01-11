@@ -1,6 +1,6 @@
-package ru.job4j.chat;
+package ru.job4j.io.chat;
 
-import ru.job4j.chat.input.Input;
+import ru.job4j.io.chat.input.Input;
 
 import java.io.IOException;
 

@@ -1,8 +1,8 @@
-package ru.job4j.chat;
+package ru.job4j.io.chat;
 
 import org.junit.Test;
-import ru.job4j.chat.input.Input;
-import ru.job4j.chat.input.StubInput;
+import ru.job4j.io.chat.input.Input;
+import ru.job4j.io.chat.input.StubInput;
 
 import java.io.*;
 import java.util.Scanner;

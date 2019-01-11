@@ -1,4 +1,4 @@
-package ru.job4j.filter.abuse;
+package ru.job4j.io.abuse;
 
 import java.io.IOException;
 import java.io.InputStream;
