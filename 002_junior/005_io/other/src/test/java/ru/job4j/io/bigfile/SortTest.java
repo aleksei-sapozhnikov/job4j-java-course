@@ -12,7 +12,7 @@ import static org.hamcrest.Matchers.is;
 
 public class SortTest {
 
-    private static final String RESOURCES = "ru/job4j/sort/bigfile/";
+    private static final String RESOURCES = "ru/job4j/io/bigfile/";
 
     private final File source;
     private final File dest;

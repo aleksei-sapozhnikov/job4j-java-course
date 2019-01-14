@@ -17,7 +17,7 @@ public class ChatTest {
 
     public ChatTest() {
         ClassLoader loader = this.getClass().getClassLoader();
-        String rootPath = loader.getResource("ru/job4j/chat").getPath();
+        String rootPath = loader.getResource("ru/job4j/io/chat").getPath();
         this.onePhrase = String.join("/", rootPath, "one_phrase.txt");
         this.logger = String.join("/", rootPath, "logger.txt");
     }

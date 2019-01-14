@@ -18,7 +18,7 @@ public class PhrasesHolderTest {
 
     public PhrasesHolderTest() {
         ClassLoader loader = this.getClass().getClassLoader();
-        String rootPath = loader.getResource("ru/job4j/chat").getPath();
+        String rootPath = loader.getResource("ru/job4j/io/chat").getPath();
         this.emptyFile = String.join("/", rootPath, "empty_file.txt");
         this.onePhrase = String.join("/", rootPath, "one_phrase.txt");
         this.threePhrases = String.join("/", rootPath, "three_phrases.txt");
