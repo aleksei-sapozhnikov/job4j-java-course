@@ -14,6 +14,7 @@
     <modules>
         <module>archiver</module>
         <module>other</module>
+        <module>search</module>
     </modules>
 
     <dependencies>

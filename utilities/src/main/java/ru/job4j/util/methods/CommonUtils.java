@@ -41,13 +41,11 @@ public class CommonUtils {
     }
 
     public static String describeThrowable(Throwable e) {
-        StringBuilder trace = new StringBuilder();
-        for (StackTraceElement el : e.getStackTrace()) {
-            trace.append(String.format(
-                    "    %s.%s\n", el.getClassName(), el.getMethodName()
-            ));
-        }
-        return String.format("%s: '%s'. Stacktrace:\n%s", e.getClass().getName(), e.getMessage(), trace.toString());
+        return String.format(
+                "Exception happened%n  in class: %s%n  in method: %s%n  exception-class:%s  exception-message:%s",
+                e.getStackTrace()[0].getClassName(), e.getStackTrace()[0].getMethodName(),
+                e.getClass().getName(), e.getMessage()
+        );
     }
 
     /**
