@@ -8,7 +8,7 @@ package ru.job4j.calculator;
  * @version $Id$
  * @since 06.01.2018
  */
-public class Calculator {
+public class Calculator implements ICalculator {
 
     /**
      * Result of the operations.
@@ -21,6 +21,7 @@ public class Calculator {
      * @param first  First number.
      * @param second Second number.
      */
+    @Override
     public void add(double first, double second) {
         this.result = first + second;
     }
@@ -31,6 +32,7 @@ public class Calculator {
      * @param first  Minuend.
      * @param second Subtrahend.
      */
+    @Override
     public void subtract(double first, double second) {
         this.result = first - second;
     }
@@ -41,6 +43,7 @@ public class Calculator {
      * @param first  First factor.
      * @param second Second factor.
      */
+    @Override
     public void multiple(double first, double second) {
         this.result = first * second;
     }
@@ -51,6 +54,7 @@ public class Calculator {
      * @param first  Dividend.
      * @param second Divisor.
      */
+    @Override
     public void div(double first, double second) {
         this.result = first / second;
     }
@@ -60,6 +64,7 @@ public class Calculator {
      *
      * @return Value stored in the @result field.
      */
+    @Override
     public double getResult() {
         return this.result;
     }
