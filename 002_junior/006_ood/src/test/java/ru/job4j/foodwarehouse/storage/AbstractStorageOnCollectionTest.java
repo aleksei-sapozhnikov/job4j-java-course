@@ -3,9 +3,7 @@ package ru.job4j.foodwarehouse.storage;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertSame;
@@ -27,6 +25,23 @@ public class AbstractStorageOnCollectionTest {
         var storage = new AbstractStorageOnCollection<>(new ArrayList<String>()) {
         };
         storage.add("hello");
-        assertThat(storage.getAll(), is(List.of("hello")));
+        storage.add("my");
+        storage.add("name");
+        var result = storage.getAll();
+        var expected = Arrays.asList("hello", "my", "name");
+        result.sort(Comparator.naturalOrder());
+        expected.sort(Comparator.naturalOrder());
+        assertThat(result, is(expected));
+    }
+
+    @Test
+    public void whenClearThenEmpty() {
+        var storage = new AbstractStorageOnCollection<>(new ArrayList<String>()) {
+        };
+        storage.add("hello");
+        storage.add("my");
+        storage.add("name");
+        storage.clear();
+        assertThat(storage.getAll(), is(Collections.emptyList()));
     }
 }

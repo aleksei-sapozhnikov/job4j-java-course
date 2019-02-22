@@ -3,6 +3,9 @@ package ru.job4j.foodwarehouse.control;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import ru.job4j.foodwarehouse.checker.GoodsChecker;
+import ru.job4j.foodwarehouse.storage.Storage;
+
+import java.util.List;
 
 /**
  * Abstract goods control class.
@@ -29,6 +32,21 @@ public abstract class AbstractGoodsControl<E> implements GoodsControl<E> {
      */
     public AbstractGoodsControl(GoodsChecker<E> checker) {
         this.checker = checker;
+    }
+
+    /**
+     * Take all elements from from given
+     * storage and do control with them.
+     *
+     * @param storage Storage to take products from.
+     */
+    @Override
+    public void resort(Storage<E> storage) {
+        List<E> elements = storage.getAll();
+        storage.clear();
+        for (var element : elements) {
+            this.doControl(element);
+        }
     }
 
     /**

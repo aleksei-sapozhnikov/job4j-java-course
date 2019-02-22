@@ -62,4 +62,12 @@ public class AbstractStorageOnCollection<E> implements Storage<E> {
     public List<E> getAll() {
         return new ArrayList<>(this.collection);
     }
+
+    /**
+     * Clears current storage.
+     */
+    @Override
+    public void clear() {
+        this.collection.clear();
+    }
 }

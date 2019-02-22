@@ -1,5 +1,7 @@
 package ru.job4j.foodwarehouse.control;
 
+import ru.job4j.foodwarehouse.storage.Storage;
+
 /**
  * Goods control.
  *
@@ -14,4 +16,12 @@ public interface GoodsControl<E> {
      * @param obj Object to control.
      */
     void doControl(E obj);
+
+    /**
+     * Take all elements from from given
+     * storage and do control with them.
+     *
+     * @param storage
+     */
+    void resort(Storage<E> storage);
 }
