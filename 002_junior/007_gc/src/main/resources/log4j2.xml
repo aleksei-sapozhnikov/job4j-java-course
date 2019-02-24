@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Coonfiguration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%msg"/>
+        </Console>
+        <!-- Файловый аппендер -->
+        <File name="file" fileName="target/log.txt">
+            <PatternLayout>
+                <Pattern>%msg</Pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="file"/>
+        </Root>
+    </Loggers>
+</Coonfiguration>
