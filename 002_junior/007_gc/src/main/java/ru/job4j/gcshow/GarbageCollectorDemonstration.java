@@ -1,5 +1,8 @@
 package ru.job4j.gcshow;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Sample demonstration of Garbage collector work.
  *
@@ -9,19 +12,24 @@ package ru.job4j.gcshow;
  */
 public class GarbageCollectorDemonstration {
     /**
+     * Logger.
+     */
+    private static final Logger LOG = LogManager.getLogger(GarbageCollectorDemonstration.class);
+
+    /**
      * Demonstration method. Start with jvm option: -Xmx6m.
      *
      * @param args String args.
      */
     public static void main(String[] args) {
-        System.out.printf("Max memory (kB): %d%n", Runtime.getRuntime().maxMemory() / 1024);
-        System.out.printf("Total memory (kB): %d%n", Runtime.getRuntime().totalMemory() / 1024);
-        System.out.printf("Free memory (kB): %d%n", Runtime.getRuntime().freeMemory() / 1024);
+        LOG.info(String.format("Max memory (kb): %d%n", Runtime.getRuntime().maxMemory() / 1024));
+        LOG.info(String.format("Total memory (kb): %d%n", Runtime.getRuntime().totalMemory() / 1024));
+        LOG.info(String.format("Free memory (kb): %d%n", Runtime.getRuntime().freeMemory() / 1024));
         User user;
         for (int i = 0; i < 1000; i++) {
             user = new User(String.format("user-%s", i), i);
-            System.out.printf("created: %s, free memory: %s bytes, thread: %s%n",
-                    user, Runtime.getRuntime().freeMemory(), Thread.currentThread().getName());
+            LOG.info(String.format("created: %s, free memory: %s bytes, thread: %s%n",
+                    user, Runtime.getRuntime().freeMemory(), Thread.currentThread().getName()));
             System.out.flush();
         }
     }
@@ -84,10 +92,7 @@ public class GarbageCollectorDemonstration {
          */
         @Override
         public String toString() {
-            return "User{" +
-                    "name='" + name + '\'' +
-                    ", age=" + age +
-                    '}';
+            return String.format("User{name='%s', age=%d}", this.name, this.age);
         }
 
         /**
@@ -97,7 +102,7 @@ public class GarbageCollectorDemonstration {
          */
         @Override
         protected void finalize() throws Throwable {
-            System.out.printf("finalizing: %s, free memory = %s, thread: %s%n", this, Runtime.getRuntime().freeMemory(), Thread.currentThread().getName());
+            LOG.info(String.format("finalizing: %s, free memory = %s, thread: %s%n", this, Runtime.getRuntime().freeMemory(), Thread.currentThread().getName()));
             System.out.flush();
             super.finalize();
         }
