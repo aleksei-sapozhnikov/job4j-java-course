@@ -3,16 +3,13 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>java_az</artifactId>
+        <artifactId>003_middle</artifactId>
         <groupId>ru.job4j</groupId>
         <version>2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>003_middle</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>002_spring</module>
-    </modules>
+    <artifactId>002_spring</artifactId>
+
 
 </project>
