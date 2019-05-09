@@ -11,9 +11,5 @@
 
     <artifactId>003_middle</artifactId>
     <packaging>pom</packaging>
-    <modules>
-        <module>001_hibernate</module>
-    </modules>
-
 
 </project>
