@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                            http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="jdbcParams" class="ru.job4j.createbeans.util.JdbcParams">
+        <constructor-arg name="dbUrl" value="jdbc:postgresql://localhost:5432/test_db"/>
+        <constructor-arg name="dbUser" value="tester"/>
+        <constructor-arg name="dbPassword" value="password"/>
+    </bean>
+    <bean id="connector" class="ru.job4j.createbeans.util.Connector">
+        <constructor-arg name="params" ref="jdbcParams"/>
+    </bean>
+
+    <bean id="memoryStorage" class="ru.job4j.createbeans.StorageMemory"/>
+    <bean id="jdbcStorage" class="ru.job4j.createbeans.StorageJdbc">
+        <constructor-arg name="connector" ref="connector"/>
+    </bean>
+
+    <bean id="storage" class="ru.job4j.createbeans.MetaStorage">
+        <constructor-arg name="storage" ref="memoryStorage"/>
+    </bean>
+
+</beans>
